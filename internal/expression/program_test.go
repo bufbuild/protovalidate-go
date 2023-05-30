@@ -24,7 +24,6 @@ import (
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"
-	"github.com/google/cel-go/interpreter"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -82,7 +81,7 @@ func TestCompiled(t *testing.T) {
 				Program: test.prog,
 				Source:  test.src,
 			}
-			violation, err := expr.eval(interpreter.EmptyActivation())
+			violation, err := expr.eval(&Variable{})
 			if test.exErr {
 				require.Error(t, err)
 			} else {

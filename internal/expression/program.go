@@ -18,12 +18,14 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 //nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
 var varPool = &VariablePool{New: func() any { return &Variable{} }}
+
+//nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
+var nowPool = &NowPool{New: func() any { return &Now{} }}
 
 // ProgramSet is a list of compiledProgram expressions that are evaluated
 // together with the same input value. All expressions in a ProgramSet may refer
@@ -90,7 +92,11 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings interpreter.Activation) (*validate.Violation, error) {
+func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error) {
+	now := nowPool.Get()
+	defer nowPool.Put(now)
+	bindings.Next = now
+
 	value, _, err := expr.Program.Eval(bindings)
 	if err != nil {
 		return nil, errors.NewRuntimeErrorf(
