@@ -1,0 +1,31 @@
+name: Conformance
+on:
+  pull_request:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    name: Go
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go-version: [ 'stable', 'oldstable' ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Test conformance
+        run: make conformance

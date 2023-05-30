@@ -1,0 +1,38 @@
+name: Buf
+on:
+  pull_request:
+    paths:
+      - 'proto/**'
+  push:
+    paths:
+      - 'proto/**'
+  delete:
+    paths:
+      - 'proto/**'
+
+env:
+  BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+
+jobs:
+  validate-protos:
+    name: Validate protos
+    if: ${{ github.event_name == 'pull_request'}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Install buf
+        uses: bufbuild/buf-setup-action@v1
+        with:
+          github_token: ${{ github.token }}
+      - name: Buf format
+        run: buf format -d --exit-code
+      - name: Buf lint
+        uses: bufbuild/buf-lint-action@v1
+      - name: Buf generate
+        run: |
+          mkdir -p .tmp/bin
+          cp $(which buf) .tmp/bin/buf
+          make checkgenerate
