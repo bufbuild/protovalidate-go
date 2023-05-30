@@ -1,14 +1,18 @@
 # [![The Buf logo](.github/buf-logo.svg)][buf] protovalidate-go
 
+[![CI](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml)
+[![Conformance](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml)
 [![Report Card](https://goreportcard.com/badge/github.com/bufbuild/protovalidate-go)](https://goreportcard.com/report/github.com/bufbuild/protovalidate-go)
 [![GoDoc](https://pkg.go.dev/badge/github.com/bufbuild/protovalidate-go.svg)](https://pkg.go.dev/github.com/bufbuild/protovalidate-go)
 [![BSR](https://img.shields.io/badge/BSR-Module-0C65EC)][buf-mod]
 
-`protovalidate-go` is a Go library designed to validate Protobuf messages at
-runtime based on user-defined validation constraints. Powered by Google's Common
-Expression Language ([CEL](https://github.com/google/cel-spec)), it provides a
+`protovalidate-go` is the Go language implementation
+of [`protovalidate`](https://github.com/bufbuild/protovalidate) designed
+to validate Protobuf messages at runtime based on user-defined validation constraints.
+Powered by Google's Common Expression Language ([CEL](https://github.com/google/cel-spec)), it provides a
 flexible and efficient foundation for defining and evaluating custom validation
-rules. The primary goal of `protovalidate` is to help developers ensure data
+rules.
+The primary goal of `protovalidate` is to help developers ensure data
 consistency and integrity across the network without requiring generated code.
 
 ## Installation
@@ -33,59 +37,46 @@ to ensure you're using the most up-to-date version.
 
 ## Usage
 
-> For API-specific details, you can refer to the
-official [pkg.go.dev](https://pkg.go.dev/github.com/bufbuild/protovalidate-go)
-documentation which provides in-depth information on the library's API,
-functions, types, and source files. This can be particularly useful for
-understanding the lower-level workings of `protovalidate-go` and how to leverage
-its full potential.
-
-### Example
-
-```go
-package main
-
-import (
-  "fmt"
-  pb "github.com/path/to/generated/protos"
-  "github.com/bufbuild/protovalidate-go"
-)
-
-func main() {
-  msg := &pb.Person{
-    Id:    1000, 
-    Email: "example@bufbuild.com", 
-    Name:  "Protobuf",
-    Home: &example.Person_Location{
-      Lat: 37.7, 
-      Lng: -122.4,
-    },
-  }
-
-  v, err := protovalidate.New()
-  if err != nil {
-    fmt.Println("failed to initialize validator:", err)
-  }
-
-  if err = v.Validate(msg); err != nil {
-    fmt.Println("validation failed:", err)
-  } else {
-    fmt.Println("validation succeeded")
-  }
-}
-```
-
 ### Implementing validation constraints
 
 Validation constraints are defined directly within `.proto` files.
-Documentation for adding constraints can be found in the root [README](https://github.com/bufbuild/protovalidate) and the [comprehensive docs](https://github.com/bufbuild/protovalidate/tree/main/docs).
+Documentation for adding constraints can be found in the `protovalidate` project
+[README](https://github.com/bufbuild/protovalidate) and its [comprehensive docs](https://github.com/bufbuild/protovalidate/tree/main/docs).
 
-The `protovalidate` package assumes the constraint extensions are imported into the `protoc-gen-go` generated code via 
-`buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go`. 
+```protobuf
+syntax = "proto3";
+
+package my.package;
+
+import "google/protobuf/timestamp.proto";
+import "buf/validate/validate.proto";
+
+message Transaction {
+  uint64 id = 1 [(buf.validate.field).uint64.gt = 999];
+  google.protobuf.Timestamp purchase_date = 2;
+  google.protobuf.Timestamp delivery_date = 3;
+  
+  string price = 4 [(buf.validate.field).cel = {
+    id: "transaction.price",
+    message: "price must be positive and include a valid currency symbol ($ or £)",
+    expression: "(this.startsWith('$') || this.startsWith('£')) && double(this.substring(1)) > 0"
+  }];
+
+  option (buf.validate.message).cel = {
+    id: "transaction.delivery_date",
+    message: "delivery date must be after purchase date",
+    expression: "this.delivery_date > this.purchase_date"
+  };
+}
+```
 
 #### Buf managed mode
 
-If you are using Buf [managed mode](https://buf.build/docs/generate/managed-mode/) to augment Go code generation, ensure that the `protovalidate` module is excluded in your [`buf.gen.yaml`](https://buf.build/docs/configuration/v1/buf-gen-yaml#except):
+`protovalidate-go` assumes the constraint extensions are imported into
+the generated code via `buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go`.
+
+If you are using Buf [managed mode](https://buf.build/docs/generate/managed-mode/) to augment Go code generation, ensure 
+that the `protovalidate` module is excluded in your [`buf.gen.yaml`](https://buf.build/docs/configuration/v1/buf-gen-yaml#except):
 
 ```yaml
 version: v1
@@ -96,6 +87,41 @@ managed:
     except:
       - buf.build/bufbuild/protovalidate
 # <snip>
+```
+
+### Example
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+	
+	pb "github.com/path/to/generated/protos"
+	"github.com/bufbuild/protovalidate-go"
+	"google.golang.org/protobuf/types/known/timestamppb"
+)
+
+func main() {
+	msg := &pb.Transaction{
+		Id:           1234,
+		Price:        "$5.67",
+		PurchaseDate: timestamppb.New(time.Now()),
+		DeliveryDate: timestamppb.New(time.Now().Add(time.Hour)),
+	}
+
+	v, err := protovalidate.New()
+	if err != nil {
+		fmt.Println("failed to initialize validator:", err)
+	}
+
+	if err = v.Validate(msg); err != nil {
+		fmt.Println("validation failed:", err)
+	} else {
+		fmt.Println("validation succeeded")
+	}
+}
 ```
 
 ### Lazy mode
@@ -144,9 +170,16 @@ validator, err := protovalidate.New(
 
 `protoc-gen-validate` code generation is **not** used by `protovalidate-go`. The 
 `legacy` package assumes the `protoc-gen-validate` extensions are imported into
-the `protoc-gen-go` generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
+the generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
 
 A [migration tool](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-migrate) is also available to incrementally upgrade legacy constraints in `.proto` files.
+
+### Ecosystem
+
+- [`protovalidate`](https://github.com/bufbuild/protovalidate) core repository
+- [Buf][buf]
+- [CEL Go][cel-go]
+- [CEL Spec][cel-spec]
 
 ## Performance
 
@@ -179,3 +212,5 @@ PASS
 
 [buf]: https://buf.build
 [buf-mod]: https://buf.build/bufbuild/protovalidate
+[cel-go]: https://github.com/google/cel-go
+[cel-spec]: https://github.com/google/cel-spec
