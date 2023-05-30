@@ -6,7 +6,7 @@ require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.30.0-20230526161020-d74e19127379.1
 	github.com/envoyproxy/protoc-gen-validate v1.0.1
 	github.com/google/cel-go v0.15.3
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	google.golang.org/protobuf v1.30.0
 )
 
