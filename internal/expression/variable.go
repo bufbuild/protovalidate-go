@@ -18,11 +18,14 @@ import (
 	"sync"
 
 	"github.com/google/cel-go/interpreter"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Variable implements interpreter.Activation, providing a lightweight named
 // variable to cel.Program executions.
 type Variable struct {
+	// Next is the parent activation
+	Next interpreter.Activation
 	// Name is the variable's name
 	Name string
 	// Val is the value for this variable
@@ -30,7 +33,14 @@ type Variable struct {
 }
 
 func (v *Variable) ResolveName(name string) (any, bool) {
-	return v.Val, name == v.Name
+	switch {
+	case name == v.Name:
+		return v.Val, true
+	case v.Next != nil:
+		return v.Next.ResolveName(name)
+	default:
+		return nil, false
+	}
 }
 
 func (v *Variable) Parent() interpreter.Activation { return nil }
@@ -42,5 +52,38 @@ func (p *VariablePool) Put(v *Variable) {
 }
 
 func (p *VariablePool) Get() *Variable {
-	return (*sync.Pool)(p).Get().(*Variable) //nolint:forcetypeassert
+	v := (*sync.Pool)(p).Get().(*Variable) //nolint:errcheck,forcetypeassert
+	v.Next = nil
+	return v
+}
+
+// Now implements interpreter.Activation, providing a lazily produced timestamp
+// for accessing the variable `now` that's constant within an evaluation.
+type Now struct {
+	// TS is the already resolved timestamp. If unset, the field is populated with
+	// timestamppb.Now.
+	TS *timestamppb.Timestamp
+}
+
+func (n *Now) ResolveName(name string) (any, bool) {
+	if name != "now" {
+		return nil, false
+	} else if n.TS == nil {
+		n.TS = timestamppb.Now()
+	}
+	return n.TS, true
+}
+
+func (n *Now) Parent() interpreter.Activation { return nil }
+
+type NowPool sync.Pool
+
+func (p *NowPool) Put(v *Now) {
+	(*sync.Pool)(p).Put(v)
+}
+
+func (p *NowPool) Get() *Now {
+	n := (*sync.Pool)(p).Get().(*Now) //nolint:errcheck,forcetypeassert
+	n.TS = nil
+	return n
 }

@@ -20,7 +20,6 @@ import (
 	"net/mail"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/overloads"
@@ -62,16 +61,7 @@ func (l lib) CompileOptions() []cel.EnvOption {
 		cel.EagerlyValidateDeclarations(true),
 		// TODO: reduce this to just the functionality we want to support
 		ext.Strings(),
-		cel.Function("now",
-			cel.Overload(
-				"now_timestamp",
-				[]*cel.Type{},
-				cel.TimestampType,
-				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					return types.Timestamp{Time: l.now()}
-				}),
-			),
-		),
+		cel.Variable("now", cel.TimestampType),
 		cel.Function("unique",
 			l.uniqueMemberOverload(cel.BoolType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.IntType, l.uniqueScalar),
@@ -236,14 +226,6 @@ func (l lib) ProgramOptions() []cel.ProgramOption {
 			cel.OptCheckStringFormat,
 		),
 	}
-}
-
-func (l lib) now() time.Time {
-	now := time.Now()
-	if l.useUTC {
-		now = now.UTC()
-	}
-	return now
 }
 
 func (l lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {

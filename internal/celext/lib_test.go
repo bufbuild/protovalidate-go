@@ -16,7 +16,6 @@ package celext
 
 import (
 	"testing"
-	"time"
 
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
@@ -29,17 +28,6 @@ func TestCELLib(t *testing.T) {
 
 	env, err := cel.NewEnv(cel.Lib(lib{}))
 	require.NoError(t, err)
-
-	t.Run("now", func(t *testing.T) {
-		t.Parallel()
-
-		prog := buildTestProgram(t, env, "now()")
-		val, _, err := prog.Eval(interpreter.EmptyActivation())
-		require.NoError(t, err)
-		ts, ok := val.Value().(time.Time)
-		require.True(t, ok)
-		assert.WithinDuration(t, time.Now(), ts, time.Millisecond)
-	})
 
 	t.Run("unique", func(t *testing.T) {
 		t.Parallel()
