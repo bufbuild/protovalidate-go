@@ -15,6 +15,22 @@ rules.
 The primary goal of `protovalidate` is to help developers ensure data
 consistency and integrity across the network without requiring generated code.
 
+## The `protovalidate` project
+
+Head over to the core [`protovalidate`](https://github.com/bufbuild/protovalidate/) repository for:
+
+- [The API definition](https://github.com/bufbuild/protovalidate/tree/main/proto/protovalidate/buf/validate/validate.proto): used to describe validation constraints
+- [Documentation](https://github.com/bufbuild/protovalidate/tree/main/docs): how to apply `protovalidate` effectively
+- [Migration tooling](https://github.com/bufbuild/protovalidate/tree/main/docs/migrate.md): incrementally migrate from `protoc-gen-validate`
+- [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): for acceptance testing of `protovalidate` implementations
+
+Other `protovalidate` runtime implementations coming soon include:
+
+- C++: `protovalidate-cc`
+- Java: `protovalidate-java`
+- Python: `protovalidate-py`
+- TypeScript: `protovalidate-ts`
+
 ## Installation
 
 **Requires the `go` toolchain (≥ v1.18)**
@@ -174,13 +190,6 @@ the generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
 
 A [migration tool](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-migrate) is also available to incrementally upgrade legacy constraints in `.proto` files.
 
-### Ecosystem
-
-- [`protovalidate`](https://github.com/bufbuild/protovalidate) core repository
-- [Buf][buf]
-- [CEL Go][cel-go]
-- [CEL Spec][cel-spec]
-
 ## Performance
 
 [Benchmarks](validator_bench_test.go) are provided to test a variety of use-cases. Generally, after the 
@@ -210,6 +219,18 @@ BenchmarkValidator/PreWarmed/FailFast-10	13960359	     92.22 ns/op	     168 B/op
 PASS
 ```
 
+### Ecosystem
+
+- [`protovalidate`](https://github.com/bufbuild/protovalidate) core repository
+- [Buf][buf]
+- [CEL Go][cel-go]
+- [CEL Spec][cel-spec]
+
+## Legal
+
+Offered under the [Apache 2 license][license].
+
+[license]: LICENSE
 [buf]: https://buf.build
 [buf-mod]: https://buf.build/bufbuild/protovalidate
 [cel-go]: https://github.com/google/cel-go
