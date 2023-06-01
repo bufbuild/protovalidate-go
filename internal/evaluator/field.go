@@ -55,7 +55,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 
 	val := msg.Get(f.Descriptor)
 	if err = f.Value.Evaluate(val, failFast); err != nil {
-		errors.PrefixErrorPaths(err, string(f.Descriptor.Name()))
+		errors.PrefixErrorPaths(err, "%s", f.Descriptor.Name())
 	}
 	return err
 }
