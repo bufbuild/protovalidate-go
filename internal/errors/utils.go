@@ -47,10 +47,11 @@ func Merge(dst, src error, failFast bool) (ok bool, err error) {
 	return !(failFast && len(dstValErrs.Violations) > 0), dst
 }
 
-// PrefixErrorPaths prepends the prefix to the violations of a ValidationError.
-func PrefixErrorPaths(err error, prefix string) {
+// PrefixErrorPaths prepends the formatted prefix to the violations of a
+// ValidationError.
+func PrefixErrorPaths(err error, format string, args ...any) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
-		PrefixFieldPaths(valErr, prefix)
+		PrefixFieldPaths(valErr, format, args...)
 	}
 }

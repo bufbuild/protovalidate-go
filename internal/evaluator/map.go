@@ -15,8 +15,6 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -34,7 +32,7 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 		evalErr := m.evalPairs(key, value, failFast)
 		if evalErr != nil {
-			errors.PrefixErrorPaths(evalErr, fmt.Sprintf("[%#v]", key.Interface()))
+			errors.PrefixErrorPaths(evalErr, "[%#v]", key.Interface())
 		}
 		ok, err = errors.Merge(err, evalErr, failFast)
 		return ok

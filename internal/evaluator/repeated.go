@@ -15,8 +15,6 @@
 package evaluator
 
 import (
-	"fmt"
-
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -34,7 +32,7 @@ func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 	for i := 0; i < list.Len(); i++ {
 		itemErr := r.ItemConstraints.Evaluate(list.Get(i), failFast)
 		if itemErr != nil {
-			errors.PrefixErrorPaths(itemErr, fmt.Sprintf("[%d]", i))
+			errors.PrefixErrorPaths(itemErr, "[%d]", i)
 		}
 		if ok, err = errors.Merge(err, itemErr, failFast); !ok {
 			return err
