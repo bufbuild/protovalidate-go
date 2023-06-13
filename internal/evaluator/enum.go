@@ -32,7 +32,7 @@ func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []*validate.Violation{{
 			ConstraintId: "enum.defined_only",
-			Message:      "value must be one of the defined enum values",
+			Message:      "value must be in list the defined enum values",
 		}}}
 	}
 	return nil
