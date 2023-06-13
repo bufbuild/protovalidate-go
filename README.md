@@ -24,9 +24,12 @@ Head over to the core [`protovalidate`](https://github.com/bufbuild/protovalidat
 - [Migration tooling](https://github.com/bufbuild/protovalidate/tree/main/docs/migrate.md): incrementally migrate from `protoc-gen-validate`
 - [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): for acceptance testing of `protovalidate` implementations
 
-Other `protovalidate` runtime implementations coming soon include:
+Other `protovalidate` runtime implementations:
 
-- C++: `protovalidate-cc`
+- C++: [`protovalidate-cc`][pv-cc]
+
+And others coming soon:
+
 - Java: `protovalidate-java`
 - Python: `protovalidate-py`
 - TypeScript: `protovalidate-ts`
@@ -235,3 +238,4 @@ Offered under the [Apache 2 license][license].
 [buf-mod]: https://buf.build/bufbuild/protovalidate
 [cel-go]: https://github.com/google/cel-go
 [cel-spec]: https://github.com/google/cel-spec
+[pv-cc]: https://github.com/bufbuild/protovalidate-cc
