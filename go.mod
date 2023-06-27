@@ -7,7 +7,7 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.1
 	github.com/google/cel-go v0.16.0
 	github.com/stretchr/testify v1.8.4
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.31.0
 )
 
 require (
