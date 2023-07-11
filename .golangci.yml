@@ -78,3 +78,7 @@ issues:
     - path: internal/constraints/lookups.go
       linters:
         - gochecknoglobals
+    - path: internal/evaluator/resolver.go
+      linters:
+        # uses deprecated fields on protoimpl.ExtensionInfo but its the only way
+        - staticcheck
