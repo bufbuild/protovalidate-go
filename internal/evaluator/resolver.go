@@ -15,12 +15,18 @@
 package evaluator
 
 import (
+	"strings"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/runtime/protoimpl"
-	"strings"
+)
+
+const (
+	newExtensionIndex      = "1159"
+	previousExtensionIndex = "51071"
 )
 
 type StandardConstraintResolver interface {
@@ -34,31 +40,15 @@ type DefaultResolver struct{}
 func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
 	constraints := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	if constraints == nil {
-		return resolveOldIndex[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
+		return resolveDeprecatedIndex[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	}
 	return constraints
-}
-
-// new -> old
-func resolveOldIndex[D protoreflect.Descriptor, C proto.Message](
-	desc D,
-	ext *protoimpl.ExtensionInfo,
-) C {
-	newEMessage := &protoimpl.ExtensionInfo{
-		ExtendedType:  ext.ExtendedType,
-		ExtensionType: ext.ExtensionType,
-		Field:         51071,
-		Name:          ext.Name,
-		Tag:           strings.Replace(ext.Tag, "1159", "51071", 1),
-		Filename:      ext.Filename,
-	}
-	return resolveExt[D, C](desc, newEMessage)
 }
 
 func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
 	constraints := resolveExt[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
 	if constraints == nil {
-		return resolveOldIndex[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
+		return resolveDeprecatedIndex[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
 	}
 	return constraints
 }
@@ -66,7 +56,7 @@ func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescript
 func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
 	constraints := resolveExt[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
 	if constraints == nil {
-		return resolveOldIndex[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
+		return resolveDeprecatedIndex[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
 	}
 	return constraints
 }
@@ -90,8 +80,8 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 		}
 	}
 
-	b := opts.GetUnknown()
-	if len(b) == 0 {
+	unknown := opts.GetUnknown()
+	if len(unknown) == 0 {
 		return constraints
 	}
 
@@ -100,7 +90,7 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 	if err := resolver.RegisterExtension(extType); err != nil {
 		return constraints
 	}
-	_ = proto.UnmarshalOptions{Resolver: &resolver}.Unmarshal(b, opts.Interface())
+	_ = proto.UnmarshalOptions{Resolver: &resolver}.Unmarshal(unknown, opts.Interface())
 
 	if opts.Has(fDesc) {
 		msg := opts.Get(fDesc).Message().Interface()
@@ -108,6 +98,30 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 			return m
 		}
 	}
+	msg := opts.Get(fDesc).Message().Interface()
+	if m, ok := msg.(C); ok {
+		return m
+	}
 
+	b, _ := proto.Marshal(msg)
+	constraints, ok := extType.New().Message().Interface().(C)
+	if !ok {
+		return constraints
+	}
+	_ = proto.Unmarshal(b, constraints)
 	return constraints
+}
+
+func resolveDeprecatedIndex[D protoreflect.Descriptor, C proto.Message](
+	desc D,
+	ext *protoimpl.ExtensionInfo,
+) C {
+	return resolveExt[D, C](desc, &protoimpl.ExtensionInfo{
+		ExtendedType:  ext.ExtendedType,
+		ExtensionType: ext.ExtensionType,
+		Field:         51071,
+		Name:          ext.Name,
+		Tag:           strings.Replace(ext.Tag, newExtensionIndex, previousExtensionIndex, 1),
+		Filename:      ext.Filename,
+	})
 }

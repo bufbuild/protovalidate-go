@@ -17,6 +17,7 @@ package protovalidate
 import (
 	"testing"
 
+	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -123,4 +124,18 @@ func TestValidator_ValidateMapFoo(t *testing.T) {
 	err = val.Validate(mapMessage)
 	require.Error(t, err)
 	t.Log(err)
+}
+
+func TestValidator_ValidateKitchenSink(t *testing.T) {
+	message := &cases.WktLevelOne{
+		Two: &cases.WktLevelOne_WktLevelTwo{
+			Three: &cases.WktLevelOne_WktLevelTwo_WktLevelThree{
+				Uuid: "f81d16ef-40e2-40c6-bebc-89aaf5292f9a",
+			},
+		},
+	}
+	val, err := New()
+	require.NoError(t, err)
+	err = val.Validate(message)
+	require.NoError(t, err)
 }
