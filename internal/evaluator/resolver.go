@@ -40,7 +40,7 @@ type DefaultResolver struct{}
 func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
 	constraints := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	if constraints == nil {
-		return resolveDeprecatedIndex[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
+		constraints = resolveDeprecatedIndex[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	}
 	return constraints
 }
@@ -48,7 +48,7 @@ func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDesc
 func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
 	constraints := resolveExt[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
 	if constraints == nil {
-		return resolveDeprecatedIndex[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
+		constraints = resolveDeprecatedIndex[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
 	}
 	return constraints
 }
@@ -56,7 +56,7 @@ func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescript
 func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
 	constraints := resolveExt[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
 	if constraints == nil {
-		return resolveDeprecatedIndex[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
+		constraints = resolveDeprecatedIndex[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
 	}
 	return constraints
 }
@@ -112,6 +112,7 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 	return constraints
 }
 
+// resolveDeprecatedIndex is a fallback for the deprecated extension index.
 func resolveDeprecatedIndex[D protoreflect.Descriptor, C proto.Message](
 	desc D,
 	ext *protoimpl.ExtensionInfo,
