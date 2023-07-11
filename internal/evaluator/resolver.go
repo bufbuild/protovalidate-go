@@ -16,8 +16,11 @@ package evaluator
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"github.com/jhump/protoreflect/v2/protobuilder"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 type StandardConstraintResolver interface {
@@ -29,7 +32,38 @@ type StandardConstraintResolver interface {
 type DefaultResolver struct{}
 
 func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
-	return resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
+	resolve := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints]
+	constraints := resolve(desc, validate.E_Message)
+	if constraints == nil {
+		return r.resolveOldIndex(desc)
+	}
+	return constraints
+}
+
+// new -> old
+func (r DefaultResolver) resolveOldIndex(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
+	builder, err := protobuilder.FromField(validate.E_Message.TypeDescriptor())
+	if err != nil {
+		return nil
+	}
+	builder.SetNumber(51071)
+	descriptor, err := builder.Build()
+	if err != nil {
+		return nil
+	}
+	constraints := resolveExt[protoreflect.MessageDescriptor, *dynamicpb.Message](desc, dynamicpb.NewExtensionType(descriptor))
+	if constraints == nil {
+		return nil
+	}
+	b, err := proto.Marshal(constraints)
+	if err != nil {
+		return nil
+	}
+	var out validate.MessageConstraints
+	if err := proto.Unmarshal(b, &out); err != nil {
+		return nil
+	}
+	return &out
 }
 
 func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
@@ -45,30 +79,38 @@ func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescript
 // circumstances, particularly in dynamic or runtime contexts, the underlying
 // extension value's type may be a dynamicpb.Message. In this case, we fall back
 // through a proto.[Un]Marshal cycle to get it into the concrete type we expect.
-func resolveExt[
-	D protoreflect.Descriptor,
-	C proto.Message,
-](
+func resolveExt[D protoreflect.Descriptor, C proto.Message](
 	desc D,
 	extType protoreflect.ExtensionType,
 ) (constraints C) {
 	opts := desc.Options().ProtoReflect()
 	fDesc := extType.TypeDescriptor()
 
-	if !opts.Has(fDesc) {
+	if opts.Has(fDesc) {
+		msg := opts.Get(fDesc).Message().Interface()
+		if m, ok := msg.(C); ok {
+			return m
+		}
+	}
+
+	b := opts.GetUnknown()
+	if len(b) == 0 {
 		return constraints
 	}
 
-	msg := opts.Get(fDesc).Message().Interface()
-	if m, ok := msg.(C); ok {
-		return m
-	}
-
-	b, _ := proto.Marshal(msg)
-	constraints, ok := extType.New().Message().Interface().(C)
-	if !ok {
+	opts = opts.Type().New()
+	var resolver protoregistry.Types
+	if err := resolver.RegisterExtension(extType); err != nil {
 		return constraints
 	}
-	_ = proto.Unmarshal(b, constraints)
+	_ = proto.UnmarshalOptions{Resolver: &resolver}.Unmarshal(b, opts.Interface())
+
+	if opts.Has(fDesc) {
+		msg := opts.Get(fDesc).Message().Interface()
+		if m, ok := msg.(C); ok {
+			return m
+		}
+	}
+
 	return constraints
 }
