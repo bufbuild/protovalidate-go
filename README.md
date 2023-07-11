@@ -27,11 +27,11 @@ Head over to the core [`protovalidate`](https://github.com/bufbuild/protovalidat
 Other `protovalidate` runtime implementations:
 
 - C++: [`protovalidate-cc`][pv-cc]
+- Python: [`protovalidate-python`][pv-py]
 
 And others coming soon:
 
 - Java: `protovalidate-java`
-- Python: `protovalidate-py`
 - TypeScript: `protovalidate-ts`
 
 ## Installation
@@ -239,3 +239,4 @@ Offered under the [Apache 2 license][license].
 [cel-go]: https://github.com/google/cel-go
 [cel-spec]: https://github.com/google/cel-spec
 [pv-cc]: https://github.com/bufbuild/protovalidate-cc
+[pv-py]: https://github.com/bufbuild/protovalidate-python
