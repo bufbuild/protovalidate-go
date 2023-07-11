@@ -93,7 +93,6 @@ func (bldr *Builder) loadOrBuild(desc protoreflect.MessageDescriptor) MessageEva
 	return bldr.build(desc)
 }
 
-// buildLocked?
 func (bldr *Builder) build(desc protoreflect.MessageDescriptor) *message {
 	if eval, ok := bldr.cache[desc]; ok {
 		return eval
