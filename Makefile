@@ -11,7 +11,7 @@ COPYRIGHT_YEARS := 2023
 LICENSE_IGNORE := -e internal/testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
-ARGS ?=gc
+ARGS ?=
 
 .PHONY: help
 help: ## Describe useful make targets
