@@ -16,11 +16,11 @@ package evaluator
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/jhump/protoreflect/v2/protobuilder"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/types/dynamicpb"
+	"google.golang.org/protobuf/runtime/protoimpl"
+	"strings"
 )
 
 type StandardConstraintResolver interface {
@@ -32,46 +32,43 @@ type StandardConstraintResolver interface {
 type DefaultResolver struct{}
 
 func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
-	resolve := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints]
-	constraints := resolve(desc, validate.E_Message)
+	constraints := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	if constraints == nil {
-		return r.resolveOldIndex(desc)
+		return resolveOldIndex[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	}
 	return constraints
 }
 
 // new -> old
-func (r DefaultResolver) resolveOldIndex(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
-	builder, err := protobuilder.FromField(validate.E_Message.TypeDescriptor())
-	if err != nil {
-		return nil
+func resolveOldIndex[D protoreflect.Descriptor, C proto.Message](
+	desc D,
+	ext *protoimpl.ExtensionInfo,
+) C {
+	newEMessage := &protoimpl.ExtensionInfo{
+		ExtendedType:  ext.ExtendedType,
+		ExtensionType: ext.ExtensionType,
+		Field:         51071,
+		Name:          ext.Name,
+		Tag:           strings.Replace(ext.Tag, "1159", "51071", 1),
+		Filename:      ext.Filename,
 	}
-	builder.SetNumber(51071)
-	descriptor, err := builder.Build()
-	if err != nil {
-		return nil
-	}
-	constraints := resolveExt[protoreflect.MessageDescriptor, *dynamicpb.Message](desc, dynamicpb.NewExtensionType(descriptor))
-	if constraints == nil {
-		return nil
-	}
-	b, err := proto.Marshal(constraints)
-	if err != nil {
-		return nil
-	}
-	var out validate.MessageConstraints
-	if err := proto.Unmarshal(b, &out); err != nil {
-		return nil
-	}
-	return &out
+	return resolveExt[D, C](desc, newEMessage)
 }
 
 func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
-	return resolveExt[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
+	constraints := resolveExt[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
+	if constraints == nil {
+		return resolveOldIndex[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
+	}
+	return constraints
 }
 
 func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
-	return resolveExt[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
+	constraints := resolveExt[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
+	if constraints == nil {
+		return resolveOldIndex[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
+	}
+	return constraints
 }
 
 // resolveExt does not use proto.GetExtension in the event the underlying type
