@@ -33,7 +33,9 @@ test: ## Run all unit tests
 lint: lint-proto lint-go  ## Lint code and protos
 
 .PHONY: lint-go
-lint-go: $(BIN)/golangci-lint
+lint-go: $(BIN)/golangci-lint $(BIN)/checklocks
+	$(GO) vet ./...
+	$(GO) vet -vettool=$(BIN)/checklocks ./...
 	$(BIN)/golangci-lint run ./...
 
 .PHONY: lint-proto
@@ -96,3 +98,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
     	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@latest
+
+$(BIN)/checklocks: Makefile
+	@mkdir -p $(@D)
+	GOBIN="$(abspath $(@D))" $(GO) install gvisor.dev/gvisor/tools/checklocks/cmd/checklocks@v0.0.0-20230606234206-115cc12055ce
