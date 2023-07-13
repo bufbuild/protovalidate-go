@@ -28,10 +28,10 @@ Other `protovalidate` runtime implementations:
 
 - C++: [`protovalidate-cc`][pv-cc]
 - Python: [`protovalidate-python`][pv-py]
+- Java: [`protovalidate-java`](https://github.com/bufbuild/protovalidate-java)
 
 And others coming soon:
 
-- Java: `protovalidate-java`
 - TypeScript: `protovalidate-ts`
 
 ## Installation
