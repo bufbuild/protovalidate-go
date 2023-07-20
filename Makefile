@@ -12,6 +12,9 @@ LICENSE_IGNORE := -e internal/testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
 ARGS ?=
+# Set to use a different version of protovalidate-conformance.
+# Should be kept in sync with the version referenced in proto/buf.lock.
+CONFORMANCE_VERSION ?= v0.2.2
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -41,7 +44,9 @@ lint-proto: $(BIN)/buf
 	$(BIN)/buf lint
 
 .PHONY: conformance
-conformance: $(BIN)/protovalidate-conformance ## Run conformance tests
+conformance: ## Run conformance tests
+	GOBIN=$(abspath $(BIN)) $(GO) install \
+    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
 	$(GO) build -o $(BIN)/protovalidate-conformance-go ./internal/cmd/protovalidate-conformance-go
 	$(BIN)/protovalidate-conformance --strict --strict_message --strict_error $(ARGS) $(BIN)/protovalidate-conformance-go
 
@@ -51,7 +56,7 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
 	rm -rf internal/gen/*/
-	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing
+	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
 	$(BIN)/buf generate proto
 
 .PHONY: generate-license
@@ -92,7 +97,3 @@ $(BIN)/license-header: $(BIN) Makefile
 $(BIN)/golangci-lint: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
 		github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
-
-$(BIN)/protovalidate-conformance: $(BIN) Makefile
-	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@latest
