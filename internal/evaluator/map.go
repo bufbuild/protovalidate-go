@@ -45,6 +45,7 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 
 func (m kvPairs) evalPairs(key protoreflect.MapKey, value protoreflect.Value, failFast bool) (err error) {
 	evalErr := m.KeyConstraints.Evaluate(key.Value(), failFast)
+	errors.MarkForKey(evalErr)
 	ok, err := errors.Merge(err, evalErr, failFast)
 	if !ok {
 		return err
