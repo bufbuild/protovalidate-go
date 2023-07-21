@@ -13,15 +13,16 @@ LICENSE_IGNORE := -e internal/testdata/
 GO ?= go
 ARGS ?=
 # Set to use a different version of protovalidate-conformance.
-# Should be kept in sync with the version referenced in proto/buf.lock.
-CONFORMANCE_VERSION ?= v0.2.2
+# Should be kept in sync with the version referenced in proto/buf.lock and
+# 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
+CONFORMANCE_VERSION ?= v0.2.6
 
 .PHONY: help
 help: ## Describe useful make targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "%-15s %s\n", $$1, $$2}'
 
 .PHONY: all
-all: test conformance lint ## Run all tests and lint (default)
+all: generate test conformance lint ## Generate and run all tests and lint (default)
 
 .PHONY: clean
 clean: ## Delete intermediate build artifacts

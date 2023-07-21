@@ -55,3 +55,12 @@ func PrefixErrorPaths(err error, format string, args ...any) {
 		PrefixFieldPaths(valErr, format, args...)
 	}
 }
+
+func MarkForKey(err error) {
+	var valErr *ValidationError
+	if errors.As(err, &valErr) {
+		for _, violation := range valErr.Violations {
+			violation.ForKey = true
+		}
+	}
+}
