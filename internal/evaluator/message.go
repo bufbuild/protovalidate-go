@@ -15,16 +15,12 @@
 package evaluator
 
 import (
-	"sync"
-
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // message performs validation on a protoreflect.Message.
 type message struct {
-	sync.WaitGroup
-
 	// Err stores if there was a compilation error constructing this evaluator.
 	// It is cached here so that it can be stored in the registry's lookup table.
 	Err error
