@@ -29,10 +29,7 @@ import (
 // Builder is a build-through cache of message evaluators keyed off the provided
 // descriptor.
 type Builder struct {
-	// TODO: (TCN-1708) based on benchmarks, about 50% of CPU time is spent obtaining a read
-	//  lock on this mutex. Ideally, this can be reworked to be thread-safe while
-	//  minimizing the need to obtain a lock.
-	mtx         sync.RWMutex
+	mu          sync.Mutex
 	cache       map[protoreflect.MessageDescriptor]*message
 	env         *cel.Env
 	constraints constraints.Cache
@@ -81,25 +78,23 @@ func (bldr *Builder) load(desc protoreflect.MessageDescriptor) MessageEvaluator 
 // descriptor, or lazily constructs a new one. This method is thread-safe via
 // locking.
 func (bldr *Builder) loadOrBuild(desc protoreflect.MessageDescriptor) MessageEvaluator {
-	bldr.mtx.RLock()
-	if eval, ok := bldr.cache[desc]; ok {
-		bldr.mtx.RUnlock()
-		return eval
-	}
-	bldr.mtx.RUnlock()
-
-	bldr.mtx.Lock()
-	defer bldr.mtx.Unlock()
-	return bldr.build(desc)
+	msgEval := bldr.build(desc)
+	msgEval.Wait()
+	return msgEval
 }
 
 func (bldr *Builder) build(desc protoreflect.MessageDescriptor) *message {
+	bldr.mu.Lock()
 	if eval, ok := bldr.cache[desc]; ok {
+		bldr.mu.Unlock()
 		return eval
 	}
 	msgEval := &message{}
+	msgEval.Add(1)
 	bldr.cache[desc] = msgEval
+	bldr.mu.Unlock()
 	bldr.buildMessage(desc, msgEval)
+	msgEval.Done()
 	return msgEval
 }
 
