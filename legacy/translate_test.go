@@ -105,7 +105,8 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacySimple{},
 			field: "x",
 			ex: &validate.FieldConstraints{Type: &validate.FieldConstraints_Int32{
-				Int32: &validate.Int32Rules{Gt: proto.Int32(0)},
+				Int32: &validate.Int32Rules{
+					GreaterThan: &validate.Int32Rules_Gt{Gt: 0}},
 			}},
 		},
 		{
@@ -135,7 +136,11 @@ func TestTranslateFieldOptions(t *testing.T) {
 			ex: &validate.FieldConstraints{Type: &validate.FieldConstraints_Repeated{
 				Repeated: &validate.RepeatedRules{Items: &validate.FieldConstraints{
 					Type: &validate.FieldConstraints_Int32{
-						Int32: &validate.Int32Rules{Gt: proto.Int32(0)},
+						Int32: &validate.Int32Rules{
+							GreaterThan: &validate.Int32Rules_Gt{
+								Gt: 0,
+							},
+						},
 					},
 				}},
 			}},
@@ -149,7 +154,11 @@ func TestTranslateFieldOptions(t *testing.T) {
 						String_: &validate.StringRules{MinLen: proto.Uint64(3)},
 					}},
 					Values: &validate.FieldConstraints{Type: &validate.FieldConstraints_Int32{
-						Int32: &validate.Int32Rules{Gt: proto.Int32(0)},
+						Int32: &validate.Int32Rules{
+							GreaterThan: &validate.Int32Rules_Gt{
+								Gt: 0,
+							},
+						},
 					}},
 				},
 			}},
@@ -192,9 +201,13 @@ func TestTranslateFieldOptions(t *testing.T) {
 			field: "x",
 			ex: &validate.FieldConstraints{
 				IgnoreEmpty: true,
-				Type: &validate.FieldConstraints_Int32{Int32: &validate.Int32Rules{
-					Gt: proto.Int32(123),
-				}},
+				Type: &validate.FieldConstraints_Int32{
+					Int32: &validate.Int32Rules{
+						GreaterThan: &validate.Int32Rules_Gt{
+							Gt: 123,
+						},
+					},
+				},
 			},
 		},
 	}
