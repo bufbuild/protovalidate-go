@@ -16,6 +16,7 @@ package celext
 
 import (
 	"bytes"
+	"math"
 	"net"
 	"net/mail"
 	"net/url"
@@ -69,6 +70,47 @@ func (l lib) CompileOptions() []cel.EnvOption {
 			l.uniqueMemberOverload(cel.DoubleType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.StringType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.BytesType, l.uniqueBytes),
+		),
+		cel.Function("isNan",
+			cel.MemberOverload(
+				"double_is_nan_bool",
+				[]*cel.Type{cel.DoubleType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					num, ok := args[0].Value().(float64)
+					if !ok {
+						return types.Bool(false)
+					}
+					return types.Bool(math.IsNaN(num))
+				}),
+			),
+		),
+		cel.Function("isInf",
+			cel.MemberOverload(
+				"double_is_inf_bool",
+				[]*cel.Type{cel.DoubleType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					num, ok := args[0].Value().(float64)
+					if !ok {
+						return types.Bool(false)
+					}
+					return types.Bool(math.IsInf(num, 0))
+				}),
+			),
+			cel.MemberOverload(
+				"double_int_is_inf_bool",
+				[]*cel.Type{cel.DoubleType, cel.IntType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					num, nok := args[0].Value().(float64)
+					sign, sok := args[1].Value().(int64)
+					if !nok || !sok {
+						return types.Bool(false)
+					}
+					return types.Bool(math.IsInf(num, int(sign)))
+				}),
+			),
 		),
 		cel.Function("isHostname",
 			cel.MemberOverload(

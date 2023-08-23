@@ -29,13 +29,26 @@ func TestCELLib(t *testing.T) {
 	env, err := cel.NewEnv(cel.Lib(lib{}))
 	require.NoError(t, err)
 
-	t.Run("unique", func(t *testing.T) {
+	t.Run("ext", func(t *testing.T) {
 		t.Parallel()
 
 		tests := []struct {
 			expr string
 			ex   bool
 		}{
+			{"0.0.isInf()", false},
+			{"0.0.isNan()", false},
+			{"(1.0/0.0).isInf()", true},
+			{"(1.0/0.0).isInf(0)", true},
+			{"(1.0/0.0).isInf(1)", true},
+			{"(1.0/0.0).isInf(-1)", false},
+			{"(-1.0/0.0).isInf()", true},
+			{"(-1.0/0.0).isInf(0)", true},
+			{"(-1.0/0.0).isInf(1)", false},
+			{"(-1.0/0.0).isInf(-1)", true},
+			{"(0.0/0.0).isNan()", true},
+			{"(0.0/0.0).isInf()", false},
+			{"(1.0/0.0).isNan()", false},
 			{
 				"[].unique()",
 				true,
