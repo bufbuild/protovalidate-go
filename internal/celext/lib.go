@@ -16,6 +16,7 @@ package celext
 
 import (
 	"bytes"
+	"math"
 	"net"
 	"net/mail"
 	"net/url"
@@ -69,6 +70,50 @@ func (l lib) CompileOptions() []cel.EnvOption {
 			l.uniqueMemberOverload(cel.DoubleType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.StringType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.BytesType, l.uniqueBytes),
+		),
+		cel.Function("isNan",
+			cel.MemberOverload(
+				"double_is_nan_bool",
+				[]*cel.Type{cel.DoubleType},
+				cel.BoolType,
+				cel.UnaryBinding(func(value ref.Val) ref.Val {
+					num, ok := value.Value().(float64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(value)
+					}
+					return types.Bool(math.IsNaN(num))
+				}),
+			),
+		),
+		cel.Function("isInf",
+			cel.MemberOverload(
+				"double_is_inf_bool",
+				[]*cel.Type{cel.DoubleType},
+				cel.BoolType,
+				cel.UnaryBinding(func(value ref.Val) ref.Val {
+					num, ok := value.Value().(float64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(value)
+					}
+					return types.Bool(math.IsInf(num, 0))
+				}),
+			),
+			cel.MemberOverload(
+				"double_int_is_inf_bool",
+				[]*cel.Type{cel.DoubleType, cel.IntType},
+				cel.BoolType,
+				cel.BinaryBinding(func(lhs ref.Val, rhs ref.Val) ref.Val {
+					num, ok := lhs.Value().(float64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					sign, ok := rhs.Value().(int64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(rhs)
+					}
+					return types.Bool(math.IsInf(num, int(sign)))
+				}),
+			),
 		),
 		cel.Function("isHostname",
 			cel.MemberOverload(
