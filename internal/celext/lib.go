@@ -76,10 +76,10 @@ func (l lib) CompileOptions() []cel.EnvOption {
 				"double_is_nan_bool",
 				[]*cel.Type{cel.DoubleType},
 				cel.BoolType,
-				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					num, ok := args[0].Value().(float64)
+				cel.UnaryBinding(func(value ref.Val) ref.Val {
+					num, ok := value.Value().(float64)
 					if !ok {
-						return types.Bool(false)
+						return types.UnsupportedRefValConversionErr(value)
 					}
 					return types.Bool(math.IsNaN(num))
 				}),
@@ -90,10 +90,10 @@ func (l lib) CompileOptions() []cel.EnvOption {
 				"double_is_inf_bool",
 				[]*cel.Type{cel.DoubleType},
 				cel.BoolType,
-				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					num, ok := args[0].Value().(float64)
+				cel.UnaryBinding(func(value ref.Val) ref.Val {
+					num, ok := value.Value().(float64)
 					if !ok {
-						return types.Bool(false)
+						return types.UnsupportedRefValConversionErr(value)
 					}
 					return types.Bool(math.IsInf(num, 0))
 				}),
@@ -102,11 +102,14 @@ func (l lib) CompileOptions() []cel.EnvOption {
 				"double_int_is_inf_bool",
 				[]*cel.Type{cel.DoubleType, cel.IntType},
 				cel.BoolType,
-				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
-					num, nok := args[0].Value().(float64)
-					sign, sok := args[1].Value().(int64)
-					if !nok || !sok {
-						return types.Bool(false)
+				cel.BinaryBinding(func(lhs ref.Val, rhs ref.Val) ref.Val {
+					num, ok := lhs.Value().(float64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					sign, ok := rhs.Value().(int64)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(rhs)
 					}
 					return types.Bool(math.IsInf(num, int(sign)))
 				}),
