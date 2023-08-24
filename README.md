@@ -159,11 +159,11 @@ validator, err := protovalidate.New(
 )
 ```
 
-Lazy mode requires usage of a mutex to keep the validator thread-safe, which 
-results in about 50% of CPU time spent obtaining a read lock. While [performance](#performance)
-is sub-microsecond, the mutex overhead can be further reduced by disabling lazy 
-mode with the `WithDisableLazy` option. Note that all expected messages must be
-provided during initialization of the validator:
+Lazy mode uses a copy on write cache stategy to reduce the required locking.
+While [performance](#performance) is sub-microsecond, the overhead can be
+further reduced by disabling lazy mode with the `WithDisableLazy` option.
+Note that all expected messages must be provided during initialization of the
+validator:
 
 ```go
 validator, err := protovalidate.New(
@@ -200,25 +200,17 @@ initial cold start, validation on a message is sub-microsecond
 and only allocates in the event of a validation error.
 
 ```
-[circa 15 May 2023]
+[circa 24 August 2023]
 goos: darwin
 goarch: arm64
 pkg: github.com/bufbuild/protovalidate-go
-BenchmarkValidator
-BenchmarkValidator/ColdStart
-BenchmarkValidator/ColdStart-10         	    4372	    276457 ns/op	  470780 B/op	    9255 allocs/op
-BenchmarkValidator/Lazy/Valid
-BenchmarkValidator/Lazy/Valid-10        	 9022392	     134.1 ns/op	       0 B/op	       0 allocs/op
-BenchmarkValidator/Lazy/Invalid
-BenchmarkValidator/Lazy/Invalid-10      	 3416996	     355.9 ns/op	     632 B/op	      14 allocs/op
-BenchmarkValidator/Lazy/FailFast
-BenchmarkValidator/Lazy/FailFast-10     	 6751131	     172.6 ns/op	     168 B/op	       3 allocs/op
-BenchmarkValidator/PreWarmed/Valid
-BenchmarkValidator/PreWarmed/Valid-10   	17557560	     69.10 ns/op	       0 B/op	       0 allocs/op
-BenchmarkValidator/PreWarmed/Invalid
-BenchmarkValidator/PreWarmed/Invalid-10 	 3621961	     332.9 ns/op	     632 B/op	      14 allocs/op
-BenchmarkValidator/PreWarmed/FailFast
-BenchmarkValidator/PreWarmed/FailFast-10	13960359	     92.22 ns/op	     168 B/op	       3 allocs/op
+BenchmarkValidator/ColdStart-8              5294            219906 ns/op          431759 B/op       5803 allocs/op
+BenchmarkValidator/Lazy/Valid-8          9725028               114.7 ns/op             0 B/op          0 allocs/op
+BenchmarkValidator/Lazy/Invalid-8        3060620               383.5 ns/op           649 B/op         15 allocs/op
+BenchmarkValidator/Lazy/FailFast-8      11999664                98.17 ns/op          168 B/op          3 allocs/op
+BenchmarkValidator/PreWarmed/Valid-8    11031498               112.0 ns/op             0 B/op          0 allocs/op
+BenchmarkValidator/PreWarmed/Invalid-8   3132213               391.1 ns/op           649 B/op         15 allocs/op
+BenchmarkValidator/PreWarmed/FailFast-8 12277747                99.36 ns/op          168 B/op          3 allocs/op
 PASS
 ```
 
