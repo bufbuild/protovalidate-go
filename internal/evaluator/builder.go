@@ -15,6 +15,7 @@
 package evaluator
 
 import (
+	"sync"
 	"sync/atomic"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -29,6 +30,7 @@ import (
 // Builder is a build-through cache of message evaluators keyed off the provided
 // descriptor.
 type Builder struct {
+	mtx         sync.Mutex                   // serializes cache writes.
 	cache       atomic.Pointer[MessageCache] // copy-on-write cache.
 	env         *cel.Env
 	constraints constraints.Cache
@@ -74,18 +76,21 @@ func (bldr *Builder) load(desc protoreflect.MessageDescriptor) MessageEvaluator 
 }
 
 // loadOrBuild either returns a memoized MessageEvaluator for the given
-// descriptor, or lazily constructs a new one. This method is thread-safe.
+// descriptor, or lazily constructs a new one. This method is thread-safe via
+// locking.
 func (bldr *Builder) loadOrBuild(desc protoreflect.MessageDescriptor) MessageEvaluator {
-	prevCache := bldr.cache.Load()
-	if eval, ok := (*prevCache)[desc]; ok {
+	if eval, ok := (*bldr.cache.Load())[desc]; ok {
 		return eval
 	}
-	newCache := prevCache.Clone()
-	msgEval := bldr.build(desc, newCache)
-	for !bldr.cache.CompareAndSwap(prevCache, &newCache) {
-		prevCache = bldr.cache.Load()
-		prevCache.SyncTo(newCache)
+	bldr.mtx.Lock()
+	defer bldr.mtx.Unlock()
+	cache := *bldr.cache.Load()
+	if eval, ok := cache[desc]; ok {
+		return eval
 	}
+	newCache := cache.Clone()
+	msgEval := bldr.build(desc, newCache)
+	bldr.cache.Store(&newCache)
 	return msgEval
 }
 
