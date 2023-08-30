@@ -105,9 +105,7 @@ message MsgHasRepeated {
     }
     unique: true,
   }];
-  repeated string y = 2 [(buf.validate.field).repeated = {
-    //    unique: true,
-  }];
+  repeated string y = 2 [(buf.validate.field).repeated = {unique: true}];
   repeated HasMsgExprs z = 3 [(buf.validate.field).repeated = {max_items: 2}];
 }
 
