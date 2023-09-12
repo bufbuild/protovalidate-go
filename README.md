@@ -89,6 +89,25 @@ message Transaction {
 }
 ```
 
+#### Add protovalidate as a dependency
+
+Update `buf.yaml` to add `buf.build/bufbuild/protovalidate` to your module dependencies:
+
+```yaml
+version: v1
+# <snip>
+deps:
+  - buf.build/bufbuild/protovalidate
+# <snip>
+```
+
+Ensure your dependencies are up-to-date with:
+
+```
+buf mod update
+```
+
+
 #### Buf managed mode
 
 `protovalidate-go` assumes the constraint extensions are imported into
