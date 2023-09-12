@@ -268,7 +268,7 @@ func (l lib) ProgramOptions() []cel.ProgramOption {
 	return []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
-			cel.OptCheckStringFormat,
+			cel.OptCheckStringFormat, //nolint:staticcheck
 		),
 	}
 }
