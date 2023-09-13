@@ -61,7 +61,7 @@ func (l lib) CompileOptions() []cel.EnvOption {
 		cel.CrossTypeNumericComparisons(true),
 		cel.EagerlyValidateDeclarations(true),
 		// TODO: reduce this to just the functionality we want to support
-		ext.Strings(),
+		ext.Strings(ext.StringsValidateFormatCalls(true)),
 		cel.Variable("now", cel.TimestampType),
 		cel.Function("unique",
 			l.uniqueMemberOverload(cel.BoolType, l.uniqueScalar),
@@ -268,7 +268,6 @@ func (l lib) ProgramOptions() []cel.ProgramOption {
 	return []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
-			cel.OptCheckStringFormat, //nolint:staticcheck
 		),
 	}
 }
