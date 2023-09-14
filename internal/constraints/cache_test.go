@@ -208,11 +208,11 @@ func TestCache_GetCELType(t *testing.T) {
 	}{
 		{
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
-			ex:   cel.MapType(cel.UintType, cel.BoolType),
+			ex:   cel.MapType(cel.DynType, cel.DynType),
 		},
 		{
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			ex:   cel.ListType(cel.IntType),
+			ex:   cel.ListType(cel.DynType),
 		},
 		{
 			desc:     getFieldDesc(t, &cases.RepeatedNone{}, "val"),
