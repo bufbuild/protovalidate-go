@@ -176,12 +176,9 @@ func (c *Cache) getCELType(fieldDesc protoreflect.FieldDescriptor, forItems bool
 	if !forItems {
 		switch {
 		case fieldDesc.IsMap():
-			return cel.MapType(
-				c.getCELType(fieldDesc.MapKey(), true),
-				c.getCELType(fieldDesc.MapValue(), true),
-			)
+			return cel.MapType(cel.DynType, cel.DynType)
 		case fieldDesc.IsList():
-			return cel.ListType(c.getCELType(fieldDesc, true))
+			return cel.ListType(cel.DynType)
 		}
 	}
 
