@@ -200,18 +200,20 @@ initial cold start, validation on a message is sub-microsecond
 and only allocates in the event of a validation error.
 
 ```
-[circa 24 August 2023]
+[circa 14 September 2023]
 goos: darwin
 goarch: arm64
 pkg: github.com/bufbuild/protovalidate-go
-BenchmarkValidator/ColdStart-8              5294            219906 ns/op          431759 B/op       5803 allocs/op
-BenchmarkValidator/Lazy/Valid-8          9725028               114.7 ns/op             0 B/op          0 allocs/op
-BenchmarkValidator/Lazy/Invalid-8        3060620               383.5 ns/op           649 B/op         15 allocs/op
-BenchmarkValidator/Lazy/FailFast-8      11999664                98.17 ns/op          168 B/op          3 allocs/op
-BenchmarkValidator/PreWarmed/Valid-8    11031498               112.0 ns/op             0 B/op          0 allocs/op
-BenchmarkValidator/PreWarmed/Invalid-8   3132213               391.1 ns/op           649 B/op         15 allocs/op
-BenchmarkValidator/PreWarmed/FailFast-8 12277747                99.36 ns/op          168 B/op          3 allocs/op
+BenchmarkValidator
+BenchmarkValidator/ColdStart-10              4192  246278 ns/op  437698 B/op  5955 allocs/op
+BenchmarkValidator/Lazy/Valid-10         11816635   95.08 ns/op       0 B/op     0 allocs/op
+BenchmarkValidator/Lazy/Invalid-10        2983478   380.5 ns/op     649 B/op    15 allocs/op
+BenchmarkValidator/Lazy/FailFast-10      12268683   98.22 ns/op     168 B/op     3 allocs/op
+BenchmarkValidator/PreWarmed/Valid-10    12209587   90.36 ns/op       0 B/op     0 allocs/op
+BenchmarkValidator/PreWarmed/Invalid-10   3098940   394.1 ns/op     649 B/op    15 allocs/op
+BenchmarkValidator/PreWarmed/FailFast-10 12291523   99.27 ns/op     168 B/op     3 allocs/op
 PASS
+
 ```
 
 ### Ecosystem
