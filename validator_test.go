@@ -20,6 +20,7 @@ import (
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
 func TestValidator_Validate(t *testing.T) {
@@ -122,5 +123,15 @@ func TestValidator_ValidateMapFoo(t *testing.T) {
 	}
 	err = val.Validate(mapMessage)
 	require.Error(t, err)
-	t.Log(err)
+}
+
+func TestValidator_Validate_TransitiveFieldConstraints(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.TransitiveFieldConstraint{
+		Mask: &fieldmaskpb.FieldMask{Paths: []string{"foo", "bar"}},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
 }
