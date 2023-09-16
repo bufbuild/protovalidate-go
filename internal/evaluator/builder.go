@@ -268,7 +268,7 @@ func (bldr *Builder) processFieldExpressions(
 	var opts []cel.EnvOption
 	if fieldDesc.Kind() == protoreflect.MessageKind {
 		opts = []cel.EnvOption{
-			cel.TypeDescs(fieldDesc.ParentFile()),
+			cel.TypeDescs(fieldDesc.Message().ParentFile()),
 			cel.Variable("this", cel.ObjectType(string(fieldDesc.Message().FullName()))),
 		}
 	} else {
