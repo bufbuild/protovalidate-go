@@ -17,6 +17,7 @@ syntax = "proto3";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
 
 message HasMsgExprs {
   option (buf.validate.message).cel = {
@@ -121,4 +122,12 @@ message MsgHasMap {
   }];
   map<string, string> string_map = 2 [(buf.validate.field).map = {max_pairs: 1}];
   map<int64, LoopRecursiveA> message_map = 3 [(buf.validate.field).map = {min_pairs: 2}];
+}
+
+message TransitiveFieldConstraint {
+  google.protobuf.FieldMask mask = 1 [(buf.validate.field).cel = {
+    id: "mask.paths",
+    message: "mask.paths must not be empty",
+    expression: "has(this.paths)",
+  }];
 }
