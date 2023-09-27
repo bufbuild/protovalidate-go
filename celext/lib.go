@@ -19,6 +19,7 @@ import (
 	"math"
 	"net"
 	"net/mail"
+	"net/netip"
 	"net/url"
 	"strings"
 
@@ -166,6 +167,56 @@ func (l lib) CompileOptions() []cel.EnvOption {
 						return types.Bool(false)
 					}
 					return types.Bool(l.validateIP(addr, vers))
+				})),
+		),
+		cel.Function("isIpPrefix",
+			cel.MemberOverload(
+				"string_is_ip_prefix_bool",
+				[]*cel.Type{cel.StringType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					prefix, ok := args[0].Value().(string)
+					if !ok {
+						return types.Bool(false)
+					}
+					return types.Bool(l.validateIPPrefix(prefix, 0, false))
+				})),
+			cel.MemberOverload(
+				"string_int_is_ip_prefix_bool",
+				[]*cel.Type{cel.StringType, cel.IntType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					prefix, pok := args[0].Value().(string)
+					vers, vok := args[1].Value().(int64)
+					if !pok || !vok {
+						return types.Bool(false)
+					}
+					return types.Bool(l.validateIPPrefix(prefix, vers, false))
+				})),
+			cel.MemberOverload(
+				"string_bool_is_ip_prefix_bool",
+				[]*cel.Type{cel.StringType, cel.BoolType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					prefix, pok := args[0].Value().(string)
+					strict, sok := args[1].Value().(bool)
+					if !pok || !sok {
+						return types.Bool(false)
+					}
+					return types.Bool(l.validateIPPrefix(prefix, 0, strict))
+				})),
+			cel.MemberOverload(
+				"string_int_bool_is_ip_prefix_bool",
+				[]*cel.Type{cel.StringType, cel.IntType, cel.BoolType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					prefix, pok := args[0].Value().(string)
+					vers, vok := args[1].Value().(int64)
+					strict, sok := args[2].Value().(bool)
+					if !pok || !vok || !sok {
+						return types.Bool(false)
+					}
+					return types.Bool(l.validateIPPrefix(prefix, vers, strict))
 				})),
 		),
 		cel.Function("isUri",
@@ -367,6 +418,26 @@ func (l lib) validateIP(addr string, ver int64) bool {
 		return address.To4() != nil
 	case 6:
 		return address.To4() == nil
+	default:
+		return false
+	}
+}
+
+func (l lib) validateIPPrefix(p string, ver int64, strict bool) bool {
+	prefix, err := netip.ParsePrefix(p)
+	if err != nil {
+		return false
+	}
+	if strict && (prefix.Addr() != prefix.Masked().Addr()) {
+		return false
+	}
+	switch ver {
+	case 0:
+		return true
+	case 4:
+		return prefix.Addr().Is4()
+	case 6:
+		return prefix.Addr().Is6()
 	default:
 		return false
 	}
