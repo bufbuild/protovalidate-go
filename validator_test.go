@@ -149,6 +149,6 @@ func TestValidator_Validate_MultipleStepsTransitiveFieldConstraints(t *testing.T
             },
         },
     }
-	err = val.Validate(msg)
-	require.NoError(t, err)
+    err = val.Validate(msg)
+    require.NoError(t, err)
 }
