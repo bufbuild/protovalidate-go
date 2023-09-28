@@ -143,12 +143,12 @@ func TestValidator_Validate_MultipleStepsTransitiveFieldConstraints(t *testing.T
 	val, err := New()
 	require.NoError(t, err)
 	msg := &pb.MultipleStepsTransitiveFieldConstraints{
-        Viewport: &viewport.Viewport{
-            Low: &latlng.LatLng{
-                Latitude: 30.0,
-            },
-        },
-    }
-    err = val.Validate(msg)
-    require.NoError(t, err)
+		Viewport: &viewport.Viewport{
+			Low: &latlng.LatLng{
+				Latitude: 30.0,
+			},
+		},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
 }
