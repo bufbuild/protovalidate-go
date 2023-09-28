@@ -20,6 +20,8 @@ import (
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/genproto/googleapis/geo/type/viewport"
+	"google.golang.org/genproto/googleapis/type/latlng"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 )
 
@@ -132,6 +134,21 @@ func TestValidator_Validate_TransitiveFieldConstraints(t *testing.T) {
 	msg := &pb.TransitiveFieldConstraint{
 		Mask: &fieldmaskpb.FieldMask{Paths: []string{"foo", "bar"}},
 	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_MultipleStepsTransitiveFieldConstraints(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MultipleStepsTransitiveFieldConstraints{
+        Viewport: &viewport.Viewport{
+            Low: &latlng.LatLng{
+                Latitude: 30.0,
+            },
+        },
+    }
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }

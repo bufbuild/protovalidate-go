@@ -3,6 +3,7 @@ deps:
   - buf.build/bufbuild/protovalidate
   - buf.build/bufbuild/protovalidate-testing
   - buf.build/envoyproxy/protoc-gen-validate
+  - buf.build/googleapis/googleapis
 breaking:
   use:
     - FILE
