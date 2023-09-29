@@ -17,7 +17,7 @@ syntax = "proto3";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
-import "google/geo/type/viewport.proto";
+import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 
 message HasMsgExprs {
@@ -134,9 +134,9 @@ message TransitiveFieldConstraint {
 }
 
 message MultipleStepsTransitiveFieldConstraints {
-  google.geo.type.Viewport viewport = 1 [(buf.validate.field).cel = {
-    id: "viewport.low.latitude",
-    message: "viewport's low point's latitude must be greater than 10.0 degrees",
-    expression: "this.low.latitude > 10.0"
+  google.protobuf.Api api = 1 [(buf.validate.field).cel = {
+    id: "api.source_context.file_name",
+    message: "api's source context file name must not be empty",
+    expression: "has(this.source_context.file_name)"
   }];
 }

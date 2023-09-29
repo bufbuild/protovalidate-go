@@ -6,7 +6,6 @@ managed:
     except:
       - buf.build/envoyproxy/protoc-gen-validate
       - buf.build/bufbuild/protovalidate
-      - buf.build/googleapis/googleapis
 plugins:
   - plugin: buf.build/protocolbuffers/go:v1.31.0
     out: internal/gen
