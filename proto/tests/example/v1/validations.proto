@@ -17,6 +17,7 @@ syntax = "proto3";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 
 message HasMsgExprs {
@@ -129,5 +130,13 @@ message TransitiveFieldConstraint {
     id: "mask.paths",
     message: "mask.paths must not be empty",
     expression: "has(this.paths)",
+  }];
+}
+
+message MultipleStepsTransitiveFieldConstraints {
+  google.protobuf.Api api = 1 [(buf.validate.field).cel = {
+    id: "api.source_context.file_name",
+    message: "api's source context file name must not be empty",
+    expression: "has(this.source_context.file_name)"
   }];
 }

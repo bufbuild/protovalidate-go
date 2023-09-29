@@ -20,7 +20,9 @@ import (
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
+	"google.golang.org/protobuf/types/known/sourcecontextpb"
 )
 
 func TestValidator_Validate(t *testing.T) {
@@ -131,6 +133,21 @@ func TestValidator_Validate_TransitiveFieldConstraints(t *testing.T) {
 	require.NoError(t, err)
 	msg := &pb.TransitiveFieldConstraint{
 		Mask: &fieldmaskpb.FieldMask{Paths: []string{"foo", "bar"}},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_MultipleStepsTransitiveFieldConstraints(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MultipleStepsTransitiveFieldConstraints{
+		Api: &apipb.Api{
+			SourceContext: &sourcecontextpb.SourceContext{
+				FileName: "path/file",
+			},
+		},
 	}
 	err = val.Validate(msg)
 	require.NoError(t, err)
