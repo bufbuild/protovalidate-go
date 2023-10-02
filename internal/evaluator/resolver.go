@@ -85,7 +85,7 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 		return m
 	}
 
-	constraints = constraints.ProtoReflect().New().Interface().(C)
+	constraints, _ = constraints.ProtoReflect().New().Interface().(C)
 	b, _ := proto.Marshal(msg)
 	_ = proto.Unmarshal(b, constraints)
 	return constraints
