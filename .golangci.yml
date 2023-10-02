@@ -67,7 +67,7 @@ issues:
         - varnamelen
         - unparam
         - gosec
-    - path: internal/celext/lib.go
+    - path: celext/lib.go
       linters:
         # setting up custom functions/overloads appears duplicative (false positive)
         - dupl
