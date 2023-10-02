@@ -20,7 +20,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/runtime/protoimpl"
 )
 
@@ -70,39 +69,25 @@ func resolveExt[D protoreflect.Descriptor, C proto.Message](
 	desc D,
 	extType protoreflect.ExtensionType,
 ) (constraints C) {
-	opts := desc.Options().ProtoReflect()
-	fDesc := extType.TypeDescriptor()
-
-	if opts.Has(fDesc) {
-		msg := opts.Get(fDesc).Message().Interface()
-		if m, ok := msg.(C); ok {
-			return m
+	num := extType.TypeDescriptor().Number()
+	var msg proto.Message
+	proto.RangeExtensions(desc.Options(), func(typ protoreflect.ExtensionType, i interface{}) bool {
+		if num != typ.TypeDescriptor().Number() {
+			return true
 		}
-	}
+		msg, _ = i.(proto.Message)
+		return false
+	})
 
-	unknown := opts.GetUnknown()
-	if len(unknown) == 0 {
+	if msg == nil {
 		return constraints
-	}
-
-	opts = opts.Type().New()
-	var resolver protoregistry.Types
-	if err := resolver.RegisterExtension(extType); err != nil {
-		return constraints
-	}
-	_ = proto.UnmarshalOptions{Resolver: &resolver}.Unmarshal(unknown, opts.Interface())
-
-	if opts.Has(fDesc) {
-		msg := opts.Get(fDesc).Message().Interface()
-		if m, ok := msg.(C); ok {
-			return m
-		}
-	}
-	msg := opts.Get(fDesc).Message().Interface()
-	if m, ok := msg.(C); ok {
+	} else if m, ok := msg.(C); ok {
 		return m
 	}
 
+	constraints, _ = constraints.ProtoReflect().New().Interface().(C)
+	b, _ := proto.Marshal(msg)
+	_ = proto.Unmarshal(b, constraints)
 	return constraints
 }
 
