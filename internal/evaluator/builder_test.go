@@ -18,7 +18,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bufbuild/protovalidate-go/internal/celext"
+	"github.com/bufbuild/protovalidate-go/celext"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
