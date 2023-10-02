@@ -33,8 +33,7 @@ import (
 // DefaultEnv produces a cel.Env with the necessary cel.EnvOption and
 // cel.ProgramOption values preconfigured for usage throughout the
 // module. If useUTC is true, timestamp operations use the UTC timezone instead
-// of the local timezone. If locale is non-empty, the provided locale string is
-// used for string formatting, defaulting to 'en_US' if unset.
+// of the local timezone.
 func DefaultEnv(useUTC bool) (*cel.Env, error) {
 	return cel.NewEnv(
 		cel.Lib(lib{
