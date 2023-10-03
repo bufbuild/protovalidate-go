@@ -20,6 +20,7 @@ import (
 
 	"github.com/bufbuild/protovalidate-go/celext"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	"github.com/bufbuild/protovalidate-go/resolver"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -32,7 +33,7 @@ func TestBuildCache(t *testing.T) {
 	env, err := celext.DefaultEnv(true)
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := NewBuilder(
-		env, false, DefaultResolver{},
+		env, false, resolver.DefaultResolver{},
 	)
 	wg := sync.WaitGroup{}
 	for i := 0; i < 100; i++ {
