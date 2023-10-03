@@ -22,7 +22,6 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/constraints"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
-	"github.com/bufbuild/protovalidate-go/resolver"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/dynamicpb"
@@ -35,15 +34,21 @@ type Builder struct {
 	cache       atomic.Pointer[MessageCache] // copy-on-write cache.
 	env         *cel.Env
 	constraints constraints.Cache
-	resolver    resolver.StandardConstraintResolver
+	resolver    StandardConstraintResolver
 	Load        func(desc protoreflect.MessageDescriptor) MessageEvaluator
+}
+
+type StandardConstraintResolver interface {
+	ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints
+	ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints
+	ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints
 }
 
 // NewBuilder initializes a new Builder.
 func NewBuilder(
 	env *cel.Env,
 	disableLazy bool,
-	res resolver.StandardConstraintResolver,
+	res StandardConstraintResolver,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *Builder {
 	bldr := &Builder{
