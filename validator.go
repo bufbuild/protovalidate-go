@@ -21,6 +21,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/evaluator"
+	"github.com/bufbuild/protovalidate-go/resolver"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -58,7 +59,7 @@ type Validator struct {
 // up the CEL execution environment if the configuration is invalid. See the
 // individual ValidatorOption for how they impact the fallibility of New.
 func New(options ...ValidatorOption) (*Validator, error) {
-	cfg := config{resolver: evaluator.DefaultResolver{}}
+	cfg := config{resolver: resolver.DefaultResolver{}}
 	for _, opt := range options {
 		opt(&cfg)
 	}

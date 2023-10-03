@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package resolver
 
 import (
 	"strings"
@@ -28,14 +28,11 @@ const (
 	previousExtensionIndex = "51071"
 )
 
-type StandardConstraintResolver interface {
-	ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints
-	ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints
-	ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints
-}
-
+// DefaultResolver resolves protovalidate constraints options from descriptors.
 type DefaultResolver struct{}
 
+// ResolveMessageConstraints returns the MessageConstraints option set for the
+// MessageDescriptor.
 func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
 	constraints := resolveExt[protoreflect.MessageDescriptor, *validate.MessageConstraints](desc, validate.E_Message)
 	if constraints == nil {
@@ -44,6 +41,8 @@ func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDesc
 	return constraints
 }
 
+// ResolveOneofConstraints returns the OneofConstraints option set for the
+// OneofDescriptor.
 func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
 	constraints := resolveExt[protoreflect.OneofDescriptor, *validate.OneofConstraints](desc, validate.E_Oneof)
 	if constraints == nil {
@@ -52,6 +51,8 @@ func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescript
 	return constraints
 }
 
+// ResolveFieldConstraints returns the FieldConstraints option set for the
+// FieldDescriptor.
 func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
 	constraints := resolveExt[protoreflect.FieldDescriptor, *validate.FieldConstraints](desc, validate.E_Field)
 	if constraints == nil {

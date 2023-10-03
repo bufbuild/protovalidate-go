@@ -38,6 +38,12 @@ type Builder struct {
 	Load        func(desc protoreflect.MessageDescriptor) MessageEvaluator
 }
 
+type StandardConstraintResolver interface {
+	ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints
+	ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints
+	ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints
+}
+
 // NewBuilder initializes a new Builder.
 func NewBuilder(
 	env *cel.Env,
