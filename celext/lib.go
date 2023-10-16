@@ -30,15 +30,22 @@ import (
 	"github.com/google/cel-go/ext"
 )
 
+var _ cel.Library = lib{}
+
 // DefaultEnv produces a cel.Env with the necessary cel.EnvOption and
 // cel.ProgramOption values preconfigured for usage throughout the
 // module. If useUTC is true, timestamp operations use the UTC timezone instead
-// of the local timezone.
-func DefaultEnv(useUTC bool) (*cel.Env, error) {
+// of the local timezone. If locale is non-empty, the provided locale string is
+// used for string formatting, defaulting to 'en_US' if unset.
+func DefaultEnv(useUTC bool, options ...EnvOption) (*cel.Env, error) {
+	l := lib{
+		useUTC: useUTC,
+	}
+	for _, option := range options {
+		option(&l)
+	}
 	return cel.NewEnv(
-		cel.Lib(lib{
-			useUTC: useUTC,
-		}),
+		cel.Lib(l),
 	)
 }
 
@@ -50,12 +57,28 @@ func DefaultEnv(useUTC bool) (*cel.Env, error) {
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
 type lib struct {
-	useUTC bool
+	useUTC              bool
+	extraEnvOptions     []cel.EnvOption
+	extraProgramOptions []cel.ProgramOption
+}
+
+type EnvOption func(*lib)
+
+func WithEnvOptions(opts ...cel.EnvOption) EnvOption {
+	return func(c *lib) {
+		c.extraEnvOptions = append(c.extraEnvOptions, opts...)
+	}
+}
+
+func WithProgramOptions(opts ...cel.ProgramOption) EnvOption {
+	return func(c *lib) {
+		c.extraProgramOptions = append(c.extraProgramOptions, opts...)
+	}
 }
 
 //nolint:funlen
 func (l lib) CompileOptions() []cel.EnvOption {
-	return []cel.EnvOption{
+	defaultEnvOptions := []cel.EnvOption{
 		cel.DefaultUTCTimeZone(l.useUTC),
 		cel.CrossTypeNumericComparisons(true),
 		cel.EagerlyValidateDeclarations(true),
@@ -261,14 +284,18 @@ func (l lib) CompileOptions() []cel.EnvOption {
 			),
 		),
 	}
+
+	return append(defaultEnvOptions, l.extraEnvOptions...)
 }
 
 func (l lib) ProgramOptions() []cel.ProgramOption {
-	return []cel.ProgramOption{
+	defaultProgramOpts := []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
 		),
 	}
+
+	return append(defaultProgramOpts, l.extraProgramOptions...)
 }
 
 func (l lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {

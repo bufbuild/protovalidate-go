@@ -18,10 +18,11 @@ import (
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
+	"github.com/bufbuild/protovalidate-go/internal/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/evaluator"
 	"github.com/bufbuild/protovalidate-go/resolver"
+	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -64,14 +65,17 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		opt(&cfg)
 	}
 
-	env, err := celext.DefaultEnv(cfg.useUTC)
-	if err != nil {
-		return nil, fmt.Errorf(
-			"failed to construct CEL environment: %w", err)
+	if cfg.celEnv == nil {
+		env, err := celext.DefaultEnv(cfg.useUTC)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"failed to construct CEL environment: %w", err)
+		}
+		cfg.celEnv = env
 	}
 
 	bldr := evaluator.NewBuilder(
-		env,
+		cfg.celEnv,
 		cfg.disableLazy,
 		cfg.resolver,
 		cfg.desc...,
@@ -99,6 +103,7 @@ func (v *Validator) Validate(msg proto.Message) error {
 }
 
 type config struct {
+	celEnv      *cel.Env
 	failFast    bool
 	useUTC      bool
 	disableLazy bool
