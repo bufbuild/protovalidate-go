@@ -36,7 +36,7 @@ And others coming soon:
 
 ## Installation
 
-**Requires the `go` toolchain (≥ v1.18)**
+**Requires the `go` toolchain (≥ v1.19)**
 
 To install the package, use the `go get` command from within your Go module:
 
