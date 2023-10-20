@@ -17,6 +17,7 @@ syntax = "proto3";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/any.proto";
 import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 
@@ -138,5 +139,17 @@ message MultipleStepsTransitiveFieldConstraints {
     id: "api.source_context.file_name",
     message: "api's source context file name must not be empty",
     expression: "has(this.source_context.file_name)"
+  }];
+}
+
+message Simple {
+  string s = 1;
+}
+
+message FieldOfTypeAny {
+  google.protobuf.Any any = 1 [(buf.validate.field).cel = {
+    id: "any_type",
+    message: "this should never fail",
+    expression: "this == this"
   }];
 }
