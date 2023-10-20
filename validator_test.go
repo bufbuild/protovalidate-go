@@ -23,6 +23,7 @@ import (
 	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 	"google.golang.org/protobuf/types/known/sourcecontextpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestValidator_Validate(t *testing.T) {
@@ -112,6 +113,35 @@ func TestValidator_ValidateRepeatedFoo(t *testing.T) {
 	}
 	err = val.Validate(repeatMessage)
 	require.NoError(t, err)
+}
+
+func TestValidator_ValidateTimestamp(t *testing.T) {
+	minTimestampSeconds := -62135596800
+	maxTimestampSeconds := +253402300799
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	timestampMessage := &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: 0, Nanos: 0}}
+	err = val.Validate(timestampMessage)
+	assert.NoError(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: 0, Nanos: -1}}
+	err = val.Validate(timestampMessage)
+	assert.Error(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: 0, Nanos: 1e9}}
+	err = val.Validate(timestampMessage)
+	assert.Error(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: int64(minTimestampSeconds), Nanos: 0}}
+	err = val.Validate(timestampMessage)
+	assert.NoError(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: int64(minTimestampSeconds) - 1, Nanos: 0}}
+	err = val.Validate(timestampMessage)
+	assert.Error(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: int64(maxTimestampSeconds), Nanos: 0}}
+	err = val.Validate(timestampMessage)
+	assert.NoError(t, err)
+	timestampMessage = &pb.MsgHasTimestamp{Timestamp: &timestamppb.Timestamp{Seconds: int64(maxTimestampSeconds) + 1, Nanos: 0}}
+	err = val.Validate(timestampMessage)
+	assert.Error(t, err)
 }
 
 func TestValidator_ValidateMapFoo(t *testing.T) {

@@ -19,6 +19,7 @@ package tests.example.v1;
 import "buf/validate/validate.proto";
 import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
 
 message HasMsgExprs {
   option (buf.validate.message).cel = {
@@ -139,4 +140,8 @@ message MultipleStepsTransitiveFieldConstraints {
     message: "api's source context file name must not be empty",
     expression: "has(this.source_context.file_name)"
   }];
+}
+
+message MsgHasTimestamp {
+  google.protobuf.Timestamp timestamp = 1 [(buf.validate.field).timestamp.valid = true];
 }
