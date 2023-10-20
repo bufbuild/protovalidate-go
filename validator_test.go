@@ -159,10 +159,10 @@ func TestValidator_Validate_FieldOfTypeAny(t *testing.T) {
 	val, err := New()
 	require.NoError(t, err)
 	simple := &pb.Simple{S: "foo"}
-	any, err := anypb.New(simple)
+	anyFromSimple, err := anypb.New(simple)
 	require.NoError(t, err)
 	msg := &pb.FieldOfTypeAny{
-		Any: any,
+		Any: anyFromSimple,
 	}
 	err = val.Validate(msg)
 	require.NoError(t, err)
