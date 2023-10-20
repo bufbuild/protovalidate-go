@@ -235,6 +235,7 @@ func (bldr *Builder) buildValue(
 		bldr.processEnumConstraints,
 		bldr.processMapConstraints,
 		bldr.processRepeatedConstraints,
+		bldr.processTimestampConstraints,
 	}
 
 	for _, step := range steps {
@@ -461,6 +462,29 @@ func (bldr *Builder) processRepeatedConstraints(
 	}
 
 	valEval.Append(listEval)
+	return nil
+}
+
+func (bldr *Builder) processTimestampConstraints(
+	fdesc protoreflect.FieldDescriptor,
+	fieldConstraints *validate.FieldConstraints,
+	_ bool,
+	valEval *value,
+	_ MessageCache,
+) error {
+	if fdesc.Kind() != protoreflect.MessageKind ||
+		fdesc.Message().FullName() != "google.protobuf.Timestamp" {
+		return nil
+	}
+
+	secondsDesc := fdesc.Message().Fields().ByName("seconds")
+	nanosDesc := fdesc.Message().Fields().ByName("nanos")
+	timestampEval := timestampPB{
+		SecondsDescriptor: secondsDesc,
+		NanosDescriptor:   nanosDesc,
+		Valid:             fieldConstraints.GetTimestamp().GetValid(),
+	}
+	valEval.Append(timestampEval)
 	return nil
 }
 
