@@ -34,12 +34,4 @@ jobs:
         # Often, lint guidelines depend on the Go version. To prevent
         # conflicting guidance, run only on the most recent supported version.
         if: matrix.go-version == 'stable'
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: v1.52.2
-          skip-pkg-cache: true
-          only-new-issues: true
-          args: >
-            --modules-download-mode=readonly
-            --timeout=3m0s
-            ./... 
+        run: make lint
