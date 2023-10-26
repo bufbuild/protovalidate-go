@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/apipb"
@@ -51,9 +50,9 @@ func TestValidator_Validate(t *testing.T) {
 		for _, test := range tests {
 			err := val.Validate(test.msg)
 			if test.exErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		}
 	})
@@ -66,11 +65,11 @@ func TestRecursive(t *testing.T) {
 
 	selfRec := &pb.SelfRecursive{X: 123, Turtle: &pb.SelfRecursive{X: 456}}
 	err = val.Validate(selfRec)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	loopRec := &pb.LoopRecursiveA{B: &pb.LoopRecursiveB{}}
 	err = val.Validate(loopRec)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestValidator_ValidateOneof(t *testing.T) {
@@ -79,19 +78,19 @@ func TestValidator_ValidateOneof(t *testing.T) {
 	require.NoError(t, err)
 	oneofMessage := &pb.MsgHasOneof{O: &pb.MsgHasOneof_X{X: "foo"}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Y{Y: 42}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Msg{Msg: &pb.HasMsgExprs{X: 4, Y: 50}}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{}
 	err = val.Validate(oneofMessage)
-	assert.Error(t, err)
+	require.Error(t, err)
 }
 
 func TestValidator_ValidateRepeatedFoo(t *testing.T) {

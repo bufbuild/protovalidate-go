@@ -103,9 +103,9 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 
 			set, err := c.Build(env, test.desc, test.cons, test.forItems)
 			if test.exErr {
-				assert.Error(t, err)
+				require.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Len(t, set, test.exCt)
 			}
 		})
@@ -127,7 +127,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.False(t, ok)
 
 	asts, err := cache.loadOrCompileStandardConstraint(env, desc)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, asts)
 
 	cached, ok := cache.cache[desc]
@@ -135,7 +135,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.Equal(t, cached, asts)
 
 	asts, err = cache.loadOrCompileStandardConstraint(env, desc)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, cached, asts)
 }
 

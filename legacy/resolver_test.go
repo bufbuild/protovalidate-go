@@ -19,7 +19,6 @@ import (
 
 	"github.com/bufbuild/protovalidate-go"
 	examplev1 "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 )
@@ -131,9 +130,9 @@ func TestWithLegacySupport(t *testing.T) {
 			err = val.Validate(test.msg)
 			if test.exErr {
 				valErr := &protovalidate.ValidationError{}
-				assert.ErrorAs(t, err, &valErr)
+				require.ErrorAs(t, err, &valErr)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		})
 	}

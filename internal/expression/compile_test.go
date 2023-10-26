@@ -36,7 +36,7 @@ func TestCompile(t *testing.T) {
 		var exprs []*validate.Constraint
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("success", func(t *testing.T) {
@@ -47,7 +47,7 @@ func TestCompile(t *testing.T) {
 		}
 		set, err := Compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
 		assert.Len(t, set, len(exprs))
-		assert.NoError(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("env extension err", func(t *testing.T) {
@@ -58,7 +58,7 @@ func TestCompile(t *testing.T) {
 		set, err := Compile(exprs, baseEnv, cel.Types(true))
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
-		assert.ErrorAs(t, err, &compErr)
+		require.ErrorAs(t, err, &compErr)
 	})
 
 	t.Run("bad syntax", func(t *testing.T) {
@@ -69,7 +69,7 @@ func TestCompile(t *testing.T) {
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
-		assert.ErrorAs(t, err, &compErr)
+		require.ErrorAs(t, err, &compErr)
 	})
 
 	t.Run("invalid output type", func(t *testing.T) {
@@ -80,6 +80,6 @@ func TestCompile(t *testing.T) {
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
-		assert.ErrorAs(t, err, &compErr)
+		require.ErrorAs(t, err, &compErr)
 	})
 }

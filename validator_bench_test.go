@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -33,7 +32,7 @@ func BenchmarkValidator(b *testing.B) {
 				val, err := New()
 				require.NoError(b, err)
 				err = val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -46,7 +45,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -59,7 +58,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(failureMsg)
-				assert.Error(b, err)
+				require.Error(b, err)
 			}
 		})
 	})
@@ -72,7 +71,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(failureMsg)
-				assert.Error(b, err)
+				require.Error(b, err)
 			}
 		})
 	})
@@ -88,7 +87,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -104,7 +103,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(failureMsg)
-				assert.Error(b, err)
+				require.Error(b, err)
 			}
 		})
 	})
@@ -121,7 +120,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(failureMsg)
-				assert.Error(b, err)
+				require.Error(b, err)
 			}
 		})
 	})

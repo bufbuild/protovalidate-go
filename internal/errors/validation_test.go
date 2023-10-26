@@ -66,7 +66,7 @@ func TestPrefixFieldPaths(t *testing.T) {
 			}}
 			PrefixFieldPaths(err, test.format, test.args...)
 			for _, v := range err.Violations {
-				assert.Equal(t, test.expected, v.FieldPath)
+				assert.Equal(t, test.expected, v.GetFieldPath())
 			}
 		})
 	}
