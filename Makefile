@@ -38,7 +38,7 @@ lint: lint-proto lint-go  ## Lint code and protos
 
 .PHONY: lint-go
 lint-go: $(BIN)/golangci-lint
-	$(BIN)/golangci-lint run ./...
+	$(BIN)/golangci-lint run --modules-download-mode=readonly --timeout=3m0s ./...
 
 .PHONY: lint-proto
 lint-proto: $(BIN)/buf
@@ -92,7 +92,7 @@ $(BIN)/license-header: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
 		  github.com/bufbuild/buf/private/pkg/licenseheader/cmd/license-header@latest
 
-$(BIN)/golangci-lint: $(BIN) Makefile ## Upgrade golangci/golangci-lint-action@v3 as well, whenever this is upgraded.
+$(BIN)/golangci-lint: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
 		github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
 
