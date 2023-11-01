@@ -167,3 +167,65 @@ func TestValidator_Validate_FieldOfTypeAny(t *testing.T) {
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
+
+func TestValidator_RequiredOneof(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	tests := []struct {
+		msg   *pb.RequiredOneof
+		exErr bool
+	}{
+		{
+			&pb.RequiredOneof{},
+			true,
+		},
+		{
+			&pb.RequiredOneof{
+				RequiredOneof: &pb.RequiredOneof_Fld_2{
+					// nil FieldMask is empty.
+					Fld_2: nil,
+				},
+			},
+			true,
+		},
+		{
+			&pb.RequiredOneof{
+				RequiredOneof: &pb.RequiredOneof_Fld_2{
+					// this passes `required`
+					Fld_2: &fieldmaskpb.FieldMask{},
+				},
+			},
+			false,
+		},
+		{
+			&pb.RequiredOneof{
+				RequiredOneof: &pb.RequiredOneof_Fld_1{
+					// empty string does not pass `required` as a normal field,
+					// and it shouldn't pass it here either.
+					Fld_1: "",
+				},
+			},
+			true,
+		},
+		{
+			&pb.RequiredOneof{
+				RequiredOneof: &pb.RequiredOneof_Fld_1{
+					// passes `required`
+					Fld_1: "foo",
+				},
+			},
+			false,
+		},
+	}
+	for _, test := range tests {
+		test := test
+		err = val.Validate(test.msg)
+		if test.exErr {
+			require.Error(t, err)
+		} else {
+			require.NoError(t, err)
+		}
+	}
+}

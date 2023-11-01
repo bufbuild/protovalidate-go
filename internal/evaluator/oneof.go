@@ -33,12 +33,26 @@ func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
 }
 
 func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
-	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
-		return &errors.ValidationError{Violations: []*validate.Violation{{
-			FieldPath:    string(o.Descriptor.Name()),
-			ConstraintId: "required",
-			Message:      "exactly one field is required in oneof",
-		}}}
+	if !o.Required {
+		return nil
+	}
+	validationErr := &errors.ValidationError{Violations: []*validate.Violation{{
+		FieldPath:    string(o.Descriptor.Name()),
+		ConstraintId: "required",
+		Message:      "exactly one field is required in oneof",
+	}}}
+	presentFieldDescriptor := msg.WhichOneof(o.Descriptor)
+	if presentFieldDescriptor == nil {
+		return validationErr
+	}
+	if presentFieldDescriptor.Kind() == protoreflect.GroupKind || presentFieldDescriptor.Kind() == protoreflect.MessageKind {
+		if !msg.Get(presentFieldDescriptor).Message().IsValid() {
+			return validationErr
+		}
+		return nil
+	}
+	if msg.Get(presentFieldDescriptor).Equal(presentFieldDescriptor.Default()) {
+		return validationErr
 	}
 	return nil
 }

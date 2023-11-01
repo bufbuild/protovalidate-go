@@ -153,3 +153,11 @@ message FieldOfTypeAny {
     expression: "this == this"
   }];
 }
+
+message RequiredOneof {
+  oneof required_oneof {
+    option (buf.validate.oneof).required = true;
+    string fld_1 = 1;
+    google.protobuf.FieldMask fld_2 = 2;
+  }
+}
