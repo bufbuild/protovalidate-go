@@ -29,11 +29,10 @@ type field struct {
 	Descriptor protoreflect.FieldDescriptor
 	// Required indicates that the field must have a set value.
 	Required bool
-	// Optional indicates that the evaluators should not be applied to this field
-	// if the value is unset. Fields that contain messages, are prefixed with
-	// `optional`, or are part of a oneof are considered optional. evaluators
-	// will still be applied if the field is set as the zero value.
-	Optional bool
+	// IgnoreEmpty indicates if a field should skip validation on its zero value.
+	// This field is generally true for nullable fields or fields with the
+	// ignore_empty constraint explicitly set.
+	IgnoreEmpty bool
 }
 
 func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
@@ -49,7 +48,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 		}}}
 	}
 
-	if (f.Optional || f.Value.IgnoreEmpty) && !msg.Has(f.Descriptor) {
+	if f.IgnoreEmpty && !msg.Has(f.Descriptor) {
 		return nil
 	}
 
