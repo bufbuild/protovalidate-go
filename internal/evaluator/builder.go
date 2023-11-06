@@ -203,9 +203,9 @@ func (bldr *Builder) buildField(
 	cache MessageCache,
 ) (field, error) {
 	fld := field{
-		Descriptor: fieldDescriptor,
-		Required:   fieldConstraints.GetRequired(),
-		Optional:   fieldDescriptor.HasPresence(),
+		Descriptor:  fieldDescriptor,
+		Required:    fieldConstraints.GetRequired(),
+		IgnoreEmpty: fieldDescriptor.HasPresence() || fieldConstraints.GetIgnoreEmpty(),
 	}
 	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, &fld.Value, cache)
 	return fld, err
@@ -218,7 +218,6 @@ func (bldr *Builder) buildValue(
 	valEval *value,
 	cache MessageCache,
 ) (err error) {
-	valEval.IgnoreEmpty = constraints.GetIgnoreEmpty()
 	steps := []func(
 		fdesc protoreflect.FieldDescriptor,
 		fieldConstraints *validate.FieldConstraints,
@@ -226,7 +225,7 @@ func (bldr *Builder) buildValue(
 		valEval *value,
 		cache MessageCache,
 	) error{
-		bldr.processZeroValue,
+		bldr.processIgnoreEmpty,
 		bldr.processFieldExpressions,
 		bldr.processEmbeddedMessage,
 		bldr.processWrapperConstraints,
@@ -245,13 +244,20 @@ func (bldr *Builder) buildValue(
 	return nil
 }
 
-func (bldr *Builder) processZeroValue(
+func (bldr *Builder) processIgnoreEmpty(
 	fdesc protoreflect.FieldDescriptor,
-	_ *validate.FieldConstraints,
+	constraints *validate.FieldConstraints,
 	forItems bool,
 	val *value,
 	_ MessageCache,
 ) error {
+	// the only time we need to ignore empty on a value is if it's evaluating a
+	// field item (repeated element or map key/value).
+	val.IgnoreEmpty = forItems && constraints.GetIgnoreEmpty()
+	if !val.IgnoreEmpty {
+		// only need the zero value for checking ignore_empty constraint
+		return nil
+	}
 	val.Zero = fdesc.Default()
 	if forItems && fdesc.IsList() {
 		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
