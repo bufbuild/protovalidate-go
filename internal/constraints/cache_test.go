@@ -20,7 +20,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
-	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -194,60 +193,6 @@ func TestCache_GetExpectedConstraintDescriptor(t *testing.T) {
 			} else {
 				assert.False(t, ok)
 			}
-		})
-	}
-}
-
-func TestCache_GetCELType(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		desc     protoreflect.FieldDescriptor
-		forItems bool
-		ex       *cel.Type
-	}{
-		{
-			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
-			ex:   cel.MapType(cel.DynType, cel.DynType),
-		},
-		{
-			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			ex:   cel.ListType(cel.DynType),
-		},
-		{
-			desc:     getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			forItems: true,
-			ex:       cel.IntType,
-		},
-		{
-			desc: getFieldDesc(t, &cases.AnyNone{}, "val"),
-			ex:   cel.AnyType,
-		},
-		{
-			desc: getFieldDesc(t, &cases.DurationNone{}, "val"),
-			ex:   cel.DurationType,
-		},
-		{
-			desc: getFieldDesc(t, &cases.TimestampNone{}, "val"),
-			ex:   cel.TimestampType,
-		},
-		{
-			desc: getFieldDesc(t, &cases.MessageNone{}, "val"),
-			ex:   cel.ObjectType(string(((&cases.MessageNone{}).GetVal()).ProtoReflect().Descriptor().FullName())),
-		},
-		{
-			desc: getFieldDesc(t, &cases.Int32None{}, "val"),
-			ex:   cel.IntType,
-		},
-	}
-
-	c := NewCache()
-	for _, tc := range tests {
-		test := tc
-		t.Run(string(test.desc.FullName()), func(t *testing.T) {
-			t.Parallel()
-			typ := c.getCELType(test.desc, test.forItems)
-			assert.Equal(t, test.ex.String(), typ.String())
 		})
 	}
 }

@@ -17,6 +17,7 @@ package constraints
 import (
 	"testing"
 
+	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/proto"
@@ -83,7 +84,7 @@ func TestProtoKindToCELType(t *testing.T) {
 		kind, typ := k, ty
 		t.Run(kind.String(), func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, typ, ProtoKindToCELType(kind))
+			assert.Equal(t, typ, expression.ProtoKindToCELType(kind))
 		})
 	}
 }

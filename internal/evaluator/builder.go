@@ -277,18 +277,12 @@ func (bldr *Builder) processFieldExpressions(
 	if len(exprs) == 0 {
 		return nil
 	}
-	var opts []cel.EnvOption
-	if fieldDesc.Kind() == protoreflect.MessageKind {
-		opts = []cel.EnvOption{
-			cel.Types(dynamicpb.NewMessage(fieldDesc.ContainingMessage())),
-			cel.Types(dynamicpb.NewMessage(fieldDesc.Message())),
-			cel.Variable("this", cel.ObjectType(string(fieldDesc.Message().FullName()))),
-		}
-	} else {
-		opts = []cel.EnvOption{
-			cel.Variable("this", constraints.ProtoKindToCELType(fieldDesc.Kind())),
-		}
-	}
+
+	celTyp := expression.ProtoFieldToCELType(fieldDesc, false, false)
+	opts := append(
+		expression.RequiredCELEnvOptions(fieldDesc),
+		cel.Variable("this", celTyp),
+	)
 	compiledExpressions, err := expression.Compile(exprs, bldr.env, opts...)
 	if err != nil {
 		return err
