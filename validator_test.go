@@ -167,3 +167,20 @@ func TestValidator_Validate_FieldOfTypeAny(t *testing.T) {
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
+
+func TestValidator_Validate_CelMapOnARepeated(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.CelMapOnARepeated{Values: []*pb.CelMapOnARepeated_Value{
+		{Name: "foo"},
+		{Name: "bar"},
+		{Name: "baz"},
+	}}
+	err = val.Validate(msg)
+	assert.NoError(t, err)
+	msg.Values = append(msg.Values, &pb.CelMapOnARepeated_Value{Name: "foo"})
+	err = val.Validate(msg)
+	valErr := &ValidationError{}
+	assert.ErrorAs(t, err, &valErr)
+}

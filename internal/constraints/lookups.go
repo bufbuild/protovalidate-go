@@ -16,7 +16,6 @@ package constraints
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -89,42 +88,5 @@ func ExpectedWrapperConstraints(fqn protoreflect.FullName) (desc protoreflect.Fi
 		return expectedStandardConstraints[protoreflect.Uint64Kind], true
 	default:
 		return nil, false
-	}
-}
-
-// ProtoKindToCELType maps a protoreflect.Kind to a compatible cel.Type.
-func ProtoKindToCELType(kind protoreflect.Kind) *cel.Type {
-	switch kind {
-	case
-		protoreflect.FloatKind,
-		protoreflect.DoubleKind:
-		return cel.DoubleType
-	case
-		protoreflect.Int32Kind,
-		protoreflect.Int64Kind,
-		protoreflect.Sint32Kind,
-		protoreflect.Sint64Kind,
-		protoreflect.Sfixed32Kind,
-		protoreflect.Sfixed64Kind,
-		protoreflect.EnumKind:
-		return cel.IntType
-	case
-		protoreflect.Uint32Kind,
-		protoreflect.Uint64Kind,
-		protoreflect.Fixed32Kind,
-		protoreflect.Fixed64Kind:
-		return cel.UintType
-	case protoreflect.BoolKind:
-		return cel.BoolType
-	case protoreflect.StringKind:
-		return cel.StringType
-	case protoreflect.BytesKind:
-		return cel.BytesType
-	case
-		protoreflect.MessageKind,
-		protoreflect.GroupKind:
-		return cel.DynType
-	default:
-		return cel.DynType
 	}
 }

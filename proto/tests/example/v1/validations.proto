@@ -153,3 +153,15 @@ message FieldOfTypeAny {
     expression: "this == this"
   }];
 }
+
+// https://github.com/bufbuild/protovalidate/issues/92
+message CelMapOnARepeated {
+  repeated Value values = 1 [(buf.validate.field).cel = {
+    id: "env.vars.unique",
+    expression: "this.map(v, v.name).unique() ? '' : 'value names must be unique'"
+  }];
+
+  message Value {
+    string name = 1;
+  }
+}

@@ -114,7 +114,7 @@ func (c *Cache) prepareEnvironment(
 ) (*cel.Env, error) {
 	env, err := env.Extend(
 		cel.Types(rules.Interface()),
-		cel.Variable("this", c.getCELType(fieldDesc, forItems)),
+		cel.Variable("this", expression.ProtoFieldToCELType(fieldDesc, true, forItems)),
 		cel.Variable("rules",
 			cel.ObjectType(string(rules.Descriptor().FullName()))),
 	)
@@ -167,32 +167,4 @@ func (c *Cache) getExpectedConstraintDescriptor(
 		expected, ok = expectedStandardConstraints[targetFieldDesc.Kind()]
 		return expected, ok
 	}
-}
-
-// getCELType resolves the CEL value type for the provided FieldDescriptor. If
-// forItems is true, the type for the repeated list items is returned instead of
-// the list type itself.
-func (c *Cache) getCELType(fieldDesc protoreflect.FieldDescriptor, forItems bool) *cel.Type {
-	if !forItems {
-		switch {
-		case fieldDesc.IsMap():
-			return cel.MapType(cel.DynType, cel.DynType)
-		case fieldDesc.IsList():
-			return cel.ListType(cel.DynType)
-		}
-	}
-
-	if fieldDesc.Kind() == protoreflect.MessageKind {
-		switch fqn := fieldDesc.Message().FullName(); fqn {
-		case "google.protobuf.Any":
-			return cel.AnyType
-		case "google.protobuf.Duration":
-			return cel.DurationType
-		case "google.protobuf.Timestamp":
-			return cel.TimestampType
-		default:
-			return cel.ObjectType(string(fqn))
-		}
-	}
-	return ProtoKindToCELType(fieldDesc.Kind())
 }
