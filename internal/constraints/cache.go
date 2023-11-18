@@ -17,6 +17,7 @@ package constraints
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/priv"
+	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
@@ -114,7 +115,7 @@ func (c *Cache) prepareEnvironment(
 ) (*cel.Env, error) {
 	env, err := env.Extend(
 		cel.Types(rules.Interface()),
-		cel.Variable("this", expression.ProtoFieldToCELType(fieldDesc, true, forItems)),
+		cel.Variable("this", celext.ProtoFieldToCELType(fieldDesc, true, forItems)),
 		cel.Variable("rules",
 			cel.ObjectType(string(rules.Descriptor().FullName()))),
 	)
