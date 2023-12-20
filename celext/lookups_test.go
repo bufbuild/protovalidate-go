@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package celext
 
 import (
 	"testing"
@@ -85,6 +85,40 @@ func TestCache_GetCELType(t *testing.T) {
 			t.Parallel()
 			typ := ProtoFieldToCELType(test.desc, test.generic, test.forItems)
 			assert.Equal(t, test.ex.String(), typ.String())
+		})
+	}
+}
+
+func TestProtoKindToCELType(t *testing.T) {
+	t.Parallel()
+
+	tests := map[protoreflect.Kind]*cel.Type{
+		protoreflect.FloatKind:    cel.DoubleType,
+		protoreflect.DoubleKind:   cel.DoubleType,
+		protoreflect.Int32Kind:    cel.IntType,
+		protoreflect.Int64Kind:    cel.IntType,
+		protoreflect.Uint32Kind:   cel.UintType,
+		protoreflect.Uint64Kind:   cel.UintType,
+		protoreflect.Sint32Kind:   cel.IntType,
+		protoreflect.Sint64Kind:   cel.IntType,
+		protoreflect.Fixed32Kind:  cel.UintType,
+		protoreflect.Fixed64Kind:  cel.UintType,
+		protoreflect.Sfixed32Kind: cel.IntType,
+		protoreflect.Sfixed64Kind: cel.IntType,
+		protoreflect.BoolKind:     cel.BoolType,
+		protoreflect.StringKind:   cel.StringType,
+		protoreflect.BytesKind:    cel.BytesType,
+		protoreflect.EnumKind:     cel.IntType,
+		protoreflect.MessageKind:  cel.DynType,
+		protoreflect.GroupKind:    cel.DynType,
+		protoreflect.Kind(0):      cel.DynType,
+	}
+
+	for k, ty := range tests {
+		kind, typ := k, ty
+		t.Run(kind.String(), func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, typ, protoKindToCELType(kind))
 		})
 	}
 }

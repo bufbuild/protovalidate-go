@@ -19,6 +19,7 @@ import (
 	"sync/atomic"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/constraints"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
@@ -278,9 +279,9 @@ func (bldr *Builder) processFieldExpressions(
 		return nil
 	}
 
-	celTyp := expression.ProtoFieldToCELType(fieldDesc, false, false)
+	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, false)
 	opts := append(
-		expression.RequiredCELEnvOptions(fieldDesc),
+		celext.RequiredCELEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
 	)
 	compiledExpressions, err := expression.Compile(exprs, bldr.env, opts...)
