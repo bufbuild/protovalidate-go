@@ -177,6 +177,22 @@ func TestCELLib(t *testing.T) {
 				"'1.2.3.0/24'.isIpPrefix(6)",
 				false,
 			},
+			{
+				"'foo@example.com'.isEmail()",
+				true,
+			},
+			{
+				"'<foo@example.com>'.isEmail()",
+				false,
+			},
+			{
+				"'  foo@example.com'.isEmail()",
+				false,
+			},
+			{
+				"'foo@example.com    '.isEmail()",
+				false,
+			},
 		}
 
 		for _, tc := range tests {

@@ -375,7 +375,7 @@ func (l lib) uniqueBytes(list traits.Lister) ref.Val {
 
 func (l lib) validateEmail(addr string) bool {
 	a, err := mail.ParseAddress(addr)
-	if err != nil || strings.ContainsRune(addr, '<') {
+	if err != nil || strings.ContainsRune(addr, '<') || a.Address != addr {
 		return false
 	}
 
