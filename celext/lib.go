@@ -29,7 +29,9 @@ import (
 	"github.com/google/cel-go/common/types/ref"
 	"github.com/google/cel-go/common/types/traits"
 	"github.com/google/cel-go/ext"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 // DefaultEnv produces a cel.Env with the necessary cel.EnvOption and
@@ -47,6 +49,23 @@ func DefaultEnv(useUTC bool) (*cel.Env, error) {
 			useUTC: useUTC,
 		}),
 	)
+}
+
+// RequiredCELEnvOptions returns the options required to have expressions which
+// rely on the provided descriptor.
+func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption {
+	if fieldDesc.IsMap() {
+		return append(
+			RequiredCELEnvOptions(fieldDesc.MapKey()),
+			RequiredCELEnvOptions(fieldDesc.MapValue())...,
+		)
+	}
+	if fieldDesc.Kind() == protoreflect.MessageKind {
+		return []cel.EnvOption{
+			cel.Types(dynamicpb.NewMessage(fieldDesc.Message())),
+		}
+	}
+	return nil
 }
 
 // lib is the collection of functions and settings required by protovalidate

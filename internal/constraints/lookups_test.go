@@ -17,8 +17,6 @@ package constraints
 import (
 	"testing"
 
-	"github.com/bufbuild/protovalidate-go/celext"
-	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -51,40 +49,6 @@ func TestExpectedWrapperConstraints(t *testing.T) {
 			} else {
 				assert.False(t, ok)
 			}
-		})
-	}
-}
-
-func TestProtoKindToCELType(t *testing.T) {
-	t.Parallel()
-
-	tests := map[protoreflect.Kind]*cel.Type{
-		protoreflect.FloatKind:    cel.DoubleType,
-		protoreflect.DoubleKind:   cel.DoubleType,
-		protoreflect.Int32Kind:    cel.IntType,
-		protoreflect.Int64Kind:    cel.IntType,
-		protoreflect.Uint32Kind:   cel.UintType,
-		protoreflect.Uint64Kind:   cel.UintType,
-		protoreflect.Sint32Kind:   cel.IntType,
-		protoreflect.Sint64Kind:   cel.IntType,
-		protoreflect.Fixed32Kind:  cel.UintType,
-		protoreflect.Fixed64Kind:  cel.UintType,
-		protoreflect.Sfixed32Kind: cel.IntType,
-		protoreflect.Sfixed64Kind: cel.IntType,
-		protoreflect.BoolKind:     cel.BoolType,
-		protoreflect.StringKind:   cel.StringType,
-		protoreflect.BytesKind:    cel.BytesType,
-		protoreflect.EnumKind:     cel.IntType,
-		protoreflect.MessageKind:  cel.DynType,
-		protoreflect.GroupKind:    cel.DynType,
-		protoreflect.Kind(0):      cel.DynType,
-	}
-
-	for k, ty := range tests {
-		kind, typ := k, ty
-		t.Run(kind.String(), func(t *testing.T) {
-			t.Parallel()
-			assert.Equal(t, typ, celext.ProtoKindToCELType(kind))
 		})
 	}
 }

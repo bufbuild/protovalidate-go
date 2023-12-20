@@ -89,6 +89,40 @@ func TestCache_GetCELType(t *testing.T) {
 	}
 }
 
+func TestProtoKindToCELType(t *testing.T) {
+	t.Parallel()
+
+	tests := map[protoreflect.Kind]*cel.Type{
+		protoreflect.FloatKind:    cel.DoubleType,
+		protoreflect.DoubleKind:   cel.DoubleType,
+		protoreflect.Int32Kind:    cel.IntType,
+		protoreflect.Int64Kind:    cel.IntType,
+		protoreflect.Uint32Kind:   cel.UintType,
+		protoreflect.Uint64Kind:   cel.UintType,
+		protoreflect.Sint32Kind:   cel.IntType,
+		protoreflect.Sint64Kind:   cel.IntType,
+		protoreflect.Fixed32Kind:  cel.UintType,
+		protoreflect.Fixed64Kind:  cel.UintType,
+		protoreflect.Sfixed32Kind: cel.IntType,
+		protoreflect.Sfixed64Kind: cel.IntType,
+		protoreflect.BoolKind:     cel.BoolType,
+		protoreflect.StringKind:   cel.StringType,
+		protoreflect.BytesKind:    cel.BytesType,
+		protoreflect.EnumKind:     cel.IntType,
+		protoreflect.MessageKind:  cel.DynType,
+		protoreflect.GroupKind:    cel.DynType,
+		protoreflect.Kind(0):      cel.DynType,
+	}
+
+	for k, ty := range tests {
+		kind, typ := k, ty
+		t.Run(kind.String(), func(t *testing.T) {
+			t.Parallel()
+			assert.Equal(t, typ, protoKindToCELType(kind))
+		})
+	}
+}
+
 func getFieldDesc(t *testing.T, msg proto.Message, fld protoreflect.Name) protoreflect.FieldDescriptor {
 	t.Helper()
 	desc := msg.ProtoReflect().Descriptor().Fields().ByName(fld)
