@@ -165,3 +165,10 @@ message CelMapOnARepeated {
     string name = 1;
   }
 }
+
+message RepeatedItemCel {
+  repeated string paths = 1 [(buf.validate.field).repeated.items.cel = {
+    id: "paths.no_space",
+    expression: "!this.startsWith(' ')"
+  }];
+}
