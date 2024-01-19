@@ -167,10 +167,8 @@ message CelMapOnARepeated {
 }
 
 message RepeatedItemCel {
-  repeated string paths = 1 [
-    (buf.validate.field).repeated.items.cel = {
-      id: "paths.no_space",
-      expression: "!this.startsWith(' ')"
-    }
-  ];
+  repeated string paths = 1 [(buf.validate.field).repeated.items.cel = {
+    id: "paths.no_space",
+    expression: "!this.startsWith(' ')"
+  }];
 }
