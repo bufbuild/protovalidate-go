@@ -184,3 +184,17 @@ func TestValidator_Validate_CelMapOnARepeated(t *testing.T) {
 	valErr := &ValidationError{}
 	assert.ErrorAs(t, err, &valErr)
 }
+
+func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.RepeatedItemCel{Paths: []string{"foo"}}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+	msg.Paths = append(msg.Paths, " bar")
+	err = val.Validate(msg)
+	valErr := &ValidationError{}
+	assert.ErrorAs(t, err, &valErr)
+	assert.Equal(t, "paths.no_space", valErr.Violations[0].ConstraintId)
+}

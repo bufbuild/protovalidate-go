@@ -270,7 +270,7 @@ func (bldr *Builder) processIgnoreEmpty(
 func (bldr *Builder) processFieldExpressions(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	_ bool,
+	forItems bool,
 	eval *value,
 	_ MessageCache,
 ) error {
@@ -279,7 +279,7 @@ func (bldr *Builder) processFieldExpressions(
 		return nil
 	}
 
-	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, false)
+	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, forItems)
 	opts := append(
 		celext.RequiredCELEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
