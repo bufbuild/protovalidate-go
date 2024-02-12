@@ -488,8 +488,11 @@ func (l lib) validateIPPrefix(p string, ver int64, strict bool) bool {
 }
 
 func (l lib) isHostAndPort(val string, portRequired bool) bool {
-	splitIdx := strings.LastIndexByte(val, ':')
+	if len(val) == 0 {
+		return false
+	}
 
+	splitIdx := strings.LastIndexByte(val, ':')
 	if val[0] == '[' { // ipv6
 		end := strings.IndexByte(val, ']')
 		switch end + 1 {
