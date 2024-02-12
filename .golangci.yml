@@ -54,6 +54,9 @@ linters:
     - wrapcheck         # don't _always_ need to wrap errors
     - wsl               # over-generous whitespace violates house style
 issues:
+  exclude:
+    # we will continue to support the deprecated field until it's removed
+    - "IgnoreEmpty is deprecated"
   exclude-rules:
     # Loosen requirements on conformance executor
     - path: internal/cmd/

@@ -4,15 +4,15 @@ deps:
   - remote: buf.build
     owner: bufbuild
     repository: protovalidate
-    commit: 12f9cba37c9d49eeb6827dde227d6031
-    digest: shake256:a9470135a1736bdb74396e35342b4431b0bf3a5e7a2198fb77f49be46af744aae134f8e0593683216e836f1f0a551ccf86a9f8857c6829b8d33f4b604602a5ff
+    commit: 3014d81c3a48461dbcc5b57536699f9e
+    digest: shake256:6b40454a0754bf624c8fc965f3576bd26bf72a480c554514672d2fac887f420c82d68cf50d40f5a77d8b6e96dda87e395aeedae84d513dde7c4bfd4d95f5657a
   - remote: buf.build
     owner: bufbuild
     repository: protovalidate-testing
-    commit: cc79bc8bf62b492d9a8305c400143fe9
-    digest: shake256:3f1d2c20783f84518ec7226c59fbbe50e585be084eb855d5d01bd4fa0b22fe8011352919288f1eb5325607a0cf9bb72b94b11007eb065a6d21c81831e4bce2da
+    commit: 00584229605e4543975a563acab42ffa
+    digest: shake256:46068826ec54bc7745617d5faa334cbe89f13261d789754748c463a2a671aef0b8c8c94ea7704344bc14798903924d9bf677bec9dd6dc4a0367256defc70cdee
   - remote: buf.build
     owner: envoyproxy
     repository: protoc-gen-validate
-    commit: eac44469a7af47e7839a7f1f3d7ac004
-    digest: shake256:0feabcde01b6b11e3c75a5e3f807968d5995626546f39c37e5d4205892b3a59cced0ed83b35a2eb9e6dddd3309660ad46b737c9dcd224b425de0a6654ce04417
+    commit: 71881f09a0c5420a9545a07987a86728
+    digest: shake256:d320bbf06653b1b2b45a1f95bfa82bf7b998221a777a042708c50d6f86a30d1a85b50c5704c597142d9b308280efe1295d39d76d1abea5f7046d3df4c8cc3cef
