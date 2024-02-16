@@ -39,16 +39,21 @@ import (
 // cel.ProgramOption values preconfigured for usage throughout the
 // module. If useUTC is true, timestamp operations use the UTC timezone instead
 // of the local timezone.
-func DefaultEnv(useUTC bool) (*cel.Env, error) {
+func DefaultEnv(useUTC bool, options ...cel.EnvOption) (*cel.Env, error) {
 	return cel.NewEnv(
-		// we bind in the global type registry optimistically to ensure expressions
-		// operating against Any WKTs can resolve their underlying type if it's
-		// known to the application. They will otherwise fail with a runtime error
-		// if the type is unknown.
-		cel.TypeDescs(protoregistry.GlobalFiles),
-		cel.Lib(lib{
-			useUTC: useUTC,
-		}),
+		append(
+			append([]cel.EnvOption{},
+				// we bind in the global type registry optimistically to ensure expressions
+				// operating against Any WKTs can resolve their underlying type if it's
+				// known to the application. They will otherwise fail with a runtime error
+				// if the type is unknown.
+				cel.TypeDescs(protoregistry.GlobalFiles),
+				cel.Lib(lib{
+					useUTC: useUTC,
+				}),
+			),
+			options...,
+		)...,
 	)
 }
 

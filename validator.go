@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
+	"github.com/google/cel-go/cel"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/celext"
@@ -64,7 +65,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		opt(&cfg)
 	}
 
-	env, err := celext.DefaultEnv(cfg.useUTC)
+	env, err := celext.DefaultEnv(cfg.useUTC, cfg.env...)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to construct CEL environment: %w", err)
@@ -104,6 +105,7 @@ type config struct {
 	disableLazy bool
 	desc        []protoreflect.MessageDescriptor
 	resolver    StandardConstraintResolver
+	env         []cel.EnvOption
 }
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -159,6 +161,12 @@ func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOpt
 func WithDisableLazy(disable bool) ValidatorOption {
 	return func(cfg *config) {
 		cfg.disableLazy = disable
+	}
+}
+
+func WithEnvironment(env ...cel.EnvOption) ValidatorOption {
+	return func(cfg *config) {
+		cfg.env = env
 	}
 }
 
