@@ -57,7 +57,7 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, val protoreflect.Value) bool {
+	constraints.Range(func(desc protoreflect.FieldDescriptor, _ protoreflect.Value) bool {
 		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, desc)
 		if compileErr != nil {
 			err = compileErr

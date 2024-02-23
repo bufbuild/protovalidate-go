@@ -15,7 +15,7 @@ ARGS ?= --strict --strict_message --strict_error
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in proto/buf.lock and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v0.5.6
+CONFORMANCE_VERSION ?= v0.6.1
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -94,7 +94,7 @@ $(BIN)/license-header: $(BIN) Makefile
 
 $(BIN)/golangci-lint: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
-		github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
+		github.com/golangci/golangci-lint/cmd/golangci-lint@v1.56.1
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
