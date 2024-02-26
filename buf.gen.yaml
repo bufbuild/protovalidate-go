@@ -7,6 +7,6 @@ managed:
       - buf.build/envoyproxy/protoc-gen-validate
       - buf.build/bufbuild/protovalidate
 plugins:
-  - plugin: buf.build/protocolbuffers/go:v1.31.0
+  - plugin: buf.build/protocolbuffers/go:v1.32.0
     out: internal/gen
     opt: paths=source_relative
