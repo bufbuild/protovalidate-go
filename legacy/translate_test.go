@@ -113,7 +113,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacySkipped{},
 			field: "x",
 			ex: &validate.FieldConstraints{
-				Skipped: true,
+				Ignore: validate.Ignore_IGNORE_ALWAYS,
 			},
 		},
 		{
@@ -200,7 +200,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacyIgnoreEmpty{},
 			field: "x",
 			ex: &validate.FieldConstraints{
-				IgnoreEmpty: true,
+				Ignore: validate.Ignore_IGNORE_IF_UNPOPULATED,
 				Type: &validate.FieldConstraints_Int32{
 					Int32: &validate.Int32Rules{
 						GreaterThan: &validate.Int32Rules_Gt{

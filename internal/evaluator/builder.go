@@ -204,9 +204,21 @@ func (bldr *Builder) buildField(
 	cache MessageCache,
 ) (field, error) {
 	fld := field{
-		Descriptor:  fieldDescriptor,
-		Required:    fieldConstraints.GetRequired(),
-		IgnoreEmpty: fieldDescriptor.HasPresence() || fieldConstraints.GetIgnoreEmpty(),
+		Descriptor: fieldDescriptor,
+		Required:   fieldConstraints.GetRequired(),
+		IgnoreEmpty: fieldDescriptor.HasPresence() ||
+			fieldConstraints.GetIgnoreEmpty() ||
+			fieldConstraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
+			fieldConstraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE,
+		IgnoreDefault: fieldDescriptor.HasPresence() && fieldConstraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE,
+	}
+	if fld.IgnoreDefault {
+		if fieldDescriptor.Kind() == protoreflect.MessageKind && fieldDescriptor.Cardinality() != protoreflect.Repeated {
+			msg := dynamicpb.NewMessage(fieldDescriptor.Message())
+			fld.Zero = protoreflect.ValueOfMessage(msg)
+		} else {
+			fld.Zero = fieldDescriptor.Default()
+		}
 	}
 	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, &fld.Value, cache)
 	return fld, err
@@ -254,15 +266,21 @@ func (bldr *Builder) processIgnoreEmpty(
 ) error {
 	// the only time we need to ignore empty on a value is if it's evaluating a
 	// field item (repeated element or map key/value).
-	val.IgnoreEmpty = forItems && constraints.GetIgnoreEmpty()
-	if !val.IgnoreEmpty {
+	val.IgnoreEmpty = forItems && (constraints.GetIgnoreEmpty() ||
+		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
+		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE)
+	switch {
+	case !val.IgnoreEmpty:
 		// only need the zero value for checking ignore_empty constraint
 		return nil
-	}
-	val.Zero = fdesc.Default()
-	if forItems && fdesc.IsList() {
+	case fdesc.IsList():
 		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
 		val.Zero = msg.Get(fdesc).List().NewElement()
+	case fdesc.Kind() == protoreflect.MessageKind:
+		msg := dynamicpb.NewMessage(fdesc.Message())
+		val.Zero = protoreflect.ValueOfMessage(msg)
+	default:
+		val.Zero = fdesc.Default()
 	}
 	return nil
 }
@@ -303,6 +321,7 @@ func (bldr *Builder) processEmbeddedMessage(
 ) error {
 	if fdesc.Kind() != protoreflect.MessageKind ||
 		rules.GetSkipped() ||
+		rules.GetIgnore() == validate.Ignore_IGNORE_ALWAYS ||
 		fdesc.IsMap() || (fdesc.IsList() && !forItems) {
 		return nil
 	}
@@ -327,6 +346,7 @@ func (bldr *Builder) processWrapperConstraints(
 ) error {
 	if fdesc.Kind() != protoreflect.MessageKind ||
 		rules.GetSkipped() ||
+		rules.GetIgnore() == validate.Ignore_IGNORE_ALWAYS ||
 		fdesc.IsMap() || (fdesc.IsList() && !forItems) {
 		return nil
 	}

@@ -30,13 +30,13 @@ func (err *ValidationError) Error() string {
 	bldr.WriteString("validation error:")
 	for _, violation := range err.Violations {
 		bldr.WriteString("\n - ")
-		if violation.FieldPath != "" {
-			bldr.WriteString(violation.FieldPath)
+		if fieldPath := violation.GetFieldPath(); fieldPath != "" {
+			bldr.WriteString(fieldPath)
 			bldr.WriteString(": ")
 		}
 		_, _ = fmt.Fprintf(bldr, "%s [%s]",
-			violation.Message,
-			violation.ConstraintId)
+			violation.GetMessage(),
+			violation.GetConstraintId())
 	}
 	return bldr.String()
 }
@@ -52,12 +52,12 @@ func PrefixFieldPaths(err *ValidationError, format string, args ...any) {
 	prefix := fmt.Sprintf(format, args...)
 	for _, violation := range err.Violations {
 		switch {
-		case violation.FieldPath == "": // no existing field path
+		case violation.GetFieldPath() == "": // no existing field path
 			violation.FieldPath = prefix
-		case violation.FieldPath[0] == '[': // field is a map/list
-			violation.FieldPath = prefix + violation.FieldPath
+		case violation.GetFieldPath()[0] == '[': // field is a map/list
+			violation.FieldPath = prefix + violation.GetFieldPath()
 		default: // any other field
-			violation.FieldPath = fmt.Sprintf("%s.%s", prefix, violation.FieldPath)
+			violation.FieldPath = fmt.Sprintf("%s.%s", prefix, violation.GetFieldPath())
 		}
 	}
 }

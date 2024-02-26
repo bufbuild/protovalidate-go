@@ -30,10 +30,10 @@ func TestMerge(t *testing.T) {
 	t.Run("no errors", func(t *testing.T) {
 		t.Parallel()
 		ok, err := Merge(nil, nil, true)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.True(t, ok)
 		ok, err = Merge(nil, nil, false)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 		assert.True(t, ok)
 	})
 

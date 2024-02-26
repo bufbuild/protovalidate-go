@@ -33,7 +33,7 @@ func BenchmarkValidator(b *testing.B) {
 				val, err := New()
 				require.NoError(b, err)
 				err = val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -46,7 +46,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -88,7 +88,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
