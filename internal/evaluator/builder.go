@@ -263,7 +263,6 @@ func (bldr *Builder) processIgnoreEmpty(
 	val.IgnoreEmpty = forItems && bldr.shouldIgnoreEmpty(constraints)
 	if val.IgnoreEmpty {
 		val.Zero = bldr.zeroValue(fdesc, forItems)
-		return nil
 	}
 	return nil
 }
