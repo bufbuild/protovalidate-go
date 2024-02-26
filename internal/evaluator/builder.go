@@ -269,17 +269,17 @@ func (bldr *Builder) processIgnoreEmpty(
 	val.IgnoreEmpty = forItems && (constraints.GetIgnoreEmpty() ||
 		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
 		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE)
-	if !val.IgnoreEmpty {
+	switch {
+	case !val.IgnoreEmpty:
 		// only need the zero value for checking ignore_empty constraint
 		return nil
-	}
-	if fdesc.IsList() {
+	case fdesc.IsList():
 		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
 		val.Zero = msg.Get(fdesc).List().NewElement()
-	} else if fdesc.Kind() == protoreflect.MessageKind {
+	case fdesc.Kind() == protoreflect.MessageKind:
 		msg := dynamicpb.NewMessage(fdesc.Message())
 		val.Zero = protoreflect.ValueOfMessage(msg)
-	} else {
+	default:
 		val.Zero = fdesc.Default()
 	}
 	return nil
