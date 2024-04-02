@@ -51,6 +51,7 @@ conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Ru
 
 .PHONY: generate
 generate: generate-proto generate-license ## Regenerate code and license headers
+	$(GO) mod tidy
 
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
@@ -81,7 +82,7 @@ checkgenerate: generate
 
 .PHONY: upgrade-go
 upgrade-go:
-	$(GO) get -u -t ./... && go mod tidy -v
+	$(GO) get -u -t ./... && $(GO) mod tidy -v
 
 $(BIN):
 	@mkdir -p $(BIN)

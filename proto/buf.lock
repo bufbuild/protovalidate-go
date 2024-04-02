@@ -4,13 +4,13 @@ deps:
   - remote: buf.build
     owner: bufbuild
     repository: protovalidate
-    commit: f05a6f4403ce4327bae4f50f281c3ed0
-    digest: shake256:668a0661b8df44d41839194896329330965fc215f3d2f88057fd60eeb759c2daf6cc6edfdd13b2a653d49fe2896ebedcb1a33c4c5b2dd10919f03ffb7fc52ae6
+    commit: b983156c5e994cc9892e0ce3e64e17e0
+    digest: shake256:fb47a62989d38c2529bcc5cd86ded43d800eb84cee82b42b9e8a9e815d4ee8134a0fb9d0ce8299b27c2d2bbb7d6ade0c4ad5a8a4d467e1e2c7ca619ae9f634e2
   - remote: buf.build
     owner: bufbuild
     repository: protovalidate-testing
-    commit: 264a18f78b774bbfad639697fe4f02c7
-    digest: shake256:c8a3e4a536724dcebe33d25ce8b804e7b0f9aae91c00ae31bdb2eb4483cd3bb6fd221ed6861aa6c27ad58e497cbf48793a1aefbfff35d6f050dc420b03095a93
+    commit: 09d8555b907f4bfa9e784469b66e2bea
+    digest: shake256:6999e8619c0291b5f1b1783666b89e408154c7f9d07ad32d8c2b32ef41aac21a7d5b761f272091b676500c116e22eec85e95a6f83461568598badc0dab134031
   - remote: buf.build
     owner: envoyproxy
     repository: protoc-gen-validate
