@@ -19,7 +19,14 @@ package tests.example.v1;
 import "buf/validate/validate.proto";
 
 message Person {
-  uint64 id = 1 [(buf.validate.field).uint64.gt = 999];
+  uint64 id = 1 [
+    (buf.validate.field).cel = {
+      id: "person.id",
+      expression:
+        "this <= PersonMinID"
+        "? 'value must be greater than %s'.format([PersonMinID]) : ''"
+    }
+  ];
 
   string email = 2 [(buf.validate.field).string.email = true];
 

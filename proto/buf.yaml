@@ -10,5 +10,6 @@ lint:
   ignore_only:
     PROTOVALIDATE:
       - tests/example/v1/validations.proto
+      - tests/example/v1/example.proto
   use:
     - DEFAULT

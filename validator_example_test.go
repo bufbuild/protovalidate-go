@@ -20,11 +20,25 @@ import (
 	"log"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
+const (
+	PersonMinID = 999
+)
+
+func personValidator(opts ...ValidatorOption) (*Validator, error) {
+	return New(append(opts,
+		WithExtendedCelEnv(
+			cel.Constant("PersonMinID", cel.UintType, types.Uint(PersonMinID)),
+		))...,
+	)
+}
+
 func Example() {
-	validator, err := New()
+	validator, err := personValidator()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +92,7 @@ func ExampleWithFailFast() {
 }
 
 func ExampleWithMessages() {
-	validator, err := New(
+	validator, err := personValidator(
 		WithMessages(&pb.Person{}),
 	)
 	if err != nil {
@@ -102,7 +116,7 @@ func ExampleWithDescriptors() {
 		log.Fatal(err)
 	}
 
-	validator, err := New(
+	validator, err := personValidator(
 		WithDescriptors(
 			pbType.Descriptor(),
 		),
@@ -133,7 +147,7 @@ func ExampleWithDisableLazy() {
 		},
 	}
 
-	validator, err := New(
+	validator, err := personValidator(
 		WithMessages(&pb.Coordinates{}),
 		WithDisableLazy(true),
 	)

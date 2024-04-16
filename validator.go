@@ -22,6 +22,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/evaluator"
 	"github.com/bufbuild/protovalidate-go/resolver"
+	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -70,6 +71,12 @@ func New(options ...ValidatorOption) (*Validator, error) {
 			"failed to construct CEL environment: %w", err)
 	}
 
+	env, err = env.Extend(cfg.celEnvOpts...)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to extend CEL environment: %w", err)
+	}
+
 	bldr := evaluator.NewBuilder(
 		env,
 		cfg.disableLazy,
@@ -104,6 +111,7 @@ type config struct {
 	disableLazy bool
 	desc        []protoreflect.MessageDescriptor
 	resolver    StandardConstraintResolver
+	celEnvOpts  []cel.EnvOption
 }
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -181,5 +189,12 @@ type StandardConstraintInterceptor func(res StandardConstraintResolver) Standard
 func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor) ValidatorOption {
 	return func(c *config) {
 		c.resolver = interceptor(c.resolver)
+	}
+}
+
+// WithExtendedCelEnv allows to extend CEL environment used for validation with user provided options.
+func WithExtendedCelEnv(celEnvOpts ...cel.EnvOption) ValidatorOption {
+	return func(cfg *config) {
+		cfg.celEnvOpts = celEnvOpts
 	}
 }
