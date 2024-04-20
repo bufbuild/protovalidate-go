@@ -172,3 +172,11 @@ message RepeatedItemCel {
     expression: "!this.startsWith(' ')"
   }];
 }
+
+message CustomCelEnv {
+  option (buf.validate.message).cel = {
+    id: "custom",
+    expression: "isCustomCheck(this.value)",
+  };
+  string value = 1;
+}

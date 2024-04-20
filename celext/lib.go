@@ -46,10 +46,13 @@ func DefaultEnv(useUTC bool) (*cel.Env, error) {
 		// known to the application. They will otherwise fail with a runtime error
 		// if the type is unknown.
 		cel.TypeDescs(protoregistry.GlobalFiles),
-		cel.Lib(lib{
-			useUTC: useUTC,
-		}),
+		cel.Lib(DefaultLib(useUTC)),
 	)
+}
+
+// DefaultLib returns the default lib implementation for the celext package.
+func DefaultLib(useUTC bool) *lib {
+	return &lib{useUTC: useUTC}
 }
 
 // RequiredCELEnvOptions returns the options required to have expressions which

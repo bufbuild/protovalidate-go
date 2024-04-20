@@ -41,3 +41,13 @@ message Coordinates {
     lte: 180
   }];
 }
+
+message Person2 {
+  option (buf.validate.message).cel = {
+    id: "custom",
+    expression: "isCustomCheck(this.email)",
+  };
+  uint64 id = 1 [(buf.validate.field).uint64.gt = 999];
+
+  string email = 2 [(buf.validate.field).string.email = true];
+}

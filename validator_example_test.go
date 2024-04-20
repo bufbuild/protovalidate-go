@@ -17,6 +17,9 @@ package protovalidate
 import (
 	"errors"
 	"fmt"
+	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/ref"
 	"log"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
@@ -166,4 +169,45 @@ func ExampleValidationError() {
 	}
 
 	// output: lat double.gte_lte
+}
+
+func ExampleWithCelEnv() {
+	person := &pb.Person2{
+		Id:    1234,
+		Email: "protovalidate@buf.build",
+	}
+
+	e, err := cel.NewEnv(
+		cel.TypeDescs(protoregistry.GlobalFiles),
+		cel.Lib(DefaultCelLib(true)),
+		cel.Function("isCustomCheck",
+			cel.Overload(
+				"string_is_custom_check_bool",
+				[]*cel.Type{cel.StringType},
+				cel.BoolType,
+				cel.FunctionBinding(func(args ...ref.Val) ref.Val {
+					v, ok := args[0].Value().(string)
+					if !ok {
+						return types.Bool(false)
+					}
+					if v == "protovalidate@buf.build" {
+						return types.Bool(true)
+					}
+					return types.Bool(false)
+				}),
+			),
+		),
+	)
+	validator, err := New(
+		WithCelEnv(e),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = validator.Validate(person)
+	fmt.Println("person:", err)
+
+	// output:
+	// person: <nil>
 }

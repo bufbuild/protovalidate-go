@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
+	"github.com/google/cel-go/cel"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/celext"
@@ -64,10 +65,16 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		opt(&cfg)
 	}
 
-	env, err := celext.DefaultEnv(cfg.useUTC)
-	if err != nil {
-		return nil, fmt.Errorf(
-			"failed to construct CEL environment: %w", err)
+	var env *cel.Env
+	if cfg.celEnv != nil {
+		env = cfg.celEnv
+	} else {
+		defaultEnv, err := celext.DefaultEnv(cfg.useUTC)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"failed to construct CEL environment: %w", err)
+		}
+		env = defaultEnv
 	}
 
 	bldr := evaluator.NewBuilder(
@@ -104,6 +111,7 @@ type config struct {
 	disableLazy bool
 	desc        []protoreflect.MessageDescriptor
 	resolver    StandardConstraintResolver
+	celEnv      *cel.Env
 }
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -160,6 +168,18 @@ func WithDisableLazy(disable bool) ValidatorOption {
 	return func(cfg *config) {
 		cfg.disableLazy = disable
 	}
+}
+
+// WithCelEnv allows to set custom CEL environment for the validator.
+func WithCelEnv(e *cel.Env) ValidatorOption {
+	return func(c *config) {
+		c.celEnv = e
+	}
+}
+
+// DefaultCelLib returns the default CEL library
+func DefaultCelLib(useUTC bool) cel.Library {
+	return celext.DefaultLib(useUTC)
 }
 
 // StandardConstraintResolver is responsible for resolving the standard
