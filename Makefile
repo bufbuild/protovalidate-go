@@ -57,7 +57,7 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 generate-proto: $(BIN)/buf
 	rm -rf internal/gen/*/
 	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
-	$(BIN)/buf generate proto
+	$(BIN)/buf generate
 
 .PHONY: generate-license
 generate-license: $(BIN)/license-header
