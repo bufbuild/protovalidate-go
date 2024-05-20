@@ -1,0 +1,23 @@
+version: v2
+modules:
+  - path: proto
+deps:
+  - buf.build/bufbuild/protovalidate
+  - buf.build/bufbuild/protovalidate-testing
+  - buf.build/envoyproxy/protoc-gen-validate
+lint:
+  use:
+    - DEFAULT
+  except:
+    - FIELD_NOT_REQUIRED
+    - PACKAGE_NO_IMPORT_CYCLE
+  ignore_only:
+    PROTOVALIDATE:
+      - proto/tests/example/v1/validations.proto
+  disallow_comment_ignores: true
+breaking:
+  use:
+    - FILE
+  except:
+    - EXTENSION_NO_DELETE
+    - FIELD_SAME_DEFAULT
