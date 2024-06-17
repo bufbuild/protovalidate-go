@@ -3,11 +3,11 @@ module github.com/bufbuild/protovalidate-go
 go 1.20
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.1-20240508200655-46a4cf4ba109.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240508200655-46a4cf4ba109.1
 	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/google/cel-go v0.20.1
 	github.com/stretchr/testify v1.9.0
-	google.golang.org/protobuf v1.34.1
+	google.golang.org/protobuf v1.34.2
 )
 
 require (
