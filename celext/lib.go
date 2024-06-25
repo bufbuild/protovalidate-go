@@ -378,12 +378,20 @@ func (l lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister trait
 }
 
 func (l lib) uniqueScalar(list traits.Lister) ref.Val {
-	exist := make(map[ref.Val]struct{})
-	for i := int64(0); i < list.Size().Value().(int64); i++ {
-		if _, ok := exist[list.Get(types.Int(i))]; ok {
+	size, ok := list.Size().Value().(int64)
+	if !ok {
+		return types.UnsupportedRefValConversionErr(list.Size().Value())
+	}
+	if size <= 1 {
+		return types.Bool(true)
+	}
+	exist := make(map[ref.Val]struct{}, size)
+	for i := int64(0); i < size; i++ {
+		val := list.Get(types.Int(i))
+		if _, ok := exist[val]; ok {
 			return types.Bool(false)
 		}
-		exist[list.Get(types.Int(i))] = struct{}{}
+		exist[val] = struct{}{}
 	}
 	return types.Bool(true)
 }
@@ -393,8 +401,15 @@ func (l lib) uniqueScalar(list traits.Lister) ref.Val {
 // as the bytes ([]uint8) type is not hashable in Go; we cheat this by converting
 // the value to a string.
 func (l lib) uniqueBytes(list traits.Lister) ref.Val {
-	exist := make(map[any]struct{})
-	for i := int64(0); i < list.Size().Value().(int64); i++ {
+	size, ok := list.Size().Value().(int64)
+	if !ok {
+		return types.UnsupportedRefValConversionErr(list.Size().Value())
+	}
+	if size <= 1 {
+		return types.Bool(true)
+	}
+	exist := make(map[any]struct{}, size)
+	for i := int64(0); i < size; i++ {
 		val := list.Get(types.Int(i)).Value()
 		if b, ok := val.([]uint8); ok {
 			val = string(b)
