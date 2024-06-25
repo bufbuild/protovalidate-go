@@ -54,6 +54,10 @@ func TestCELLib(t *testing.T) {
 				true,
 			},
 			{
+				"[true].unique()",
+				true,
+			},
+			{
 				"[true, false].unique()",
 				true,
 			},
