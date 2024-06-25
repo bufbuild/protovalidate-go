@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, val protoreflect.Value) bool {
+	constraints.Range(func(desc protoreflect.FieldDescriptor, _ protoreflect.Value) bool {
 		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, desc)
 		if compileErr != nil {
 			err = compileErr

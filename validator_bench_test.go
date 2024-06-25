@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ func BenchmarkValidator(b *testing.B) {
 				val, err := New()
 				require.NoError(b, err)
 				err = val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -46,7 +46,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})
@@ -88,7 +88,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				err := val.Validate(successMsg)
-				assert.NoError(b, err)
+				require.NoError(b, err)
 			}
 		})
 	})

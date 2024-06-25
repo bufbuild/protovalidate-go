@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,6 +33,11 @@ type field struct {
 	// This field is generally true for nullable fields or fields with the
 	// ignore_empty constraint explicitly set.
 	IgnoreEmpty bool
+	// IgnoreDefault indicates if a field should skip validation on its zero value,
+	// including for fields which have field presence and are set to the zero value.
+	IgnoreDefault bool
+	// Zero is the default or zero-value for this value's type
+	Zero protoreflect.Value
 }
 
 func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
@@ -53,6 +58,9 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 	}
 
 	val := msg.Get(f.Descriptor)
+	if f.IgnoreDefault && val.Equal(f.Zero) {
+		return nil
+	}
 	if err = f.Value.Evaluate(val, failFast); err != nil {
 		errors.PrefixErrorPaths(err, "%s", f.Descriptor.Name())
 	}

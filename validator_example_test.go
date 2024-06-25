@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -141,7 +141,7 @@ func ExampleWithDisableLazy() {
 		log.Fatal(err)
 	}
 
-	err = validator.Validate(person.Home)
+	err = validator.Validate(person.GetHome())
 	fmt.Println("person.Home:", err)
 	err = validator.Validate(person)
 	fmt.Println("person:", err)
@@ -162,7 +162,7 @@ func ExampleValidationError() {
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
 		msg := valErr.ToProto()
-		fmt.Println(msg.Violations[0].FieldPath, msg.Violations[0].ConstraintId)
+		fmt.Println(msg.GetViolations()[0].GetFieldPath(), msg.GetViolations()[0].GetConstraintId())
 	}
 
 	// output: lat double.gte_lte

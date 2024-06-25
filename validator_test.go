@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ func TestValidator_Validate(t *testing.T) {
 			if test.exErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		}
 	})
@@ -66,11 +66,11 @@ func TestRecursive(t *testing.T) {
 
 	selfRec := &pb.SelfRecursive{X: 123, Turtle: &pb.SelfRecursive{X: 456}}
 	err = val.Validate(selfRec)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	loopRec := &pb.LoopRecursiveA{B: &pb.LoopRecursiveB{}}
 	err = val.Validate(loopRec)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestValidator_ValidateOneof(t *testing.T) {
@@ -79,15 +79,15 @@ func TestValidator_ValidateOneof(t *testing.T) {
 	require.NoError(t, err)
 	oneofMessage := &pb.MsgHasOneof{O: &pb.MsgHasOneof_X{X: "foo"}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Y{Y: 42}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Msg{Msg: &pb.HasMsgExprs{X: 4, Y: 50}}}
 	err = val.Validate(oneofMessage)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	oneofMessage = &pb.MsgHasOneof{}
 	err = val.Validate(oneofMessage)
@@ -178,11 +178,11 @@ func TestValidator_Validate_CelMapOnARepeated(t *testing.T) {
 		{Name: "baz"},
 	}}
 	err = val.Validate(msg)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	msg.Values = append(msg.Values, &pb.CelMapOnARepeated_Value{Name: "foo"})
 	err = val.Validate(msg)
 	valErr := &ValidationError{}
-	assert.ErrorAs(t, err, &valErr)
+	require.ErrorAs(t, err, &valErr)
 }
 
 func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
@@ -195,6 +195,6 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	msg.Paths = append(msg.Paths, " bar")
 	err = val.Validate(msg)
 	valErr := &ValidationError{}
-	assert.ErrorAs(t, err, &valErr)
-	assert.Equal(t, "paths.no_space", valErr.Violations[0].ConstraintId)
+	require.ErrorAs(t, err, &valErr)
+	assert.Equal(t, "paths.no_space", valErr.Violations[0].GetConstraintId())
 }

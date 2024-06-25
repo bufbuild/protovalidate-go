@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	empty := ASTSet{}
 	set, err = empty.ToProgramSet()
 	assert.Empty(t, set)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 }
 
 func TestASTSet_ReduceResiduals(t *testing.T) {
@@ -86,6 +86,6 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	require.NoError(t, err)
 	assert.Len(t, asts.asts, 1)
 	set, err := asts.ReduceResiduals(cel.Globals(&Variable{Name: "foo", Val: true}))
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Empty(t, set)
 }

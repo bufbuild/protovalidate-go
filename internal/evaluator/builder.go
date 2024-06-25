@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -204,9 +204,15 @@ func (bldr *Builder) buildField(
 	cache MessageCache,
 ) (field, error) {
 	fld := field{
-		Descriptor:  fieldDescriptor,
-		Required:    fieldConstraints.GetRequired(),
-		IgnoreEmpty: fieldDescriptor.HasPresence() || fieldConstraints.GetIgnoreEmpty(),
+		Descriptor: fieldDescriptor,
+		Required:   fieldConstraints.GetRequired(),
+		IgnoreEmpty: fieldDescriptor.HasPresence() ||
+			bldr.shouldIgnoreEmpty(fieldConstraints),
+		IgnoreDefault: fieldDescriptor.HasPresence() &&
+			bldr.shouldIgnoreDefault(fieldConstraints),
+	}
+	if fld.IgnoreDefault {
+		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
 	}
 	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, &fld.Value, cache)
 	return fld, err
@@ -254,15 +260,9 @@ func (bldr *Builder) processIgnoreEmpty(
 ) error {
 	// the only time we need to ignore empty on a value is if it's evaluating a
 	// field item (repeated element or map key/value).
-	val.IgnoreEmpty = forItems && constraints.GetIgnoreEmpty()
-	if !val.IgnoreEmpty {
-		// only need the zero value for checking ignore_empty constraint
-		return nil
-	}
-	val.Zero = fdesc.Default()
-	if forItems && fdesc.IsList() {
-		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
-		val.Zero = msg.Get(fdesc).List().NewElement()
+	val.IgnoreEmpty = forItems && bldr.shouldIgnoreEmpty(constraints)
+	if val.IgnoreEmpty {
+		val.Zero = bldr.zeroValue(fdesc, forItems)
 	}
 	return nil
 }
@@ -302,8 +302,9 @@ func (bldr *Builder) processEmbeddedMessage(
 	cache MessageCache,
 ) error {
 	if fdesc.Kind() != protoreflect.MessageKind ||
-		rules.GetSkipped() ||
-		fdesc.IsMap() || (fdesc.IsList() && !forItems) {
+		bldr.shouldSkip(rules) ||
+		fdesc.IsMap() ||
+		(fdesc.IsList() && !forItems) {
 		return nil
 	}
 
@@ -326,8 +327,9 @@ func (bldr *Builder) processWrapperConstraints(
 	cache MessageCache,
 ) error {
 	if fdesc.Kind() != protoreflect.MessageKind ||
-		rules.GetSkipped() ||
-		fdesc.IsMap() || (fdesc.IsList() && !forItems) {
+		bldr.shouldSkip(rules) ||
+		fdesc.IsMap() ||
+		(fdesc.IsList() && !forItems) {
 		return nil
 	}
 
@@ -464,6 +466,35 @@ func (bldr *Builder) processRepeatedConstraints(
 
 	valEval.Append(listEval)
 	return nil
+}
+
+func (bldr *Builder) shouldSkip(constraints *validate.FieldConstraints) bool {
+	return constraints.GetSkipped() ||
+		constraints.GetIgnore() == validate.Ignore_IGNORE_ALWAYS
+}
+
+func (bldr *Builder) shouldIgnoreEmpty(constraints *validate.FieldConstraints) bool {
+	return constraints.GetIgnoreEmpty() ||
+		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
+		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
+}
+
+func (bldr *Builder) shouldIgnoreDefault(constraints *validate.FieldConstraints) bool {
+	return constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
+}
+
+func (bldr *Builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool) protoreflect.Value {
+	switch {
+	case forItems && fdesc.IsList():
+		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
+		return msg.Get(fdesc).List().NewElement()
+	case fdesc.Kind() == protoreflect.MessageKind &&
+		fdesc.Cardinality() != protoreflect.Repeated:
+		msg := dynamicpb.NewMessage(fdesc.Message())
+		return protoreflect.ValueOfMessage(msg)
+	default:
+		return fdesc.Default()
+	}
 }
 
 type MessageCache map[protoreflect.MessageDescriptor]*message

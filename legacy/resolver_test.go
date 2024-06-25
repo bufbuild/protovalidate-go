@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import (
 
 	"github.com/bufbuild/protovalidate-go"
 	examplev1 "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 )
@@ -131,9 +130,9 @@ func TestWithLegacySupport(t *testing.T) {
 			err = val.Validate(test.msg)
 			if test.exErr {
 				valErr := &protovalidate.ValidationError{}
-				assert.ErrorAs(t, err, &valErr)
+				require.ErrorAs(t, err, &valErr)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
 		})
 	}

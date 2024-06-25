@@ -1,4 +1,4 @@
-// Copyright 2023 Buf Technologies, Inc.
+// Copyright 2023-2024 Buf Technologies, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -104,7 +104,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 			if test.exErr {
 				assert.Error(t, err)
 			} else {
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				assert.Len(t, set, test.exCt)
 			}
 		})
@@ -126,7 +126,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.False(t, ok)
 
 	asts, err := cache.loadOrCompileStandardConstraint(env, desc)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, asts)
 
 	cached, ok := cache.cache[desc]
@@ -134,7 +134,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.Equal(t, cached, asts)
 
 	asts, err = cache.loadOrCompileStandardConstraint(env, desc)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, cached, asts)
 }
 
