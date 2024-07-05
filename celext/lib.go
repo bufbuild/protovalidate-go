@@ -46,7 +46,7 @@ func DefaultEnv(useUTC bool) (*cel.Env, error) {
 		// known to the application. They will otherwise fail with a runtime error
 		// if the type is unknown.
 		cel.TypeDescs(protoregistry.GlobalFiles),
-		cel.Lib(lib{
+		cel.Lib(Lib{
 			useUTC: useUTC,
 		}),
 	)
@@ -69,19 +69,19 @@ func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOpti
 	return nil
 }
 
-// lib is the collection of functions and settings required by protovalidate
+// Lib is the collection of functions and settings required by protovalidate
 // beyond the standard definitions of the CEL Specification:
 //
 //	https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions
 //
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
-type lib struct {
+type Lib struct {
 	useUTC bool
 }
 
 //nolint:funlen
-func (l lib) CompileOptions() []cel.EnvOption {
+func (l Lib) CompileOptions() []cel.EnvOption {
 	return []cel.EnvOption{
 		cel.DefaultUTCTimeZone(l.useUTC),
 		cel.CrossTypeNumericComparisons(true),
@@ -354,7 +354,7 @@ func (l lib) CompileOptions() []cel.EnvOption {
 	}
 }
 
-func (l lib) ProgramOptions() []cel.ProgramOption {
+func (l Lib) ProgramOptions() []cel.ProgramOption {
 	return []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
@@ -362,7 +362,7 @@ func (l lib) ProgramOptions() []cel.ProgramOption {
 	}
 }
 
-func (l lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {
+func (l Lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {
 	return cel.MemberOverload(
 		itemType.String()+"_unique_bool",
 		[]*cel.Type{cel.ListType(itemType)},
@@ -377,7 +377,7 @@ func (l lib) uniqueMemberOverload(itemType *cel.Type, overload func(lister trait
 	)
 }
 
-func (l lib) uniqueScalar(list traits.Lister) ref.Val {
+func (l Lib) uniqueScalar(list traits.Lister) ref.Val {
 	size, ok := list.Size().Value().(int64)
 	if !ok {
 		return types.UnsupportedRefValConversionErr(list.Size().Value())
@@ -400,7 +400,7 @@ func (l lib) uniqueScalar(list traits.Lister) ref.Val {
 // compares bytes type CEL values. This function is used instead of uniqueScalar
 // as the bytes ([]uint8) type is not hashable in Go; we cheat this by converting
 // the value to a string.
-func (l lib) uniqueBytes(list traits.Lister) ref.Val {
+func (l Lib) uniqueBytes(list traits.Lister) ref.Val {
 	size, ok := list.Size().Value().(int64)
 	if !ok {
 		return types.UnsupportedRefValConversionErr(list.Size().Value())
@@ -422,7 +422,7 @@ func (l lib) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
-func (l lib) validateEmail(addr string) bool {
+func (l Lib) validateEmail(addr string) bool {
 	a, err := mail.ParseAddress(addr)
 	if err != nil || strings.ContainsRune(addr, '<') || a.Address != addr {
 		return false
@@ -437,7 +437,7 @@ func (l lib) validateEmail(addr string) bool {
 	return len(parts[0]) <= 64 && l.validateHostname(parts[1])
 }
 
-func (l lib) validateHostname(host string) bool {
+func (l Lib) validateHostname(host string) bool {
 	if len(host) > 253 {
 		return false
 	}
@@ -465,7 +465,7 @@ func (l lib) validateHostname(host string) bool {
 	return !allDigits
 }
 
-func (l lib) validateIP(addr string, ver int64) bool {
+func (l Lib) validateIP(addr string, ver int64) bool {
 	address := net.ParseIP(addr)
 	if address == nil {
 		return false
@@ -482,7 +482,7 @@ func (l lib) validateIP(addr string, ver int64) bool {
 	}
 }
 
-func (l lib) validateIPPrefix(p string, ver int64, strict bool) bool {
+func (l Lib) validateIPPrefix(p string, ver int64, strict bool) bool {
 	prefix, err := netip.ParsePrefix(p)
 	if err != nil {
 		return false
@@ -502,7 +502,7 @@ func (l lib) validateIPPrefix(p string, ver int64, strict bool) bool {
 	}
 }
 
-func (l lib) isHostAndPort(val string, portRequired bool) bool {
+func (l Lib) isHostAndPort(val string, portRequired bool) bool {
 	if len(val) == 0 {
 		return false
 	}
@@ -533,7 +533,7 @@ func (l lib) isHostAndPort(val string, portRequired bool) bool {
 		l.validatePort(port)
 }
 
-func (l lib) validatePort(val string) bool {
+func (l Lib) validatePort(val string) bool {
 	n, err := strconv.ParseUint(val, 10, 32)
 	return err == nil && n <= 65535
 }

@@ -26,7 +26,7 @@ import (
 func TestCELLib(t *testing.T) {
 	t.Parallel()
 
-	env, err := cel.NewEnv(cel.Lib(lib{}))
+	env, err := cel.NewEnv(cel.Lib(Lib{}))
 	require.NoError(t, err)
 
 	t.Run("ext", func(t *testing.T) {
