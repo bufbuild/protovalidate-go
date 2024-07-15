@@ -301,7 +301,8 @@ func (bldr *Builder) processEmbeddedMessage(
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if fdesc.Kind() != protoreflect.MessageKind ||
+	if (fdesc.Kind() != protoreflect.MessageKind &&
+		fdesc.Kind() != protoreflect.GroupKind) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && !forItems) {
@@ -326,7 +327,8 @@ func (bldr *Builder) processWrapperConstraints(
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if fdesc.Kind() != protoreflect.MessageKind ||
+	if (fdesc.Kind() != protoreflect.MessageKind &&
+		fdesc.Kind() != protoreflect.GroupKind) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && !forItems) {
@@ -374,7 +376,8 @@ func (bldr *Builder) processAnyConstraints(
 	_ MessageCache,
 ) error {
 	if (fdesc.IsList() && !forItems) ||
-		fdesc.Kind() != protoreflect.MessageKind ||
+		(fdesc.Kind() != protoreflect.MessageKind &&
+			fdesc.Kind() != protoreflect.GroupKind) ||
 		fdesc.Message().FullName() != "google.protobuf.Any" {
 		return nil
 	}
@@ -488,7 +491,8 @@ func (bldr *Builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool
 	case forItems && fdesc.IsList():
 		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
 		return msg.Get(fdesc).List().NewElement()
-	case fdesc.Kind() == protoreflect.MessageKind &&
+	case (fdesc.Kind() == protoreflect.MessageKind ||
+		fdesc.Kind() == protoreflect.GroupKind) &&
 		fdesc.Cardinality() != protoreflect.Repeated:
 		msg := dynamicpb.NewMessage(fdesc.Message())
 		return protoreflect.ValueOfMessage(msg)

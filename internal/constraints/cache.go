@@ -161,7 +161,8 @@ func (c *Cache) getExpectedConstraintDescriptor(
 		return mapFieldConstraintsDesc, true
 	case targetFieldDesc.IsList() && !forItems:
 		return repeatedFieldConstraintsDesc, true
-	case targetFieldDesc.Kind() == protoreflect.MessageKind:
+	case targetFieldDesc.Kind() == protoreflect.MessageKind,
+		targetFieldDesc.Kind() == protoreflect.GroupKind:
 		expected, ok = expectedWKTConstraints[targetFieldDesc.Message().FullName()]
 		return expected, ok
 	default:

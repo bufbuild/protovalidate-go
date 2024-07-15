@@ -61,7 +61,8 @@ func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOpti
 			RequiredCELEnvOptions(fieldDesc.MapValue())...,
 		)
 	}
-	if fieldDesc.Kind() == protoreflect.MessageKind {
+	if fieldDesc.Kind() == protoreflect.MessageKind ||
+		fieldDesc.Kind() == protoreflect.GroupKind {
 		return []cel.EnvOption{
 			cel.Types(dynamicpb.NewMessage(fieldDesc.Message())),
 		}
