@@ -124,7 +124,8 @@ func translateRule(
 	case pgvDesc.IsList():
 		// only repeated fields are either scalar types or WKTs
 		typConstraints.Set(pvDesc, value)
-	case pgvDesc.Kind() == protoreflect.MessageKind &&
+	case (pgvDesc.Kind() == protoreflect.MessageKind ||
+		pgvDesc.Kind() == protoreflect.GroupKind) &&
 		pgvDesc.Message().FullName() == "validate.FieldRules":
 		// recurse to translate RepeatedRules.items & MapRules.{keys,values}
 		cons := translateRules(value.Message())

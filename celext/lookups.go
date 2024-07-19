@@ -42,7 +42,8 @@ func ProtoFieldToCELType(fieldDesc protoreflect.FieldDescriptor, generic, forIte
 		}
 	}
 
-	if fieldDesc.Kind() == protoreflect.MessageKind {
+	if fieldDesc.Kind() == protoreflect.MessageKind ||
+		fieldDesc.Kind() == protoreflect.GroupKind {
 		switch fqn := fieldDesc.Message().FullName(); fqn {
 		case "google.protobuf.Any":
 			return cel.AnyType

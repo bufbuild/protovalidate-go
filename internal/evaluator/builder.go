@@ -301,7 +301,7 @@ func (bldr *Builder) processEmbeddedMessage(
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if fdesc.Kind() != protoreflect.MessageKind ||
+	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && !forItems) {
@@ -326,7 +326,7 @@ func (bldr *Builder) processWrapperConstraints(
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if fdesc.Kind() != protoreflect.MessageKind ||
+	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && !forItems) {
@@ -374,7 +374,7 @@ func (bldr *Builder) processAnyConstraints(
 	_ MessageCache,
 ) error {
 	if (fdesc.IsList() && !forItems) ||
-		fdesc.Kind() != protoreflect.MessageKind ||
+		!isMessageField(fdesc) ||
 		fdesc.Message().FullName() != "google.protobuf.Any" {
 		return nil
 	}
@@ -488,7 +488,7 @@ func (bldr *Builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool
 	case forItems && fdesc.IsList():
 		msg := dynamicpb.NewMessage(fdesc.ContainingMessage())
 		return msg.Get(fdesc).List().NewElement()
-	case fdesc.Kind() == protoreflect.MessageKind &&
+	case isMessageField(fdesc) &&
 		fdesc.Cardinality() != protoreflect.Repeated:
 		msg := dynamicpb.NewMessage(fdesc.Message())
 		return protoreflect.ValueOfMessage(msg)
@@ -508,4 +508,15 @@ func (c MessageCache) SyncTo(other MessageCache) {
 	for k, v := range c {
 		other[k] = v
 	}
+}
+
+// isMessageField returns true if the field descriptor fdesc describes a field
+// containing a submessage. Although they are represented differently on the
+// wire, group fields are treated like message fields in protoreflect and have
+// similar properties. In the 2023 edition of protobuf, message fields with the
+// delimited encoding feature will be detected as groups, but should otherwise
+// be treated the same.
+func isMessageField(fdesc protoreflect.FieldDescriptor) bool {
+	return fdesc.Kind() == protoreflect.MessageKind ||
+		fdesc.Kind() == protoreflect.GroupKind
 }
