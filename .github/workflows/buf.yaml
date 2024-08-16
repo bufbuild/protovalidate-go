@@ -7,6 +7,10 @@ on:
     branches: [ main ]
   workflow_dispatch: { } # support manual runs
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   validate-protos:
     name: Validate protos
@@ -21,6 +25,7 @@ jobs:
         uses: bufbuild/buf-action@v1
         with:
           github_token: ${{ github.token }}
+          token: ${{ secrets.BUF_TOKEN }}
           format: true
           lint: true
           breaking: true
