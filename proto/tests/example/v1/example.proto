@@ -24,8 +24,8 @@ message Person {
   string email = 2 [(buf.validate.field).string.email = true];
 
   string name = 3 [(buf.validate.field).string = {
-    pattern: "^[[:alpha:]]+( [[:alpha:]]+)*$",
-    max_bytes: 256,
+    pattern: "^[[:alpha:]]+( [[:alpha:]]+)*$"
+    max_bytes: 256
   }];
 
   Coordinates home = 4;
@@ -33,11 +33,11 @@ message Person {
 
 message Coordinates {
   double lat = 1 [(buf.validate.field).double = {
-    gte: -90,
+    gte: -90
     lte: 90
   }];
   double lng = 2 [(buf.validate.field).double = {
-    gte: -180,
+    gte: -180
     lte: 180
   }];
 }

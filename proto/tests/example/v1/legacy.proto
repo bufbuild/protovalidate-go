@@ -113,7 +113,7 @@ message LegacyMixedFields {
 
 message LegacyIgnoreEmpty {
   int32 x = 1 [(validate.rules).int32 = {
-    gt: 123,
+    gt: 123
     ignore_empty: true
   }];
 }

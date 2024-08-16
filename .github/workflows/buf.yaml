@@ -1,17 +1,15 @@
 name: Buf
 on:
-  pull_request:
-    paths:
-      - 'proto/**'
   push:
-    paths:
-      - 'proto/**'
-  delete:
-    paths:
-      - 'proto/**'
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: { } # support manual runs
 
-env:
-  BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+permissions:
+  contents: read
+  pull-requests: write
 
 jobs:
   validate-protos:
@@ -22,17 +20,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
-      - name: Install buf
-        uses: bufbuild/buf-setup-action@v1
+          fetch-depth: 2
+      - name: Buf CI
+        uses: bufbuild/buf-action@v1
         with:
           github_token: ${{ github.token }}
-      - name: Buf format
-        run: buf format -d --exit-code
-      - name: Buf lint
-        uses: bufbuild/buf-lint-action@v1
-      - name: Buf generate
-        run: |
-          mkdir -p .tmp/bin
-          cp $(which buf) .tmp/bin/buf
-          make checkgenerate
+          token: ${{ secrets.BUF_TOKEN }}
+          format: true
+          lint: true
+          breaking: true
+          push: false
+          archive: false
+      - name: Check Generate
+        run: make checkgenerate
