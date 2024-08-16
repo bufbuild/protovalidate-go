@@ -1,20 +1,11 @@
 name: Buf
 on:
-  pull_request:
-    paths:
-      - 'proto/**'
-      - 'buf.*'
   push:
-    paths:
-      - 'proto/**'
-      - 'buf.*'
-  delete:
-    paths:
-      - 'proto/**'
-      - 'buf.*'
-
-env:
-  BUF_TOKEN: ${{ secrets.BUF_TOKEN }}
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: { } # support manual runs
 
 jobs:
   validate-protos:
