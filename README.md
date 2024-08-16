@@ -97,6 +97,7 @@ the generated code via `buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/
 If you are using Buf [managed mode](https://buf.build/docs/generate/managed-mode/) to augment Go code generation, ensure 
 that the `protovalidate` module is excluded in your [`buf.gen.yaml`](https://buf.build/docs/configuration/v1/buf-gen-yaml#except):
 
+**`buf.gen.yaml` v1**
 ```yaml
 version: v1
 # <snip>
@@ -105,6 +106,18 @@ managed:
   go_package_prefix:
     except:
       - buf.build/bufbuild/protovalidate
+# <snip>
+```
+
+**`buf.gen.yaml` v2**
+```yaml
+version: v2
+# <snip>
+managed:
+  enabled: true
+  disable:
+    - file_option: go_package_prefix
+      module: buf.build/bufbuild/protovalidate
 # <snip>
 ```
 
