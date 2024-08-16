@@ -23,29 +23,29 @@ import "google/protobuf/field_mask.proto";
 
 message HasMsgExprs {
   option (buf.validate.message).cel = {
-    id: "x_lt_y",
-    message: "x must be less than y",
-    expression: "this.x < this.y",
+    id: "x_lt_y"
+    message: "x must be less than y"
+    expression: "this.x < this.y"
   };
 
   option (buf.validate.message).cel = {
-    id: "y_gt_42",
+    id: "y_gt_42"
     expression:
       "this.y > 42 ? ''"
-      ": 'y must be greater than 42'",
+      ": 'y must be greater than 42'"
   };
 
   int32 x = 1 [
     (buf.validate.field).cel = {
-      id: "x_even",
-      message: "x must be even",
+      id: "x_even"
+      message: "x must be even"
       expression: "this % 2 == 0"
     },
     (buf.validate.field).cel = {
-      id: "x_coprime_3",
+      id: "x_coprime_3"
       expression:
         "this % 3 != 0 ? ''"
-        ": 'x must not be divisible by 3'",
+        ": 'x must not be divisible by 3'"
     }
   ];
   int32 y = 2;
@@ -53,16 +53,16 @@ message HasMsgExprs {
 
 message SelfRecursive {
   option (buf.validate.message).cel = {
-    id: "unique_turtles",
-    message: "adjacent turtles must be unique",
-    expression: "this.x != this.turtle.x",
+    id: "unique_turtles"
+    message: "adjacent turtles must be unique"
+    expression: "this.x != this.turtle.x"
   };
 
   int32 x = 1;
   SelfRecursive turtle = 2 [(buf.validate.field).cel = {
-    id: "non_zero_baby_turtle",
-    message: "embedded turtle's x value must not be zero",
-    expression: "this.x > 0",
+    id: "non_zero_baby_turtle"
+    message: "embedded turtle's x value must not be zero"
+    expression: "this.x > 0"
   }];
 }
 
@@ -76,15 +76,15 @@ message LoopRecursiveB {
 
 message MsgHasOneof {
   option (buf.validate.message).cel = {
-    id: "test x",
+    id: "test x"
     expression:
       "this.x == '' ? '' : \n"
-      "!this.x.startsWith('foo') ? 'does not have prefix `foo`' : ''",
+      "!this.x.startsWith('foo') ? 'does not have prefix `foo`' : ''"
   };
 
   option (buf.validate.message).cel = {
-    id: "text y",
-    expression: "this.y >= 0",
+    id: "text y"
+    expression: "this.y >= 0"
   };
 
   oneof o {
@@ -97,16 +97,16 @@ message MsgHasOneof {
 
 message MsgHasRepeated {
   repeated float x = 1 [(buf.validate.field).repeated = {
-    max_items: 3,
-    min_items: 1,
+    max_items: 3
+    min_items: 1
     items: {
       cel: {
-        expression: "true",
+        expression: "true"
         message: "intentional false"
       }
       float: {gt: 0}
     }
-    unique: true,
+    unique: true
   }];
   repeated string y = 2 [(buf.validate.field).repeated.unique = true];
   repeated HasMsgExprs z = 3 [(buf.validate.field).repeated = {max_items: 2}];
@@ -114,10 +114,10 @@ message MsgHasRepeated {
 
 message MsgHasMap {
   map<int32, int32> int32map = 1 [(buf.validate.field).map = {
-    min_pairs: 3,
+    min_pairs: 3
     keys: {
       int32: {gt: 0}
-    },
+    }
     values: {
       int32: {lt: 0}
     }
@@ -128,16 +128,16 @@ message MsgHasMap {
 
 message TransitiveFieldConstraint {
   google.protobuf.FieldMask mask = 1 [(buf.validate.field).cel = {
-    id: "mask.paths",
-    message: "mask.paths must not be empty",
-    expression: "has(this.paths)",
+    id: "mask.paths"
+    message: "mask.paths must not be empty"
+    expression: "has(this.paths)"
   }];
 }
 
 message MultipleStepsTransitiveFieldConstraints {
   google.protobuf.Api api = 1 [(buf.validate.field).cel = {
-    id: "api.source_context.file_name",
-    message: "api's source context file name must not be empty",
+    id: "api.source_context.file_name"
+    message: "api's source context file name must not be empty"
     expression: "has(this.source_context.file_name)"
   }];
 }
@@ -148,8 +148,8 @@ message Simple {
 
 message FieldOfTypeAny {
   google.protobuf.Any any = 1 [(buf.validate.field).cel = {
-    id: "any_type",
-    message: "this should never fail",
+    id: "any_type"
+    message: "this should never fail"
     expression: "this == this"
   }];
 }
@@ -157,7 +157,7 @@ message FieldOfTypeAny {
 // https://github.com/bufbuild/protovalidate/issues/92
 message CelMapOnARepeated {
   repeated Value values = 1 [(buf.validate.field).cel = {
-    id: "env.vars.unique",
+    id: "env.vars.unique"
     expression: "this.map(v, v.name).unique() ? '' : 'value names must be unique'"
   }];
 
@@ -168,7 +168,7 @@ message CelMapOnARepeated {
 
 message RepeatedItemCel {
   repeated string paths = 1 [(buf.validate.field).repeated.items.cel = {
-    id: "paths.no_space",
+    id: "paths.no_space"
     expression: "!this.startsWith(' ')"
   }];
 }
