@@ -83,7 +83,7 @@ func (bldr *Builder) load(desc protoreflect.MessageDescriptor) MessageEvaluator 
 }
 
 // loadOrBuild either returns a memoized MessageEvaluator for the given
-// descriptor, or lazily constructs a new one. This method is thread-safe via
+// descriptor or lazily constructs a new one. This method is thread-safe via
 // locking.
 func (bldr *Builder) loadOrBuild(desc protoreflect.MessageDescriptor) MessageEvaluator {
 	if eval, ok := (*bldr.cache.Load())[desc]; ok {
