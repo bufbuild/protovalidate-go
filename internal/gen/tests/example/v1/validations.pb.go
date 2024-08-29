@@ -746,6 +746,273 @@ func (x *RepeatedItemCel) GetPaths() []string {
 	return nil
 }
 
+type OneTwo struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Field1 *F1 `protobuf:"bytes,1,opt,name=field1,proto3" json:"field1,omitempty"`
+	Field2 *F2 `protobuf:"bytes,2,opt,name=field2,proto3" json:"field2,omitempty"`
+}
+
+func (x *OneTwo) Reset() {
+	*x = OneTwo{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_tests_example_v1_validations_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *OneTwo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OneTwo) ProtoMessage() {}
+
+func (x *OneTwo) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OneTwo.ProtoReflect.Descriptor instead.
+func (*OneTwo) Descriptor() ([]byte, []int) {
+	return file_tests_example_v1_validations_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *OneTwo) GetField1() *F1 {
+	if x != nil {
+		return x.Field1
+	}
+	return nil
+}
+
+func (x *OneTwo) GetField2() *F2 {
+	if x != nil {
+		return x.Field2
+	}
+	return nil
+}
+
+type TwoOne struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Field2 *F2 `protobuf:"bytes,1,opt,name=field2,proto3" json:"field2,omitempty"`
+	Field1 *F1 `protobuf:"bytes,2,opt,name=field1,proto3" json:"field1,omitempty"`
+}
+
+func (x *TwoOne) Reset() {
+	*x = TwoOne{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_tests_example_v1_validations_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TwoOne) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TwoOne) ProtoMessage() {}
+
+func (x *TwoOne) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TwoOne.ProtoReflect.Descriptor instead.
+func (*TwoOne) Descriptor() ([]byte, []int) {
+	return file_tests_example_v1_validations_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *TwoOne) GetField2() *F2 {
+	if x != nil {
+		return x.Field2
+	}
+	return nil
+}
+
+func (x *TwoOne) GetField1() *F1 {
+	if x != nil {
+		return x.Field1
+	}
+	return nil
+}
+
+type F1 struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	NeedThis string          `protobuf:"bytes,1,opt,name=need_this,json=needThis,proto3" json:"need_this,omitempty"`
+	Field    *FieldWithIssue `protobuf:"bytes,2,opt,name=field,proto3" json:"field,omitempty"`
+}
+
+func (x *F1) Reset() {
+	*x = F1{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_tests_example_v1_validations_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *F1) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*F1) ProtoMessage() {}
+
+func (x *F1) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use F1.ProtoReflect.Descriptor instead.
+func (*F1) Descriptor() ([]byte, []int) {
+	return file_tests_example_v1_validations_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *F1) GetNeedThis() string {
+	if x != nil {
+		return x.NeedThis
+	}
+	return ""
+}
+
+func (x *F1) GetField() *FieldWithIssue {
+	if x != nil {
+		return x.Field
+	}
+	return nil
+}
+
+type F2 struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Field *FieldWithIssue `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+}
+
+func (x *F2) Reset() {
+	*x = F2{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *F2) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*F2) ProtoMessage() {}
+
+func (x *F2) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use F2.ProtoReflect.Descriptor instead.
+func (*F2) Descriptor() ([]byte, []int) {
+	return file_tests_example_v1_validations_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *F2) GetField() *FieldWithIssue {
+	if x != nil {
+		return x.Field
+	}
+	return nil
+}
+
+type FieldWithIssue struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	F1   *F1    `protobuf:"bytes,1,opt,name=f1,proto3" json:"f1,omitempty"`
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+}
+
+func (x *FieldWithIssue) Reset() {
+	*x = FieldWithIssue{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_tests_example_v1_validations_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FieldWithIssue) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FieldWithIssue) ProtoMessage() {}
+
+func (x *FieldWithIssue) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FieldWithIssue.ProtoReflect.Descriptor instead.
+func (*FieldWithIssue) Descriptor() ([]byte, []int) {
+	return file_tests_example_v1_validations_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *FieldWithIssue) GetF1() *F1 {
+	if x != nil {
+		return x.F1
+	}
+	return nil
+}
+
+func (x *FieldWithIssue) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 type CelMapOnARepeated_Value struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -757,7 +1024,7 @@ type CelMapOnARepeated_Value struct {
 func (x *CelMapOnARepeated_Value) Reset() {
 	*x = CelMapOnARepeated_Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+		mi := &file_tests_example_v1_validations_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -770,7 +1037,7 @@ func (x *CelMapOnARepeated_Value) String() string {
 func (*CelMapOnARepeated_Value) ProtoMessage() {}
 
 func (x *CelMapOnARepeated_Value) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -955,21 +1222,48 @@ var file_tests_example_v1_validations_proto_rawDesc = []byte{
 	0x01, 0x27, 0x0a, 0x0e, 0x70, 0x61, 0x74, 0x68, 0x73, 0x2e, 0x6e, 0x6f, 0x5f, 0x73, 0x70, 0x61,
 	0x63, 0x65, 0x1a, 0x15, 0x21, 0x74, 0x68, 0x69, 0x73, 0x2e, 0x73, 0x74, 0x61, 0x72, 0x74, 0x73,
 	0x57, 0x69, 0x74, 0x68, 0x28, 0x27, 0x20, 0x27, 0x29, 0x52, 0x05, 0x70, 0x61, 0x74, 0x68, 0x73,
-	0x42, 0xd8, 0x01, 0x0a, 0x14, 0x63, 0x6f, 0x6d, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65,
-	0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x42, 0x10, 0x56, 0x61, 0x6c, 0x69, 0x64,
-	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x4c, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x75, 0x66, 0x62, 0x75, 0x69,
-	0x6c, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65,
-	0x2d, 0x67, 0x6f, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x67, 0x65, 0x6e,
-	0x2f, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2f, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2f, 0x76,
-	0x31, 0x3b, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x54, 0x45,
-	0x58, 0xaa, 0x02, 0x10, 0x54, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c,
-	0x65, 0x2e, 0x56, 0x31, 0xca, 0x02, 0x10, 0x54, 0x65, 0x73, 0x74, 0x73, 0x5c, 0x45, 0x78, 0x61,
-	0x6d, 0x70, 0x6c, 0x65, 0x5c, 0x56, 0x31, 0xe2, 0x02, 0x1c, 0x54, 0x65, 0x73, 0x74, 0x73, 0x5c,
-	0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65,
-	0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x12, 0x54, 0x65, 0x73, 0x74, 0x73, 0x3a, 0x3a,
-	0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x22, 0x64, 0x0a, 0x06, 0x4f, 0x6e, 0x65, 0x54, 0x77, 0x6f, 0x12, 0x2c, 0x0a, 0x06, 0x66, 0x69,
+	0x65, 0x6c, 0x64, 0x31, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x74, 0x65, 0x73,
+	0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x46, 0x31,
+	0x52, 0x06, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x31, 0x12, 0x2c, 0x0a, 0x06, 0x66, 0x69, 0x65, 0x6c,
+	0x64, 0x32, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x73,
+	0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x46, 0x32, 0x52, 0x06,
+	0x66, 0x69, 0x65, 0x6c, 0x64, 0x32, 0x22, 0x64, 0x0a, 0x06, 0x54, 0x77, 0x6f, 0x4f, 0x6e, 0x65,
+	0x12, 0x2c, 0x0a, 0x06, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x32, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x14, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65,
+	0x2e, 0x76, 0x31, 0x2e, 0x46, 0x32, 0x52, 0x06, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x32, 0x12, 0x2c,
+	0x0a, 0x06, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x31, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14,
+	0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76,
+	0x31, 0x2e, 0x46, 0x31, 0x52, 0x06, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x31, 0x22, 0x59, 0x0a, 0x02,
+	0x46, 0x31, 0x12, 0x1b, 0x0a, 0x09, 0x6e, 0x65, 0x65, 0x64, 0x5f, 0x74, 0x68, 0x69, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6e, 0x65, 0x65, 0x64, 0x54, 0x68, 0x69, 0x73, 0x12,
+	0x36, 0x0a, 0x05, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20,
+	0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76,
+	0x31, 0x2e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x57, 0x69, 0x74, 0x68, 0x49, 0x73, 0x73, 0x75, 0x65,
+	0x52, 0x05, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x22, 0x3c, 0x0a, 0x02, 0x46, 0x32, 0x12, 0x36, 0x0a,
+	0x05, 0x66, 0x69, 0x65, 0x6c, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x74,
+	0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x2e,
+	0x46, 0x69, 0x65, 0x6c, 0x64, 0x57, 0x69, 0x74, 0x68, 0x49, 0x73, 0x73, 0x75, 0x65, 0x52, 0x05,
+	0x66, 0x69, 0x65, 0x6c, 0x64, 0x22, 0x53, 0x0a, 0x0e, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x57, 0x69,
+	0x74, 0x68, 0x49, 0x73, 0x73, 0x75, 0x65, 0x12, 0x24, 0x0a, 0x02, 0x66, 0x31, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d,
+	0x70, 0x6c, 0x65, 0x2e, 0x76, 0x31, 0x2e, 0x46, 0x31, 0x52, 0x02, 0x66, 0x31, 0x12, 0x1b, 0x0a,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xba, 0x48, 0x04,
+	0x72, 0x02, 0x10, 0x01, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x42, 0xd8, 0x01, 0x0a, 0x14, 0x63,
+	0x6f, 0x6d, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x73, 0x2e, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65,
+	0x2e, 0x76, 0x31, 0x42, 0x10, 0x56, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73,
+	0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x4c, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e,
+	0x63, 0x6f, 0x6d, 0x2f, 0x62, 0x75, 0x66, 0x62, 0x75, 0x69, 0x6c, 0x64, 0x2f, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x2d, 0x67, 0x6f, 0x2f, 0x69, 0x6e,
+	0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x67, 0x65, 0x6e, 0x2f, 0x74, 0x65, 0x73, 0x74, 0x73,
+	0x2f, 0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2f, 0x76, 0x31, 0x3b, 0x65, 0x78, 0x61, 0x6d,
+	0x70, 0x6c, 0x65, 0x76, 0x31, 0xa2, 0x02, 0x03, 0x54, 0x45, 0x58, 0xaa, 0x02, 0x10, 0x54, 0x65,
+	0x73, 0x74, 0x73, 0x2e, 0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x2e, 0x56, 0x31, 0xca, 0x02,
+	0x10, 0x54, 0x65, 0x73, 0x74, 0x73, 0x5c, 0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65, 0x5c, 0x56,
+	0x31, 0xe2, 0x02, 0x1c, 0x54, 0x65, 0x73, 0x74, 0x73, 0x5c, 0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c,
+	0x65, 0x5c, 0x56, 0x31, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61,
+	0xea, 0x02, 0x12, 0x54, 0x65, 0x73, 0x74, 0x73, 0x3a, 0x3a, 0x45, 0x78, 0x61, 0x6d, 0x70, 0x6c,
+	0x65, 0x3a, 0x3a, 0x56, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -984,7 +1278,7 @@ func file_tests_example_v1_validations_proto_rawDescGZIP() []byte {
 	return file_tests_example_v1_validations_proto_rawDescData
 }
 
-var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_tests_example_v1_validations_proto_goTypes = []interface{}{
 	(*HasMsgExprs)(nil),                             // 0: tests.example.v1.HasMsgExprs
 	(*SelfRecursive)(nil),                           // 1: tests.example.v1.SelfRecursive
@@ -999,13 +1293,18 @@ var file_tests_example_v1_validations_proto_goTypes = []interface{}{
 	(*FieldOfTypeAny)(nil),                          // 10: tests.example.v1.FieldOfTypeAny
 	(*CelMapOnARepeated)(nil),                       // 11: tests.example.v1.CelMapOnARepeated
 	(*RepeatedItemCel)(nil),                         // 12: tests.example.v1.RepeatedItemCel
-	nil,                                             // 13: tests.example.v1.MsgHasMap.Int32mapEntry
-	nil,                                             // 14: tests.example.v1.MsgHasMap.StringMapEntry
-	nil,                                             // 15: tests.example.v1.MsgHasMap.MessageMapEntry
-	(*CelMapOnARepeated_Value)(nil),                 // 16: tests.example.v1.CelMapOnARepeated.Value
-	(*fieldmaskpb.FieldMask)(nil),                   // 17: google.protobuf.FieldMask
-	(*apipb.Api)(nil),                               // 18: google.protobuf.Api
-	(*anypb.Any)(nil),                               // 19: google.protobuf.Any
+	(*OneTwo)(nil),                                  // 13: tests.example.v1.OneTwo
+	(*TwoOne)(nil),                                  // 14: tests.example.v1.TwoOne
+	(*F1)(nil),                                      // 15: tests.example.v1.F1
+	(*F2)(nil),                                      // 16: tests.example.v1.F2
+	(*FieldWithIssue)(nil),                          // 17: tests.example.v1.FieldWithIssue
+	nil,                                             // 18: tests.example.v1.MsgHasMap.Int32mapEntry
+	nil,                                             // 19: tests.example.v1.MsgHasMap.StringMapEntry
+	nil,                                             // 20: tests.example.v1.MsgHasMap.MessageMapEntry
+	(*CelMapOnARepeated_Value)(nil),                 // 21: tests.example.v1.CelMapOnARepeated.Value
+	(*fieldmaskpb.FieldMask)(nil),                   // 22: google.protobuf.FieldMask
+	(*apipb.Api)(nil),                               // 23: google.protobuf.Api
+	(*anypb.Any)(nil),                               // 24: google.protobuf.Any
 }
 var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	1,  // 0: tests.example.v1.SelfRecursive.turtle:type_name -> tests.example.v1.SelfRecursive
@@ -1013,19 +1312,26 @@ var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	2,  // 2: tests.example.v1.LoopRecursiveB.a:type_name -> tests.example.v1.LoopRecursiveA
 	0,  // 3: tests.example.v1.MsgHasOneof.msg:type_name -> tests.example.v1.HasMsgExprs
 	0,  // 4: tests.example.v1.MsgHasRepeated.z:type_name -> tests.example.v1.HasMsgExprs
-	13, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
-	14, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
-	15, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
-	17, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
-	18, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
-	19, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
-	16, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
-	2,  // 12: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	18, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
+	19, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
+	20, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
+	22, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
+	23, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
+	24, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
+	21, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
+	15, // 12: tests.example.v1.OneTwo.field1:type_name -> tests.example.v1.F1
+	16, // 13: tests.example.v1.OneTwo.field2:type_name -> tests.example.v1.F2
+	16, // 14: tests.example.v1.TwoOne.field2:type_name -> tests.example.v1.F2
+	15, // 15: tests.example.v1.TwoOne.field1:type_name -> tests.example.v1.F1
+	17, // 16: tests.example.v1.F1.field:type_name -> tests.example.v1.FieldWithIssue
+	17, // 17: tests.example.v1.F2.field:type_name -> tests.example.v1.FieldWithIssue
+	15, // 18: tests.example.v1.FieldWithIssue.f1:type_name -> tests.example.v1.F1
+	2,  // 19: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
+	20, // [20:20] is the sub-list for method output_type
+	20, // [20:20] is the sub-list for method input_type
+	20, // [20:20] is the sub-list for extension type_name
+	20, // [20:20] is the sub-list for extension extendee
+	0,  // [0:20] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_validations_proto_init() }
@@ -1190,7 +1496,67 @@ func file_tests_example_v1_validations_proto_init() {
 				return nil
 			}
 		}
+		file_tests_example_v1_validations_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*OneTwo); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_tests_example_v1_validations_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TwoOne); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_tests_example_v1_validations_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*F1); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_tests_example_v1_validations_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*F2); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_tests_example_v1_validations_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FieldWithIssue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_tests_example_v1_validations_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CelMapOnARepeated_Value); i {
 			case 0:
 				return &v.state
@@ -1214,7 +1580,7 @@ func file_tests_example_v1_validations_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_tests_example_v1_validations_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

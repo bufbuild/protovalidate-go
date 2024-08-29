@@ -41,7 +41,12 @@ func (m *message) EvaluateMessage(msg protoreflect.Message, failFast bool) error
 }
 
 func (m *message) Tautology() bool {
-	return m.Err == nil && m.evaluators.Tautology()
+	// returning false for now to avoid recursive messages causing false positives
+	// on tautology detection.
+	//
+	// TODO: use a more sophisticated method to detect recursions so we can
+	//  continue to detect tautologies on message evaluators.
+	return false
 }
 
 func (m *message) Append(eval MessageEvaluator) {

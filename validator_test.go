@@ -198,3 +198,45 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	require.ErrorAs(t, err, &valErr)
 	assert.Equal(t, "paths.no_space", valErr.Violations[0].GetConstraintId())
 }
+
+func TestValidator_Validate_Issue141(t *testing.T) {
+	t.Parallel()
+
+	t.Run("FieldWithIssue", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.FieldWithIssue{}
+		err = val.Validate(msg)
+		var valErr *ValidationError
+		require.ErrorAs(t, err, &valErr)
+	})
+
+	t.Run("OneTwo", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.OneTwo{
+			Field1: &pb.F1{
+				Field: &pb.FieldWithIssue{},
+			},
+		}
+		err = val.Validate(msg)
+		var valErr *ValidationError
+		require.ErrorAs(t, err, &valErr)
+	})
+
+	t.Run("TwoOne", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.TwoOne{
+			Field1: &pb.F1{
+				Field: &pb.FieldWithIssue{},
+			},
+		}
+		err = val.Validate(msg)
+		var valErr *ValidationError
+		require.ErrorAs(t, err, &valErr)
+	})
+}
