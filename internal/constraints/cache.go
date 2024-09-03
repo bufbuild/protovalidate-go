@@ -15,14 +15,17 @@
 package constraints
 
 import (
+	"fmt"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/priv"
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/shared"
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // Cache is a build-through cache to computed standard constraints.
@@ -102,6 +105,11 @@ func (c *Cache) resolveConstraints(
 		return nil, true, nil
 	}
 	rules = constraints.Get(setOneof).Message()
+	// Reparse unrecognized fields so that we get dynamic extensions.
+	err = reparseUnrecognized(rules)
+	if err != nil {
+		return nil, false, fmt.Errorf("error reparsing message: %v", err)
+	}
 	return rules, false, nil
 }
 
@@ -137,7 +145,7 @@ func (c *Cache) loadOrCompileStandardConstraint(
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), priv.E_Field).(*priv.FieldConstraints)
+	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), shared.E_Field).(*shared.FieldConstraints)
 	set, err = expression.CompileASTs(exprs.GetCel(), env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
@@ -169,4 +177,19 @@ func (c *Cache) getExpectedConstraintDescriptor(
 		expected, ok = expectedStandardConstraints[targetFieldDesc.Kind()]
 		return expected, ok
 	}
+}
+
+func reparseUnrecognized(reflectMessage protoreflect.Message) error {
+	unknown := reflectMessage.GetUnknown()
+	if len(unknown) > 0 {
+		reflectMessage.SetUnknown(nil)
+		options := proto.UnmarshalOptions{
+			Resolver: protoregistry.GlobalTypes,
+			Merge:    true,
+		}
+		if err := options.Unmarshal(unknown, reflectMessage.Interface()); err != nil {
+			return err
+		}
+	}
+	return nil
 }

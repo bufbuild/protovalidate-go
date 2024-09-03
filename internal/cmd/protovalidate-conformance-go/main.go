@@ -58,6 +58,25 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 		err = fmt.Errorf("failed to parse file descriptors: %w", err)
 		return nil, err
 	}
+	// Register all dynamic FDS files and their extensions.
+	files.RangeFiles(func(file protoreflect.FileDescriptor) bool {
+		if _, err := protoregistry.GlobalFiles.FindFileByPath(file.Path()); err == nil {
+			// Already registered
+			return true
+		}
+		err = protoregistry.GlobalFiles.RegisterFile(file)
+		if err != nil {
+			err = fmt.Errorf("failed to register file descriptor %q: %w", file.FullName(), err)
+		}
+		exts := file.Extensions()
+		for i := 0; i < exts.Len(); i++ {
+			protoregistry.GlobalTypes.RegisterExtension(dynamicpb.NewExtensionType(exts.Get(i)))
+		}
+		return err == nil
+	})
+	if err != nil {
+		return nil, err
+	}
 	val, err := protovalidate.New()
 	if err != nil {
 		err = fmt.Errorf("failed to initialize validator: %w", err)
