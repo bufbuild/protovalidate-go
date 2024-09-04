@@ -23,6 +23,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -60,8 +61,19 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, _ protoreflect.Value) bool {
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, desc)
+	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+		fieldEnv, compileErr := env.Extend(
+			cel.Constant(
+				"rule",
+				celext.ProtoFieldToCELType(desc, true, forItems),
+				types.DefaultTypeAdapter.NativeToValue(rule.Interface()),
+			),
+		)
+		if err != nil {
+			err = compileErr
+			return false
+		}
+		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, desc)
 		if compileErr != nil {
 			err = compileErr
 			return false
