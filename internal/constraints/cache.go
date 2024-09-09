@@ -69,7 +69,7 @@ func (c *Cache) Build(
 				types.DefaultTypeAdapter.NativeToValue(rule.Interface()),
 			),
 		)
-		if err != nil {
+		if compileErr != nil {
 			err = compileErr
 			return false
 		}
