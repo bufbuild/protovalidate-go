@@ -16,6 +16,8 @@ package errors
 
 import (
 	"errors"
+
+	"google.golang.org/protobuf/proto"
 )
 
 // Merge is a utility to resolve and combine errors resulting from
@@ -60,7 +62,7 @@ func MarkForKey(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			violation.ForKey = true
+			violation.ForKey = proto.Bool(true)
 		}
 	}
 }

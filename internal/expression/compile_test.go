@@ -22,6 +22,7 @@ import (
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestCompile(t *testing.T) {
@@ -42,8 +43,8 @@ func TestCompile(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 		exprs := []*validate.Constraint{
-			{Id: "foo", Expression: "this == 123"},
-			{Id: "bar", Expression: "'a string'"},
+			{Id: proto.String("foo"), Expression: proto.String("this == 123")},
+			{Id: proto.String("bar"), Expression: proto.String("'a string'")},
 		}
 		set, err := Compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
 		assert.Len(t, set, len(exprs))
@@ -53,7 +54,7 @@ func TestCompile(t *testing.T) {
 	t.Run("env extension err", func(t *testing.T) {
 		t.Parallel()
 		exprs := []*validate.Constraint{
-			{Id: "foo", Expression: "0 != 0"},
+			{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
 		}
 		set, err := Compile(exprs, baseEnv, cel.Types(true))
 		assert.Nil(t, set)
@@ -64,7 +65,7 @@ func TestCompile(t *testing.T) {
 	t.Run("bad syntax", func(t *testing.T) {
 		t.Parallel()
 		exprs := []*validate.Constraint{
-			{Id: "foo", Expression: "!@#$%^&"},
+			{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
 		}
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
@@ -75,7 +76,7 @@ func TestCompile(t *testing.T) {
 	t.Run("invalid output type", func(t *testing.T) {
 		t.Parallel()
 		exprs := []*validate.Constraint{
-			{Id: "foo", Expression: "1.23"},
+			{Id: proto.String("foo"), Expression: proto.String("1.23")},
 		}
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)

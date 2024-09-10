@@ -17,6 +17,7 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -47,9 +48,9 @@ func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
 func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
 	if f.Required && !msg.Has(f.Descriptor) {
 		return &errors.ValidationError{Violations: []*validate.Violation{{
-			FieldPath:    string(f.Descriptor.Name()),
-			ConstraintId: "required",
-			Message:      "value is required",
+			FieldPath:    proto.String(string(f.Descriptor.Name())),
+			ConstraintId: proto.String("required"),
+			Message:      proto.String("value is required"),
 		}}}
 	}
 

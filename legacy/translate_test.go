@@ -113,14 +113,14 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacySkipped{},
 			field: "x",
 			ex: &validate.FieldConstraints{
-				Ignore: validate.Ignore_IGNORE_ALWAYS,
+				Ignore: toPointer(validate.Ignore_IGNORE_ALWAYS),
 			},
 		},
 		{
 			msg:   &examplev1.LegacyMessageRequired{},
 			field: "x",
 			ex: &validate.FieldConstraints{
-				Required: true,
+				Required: proto.Bool(true),
 			},
 		},
 		{
@@ -176,7 +176,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacyWKTRequired{},
 			field: "any",
 			ex: &validate.FieldConstraints{
-				Required: true,
+				Required: proto.Bool(true),
 				Type:     &validate.FieldConstraints_Any{},
 			},
 		},
@@ -184,7 +184,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacyWKTRequired{},
 			field: "ts",
 			ex: &validate.FieldConstraints{
-				Required: true,
+				Required: proto.Bool(true),
 				Type:     &validate.FieldConstraints_Timestamp{},
 			},
 		},
@@ -192,7 +192,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacyWKTRequired{},
 			field: "dur",
 			ex: &validate.FieldConstraints{
-				Required: true,
+				Required: proto.Bool(true),
 				Type:     &validate.FieldConstraints_Duration{},
 			},
 		},
@@ -200,7 +200,7 @@ func TestTranslateFieldOptions(t *testing.T) {
 			msg:   &examplev1.LegacyIgnoreEmpty{},
 			field: "x",
 			ex: &validate.FieldConstraints{
-				Ignore: validate.Ignore_IGNORE_IF_UNPOPULATED,
+				Ignore: toPointer(validate.Ignore_IGNORE_IF_UNPOPULATED),
 				Type: &validate.FieldConstraints_Int32{
 					Int32: &validate.Int32Rules{
 						GreaterThan: &validate.Int32Rules_Gt{

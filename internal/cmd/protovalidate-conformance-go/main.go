@@ -70,7 +70,10 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 		}
 		exts := file.Extensions()
 		for i := 0; i < exts.Len(); i++ {
-			protoregistry.GlobalTypes.RegisterExtension(dynamicpb.NewExtensionType(exts.Get(i)))
+			err = protoregistry.GlobalTypes.RegisterExtension(dynamicpb.NewExtensionType(exts.Get(i)))
+			if err != nil {
+				return false
+			}
 		}
 		return err == nil
 	})

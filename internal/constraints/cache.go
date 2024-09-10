@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/shared"
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
@@ -120,7 +119,7 @@ func (c *Cache) resolveConstraints(
 	// Reparse unrecognized fields so that we get dynamic extensions.
 	err = reparseUnrecognized(rules)
 	if err != nil {
-		return nil, false, fmt.Errorf("error reparsing message: %v", err)
+		return nil, false, fmt.Errorf("error reparsing message: %w", err)
 	}
 	return rules, false, nil
 }
@@ -157,7 +156,7 @@ func (c *Cache) loadOrCompileStandardConstraint(
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), shared.E_Field).(*shared.FieldConstraints)
+	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), validate.E_SharedField).(*validate.SharedFieldConstraints)
 	set, err = expression.CompileASTs(exprs.GetCel(), env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
