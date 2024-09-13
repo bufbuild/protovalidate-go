@@ -24,6 +24,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/resolver"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 type (
@@ -59,7 +60,10 @@ type Validator struct {
 // up the CEL execution environment if the configuration is invalid. See the
 // individual ValidatorOption for how they impact the fallibility of New.
 func New(options ...ValidatorOption) (*Validator, error) {
-	cfg := config{resolver: resolver.DefaultResolver{}}
+	cfg := config{
+		resolver:              resolver.DefaultResolver{},
+		extensionTypeResolver: protoregistry.GlobalTypes,
+	}
 	for _, opt := range options {
 		opt(&cfg)
 	}
@@ -74,6 +78,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		env,
 		cfg.disableLazy,
 		cfg.resolver,
+		cfg.extensionTypeResolver,
 		cfg.desc...,
 	)
 
@@ -99,11 +104,12 @@ func (v *Validator) Validate(msg proto.Message) error {
 }
 
 type config struct {
-	failFast    bool
-	useUTC      bool
-	disableLazy bool
-	desc        []protoreflect.MessageDescriptor
-	resolver    StandardConstraintResolver
+	failFast              bool
+	useUTC                bool
+	disableLazy           bool
+	desc                  []protoreflect.MessageDescriptor
+	resolver              StandardConstraintResolver
+	extensionTypeResolver protoregistry.ExtensionTypeResolver
 }
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -181,5 +187,14 @@ type StandardConstraintInterceptor func(res StandardConstraintResolver) Standard
 func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor) ValidatorOption {
 	return func(c *config) {
 		c.resolver = interceptor(c.resolver)
+	}
+}
+
+// WithExtensionTypeResolver specifies a resolver to use when reparsing unknown
+// extension types. When dealing with dynamic file descriptor sets, passing this
+// option will allow extensions to be resolved using a custom resolver.
+func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionTypeResolver) ValidatorOption {
+	return func(c *config) {
+		c.extensionTypeResolver = extensionTypeResolver
 	}
 }

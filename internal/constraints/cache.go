@@ -21,6 +21,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
+	"github.com/bufbuild/protovalidate-go/internal/extensions"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/proto"
@@ -47,9 +48,15 @@ func (c *Cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
-	constraints, done, err := c.resolveConstraints(fieldDesc, fieldConstraints, forItems)
+	constraints, done, err := c.resolveConstraints(
+		fieldDesc,
+		fieldConstraints,
+		extensionTypeResolver,
+		forItems,
+	)
 	if done {
 		return nil, err
 	}
@@ -96,6 +103,7 @@ func (c *Cache) Build(
 func (c *Cache) resolveConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	forItems bool,
 ) (rules protoreflect.Message, done bool, err error) {
 	constraints := fieldConstraints.ProtoReflect()
@@ -117,8 +125,7 @@ func (c *Cache) resolveConstraints(
 	}
 	rules = constraints.Get(setOneof).Message()
 	// Reparse unrecognized fields so that we get dynamic extensions.
-	err = reparseUnrecognized(rules)
-	if err != nil {
+	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
 		return nil, false, fmt.Errorf("error reparsing message: %w", err)
 	}
 	return rules, false, nil
@@ -156,7 +163,10 @@ func (c *Cache) loadOrCompileStandardConstraint(
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), validate.E_SharedField).(*validate.SharedFieldConstraints)
+	exprs := extensions.Resolve[*validate.PredefinedConstraints](
+		constraintFieldDesc.Options(),
+		validate.E_Predefined,
+	)
 	set, err = expression.CompileASTs(exprs.GetCel(), env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
@@ -190,12 +200,14 @@ func (c *Cache) getExpectedConstraintDescriptor(
 	}
 }
 
-func reparseUnrecognized(reflectMessage protoreflect.Message) error {
-	unknown := reflectMessage.GetUnknown()
-	if len(unknown) > 0 {
+func reparseUnrecognized(
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	reflectMessage protoreflect.Message,
+) error {
+	if unknown := reflectMessage.GetUnknown(); len(unknown) > 0 {
 		reflectMessage.SetUnknown(nil)
 		options := proto.UnmarshalOptions{
-			Resolver: protoregistry.GlobalTypes,
+			Resolver: extensionTypeResolver,
 			Merge:    true,
 		}
 		if err := options.Unmarshal(unknown, reflectMessage.Interface()); err != nil {
