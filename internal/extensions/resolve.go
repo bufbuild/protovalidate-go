@@ -15,18 +15,18 @@
 package extensions
 
 import (
-	"strings"
-
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"google.golang.org/protobuf/encoding/protowire"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/runtime/protoimpl"
+	"google.golang.org/protobuf/types/descriptorpb"
+	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 const (
-	newExtensionIndex      = "1159"  // protovalidate versions >= v0.2.0
-	previousExtensionIndex = "51071" // protovalidate versions < v0.2.0
+	legacyExtensionIndex protowire.Number = 51071 // protovalidate versions < v0.2.0
 )
 
 //nolint:gochecknoglobals // static data, only want single instance
@@ -58,10 +58,8 @@ func Resolve[C proto.Message](
 // extensionResolver implements most of the logic of resolving protovalidate
 // extensions.
 type extensionResolver struct {
-	// registry is a registry that just contains the protovalidate extensions.
-	// Consulting the global registry is unnecessary and will incur global mutex
-	// locks, so it is best avoided.
-	registry *protoregistry.Types
+	// types is a types that just contains the protovalidate extensions.
+	types *protoregistry.Types
 
 	// legacyExtensionMap is a mapping from current protovalidate extensions to
 	// legacy protovalidate extensions, used for backwards compatibility. This
@@ -73,41 +71,55 @@ type extensionResolver struct {
 // init and will panic if it fails.
 func newExtensionResolver() extensionResolver {
 	resolver := extensionResolver{
-		registry:           &protoregistry.Types{},
+		types:              &protoregistry.Types{},
 		legacyExtensionMap: make(map[protoreflect.ExtensionType]protoreflect.ExtensionType),
 	}
 	resolver.register(validate.E_Field)
 	resolver.register(validate.E_Message)
 	resolver.register(validate.E_Oneof)
 	resolver.register(validate.E_Predefined)
-	resolver.register(resolver.createLegacyExtension(validate.E_Field))
-	resolver.register(resolver.createLegacyExtension(validate.E_Message))
-	resolver.register(resolver.createLegacyExtension(validate.E_Oneof))
+	resolver.registerLegacy(validate.E_Field)
+	resolver.registerLegacy(validate.E_Message)
+	resolver.registerLegacy(validate.E_Oneof)
 	return resolver
 }
 
 // register registers an extension into the resolver's registry. This is only
 // called at init and will panic if it fails.
-func (resolver extensionResolver) register(xt protoreflect.ExtensionType) {
-	if err := resolver.registry.RegisterExtension(xt); err != nil {
+func (resolver extensionResolver) register(extension protoreflect.ExtensionType) {
+	if err := resolver.types.RegisterExtension(extension); err != nil {
 		//nolint:forbidigo // this needs to be a fatal at init
 		panic(err)
 	}
 }
 
-// createLegacyExtension creates a legacy extension, putting it in the legacy
-// extension mapping and returning it.
-func (resolver extensionResolver) createLegacyExtension(extensionInfo *protoimpl.ExtensionInfo) *protoimpl.ExtensionInfo {
-	legacyExtensionInfo := &protoimpl.ExtensionInfo{
-		ExtendedType:  extensionInfo.ExtendedType,
-		ExtensionType: extensionInfo.ExtensionType,
-		Field:         51071,
-		Name:          extensionInfo.Name + "_legacy",
-		Tag:           strings.Replace(extensionInfo.Tag, newExtensionIndex, previousExtensionIndex, 1),
-		Filename:      extensionInfo.Filename,
+// registerLegacy creates and registers a legacy extension.
+func (resolver extensionResolver) registerLegacy(extension protoreflect.ExtensionType) {
+	fileDescriptor, err := protodesc.NewFile(&descriptorpb.FileDescriptorProto{
+		Name:    proto.String("buf/validate/validate_legacy.proto"),
+		Package: proto.String("buf.validate"),
+		Dependency: []string{
+			"buf/validate/validate.proto",
+			"google/protobuf/descriptor.proto",
+		},
+		Extension: []*descriptorpb.FieldDescriptorProto{
+			{
+				Name:     proto.String(string(extension.TypeDescriptor().Name()) + "_legacy"),
+				Number:   proto.Int32(int32(legacyExtensionIndex)),
+				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+				Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
+				TypeName: proto.String(string(extension.TypeDescriptor().Message().FullName())),
+				Extendee: proto.String(string(extension.TypeDescriptor().ContainingMessage().FullName())),
+			},
+		},
+	}, protoregistry.GlobalFiles)
+	if err != nil {
+		//nolint:forbidigo // this needs to be a fatal at init
+		panic(err)
 	}
-	resolver.legacyExtensionMap[extensionInfo] = legacyExtensionInfo
-	return legacyExtensionInfo
+	legacyExtension := dynamicpb.NewExtensionType(fileDescriptor.Extensions().Get(0))
+	resolver.register(legacyExtension)
+	resolver.legacyExtensionMap[extension] = legacyExtension
 }
 
 // resolve handles the majority of extension resolution logic. This will return
@@ -125,7 +137,7 @@ func (resolver extensionResolver) resolve(
 		if unknown := options.ProtoReflect().GetUnknown(); len(unknown) > 0 {
 			reparsedOptions := options.ProtoReflect().Type().New().Interface()
 			if err := (proto.UnmarshalOptions{
-				Resolver: resolver.registry,
+				Resolver: resolver.types,
 			}).Unmarshal(unknown, reparsedOptions); err == nil {
 				msg = resolver.getExtensionOrLegacy(reparsedOptions, extensionType)
 			}
@@ -147,13 +159,7 @@ func (resolver extensionResolver) getExtensionOrLegacy(
 		extension, _ := reflect.Get(extensionType.TypeDescriptor()).Interface().(protoreflect.Message)
 		return extension.Interface()
 	}
-	// This cast allows us to avoid using a map-of-interfaces for the legacy
-	// extensions, which would be undesirable.
-	extensionTypeInfo, ok := extensionType.(*protoimpl.ExtensionInfo)
-	if !ok {
-		return nil
-	}
-	legacyExtensionType, ok := resolver.legacyExtensionMap[extensionTypeInfo]
+	legacyExtensionType, ok := resolver.legacyExtensionMap[extensionType]
 	if !ok {
 		return nil
 	}
