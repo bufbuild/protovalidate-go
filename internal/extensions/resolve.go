@@ -126,7 +126,7 @@ func (resolver extensionResolver) resolve(
 			reparsedOptions := options.ProtoReflect().Type().New().Interface()
 			if err := (proto.UnmarshalOptions{
 				Resolver: resolver.registry,
-			}).Unmarshal(unknown, reparsedOptions); err != nil {
+			}).Unmarshal(unknown, reparsedOptions); err == nil {
 				msg = resolver.getExtensionOrLegacy(reparsedOptions, extensionType)
 			}
 		}
