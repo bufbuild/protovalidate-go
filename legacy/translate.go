@@ -70,7 +70,7 @@ func translateRules(rules protoreflect.Message) *pv.FieldConstraints {
 		if msgRules.Get(msgDesc.Fields().ByName("required")).Bool() {
 			constraints.Required = proto.Bool(true)
 		} else if msgRules.Get(msgDesc.Fields().ByName("skip")).Bool() {
-			constraints.Ignore = toPointer(pv.Ignore_IGNORE_ALWAYS)
+			constraints.Ignore = pv.Ignore_IGNORE_ALWAYS.Enum()
 		}
 	}
 
@@ -105,7 +105,7 @@ func translateRule(
 		return true
 	} else if pgvDesc.Name() == "ignore_empty" && pgvDesc.Kind() == protoreflect.BoolKind && value.Bool() {
 		// old `ignore_empty` fields on the type rules need to be lifted to the top level
-		constraints.Ignore = toPointer(pv.Ignore_IGNORE_IF_UNPOPULATED)
+		constraints.Ignore = pv.Ignore_IGNORE_IF_UNPOPULATED.Enum()
 		return true
 	}
 
@@ -143,8 +143,4 @@ func translateRule(
 		typConstraints.Set(pvDesc, value)
 	}
 	return true
-}
-
-func toPointer[T any](value T) *T {
-	return &value
 }
