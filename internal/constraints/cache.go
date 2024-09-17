@@ -15,8 +15,6 @@
 package constraints
 
 import (
-	"fmt"
-
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
@@ -62,10 +60,10 @@ func (c *Cache) Build(
 	}
 
 	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
-		return nil, fmt.Errorf("error reparsing message: %w", err)
+		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
 	}
 	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
-		return nil, errors.NewCompilationErrorf("unknown rules in %s", constraints.Descriptor().FullName())
+		return nil, errors.NewCompilationErrorf("unknown constraints in %s", constraints.Descriptor().FullName())
 	}
 
 	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
