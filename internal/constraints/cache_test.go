@@ -101,7 +101,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 			require.NoError(t, err)
 			c := NewCache()
 
-			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, test.forItems)
+			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems)
 			if test.exErr {
 				assert.Error(t, err)
 			} else {

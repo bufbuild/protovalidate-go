@@ -38,6 +38,7 @@ type Builder struct {
 	constraints           constraints.Cache
 	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
+	allowUnknownFields    bool
 	Load                  func(desc protoreflect.MessageDescriptor) MessageEvaluator
 }
 
@@ -53,6 +54,7 @@ func NewBuilder(
 	disableLazy bool,
 	res StandardConstraintResolver,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	allowUnknownFields bool,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *Builder {
 	bldr := &Builder{
@@ -60,6 +62,7 @@ func NewBuilder(
 		constraints:           constraints.NewCache(),
 		resolver:              res,
 		extensionTypeResolver: extensionTypeResolver,
+		allowUnknownFields:    allowUnknownFields,
 	}
 
 	if disableLazy {
@@ -362,6 +365,7 @@ func (bldr *Builder) processStandardConstraints(
 		fdesc,
 		constraints,
 		bldr.extensionTypeResolver,
+		bldr.allowUnknownFields,
 		forItems,
 	)
 	if err != nil {

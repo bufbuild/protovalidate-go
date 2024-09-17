@@ -49,16 +49,23 @@ func (c *Cache) Build(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	allowUnknownFields bool,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
 	constraints, done, err := c.resolveConstraints(
 		fieldDesc,
 		fieldConstraints,
-		extensionTypeResolver,
 		forItems,
 	)
 	if done {
 		return nil, err
+	}
+
+	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
+		return nil, fmt.Errorf("error reparsing message: %w", err)
+	}
+	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
+		return nil, errors.NewCompilationErrorf("unknown rules in %s", constraints.Descriptor().FullName())
 	}
 
 	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
@@ -103,7 +110,6 @@ func (c *Cache) Build(
 func (c *Cache) resolveConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	forItems bool,
 ) (rules protoreflect.Message, done bool, err error) {
 	constraints := fieldConstraints.ProtoReflect()
@@ -124,10 +130,6 @@ func (c *Cache) resolveConstraints(
 		return nil, true, nil
 	}
 	rules = constraints.Get(setOneof).Message()
-	// Reparse unrecognized fields so that we get dynamic extensions.
-	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
-		return nil, false, fmt.Errorf("error reparsing message: %w", err)
-	}
 	return rules, false, nil
 }
 

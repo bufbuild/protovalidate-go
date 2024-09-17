@@ -79,6 +79,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		cfg.disableLazy,
 		cfg.resolver,
 		cfg.extensionTypeResolver,
+		cfg.allowUnknownFields,
 		cfg.desc...,
 	)
 
@@ -110,6 +111,7 @@ type config struct {
 	desc                  []protoreflect.MessageDescriptor
 	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
+	allowUnknownFields    bool
 }
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -196,5 +198,18 @@ func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor
 func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionTypeResolver) ValidatorOption {
 	return func(c *config) {
 		c.extensionTypeResolver = extensionTypeResolver
+	}
+}
+
+// WithAllowUnknownFields specifies if the presence of unknown field constraints
+// should cause compilation to fail with an error. When set to false, an unknown
+// field will simply be ignored, which will cause constraints to silently not be
+// applied. This condition may occur if a predefined constraint definition isn't
+// present in the extension type resolver, or when passing dynamic messages with
+// standard constraints defined in a newer version of protovalidate. The default
+// value is false, to prevent silently-incorrect validation from occurring.
+func WithAllowUnknownFields(allowUnknownFields bool) ValidatorOption {
+	return func(c *config) {
+		c.allowUnknownFields = allowUnknownFields
 	}
 }
