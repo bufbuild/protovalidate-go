@@ -6,6 +6,9 @@ managed:
       module: buf.build/envoyproxy/protoc-gen-validate
     - file_option: go_package
       module: buf.build/bufbuild/protovalidate
+    # TEMPORARY: DO NOT MERGE
+    - file_option: go_package
+      module: buf.build/jchadwick-buf/protovalidate
   override:
     - file_option: go_package_prefix
       value: github.com/bufbuild/protovalidate-go/internal/gen

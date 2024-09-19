@@ -2,8 +2,10 @@ version: v2
 modules:
   - path: proto
 deps:
-  - buf.build/bufbuild/protovalidate
-  - buf.build/bufbuild/protovalidate-testing
+  # DO NOT MERGE: TEMPORARY
+  - buf.build/jchadwick-buf/protovalidate
+  # DO NOT MERGE: TEMPORARY
+  - buf.build/jchadwick-buf/protovalidate-testing
   - buf.build/envoyproxy/protoc-gen-validate
 lint:
   use:
