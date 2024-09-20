@@ -16,8 +16,7 @@ GOLANGCI_LINT_VERSION ?= v1.60.1
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in proto/buf.lock and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-# TEMPORARY: DO NOT MERGE
-CONFORMANCE_VERSION ?= main
+CONFORMANCE_VERSION ?= v0.7.1
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -57,8 +56,7 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
 	rm -rf internal/gen/*/
-	# TEMPORARY: DO NOT MERGE
-	$(BIN)/buf generate buf.build/jchadwick-buf/protovalidate-testing:$(CONFORMANCE_VERSION)
+	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
 	$(BIN)/buf generate
 
 .PHONY: generate-license
