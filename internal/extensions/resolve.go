@@ -37,8 +37,8 @@ var resolver = newExtensionResolver()
 // library. In some cases, particularly when using a dynamic descriptor set, the
 // underlying extension value's type will be a dynamicpb.Message. In some cases,
 // the extension may not be resolved at all. This function handles reparsing the
-// fields as needed to get it into the right concrete message as needed. Resolve
-// does not modify the input protobuf message, so it can be used concurrently.
+// fields as needed to get it into the right concrete message. Resolve does not
+// modify the input protobuf message, so it can be used concurrently.
 func Resolve[C proto.Message](
 	options proto.Message,
 	extensionType protoreflect.ExtensionType,
@@ -124,7 +124,7 @@ func (resolver extensionResolver) registerLegacy(extension protoreflect.Extensio
 
 // resolve handles the majority of extension resolution logic. This will return
 // a proto.Message for the given extension if the message has the tag number of
-// the provided extension (or an equivalent legacy extension.) If there was no
+// the provided extension (or an equivalent legacy extension). If there was no
 // such tag number present in the known or unknown fields, this method will
 // return nil. Note that the returned message may be dynamicpb.Message or
 // another type, and thus may need to still be reparsed if needed.
