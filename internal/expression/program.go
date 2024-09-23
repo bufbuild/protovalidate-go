@@ -18,6 +18,7 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -108,16 +109,16 @@ func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error
 			return nil, nil
 		}
 		return &validate.Violation{
-			ConstraintId: expr.Source.GetId(),
-			Message:      val,
+			ConstraintId: proto.String(expr.Source.GetId()),
+			Message:      proto.String(val),
 		}, nil
 	case bool:
 		if val {
 			return nil, nil
 		}
 		return &validate.Violation{
-			ConstraintId: expr.Source.GetId(),
-			Message:      expr.Source.GetMessage(),
+			ConstraintId: proto.String(expr.Source.GetId()),
+			Message:      proto.String(expr.Source.GetMessage()),
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(

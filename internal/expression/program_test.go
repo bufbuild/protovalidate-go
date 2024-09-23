@@ -52,14 +52,14 @@ func TestCompiled(t *testing.T) {
 		{
 			name:   "invalid bool",
 			prog:   mockProgram{Val: types.False},
-			src:    &validate.Constraint{Id: "foo", Message: "bar"},
-			exViol: &validate.Violation{ConstraintId: "foo", Message: "bar"},
+			src:    &validate.Constraint{Id: proto.String("foo"), Message: proto.String("bar")},
+			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:   "invalid string",
 			prog:   mockProgram{Val: types.String("bar")},
-			src:    &validate.Constraint{Id: "foo"},
-			exViol: &validate.Violation{ConstraintId: "foo", Message: "bar"},
+			src:    &validate.Constraint{Id: proto.String("foo")},
+			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:  "eval error",
@@ -136,16 +136,16 @@ func TestSet(t *testing.T) {
 			set: ProgramSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Constraint{Id: "foo", Message: "fizz"},
+					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Constraint{Id: "bar"},
+					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
 			exViols: &pverr.ValidationError{Violations: []*validate.Violation{
-				{ConstraintId: "foo", Message: "fizz"},
-				{ConstraintId: "bar", Message: "buzz"},
+				{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+				{ConstraintId: proto.String("bar"), Message: proto.String("buzz")},
 			}},
 		},
 		{
@@ -154,15 +154,15 @@ func TestSet(t *testing.T) {
 			set: ProgramSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Constraint{Id: "foo", Message: "fizz"},
+					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Constraint{Id: "bar"},
+					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
 			exViols: &pverr.ValidationError{Violations: []*validate.Violation{
-				{ConstraintId: "foo", Message: "fizz"},
+				{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
 			}},
 		},
 	}

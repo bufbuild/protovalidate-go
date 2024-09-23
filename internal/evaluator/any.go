@@ -17,6 +17,7 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -40,8 +41,8 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, &validate.Violation{
-				ConstraintId: "any.in",
-				Message:      "type URL must be in the allow list",
+				ConstraintId: proto.String("any.in"),
+				Message:      proto.String("type URL must be in the allow list"),
 			})
 			if failFast {
 				return err
@@ -52,8 +53,8 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, &validate.Violation{
-				ConstraintId: "any.not_in",
-				Message:      "type URL must not be in the block list",
+				ConstraintId: proto.String("any.not_in"),
+				Message:      proto.String("type URL must not be in the block list"),
 			})
 		}
 	}

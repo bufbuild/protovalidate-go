@@ -25,18 +25,21 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 // Builder is a build-through cache of message evaluators keyed off the provided
 // descriptor.
 type Builder struct {
-	mtx         sync.Mutex                   // serializes cache writes.
-	cache       atomic.Pointer[MessageCache] // copy-on-write cache.
-	env         *cel.Env
-	constraints constraints.Cache
-	resolver    StandardConstraintResolver
-	Load        func(desc protoreflect.MessageDescriptor) MessageEvaluator
+	mtx                   sync.Mutex                   // serializes cache writes.
+	cache                 atomic.Pointer[MessageCache] // copy-on-write cache.
+	env                   *cel.Env
+	constraints           constraints.Cache
+	resolver              StandardConstraintResolver
+	extensionTypeResolver protoregistry.ExtensionTypeResolver
+	allowUnknownFields    bool
+	Load                  func(desc protoreflect.MessageDescriptor) MessageEvaluator
 }
 
 type StandardConstraintResolver interface {
@@ -50,12 +53,16 @@ func NewBuilder(
 	env *cel.Env,
 	disableLazy bool,
 	res StandardConstraintResolver,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	allowUnknownFields bool,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *Builder {
 	bldr := &Builder{
-		env:         env,
-		constraints: constraints.NewCache(),
-		resolver:    res,
+		env:                   env,
+		constraints:           constraints.NewCache(),
+		resolver:              res,
+		extensionTypeResolver: extensionTypeResolver,
+		allowUnknownFields:    allowUnknownFields,
 	}
 
 	if disableLazy {
@@ -357,6 +364,8 @@ func (bldr *Builder) processStandardConstraints(
 		bldr.env,
 		fdesc,
 		constraints,
+		bldr.extensionTypeResolver,
+		bldr.allowUnknownFields,
 		forItems,
 	)
 	if err != nil {

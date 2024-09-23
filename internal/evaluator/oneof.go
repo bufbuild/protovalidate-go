@@ -17,6 +17,7 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -35,9 +36,9 @@ func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
 func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
 	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
 		return &errors.ValidationError{Violations: []*validate.Violation{{
-			FieldPath:    string(o.Descriptor.Name()),
-			ConstraintId: "required",
-			Message:      "exactly one field is required in oneof",
+			FieldPath:    proto.String(string(o.Descriptor.Name())),
+			ConstraintId: proto.String("required"),
+			Message:      proto.String("exactly one field is required in oneof"),
 		}}}
 	}
 	return nil

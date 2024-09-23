@@ -24,6 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 func getFieldDesc(t *testing.T, msg proto.Message, fld protoreflect.Name) protoreflect.FieldDescriptor {
@@ -100,7 +101,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 			require.NoError(t, err)
 			c := NewCache()
 
-			set, err := c.Build(env, test.desc, test.cons, test.forItems)
+			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems)
 			if test.exErr {
 				assert.Error(t, err)
 			} else {

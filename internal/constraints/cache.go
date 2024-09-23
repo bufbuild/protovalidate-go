@@ -16,13 +16,15 @@ package constraints
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/priv"
 	"github.com/bufbuild/protovalidate-go/celext"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
+	"github.com/bufbuild/protovalidate-go/internal/extensions"
 	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // Cache is a build-through cache to computed standard constraints.
@@ -44,11 +46,24 @@ func (c *Cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	allowUnknownFields bool,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
-	constraints, done, err := c.resolveConstraints(fieldDesc, fieldConstraints, forItems)
+	constraints, done, err := c.resolveConstraints(
+		fieldDesc,
+		fieldConstraints,
+		forItems,
+	)
 	if done {
 		return nil, err
+	}
+
+	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
+		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
+	}
+	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
+		return nil, errors.NewCompilationErrorf("unknown constraints in %s; see protovalidate.WithExtensionTypeResolver", constraints.Descriptor().FullName())
 	}
 
 	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
@@ -57,8 +72,19 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, _ protoreflect.Value) bool {
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, desc)
+	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+		fieldEnv, compileErr := env.Extend(
+			cel.Constant(
+				"rule",
+				celext.ProtoFieldToCELType(desc, true, forItems),
+				types.DefaultTypeAdapter.NativeToValue(rule.Interface()),
+			),
+		)
+		if compileErr != nil {
+			err = compileErr
+			return false
+		}
+		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, desc)
 		if compileErr != nil {
 			err = compileErr
 			return false
@@ -137,7 +163,10 @@ func (c *Cache) loadOrCompileStandardConstraint(
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs, _ := proto.GetExtension(constraintFieldDesc.Options(), priv.E_Field).(*priv.FieldConstraints)
+	exprs := extensions.Resolve[*validate.PredefinedConstraints](
+		constraintFieldDesc.Options(),
+		validate.E_Predefined,
+	)
 	set, err = expression.CompileASTs(exprs.GetCel(), env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
@@ -169,4 +198,21 @@ func (c *Cache) getExpectedConstraintDescriptor(
 		expected, ok = expectedStandardConstraints[targetFieldDesc.Kind()]
 		return expected, ok
 	}
+}
+
+func reparseUnrecognized(
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+	reflectMessage protoreflect.Message,
+) error {
+	if unknown := reflectMessage.GetUnknown(); len(unknown) > 0 {
+		reflectMessage.SetUnknown(nil)
+		options := proto.UnmarshalOptions{
+			Resolver: extensionTypeResolver,
+			Merge:    true,
+		}
+		if err := options.Unmarshal(unknown, reflectMessage.Interface()); err != nil {
+			return err
+		}
+	}
+	return nil
 }

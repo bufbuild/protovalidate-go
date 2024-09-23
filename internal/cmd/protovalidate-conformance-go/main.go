@@ -58,7 +58,21 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 		err = fmt.Errorf("failed to parse file descriptors: %w", err)
 		return nil, err
 	}
-	val, err := protovalidate.New()
+	registry := &protoregistry.Types{}
+	files.RangeFiles(func(file protoreflect.FileDescriptor) bool {
+		for i := 0; i < file.Extensions().Len(); i++ {
+			if err = registry.RegisterExtension(
+				dynamicpb.NewExtensionType(file.Extensions().Get(i)),
+			); err != nil {
+				return false
+			}
+		}
+		return err == nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	val, err := protovalidate.New(protovalidate.WithExtensionTypeResolver(registry))
 	if err != nil {
 		err = fmt.Errorf("failed to initialize validator: %w", err)
 		return nil, err

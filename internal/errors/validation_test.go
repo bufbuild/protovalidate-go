@@ -19,6 +19,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestPrefixFieldPaths(t *testing.T) {
@@ -61,8 +62,8 @@ func TestPrefixFieldPaths(t *testing.T) {
 		t.Run(test.expected, func(t *testing.T) {
 			t.Parallel()
 			err := &ValidationError{Violations: []*validate.Violation{
-				{FieldPath: test.fieldPath},
-				{FieldPath: test.fieldPath},
+				{FieldPath: proto.String(test.fieldPath)},
+				{FieldPath: proto.String(test.fieldPath)},
 			}}
 			PrefixFieldPaths(err, test.format, test.args...)
 			for _, v := range err.Violations {

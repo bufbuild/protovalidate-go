@@ -22,6 +22,7 @@ import (
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
 func TestASTSet_Merge(t *testing.T) {
@@ -58,7 +59,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	env, err := celext.DefaultEnv(false)
 	require.NoError(t, err)
 
-	expr := &validate.Constraint{Expression: "foo"}
+	expr := &validate.Constraint{Expression: proto.String("foo")}
 	asts, err := CompileASTs([]*validate.Constraint{expr}, env,
 		cel.Variable("foo", cel.BoolType))
 	require.NoError(t, err)
@@ -80,7 +81,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	env, err := celext.DefaultEnv(false)
 	require.NoError(t, err)
 
-	expr := &validate.Constraint{Expression: "foo"}
+	expr := &validate.Constraint{Expression: proto.String("foo")}
 	asts, err := CompileASTs([]*validate.Constraint{expr}, env,
 		cel.Variable("foo", cel.BoolType))
 	require.NoError(t, err)

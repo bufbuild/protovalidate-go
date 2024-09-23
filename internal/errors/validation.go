@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"google.golang.org/protobuf/proto"
 )
 
 // A ValidationError is returned if one or more constraint violations were
@@ -53,11 +54,11 @@ func PrefixFieldPaths(err *ValidationError, format string, args ...any) {
 	for _, violation := range err.Violations {
 		switch {
 		case violation.GetFieldPath() == "": // no existing field path
-			violation.FieldPath = prefix
+			violation.FieldPath = proto.String(prefix)
 		case violation.GetFieldPath()[0] == '[': // field is a map/list
-			violation.FieldPath = prefix + violation.GetFieldPath()
+			violation.FieldPath = proto.String(prefix + violation.GetFieldPath())
 		default: // any other field
-			violation.FieldPath = fmt.Sprintf("%s.%s", prefix, violation.GetFieldPath())
+			violation.FieldPath = proto.String(fmt.Sprintf("%s.%s", prefix, violation.GetFieldPath()))
 		}
 	}
 }

@@ -25,6 +25,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 func TestBuildCache(t *testing.T) {
@@ -33,7 +34,7 @@ func TestBuildCache(t *testing.T) {
 	env, err := celext.DefaultEnv(true)
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := NewBuilder(
-		env, false, resolver.DefaultResolver{},
+		env, false, resolver.DefaultResolver{}, protoregistry.GlobalTypes, false,
 	)
 	wg := sync.WaitGroup{}
 	for i := 0; i < 100; i++ {

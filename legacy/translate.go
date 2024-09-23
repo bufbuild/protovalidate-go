@@ -68,9 +68,9 @@ func translateRules(rules protoreflect.Message) *pv.FieldConstraints {
 	if msgRules := rules.Get(desc.Fields().ByName("message")).Message(); msgRules.IsValid() {
 		msgDesc := msgRules.Descriptor()
 		if msgRules.Get(msgDesc.Fields().ByName("required")).Bool() {
-			constraints.Required = true
+			constraints.Required = proto.Bool(true)
 		} else if msgRules.Get(msgDesc.Fields().ByName("skip")).Bool() {
-			constraints.Ignore = pv.Ignore_IGNORE_ALWAYS
+			constraints.Ignore = pv.Ignore_IGNORE_ALWAYS.Enum()
 		}
 	}
 
@@ -101,11 +101,11 @@ func translateRule(
 ) bool {
 	if pgvDesc.Name() == "required" && pgvDesc.Kind() == protoreflect.BoolKind && value.Bool() {
 		// old `required` fields on the WKTs need to be lifted to the top level
-		constraints.Required = true
+		constraints.Required = proto.Bool(true)
 		return true
 	} else if pgvDesc.Name() == "ignore_empty" && pgvDesc.Kind() == protoreflect.BoolKind && value.Bool() {
 		// old `ignore_empty` fields on the type rules need to be lifted to the top level
-		constraints.Ignore = pv.Ignore_IGNORE_IF_UNPOPULATED
+		constraints.Ignore = pv.Ignore_IGNORE_IF_UNPOPULATED.Enum()
 		return true
 	}
 

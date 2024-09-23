@@ -17,6 +17,7 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -31,8 +32,8 @@ type definedEnum struct {
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []*validate.Violation{{
-			ConstraintId: "enum.defined_only",
-			Message:      "value must be one of the defined enum values",
+			ConstraintId: proto.String("enum.defined_only"),
+			Message:      proto.String("value must be one of the defined enum values"),
 		}}}
 	}
 	return nil
