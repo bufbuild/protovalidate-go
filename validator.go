@@ -195,6 +195,10 @@ func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor
 // WithExtensionTypeResolver specifies a resolver to use when reparsing unknown
 // extension types. When dealing with dynamic file descriptor sets, passing this
 // option will allow extensions to be resolved using a custom resolver.
+//
+// To ignore unknown extension fields, use the [WithAllowUnknownFields] option.
+// Note that this may result in messages being treated as valid even though not
+// all constraints are being applied.
 func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionTypeResolver) ValidatorOption {
 	return func(c *config) {
 		c.extensionTypeResolver = extensionTypeResolver

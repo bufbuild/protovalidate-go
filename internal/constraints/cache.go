@@ -63,7 +63,7 @@ func (c *Cache) Build(
 		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
 	}
 	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
-		return nil, errors.NewCompilationErrorf("unknown constraints in %s", constraints.Descriptor().FullName())
+		return nil, errors.NewCompilationErrorf("unknown constraints in %s; see protovalidate.WithExtensionTypeResolver", constraints.Descriptor().FullName())
 	}
 
 	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
