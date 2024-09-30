@@ -20,6 +20,7 @@ import (
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
@@ -239,4 +240,13 @@ func TestValidator_Validate_Issue141(t *testing.T) {
 		var valErr *ValidationError
 		require.ErrorAs(t, err, &valErr)
 	})
+}
+
+func TestValidator_Validate_Issue148(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.Issue148{Test: proto.Int32(1)}
+	err = val.Validate(msg)
+	require.NoError(t, err)
 }
