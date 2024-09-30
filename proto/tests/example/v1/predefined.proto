@@ -21,11 +21,8 @@ import "buf/validate/validate.proto";
 // https://github.com/bufbuild/protovalidate-go/issues/148
 message Issue148 {
   optional int32 test = 1 [
-    (buf.validate.field).int32.lt = 5,
     (buf.validate.field).int32.(abs_not_in) = 1,
-    (buf.validate.field).int32.(abs_not_in) = -2,
-    (buf.validate.field).int32.example = 3,
-    (buf.validate.field).int32.example = 2
+    (buf.validate.field).int32.(abs_not_in) = -2
   ];
 }
 

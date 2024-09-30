@@ -21,7 +21,6 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/bufbuild/protovalidate-go/internal/extensions"
 	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -77,7 +76,7 @@ func (c *Cache) Build(
 			cel.Constant(
 				"rule",
 				celext.ProtoFieldToCELType(desc, true, forItems),
-				types.DefaultTypeAdapter.NativeToValue(rule.Interface()),
+				celext.ProtoFieldToCELValue(desc, rule, forItems),
 			),
 		)
 		if compileErr != nil {

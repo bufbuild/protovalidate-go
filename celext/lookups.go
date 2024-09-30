@@ -16,6 +16,8 @@ package celext
 
 import (
 	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/ref"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -56,6 +58,15 @@ func ProtoFieldToCELType(fieldDesc protoreflect.FieldDescriptor, generic, forIte
 		}
 	}
 	return protoKindToCELType(fieldDesc.Kind())
+}
+
+func ProtoFieldToCELValue(fieldDesc protoreflect.FieldDescriptor, value protoreflect.Value, forItems bool) ref.Val {
+	switch {
+	case fieldDesc.IsList() && !forItems:
+		return types.NewProtoList(types.DefaultTypeAdapter, value.List())
+	default:
+		return types.DefaultTypeAdapter.NativeToValue(value.Interface())
+	}
 }
 
 // protoKindToCELType maps a protoreflect.Kind to a compatible cel.Type.
