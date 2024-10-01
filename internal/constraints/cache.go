@@ -75,8 +75,8 @@ func (c *Cache) Build(
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
 				"rule",
-				celext.ProtoFieldToCELType(desc, true, forItems),
-				celext.ProtoFieldToCELValue(desc, rule, forItems),
+				celext.ProtoFieldToCELType(desc, true, false),
+				celext.ProtoFieldToCELValue(desc, rule, false),
 			),
 		)
 		if compileErr != nil {
