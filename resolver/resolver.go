@@ -40,3 +40,11 @@ func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescript
 func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
 	return extensions.Resolve[*validate.FieldConstraints](desc.Options(), validate.E_Field)
 }
+
+// ResolvePredefinedConstraints returns the PredefinedConstraints option set for
+// the FieldDescriptor. Note that this value is only meaningful if it is set on
+// a field or extension of a field rule message. This method is provided for
+// convenience.
+func (r DefaultResolver) ResolvePredefinedConstraints(desc protoreflect.FieldDescriptor) *validate.PredefinedConstraints {
+	return extensions.Resolve[*validate.PredefinedConstraints](desc.Options(), validate.E_Predefined)
+}
