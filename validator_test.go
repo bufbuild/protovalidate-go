@@ -60,6 +60,37 @@ func TestValidator_Validate(t *testing.T) {
 	})
 }
 
+func TestValidator_ValidateGlobal(t *testing.T) {
+	t.Parallel()
+
+	t.Run("HasMsgExprs", func(t *testing.T) {
+		t.Parallel()
+
+		tests := []struct {
+			msg   *pb.HasMsgExprs
+			exErr bool
+		}{
+			{
+				&pb.HasMsgExprs{X: 2, Y: 43},
+				false,
+			},
+			{
+				&pb.HasMsgExprs{X: 9, Y: 8},
+				true,
+			},
+		}
+
+		for _, test := range tests {
+			err := Validate(test.msg)
+			if test.exErr {
+				assert.Error(t, err)
+			} else {
+				require.NoError(t, err)
+			}
+		}
+	})
+}
+
 func TestRecursive(t *testing.T) {
 	t.Parallel()
 	val, err := New()

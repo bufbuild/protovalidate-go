@@ -24,11 +24,6 @@ import (
 )
 
 func Example() {
-	validator, err := New()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	person := &pb.Person{
 		Id:    1234,
 		Email: "protovalidate@buf.build",
@@ -39,11 +34,11 @@ func Example() {
 		},
 	}
 
-	err = validator.Validate(person)
+	err := Validate(person)
 	fmt.Println("valid:", err)
 
 	person.Email = "not an email"
-	err = validator.Validate(person)
+	err = Validate(person)
 	fmt.Println("invalid:", err)
 
 	// output:

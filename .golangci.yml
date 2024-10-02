@@ -79,3 +79,7 @@ issues:
       linters:
         # uses deprecated fields on protoimpl.ExtensionInfo but its the only way
         - staticcheck
+    # We allow a global validator.
+    - path: validator.go
+      linters:
+        - gochecknoglobals
