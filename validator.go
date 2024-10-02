@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
+	"sync"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/celext"
@@ -26,6 +27,8 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
+
+var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New() })
 
 type (
 	// A ValidationError is returned if one or more constraints on a message are
@@ -102,6 +105,18 @@ func (v *Validator) Validate(msg proto.Message) error {
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
 	return eval.EvaluateMessage(refl, v.failFast)
+}
+
+// Validate uses a global instance of Validator constructed with no ValidatorOptions and
+// calls its Validate function. For the vast majority of validation cases, using this global
+// function is safe and acceptable. If you need to provide i.e. a custom
+// ExtensionTypeResolver, you'll need to construct a Validator.
+func Validate(msg proto.Message) error {
+	globalValidator, err := getGlobalValidator()
+	if err != nil {
+		return err
+	}
+	return globalValidator.Validate(msg)
 }
 
 type config struct {

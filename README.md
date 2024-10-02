@@ -74,7 +74,7 @@ message Transaction {
   uint64 id = 1 [(buf.validate.field).uint64.gt = 999];
   google.protobuf.Timestamp purchase_date = 2;
   google.protobuf.Timestamp delivery_date = 3;
-  
+
   string price = 4 [(buf.validate.field).cel = {
     id: "transaction.price",
     message: "price must be positive and include a valid currency symbol ($ or £)",
@@ -94,7 +94,7 @@ message Transaction {
 `protovalidate-go` assumes the constraint extensions are imported into
 the generated code via `buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go`.
 
-If you are using Buf [managed mode](https://buf.build/docs/generate/managed-mode/) to augment Go code generation, ensure 
+If you are using Buf [managed mode](https://buf.build/docs/generate/managed-mode/) to augment Go code generation, ensure
 that the `protovalidate` module is excluded in your [`buf.gen.yaml`](https://buf.build/docs/configuration/v1/buf-gen-yaml#except):
 
 **`buf.gen.yaml` v1**
@@ -129,7 +129,7 @@ package main
 import (
 	"fmt"
 	"time"
-	
+
 	pb "github.com/path/to/generated/protos"
 	"github.com/bufbuild/protovalidate-go"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -142,13 +142,7 @@ func main() {
 		PurchaseDate: timestamppb.New(time.Now()),
 		DeliveryDate: timestamppb.New(time.Now().Add(time.Hour)),
 	}
-
-	v, err := protovalidate.New()
-	if err != nil {
-		fmt.Println("failed to initialize validator:", err)
-	}
-
-	if err = v.Validate(msg); err != nil {
+	if err = protovalidate.Validate(msg); err != nil {
 		fmt.Println("validation failed:", err)
 	} else {
 		fmt.Println("validation succeeded")
@@ -158,16 +152,16 @@ func main() {
 
 ### Lazy mode
 
-`protovalidate-go` defaults to lazily construct validation logic for Protobuf 
-message types the first time they are encountered. A validator's internal 
-cache can be pre-warmed with the `WithMessages` or `WithDescriptors` options 
+`protovalidate-go` defaults to lazily construct validation logic for Protobuf
+message types the first time they are encountered. A validator's internal
+cache can be pre-warmed with the `WithMessages` or `WithDescriptors` options
 during initialization:
 
 ```go
 validator, err := protovalidate.New(
   protovalidate.WithMessages(
-    &pb.MyFoo{}, 
-    &pb.MyBar{}, 
+    &pb.MyFoo{},
+    &pb.MyBar{},
   ),
 )
 ```
@@ -191,7 +185,7 @@ validator, err := protovalidate.New(
 ### Support legacy `protoc-gen-validate` constraints
 
 The `protovalidate-go` module comes with a `legacy` package which adds opt-in support
-for existing `protoc-gen-validate` constraints. Provide the`legacy.WithLegacySupport` 
+for existing `protoc-gen-validate` constraints. Provide the`legacy.WithLegacySupport`
 option when initializing the validator:
 
 ```go
@@ -200,7 +194,7 @@ validator, err := protovalidate.New(
 )
 ```
 
-`protoc-gen-validate` code generation is **not** used by `protovalidate-go`. The 
+`protoc-gen-validate` code generation is **not** used by `protovalidate-go`. The
 `legacy` package assumes the `protoc-gen-validate` extensions are imported into
 the generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
 
@@ -208,8 +202,8 @@ A [migration tool](https://github.com/bufbuild/protovalidate/tree/main/tools/pro
 
 ## Performance
 
-[Benchmarks](validator_bench_test.go) are provided to test a variety of use-cases. Generally, after the 
-initial cold start, validation on a message is sub-microsecond 
+[Benchmarks](validator_bench_test.go) are provided to test a variety of use-cases. Generally, after the
+initial cold start, validation on a message is sub-microsecond
 and only allocates in the event of a validation error.
 
 ```
