@@ -16,13 +16,12 @@ package errors
 
 import (
 	"errors"
-
-	"google.golang.org/protobuf/proto"
+	"slices"
 )
 
-// Merge is a utility to resolve and combine errors resulting from
+// Merge is a utility to resolve and combine Errors resulting from
 // evaluation. If ok is false, execution of validation should stop (either due
-// to failFast or the result is not a ValidationError).
+// to failFast or the result is not a ValidationErrors).
 //
 //nolint:errorlint
 func Merge(dst, src error, failFast bool) (ok bool, err error) {
@@ -50,7 +49,7 @@ func Merge(dst, src error, failFast bool) (ok bool, err error) {
 }
 
 // PrefixErrorPaths prepends the formatted prefix to the violations of a
-// ValidationError.
+// ValidationErrors.
 func PrefixErrorPaths(err error, format string, args ...any) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
@@ -61,8 +60,18 @@ func PrefixErrorPaths(err error, format string, args ...any) {
 func MarkForKey(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
-		for _, violation := range valErr.Violations {
-			violation.ForKey = proto.Bool(true)
+		for i := range valErr.Violations {
+			valErr.Violations[i].ForKey = true
 		}
 	}
+}
+
+// EqualViolations returns true if the underlying violations are equal.
+func EqualViolations(a, b []Violation) bool {
+	return slices.EqualFunc(a, b, EqualViolation)
+}
+
+// EqualViolation returns true if the underlying violations are equal.
+func EqualViolation(a, b Violation) bool {
+	return a.FieldPath == b.FieldPath && a.ConstraintID == b.ConstraintID && a.Message == b.Message && a.ForKey == b.ForKey
 }
