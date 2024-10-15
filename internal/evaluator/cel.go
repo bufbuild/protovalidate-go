@@ -23,11 +23,11 @@ import (
 type celPrograms expression.ProgramSet
 
 func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
-	return expression.ProgramSet(c).Eval(val.Interface(), failFast)
+	return expression.ProgramSet(c).Eval(val, failFast)
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, failFast bool) error {
-	return expression.ProgramSet(c).Eval(msg.Interface(), failFast)
+	return expression.ProgramSet(c).Eval(protoreflect.ValueOfMessage(msg), failFast)
 }
 
 func (c celPrograms) Tautology() bool {

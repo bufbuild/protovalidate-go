@@ -21,7 +21,9 @@ import (
 	"os"
 	"strings"
 
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go"
+	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/harness"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
@@ -113,7 +115,7 @@ func TestCase(val *protovalidate.Validator, files *protoregistry.Files, testCase
 	case *protovalidate.ValidationError:
 		return &harness.TestResult{
 			Result: &harness.TestResult_ValidationError{
-				ValidationError: res.ToProto(),
+				ValidationError: violationsToProto(res.Violations),
 			},
 		}
 	case *protovalidate.RuntimeError:
@@ -131,6 +133,19 @@ func TestCase(val *protovalidate.Validator, files *protoregistry.Files, testCase
 	default:
 		return unexpectedErrorResult("unknown error: %v", err)
 	}
+}
+
+func violationsToProto(violations []errors.Violation) *validate.Violations {
+	result := make([]*validate.Violation, len(violations))
+	for i := range violations {
+		result[i] = &validate.Violation{
+			FieldPath:    &violations[i].FieldPath,
+			ConstraintId: &violations[i].ConstraintID,
+			Message:      &violations[i].Message,
+			ForKey:       &violations[i].ForKey,
+		}
+	}
+	return &validate.Violations{Violations: result}
 }
 
 func unexpectedErrorResult(format string, args ...any) *harness.TestResult {

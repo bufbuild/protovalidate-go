@@ -15,10 +15,8 @@
 package expression
 
 import (
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -34,21 +32,21 @@ var nowPool = &NowPool{New: func() any { return &Now{} }}
 type ProgramSet []compiledProgram
 
 // Eval applies the contained expressions to the provided `this` val, returning
-// either *errors.ValidationError if the input is invalid or errors.RuntimeError
+// either errors.ValidationErrors if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
-func (s ProgramSet) Eval(val any, failFast bool) error {
-	binding := s.bindThis(val)
+func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
+	binding := s.bindThis(val.Interface())
 	defer varPool.Put(binding)
 
-	var violations []*validate.Violation
+	var violations []errors.Violation
 	for _, expr := range s {
 		violation, err := expr.eval(binding)
 		if err != nil {
 			return err
 		}
 		if violation != nil {
-			violations = append(violations, violation)
+			violations = append(violations, *violation)
 			if failFast {
 				break
 			}
@@ -88,12 +86,13 @@ func (s ProgramSet) bindThis(val any) *Variable {
 // compiledProgram is a parsed and type-checked cel.Program along with the
 // source Expression.
 type compiledProgram struct {
-	Program cel.Program
-	Source  Expression
+	Program   cel.Program
+	Source    Expression
+	RuleValue protoreflect.Value
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error) {
+func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) {
 	now := nowPool.Get()
 	defer nowPool.Put(now)
 	bindings.Next = now
@@ -108,17 +107,19 @@ func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error
 		if val == "" {
 			return nil, nil
 		}
-		return &validate.Violation{
-			ConstraintId: proto.String(expr.Source.GetId()),
-			Message:      proto.String(val),
+		return &errors.Violation{
+			ConstraintID: expr.Source.GetId(),
+			Message:      val,
+			RuleValue:    expr.RuleValue,
 		}, nil
 	case bool:
 		if val {
 			return nil, nil
 		}
-		return &validate.Violation{
-			ConstraintId: proto.String(expr.Source.GetId()),
-			Message:      proto.String(expr.Source.GetMessage()),
+		return &errors.Violation{
+			ConstraintID: expr.Source.GetId(),
+			Message:      expr.Source.GetMessage(),
+			RuleValue:    expr.RuleValue,
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(
