@@ -41,10 +41,11 @@ func (set ASTSet) Merge(other ASTSet) ASTSet {
 	return out
 }
 
-// SetRuleValue sets the rule value attached to the compiled ASTs. This will be
-// returned with validation errors returned by these rules.
-func (set ASTSet) SetRuleValue(ruleValue protoreflect.Value) {
+// SetRule sets the rule attached to the compiled ASTs. This will be returned
+// with validation errors returned by these expressions.
+func (set ASTSet) SetRule(rulePath string, ruleValue protoreflect.Value) {
 	for i := range set.asts {
+		set.asts[i].RulePath = rulePath
 		set.asts[i].RuleValue = ruleValue
 	}
 }
@@ -91,8 +92,10 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 			x := residual.Source().Content()
 			_ = x
 			residuals = append(residuals, compiledAST{
-				AST:    residual,
-				Source: ast.Source,
+				AST:       residual,
+				Source:    ast.Source,
+				RulePath:  ast.RulePath,
+				RuleValue: ast.RuleValue,
 			})
 		}
 	}
@@ -121,6 +124,7 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 type compiledAST struct {
 	AST       *cel.Ast
 	Source    Expression
+	RulePath  string
 	RuleValue protoreflect.Value
 }
 
@@ -133,6 +137,7 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 	return compiledProgram{
 		Program:   prog,
 		Source:    ast.Source,
+		RulePath:  ast.RulePath,
 		RuleValue: ast.RuleValue,
 	}, nil
 }

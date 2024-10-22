@@ -37,6 +37,10 @@ type field struct {
 	IgnoreDefault bool
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
+	// Whether the evaluator applies to either map keys or map items.
+	ForMap bool
+	// Whether the evaluator applies to items of a map or repeated field.
+	ForItems bool
 }
 
 func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
@@ -48,6 +52,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 		return &errors.ValidationError{Violations: []errors.Violation{{
 			FieldPath:    string(f.Descriptor.Name()),
 			ConstraintID: "required",
+			RulePath:     "required",
 			Message:      "value is required",
 		}}}
 	}

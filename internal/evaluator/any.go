@@ -30,16 +30,30 @@ type anyPB struct {
 	In map[string]struct{}
 	// NotIn specifies which type URLs the value may not possess
 	NotIn map[string]struct{}
+	// Whether the evaluator applies to either map keys or map items.
+	ForMap bool
+	// Whether the evaluator applies to items of a map or repeated field.
+	ForItems bool
 }
 
 func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
+
+	rulePathPrefix := ""
+	if a.ForMap && a.ForItems {
+		rulePathPrefix += "map.values."
+	} else if a.ForMap && !a.ForItems {
+		rulePathPrefix += "map.keys."
+	} else if a.ForItems {
+		rulePathPrefix += "repeated.items."
+	}
 
 	err := &errors.ValidationError{}
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, errors.Violation{
 				ConstraintID: "any.in",
+				RulePath:     rulePathPrefix + "any.in",
 				Message:      "type URL must be in the allow list",
 			})
 			if failFast {
@@ -52,6 +66,7 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, errors.Violation{
 				ConstraintID: "any.not_in",
+				RulePath:     rulePathPrefix + "any.not_in",
 				Message:      "type URL must not be in the block list",
 			})
 		}

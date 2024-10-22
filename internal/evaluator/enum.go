@@ -25,12 +25,25 @@ import (
 type definedEnum struct {
 	// ValueDescriptors captures all the defined values for this enum
 	ValueDescriptors protoreflect.EnumValueDescriptors
+	// Whether the evaluator applies to either map keys or map items.
+	ForMap bool
+	// Whether the evaluator applies to items of a map or repeated field.
+	ForItems bool
 }
 
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
+	rulePathPrefix := ""
+	if d.ForMap && d.ForItems {
+		rulePathPrefix += "map.values."
+	} else if d.ForMap && !d.ForItems {
+		rulePathPrefix += "map.keys."
+	} else if d.ForItems {
+		rulePathPrefix += "repeated.items."
+	}
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []errors.Violation{{
 			ConstraintID: "enum.defined_only",
+			RulePath:     rulePathPrefix + "enum.defined_only",
 			Message:      "value must be one of the defined enum values",
 		}}}
 	}

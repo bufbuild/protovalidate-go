@@ -36,6 +36,7 @@ func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
 		return &errors.ValidationError{Violations: []errors.Violation{{
 			FieldPath:    string(o.Descriptor.Name()),
 			ConstraintID: "required",
+			RulePath:     "required",
 			Message:      "exactly one field is required in oneof",
 		}}}
 	}

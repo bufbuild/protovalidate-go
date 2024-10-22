@@ -47,9 +47,10 @@ func (c *Cache) Build(
 	fieldConstraints *validate.FieldConstraints,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
+	forMap bool,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
-	constraints, done, err := c.resolveConstraints(
+	constraints, setOneof, done, err := c.resolveConstraints(
 		fieldDesc,
 		fieldConstraints,
 		forItems,
@@ -57,6 +58,17 @@ func (c *Cache) Build(
 	if done {
 		return nil, err
 	}
+
+	rulePath := ""
+	if forMap && forItems {
+		rulePath += "map.values."
+	} else if forMap && !forItems {
+		rulePath += "map.keys."
+	} else if forItems {
+		rulePath += "repeated.items."
+	}
+
+	rulePath += string(setOneof.Name()) + "."
 
 	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
 		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
@@ -71,12 +83,12 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+	constraints.Range(func(desc protoreflect.FieldDescriptor, ruleValue protoreflect.Value) bool {
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
 				"rule",
 				celext.ProtoFieldToCELType(desc, true, false),
-				celext.ProtoFieldToCELValue(desc, rule, false),
+				celext.ProtoFieldToCELValue(desc, ruleValue, false),
 			),
 		)
 		if compileErr != nil {
@@ -88,7 +100,8 @@ func (c *Cache) Build(
 			err = compileErr
 			return false
 		}
-		precomputedASTs.SetRuleValue(rule)
+		rulePath := rulePath + desc.TextName()
+		precomputedASTs.SetRule(rulePath, ruleValue)
 		asts = asts.Merge(precomputedASTs)
 		return true
 	})
@@ -109,15 +122,15 @@ func (c *Cache) resolveConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
 	forItems bool,
-) (rules protoreflect.Message, done bool, err error) {
+) (rules protoreflect.Message, fieldRule protoreflect.FieldDescriptor, done bool, err error) {
 	constraints := fieldConstraints.ProtoReflect()
 	setOneof := constraints.WhichOneof(fieldConstraintsOneofDesc)
 	if setOneof == nil {
-		return nil, true, nil
+		return nil, nil, true, nil
 	}
 	expected, ok := c.getExpectedConstraintDescriptor(fieldDesc, forItems)
 	if ok && setOneof.FullName() != expected.FullName() {
-		return nil, true, errors.NewCompilationErrorf(
+		return nil, nil, true, errors.NewCompilationErrorf(
 			"expected constraint %q, got %q on field %q",
 			expected.FullName(),
 			setOneof.FullName(),
@@ -125,10 +138,10 @@ func (c *Cache) resolveConstraints(
 		)
 	}
 	if !ok || !constraints.Has(setOneof) {
-		return nil, true, nil
+		return nil, nil, true, nil
 	}
 	rules = constraints.Get(setOneof).Message()
-	return rules, false, nil
+	return rules, setOneof, false, nil
 }
 
 // prepareEnvironment prepares the environment for compiling standard constraint

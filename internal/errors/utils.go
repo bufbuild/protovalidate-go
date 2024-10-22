@@ -16,7 +16,6 @@ package errors
 
 import (
 	"errors"
-	"slices"
 )
 
 // Merge is a utility to resolve and combine Errors resulting from
@@ -64,14 +63,4 @@ func MarkForKey(err error) {
 			valErr.Violations[i].ForKey = true
 		}
 	}
-}
-
-// EqualViolations returns true if the underlying violations are equal.
-func EqualViolations(a, b []Violation) bool {
-	return slices.EqualFunc(a, b, EqualViolation)
-}
-
-// EqualViolation returns true if the underlying violations are equal.
-func EqualViolation(a, b Violation) bool {
-	return a.FieldPath == b.FieldPath && a.ConstraintID == b.ConstraintID && a.Message == b.Message && a.ForKey == b.ForKey
 }

@@ -88,6 +88,7 @@ func (s ProgramSet) bindThis(val any) *Variable {
 type compiledProgram struct {
 	Program   cel.Program
 	Source    Expression
+	RulePath  string
 	RuleValue protoreflect.Value
 }
 
@@ -110,6 +111,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		return &errors.Violation{
 			ConstraintID: expr.Source.GetId(),
 			Message:      val,
+			RulePath:     expr.RulePath,
 			RuleValue:    expr.RuleValue,
 		}, nil
 	case bool:
@@ -119,6 +121,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		return &errors.Violation{
 			ConstraintID: expr.Source.GetId(),
 			Message:      expr.Source.GetMessage(),
+			RulePath:     expr.RulePath,
 			RuleValue:    expr.RuleValue,
 		}, nil
 	default:

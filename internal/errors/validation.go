@@ -16,9 +16,13 @@ package errors
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
 // Violation represents a single instance where a validation rule was not met.
@@ -31,10 +35,16 @@ type Violation struct {
 	// field that caused the violation.
 	FieldPath string
 
+	// RulePath is a machine-readable identifier that points to the specific
+	// constraint rule that failed validation. This will be a nested field
+	// starting from the FieldConstraints of the field that failed validation.
+	// This value is only present for standard or predefined rules on fields.
+	RulePath string
+
 	// FieldValue is the value of the specific field that failed validation.
 	FieldValue protoreflect.Value
 
-	// ForKey` indicates whether the violation was caused by a map key, rather
+	// ForKey indicates whether the violation was caused by a map key, rather
 	// than a value.
 	ForKey bool
 
@@ -59,6 +69,60 @@ type Violation struct {
 // detected.
 type ValidationError struct {
 	Violations []Violation
+}
+
+// FromProto converts the proto.Message form of the error back into native form.
+func FromProto(
+	registry protoregistry.ExtensionTypeResolver,
+	message proto.Message,
+	violations *validate.Violations,
+) (*ValidationError, error) {
+	valErr := &ValidationError{
+		Violations: make([]Violation, len(violations.GetViolations())),
+	}
+	for i, violation := range violations.GetViolations() {
+		valErr.Violations[i] = Violation{
+			FieldPath:    violation.GetFieldPath(),
+			RulePath:     violation.GetRulePath(),
+			ConstraintID: violation.GetConstraintId(),
+			Message:      violation.GetMessage(),
+			ForKey:       violation.GetForKey(),
+		}
+		if valErr.Violations[i].FieldPath == "" {
+			continue
+		}
+		fieldValue, descriptor, err := getFieldValue(registry, message, violation.GetFieldPath())
+		if err != nil {
+			return nil, err
+		}
+		valErr.Violations[i].FieldValue = fieldValue
+		if valErr.Violations[i].RulePath == "" {
+			continue
+		}
+		ruleValue, _, err := getFieldValue(registry, descriptor.Options(), valErr.Violations[i].RulePath)
+		if err != nil {
+			return nil, err
+		}
+		valErr.Violations[i].RuleValue = ruleValue
+	}
+	return valErr, nil
+}
+
+// ToProto converts this error into its proto.Message form.
+func (err *ValidationError) ToProto() *validate.Violations {
+	violations := &validate.Violations{
+		Violations: make([]*validate.Violation, len(err.Violations)),
+	}
+	for i, violation := range err.Violations {
+		violations.Violations[i] = &validate.Violation{
+			FieldPath:    proto.String(violation.FieldPath),
+			RulePath:     proto.String(violation.RulePath),
+			ConstraintId: proto.String(violation.ConstraintID),
+			Message:      proto.String(violation.Message),
+			ForKey:       proto.Bool(violation.ForKey),
+		}
+	}
+	return violations
 }
 
 func (err *ValidationError) Error() string {
@@ -92,4 +156,31 @@ func PrefixFieldPaths(err *ValidationError, format string, args ...any) {
 			violation.FieldPath = fmt.Sprintf("%s.%s", prefix, violation.FieldPath)
 		}
 	}
+}
+
+// PrefixRulePaths prepends to the provided prefix to the error's internal
+// rule paths.
+func PrefixRulePaths(err *ValidationError, format string, args ...any) {
+	prefix := fmt.Sprintf(format, args...)
+	for i := range err.Violations {
+		violation := &err.Violations[i]
+		switch {
+		case violation.RulePath == "": // no existing rule path
+			violation.RulePath = prefix
+		case violation.RulePath[0] == '[': // rule is a map/list
+			violation.RulePath = prefix + violation.RulePath
+		default: // any other rule
+			violation.RulePath = fmt.Sprintf("%s.%s", prefix, violation.RulePath)
+		}
+	}
+}
+
+// EqualViolations returns true if the underlying violations are equal.
+func EqualViolations(a, b []Violation) bool {
+	return slices.EqualFunc(a, b, EqualViolation)
+}
+
+// EqualViolation returns true if the underlying violations are equal.
+func EqualViolation(a, b Violation) bool {
+	return a.FieldPath == b.FieldPath && a.ConstraintID == b.ConstraintID && a.Message == b.Message && a.ForKey == b.ForKey
 }
