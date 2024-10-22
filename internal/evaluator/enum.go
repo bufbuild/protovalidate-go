@@ -15,9 +15,7 @@
 package evaluator
 
 import (
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -27,13 +25,26 @@ import (
 type definedEnum struct {
 	// ValueDescriptors captures all the defined values for this enum
 	ValueDescriptors protoreflect.EnumValueDescriptors
+	// Whether the evaluator applies to either map keys or map items.
+	ForMap bool
+	// Whether the evaluator applies to items of a map or repeated field.
+	ForItems bool
 }
 
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
+	rulePathPrefix := ""
+	if d.ForMap && d.ForItems {
+		rulePathPrefix += "map.values."
+	} else if d.ForMap && !d.ForItems {
+		rulePathPrefix += "map.keys."
+	} else if d.ForItems {
+		rulePathPrefix += "repeated.items."
+	}
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
-		return &errors.ValidationError{Violations: []*validate.Violation{{
-			ConstraintId: proto.String("enum.defined_only"),
-			Message:      proto.String("value must be one of the defined enum values"),
+		return &errors.ValidationError{Violations: []errors.Violation{{
+			ConstraintID: "enum.defined_only",
+			RulePath:     rulePathPrefix + "enum.defined_only",
+			Message:      "value must be one of the defined enum values",
 		}}}
 	}
 	return nil

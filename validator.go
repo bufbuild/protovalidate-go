@@ -31,17 +31,20 @@ import (
 var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New() })
 
 type (
-	// A ValidationError is returned if one or more constraints on a message are
-	// violated. This error type can be converted into a validate.Violations
-	// message via ToProto.
+	// ValidationError is returned if one or more constraints on a message are
+	// violated. This error type is a composite of multiple ValidationError
+	// instances.
 	//
 	//    err = validator.Validate(msg)
 	//    var valErr *ValidationError
 	//    if ok := errors.As(err, &valErr); ok {
-	//      pb := valErr.ToProto()
+	//      violations := valErrs.Violations
 	//      // ...
 	//    }
 	ValidationError = errors.ValidationError
+
+	// A Violation contains information about one constraint violation.
+	Violation = errors.Violation
 
 	// A CompilationError is returned if a CEL expression cannot be compiled &
 	// type-checked or if invalid standard constraints are applied to a field.

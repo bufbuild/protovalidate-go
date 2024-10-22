@@ -221,13 +221,14 @@ func (bldr *Builder) buildField(
 	if fld.IgnoreDefault {
 		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
 	}
-	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, &fld.Value, cache)
+	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, false, &fld.Value, cache)
 	return fld, err
 }
 
 func (bldr *Builder) buildValue(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	cache MessageCache,
@@ -235,6 +236,7 @@ func (bldr *Builder) buildValue(
 	steps := []func(
 		fdesc protoreflect.FieldDescriptor,
 		fieldConstraints *validate.FieldConstraints,
+		forMap bool,
 		forItems bool,
 		valEval *value,
 		cache MessageCache,
@@ -251,7 +253,7 @@ func (bldr *Builder) buildValue(
 	}
 
 	for _, step := range steps {
-		if err = step(fdesc, constraints, forItems, valEval, cache); err != nil {
+		if err = step(fdesc, constraints, forMap, forItems, valEval, cache); err != nil {
 			return err
 		}
 	}
@@ -261,13 +263,14 @@ func (bldr *Builder) buildValue(
 func (bldr *Builder) processIgnoreEmpty(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	val *value,
 	_ MessageCache,
 ) error {
 	// the only time we need to ignore empty on a value is if it's evaluating a
 	// field item (repeated element or map key/value).
-	val.IgnoreEmpty = forItems && bldr.shouldIgnoreEmpty(constraints)
+	val.IgnoreEmpty = (forMap || forItems) && bldr.shouldIgnoreEmpty(constraints)
 	if val.IgnoreEmpty {
 		val.Zero = bldr.zeroValue(fdesc, forItems)
 	}
@@ -277,6 +280,7 @@ func (bldr *Builder) processIgnoreEmpty(
 func (bldr *Builder) processFieldExpressions(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	eval *value,
 	_ MessageCache,
@@ -304,6 +308,7 @@ func (bldr *Builder) processFieldExpressions(
 func (bldr *Builder) processEmbeddedMessage(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	cache MessageCache,
@@ -329,6 +334,7 @@ func (bldr *Builder) processEmbeddedMessage(
 func (bldr *Builder) processWrapperConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	cache MessageCache,
@@ -345,7 +351,7 @@ func (bldr *Builder) processWrapperConstraints(
 		return nil
 	}
 	var unwrapped value
-	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, true, &unwrapped, cache)
+	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, forMap, forItems, &unwrapped, cache)
 	if err != nil {
 		return err
 	}
@@ -356,6 +362,7 @@ func (bldr *Builder) processWrapperConstraints(
 func (bldr *Builder) processStandardConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	_ MessageCache,
@@ -366,6 +373,7 @@ func (bldr *Builder) processStandardConstraints(
 		constraints,
 		bldr.extensionTypeResolver,
 		bldr.allowUnknownFields,
+		forMap,
 		forItems,
 	)
 	if err != nil {
@@ -378,6 +386,7 @@ func (bldr *Builder) processStandardConstraints(
 func (bldr *Builder) processAnyConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	_ MessageCache,
@@ -393,6 +402,8 @@ func (bldr *Builder) processAnyConstraints(
 		TypeURLDescriptor: typeURLDesc,
 		In:                stringsToSet(fieldConstraints.GetAny().GetIn()),
 		NotIn:             stringsToSet(fieldConstraints.GetAny().GetNotIn()),
+		ForMap:            forMap,
+		ForItems:          forItems,
 	}
 	valEval.Append(anyEval)
 	return nil
@@ -401,7 +412,8 @@ func (bldr *Builder) processAnyConstraints(
 func (bldr *Builder) processEnumConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	_ bool,
+	forMap bool,
+	forItems bool,
 	valEval *value,
 	_ MessageCache,
 ) error {
@@ -409,7 +421,11 @@ func (bldr *Builder) processEnumConstraints(
 		return nil
 	}
 	if fieldConstraints.GetEnum().GetDefinedOnly() {
-		valEval.Append(definedEnum{ValueDescriptors: fdesc.Enum().Values()})
+		valEval.Append(definedEnum{
+			ValueDescriptors: fdesc.Enum().Values(),
+			ForMap:           forMap,
+			ForItems:         forItems,
+		})
 	}
 	return nil
 }
@@ -417,6 +433,7 @@ func (bldr *Builder) processEnumConstraints(
 func (bldr *Builder) processMapConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
+	_ bool,
 	_ bool,
 	valEval *value,
 	cache MessageCache,
@@ -431,6 +448,7 @@ func (bldr *Builder) processMapConstraints(
 		fieldDesc.MapKey(),
 		constraints.GetMap().GetKeys(),
 		true,
+		false,
 		&mapEval.KeyConstraints,
 		cache)
 	if err != nil {
@@ -442,6 +460,7 @@ func (bldr *Builder) processMapConstraints(
 	err = bldr.buildValue(
 		fieldDesc.MapValue(),
 		constraints.GetMap().GetValues(),
+		true,
 		true,
 		&mapEval.ValueConstraints,
 		cache)
@@ -458,6 +477,7 @@ func (bldr *Builder) processMapConstraints(
 func (bldr *Builder) processRepeatedConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
+	forMap bool,
 	forItems bool,
 	valEval *value,
 	cache MessageCache,
@@ -467,7 +487,7 @@ func (bldr *Builder) processRepeatedConstraints(
 	}
 
 	var listEval listItems
-	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), true, &listEval.ItemConstraints, cache)
+	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), false, true, &listEval.ItemConstraints, cache)
 	if err != nil {
 		return errors.NewCompilationErrorf(
 			"failed to compile items constraints for repeated %v: %w", fdesc.FullName(), err)
