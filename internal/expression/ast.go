@@ -15,10 +15,10 @@
 package expression
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
-	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // ASTSet represents a collection of compiledAST and their associated cel.Env.
@@ -39,15 +39,6 @@ func (set ASTSet) Merge(other ASTSet) ASTSet {
 	out.asts = append(out.asts, set.asts...)
 	out.asts = append(out.asts, other.asts...)
 	return out
-}
-
-// SetRule sets the rule attached to the compiled ASTs. This will be returned
-// with validation errors returned by these expressions.
-func (set ASTSet) SetRule(rulePath string, ruleValue protoreflect.Value) {
-	for i := range set.asts {
-		set.asts[i].RulePath = rulePath
-		set.asts[i].RuleValue = ruleValue
-	}
 }
 
 // ReduceResiduals generates a ProgramSet, performing a partial evaluation of
@@ -92,10 +83,9 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 			x := residual.Source().Content()
 			_ = x
 			residuals = append(residuals, compiledAST{
-				AST:       residual,
-				Source:    ast.Source,
-				RulePath:  ast.RulePath,
-				RuleValue: ast.RuleValue,
+				AST:    residual,
+				Source: ast.Source,
+				Path:   ast.Path,
 			})
 		}
 	}
@@ -122,10 +112,9 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 }
 
 type compiledAST struct {
-	AST       *cel.Ast
-	Source    Expression
-	RulePath  string
-	RuleValue protoreflect.Value
+	AST    *cel.Ast
+	Source *validate.Constraint
+	Path   []*validate.FieldPathElement
 }
 
 func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out compiledProgram, err error) {
@@ -135,9 +124,8 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 			"failed to compile program %s: %w", ast.Source.GetId(), err)
 	}
 	return compiledProgram{
-		Program:   prog,
-		Source:    ast.Source,
-		RulePath:  ast.RulePath,
-		RuleValue: ast.RuleValue,
+		Program: prog,
+		Source:  ast.Source,
+		Path:    ast.Path,
 	}, nil
 }

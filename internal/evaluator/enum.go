@@ -15,9 +15,18 @@
 package evaluator
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
+
+//nolint:gochecknoglobals
+var enumDefinedOnlyRulePath = []*validate.FieldPathElement{
+	{FieldName: proto.String("enum"), FieldNumber: proto.Int32(16), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+	{FieldName: proto.String("defined_only"), FieldNumber: proto.Int32(2), FieldType: descriptorpb.FieldDescriptorProto_Type(8).Enum()},
+}
 
 // definedEnum is an evaluator that checks an enum value being a member of
 // the defined values exclusively. This check is handled outside CEL as enums
@@ -25,25 +34,13 @@ import (
 type definedEnum struct {
 	// ValueDescriptors captures all the defined values for this enum
 	ValueDescriptors protoreflect.EnumValueDescriptors
-	// Whether the evaluator applies to either map keys or map items.
-	ForMap bool
-	// Whether the evaluator applies to items of a map or repeated field.
-	ForItems bool
 }
 
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
-	rulePathPrefix := ""
-	if d.ForMap && d.ForItems {
-		rulePathPrefix += "map.values."
-	} else if d.ForMap && !d.ForItems {
-		rulePathPrefix += "map.keys."
-	} else if d.ForItems {
-		rulePathPrefix += "repeated.items."
-	}
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []errors.Violation{{
+			RulePath:     errors.NewFieldPath(enumDefinedOnlyRulePath),
 			ConstraintID: "enum.defined_only",
-			RulePath:     rulePathPrefix + "enum.defined_only",
 			Message:      "value must be one of the defined enum values",
 		}}}
 	}

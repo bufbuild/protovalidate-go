@@ -15,6 +15,7 @@
 package expression
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -86,10 +87,9 @@ func (s ProgramSet) bindThis(val any) *Variable {
 // compiledProgram is a parsed and type-checked cel.Program along with the
 // source Expression.
 type compiledProgram struct {
-	Program   cel.Program
-	Source    Expression
-	RulePath  string
-	RuleValue protoreflect.Value
+	Program cel.Program
+	Source  *validate.Constraint
+	Path    []*validate.FieldPathElement
 }
 
 //nolint:nilnil // non-existence of violations is intentional
@@ -109,20 +109,18 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 			return nil, nil
 		}
 		return &errors.Violation{
+			RulePath:     errors.NewFieldPath(expr.Path),
 			ConstraintID: expr.Source.GetId(),
 			Message:      val,
-			RulePath:     expr.RulePath,
-			RuleValue:    expr.RuleValue,
 		}, nil
 	case bool:
 		if val {
 			return nil, nil
 		}
 		return &errors.Violation{
+			RulePath:     errors.NewFieldPath(expr.Path),
 			ConstraintID: expr.Source.GetId(),
 			Message:      expr.Source.GetMessage(),
-			RulePath:     expr.RulePath,
-			RuleValue:    expr.RuleValue,
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(

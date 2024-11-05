@@ -102,6 +102,10 @@ func (m messageEvaluators) Tautology() bool {
 	return true
 }
 
+// wrapper wraps an evaluator, used to handle some logic that applies
+// specifically to recursive constraint rules.
+type wrapper func(evaluator) evaluator
+
 var (
 	_ evaluator        = evaluators(nil)
 	_ MessageEvaluator = messageEvaluators(nil)

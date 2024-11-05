@@ -15,8 +15,23 @@
 package evaluator
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
+)
+
+//nolint:gochecknoglobals
+var (
+	anyInRulePath = []*validate.FieldPathElement{
+		{FieldName: proto.String("any"), FieldNumber: proto.Int32(20), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+		{FieldName: proto.String("in"), FieldNumber: proto.Int32(2), FieldType: descriptorpb.FieldDescriptorProto_Type(9).Enum()},
+	}
+	anyNotInRulePath = []*validate.FieldPathElement{
+		{FieldName: proto.String("any"), FieldNumber: proto.Int32(20), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+		{FieldName: proto.String("not_in"), FieldNumber: proto.Int32(3), FieldType: descriptorpb.FieldDescriptorProto_Type(9).Enum()},
+	}
 )
 
 // anyPB is a specialized evaluator for applying validate.AnyRules to an
@@ -30,30 +45,17 @@ type anyPB struct {
 	In map[string]struct{}
 	// NotIn specifies which type URLs the value may not possess
 	NotIn map[string]struct{}
-	// Whether the evaluator applies to either map keys or map items.
-	ForMap bool
-	// Whether the evaluator applies to items of a map or repeated field.
-	ForItems bool
 }
 
 func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
 
-	rulePathPrefix := ""
-	if a.ForMap && a.ForItems {
-		rulePathPrefix += "map.values."
-	} else if a.ForMap && !a.ForItems {
-		rulePathPrefix += "map.keys."
-	} else if a.ForItems {
-		rulePathPrefix += "repeated.items."
-	}
-
 	err := &errors.ValidationError{}
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, errors.Violation{
+				RulePath:     errors.NewFieldPath(anyInRulePath),
 				ConstraintID: "any.in",
-				RulePath:     rulePathPrefix + "any.in",
 				Message:      "type URL must be in the allow list",
 			})
 			if failFast {
@@ -65,8 +67,8 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, errors.Violation{
+				RulePath:     errors.NewFieldPath(anyNotInRulePath),
 				ConstraintID: "any.not_in",
-				RulePath:     rulePathPrefix + "any.not_in",
 				Message:      "type URL must not be in the block list",
 			})
 		}

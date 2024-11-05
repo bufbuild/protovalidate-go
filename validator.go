@@ -107,7 +107,9 @@ func (v *Validator) Validate(msg proto.Message) error {
 	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	return eval.EvaluateMessage(refl, v.failFast)
+	err := eval.EvaluateMessage(refl, v.failFast)
+	errors.ReverseFieldPaths(err)
+	return err
 }
 
 // Validate uses a global instance of Validator constructed with no ValidatorOptions and

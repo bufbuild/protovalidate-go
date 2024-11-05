@@ -47,7 +47,6 @@ func (c *Cache) Build(
 	fieldConstraints *validate.FieldConstraints,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
-	forMap bool,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
 	constraints, setOneof, done, err := c.resolveConstraints(
@@ -58,17 +57,6 @@ func (c *Cache) Build(
 	if done {
 		return nil, err
 	}
-
-	rulePath := ""
-	if forMap && forItems {
-		rulePath += "map.values."
-	} else if forMap && !forItems {
-		rulePath += "map.keys."
-	} else if forItems {
-		rulePath += "repeated.items."
-	}
-
-	rulePath += string(setOneof.Name()) + "."
 
 	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
 		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
@@ -95,13 +83,11 @@ func (c *Cache) Build(
 			err = compileErr
 			return false
 		}
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, desc)
+		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, setOneof, desc)
 		if compileErr != nil {
 			err = compileErr
 			return false
 		}
-		rulePath := rulePath + desc.TextName()
-		precomputedASTs.SetRule(rulePath, ruleValue)
 		asts = asts.Merge(precomputedASTs)
 		return true
 	})
@@ -171,16 +157,23 @@ func (c *Cache) prepareEnvironment(
 // CEL expressions.
 func (c *Cache) loadOrCompileStandardConstraint(
 	env *cel.Env,
+	setOneOf protoreflect.FieldDescriptor,
 	constraintFieldDesc protoreflect.FieldDescriptor,
 ) (set expression.ASTSet, err error) {
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs := extensions.Resolve[*validate.PredefinedConstraints](
-		constraintFieldDesc.Options(),
-		validate.E_Predefined,
-	)
-	set, err = expression.CompileASTs(exprs.GetCel(), env)
+	exprs := expression.Expressions{
+		Constraints: extensions.Resolve[*validate.PredefinedConstraints](
+			constraintFieldDesc.Options(),
+			validate.E_Predefined,
+		).GetCel(),
+		RulePath: []*validate.FieldPathElement{
+			errors.FieldPathElement(setOneOf),
+			errors.FieldPathElement(constraintFieldDesc),
+		},
+	}
+	set, err = expression.CompileASTs(exprs, env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
 			"failed to compile standard constraint %q: %w",

@@ -15,9 +15,17 @@
 package evaluator
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
+
+//nolint:gochecknoglobals
+var requiredRulePath = []*validate.FieldPathElement{
+	{FieldName: proto.String("required"), FieldNumber: proto.Int32(25), FieldType: descriptorpb.FieldDescriptorProto_Type(8).Enum()},
+}
 
 // field performs validation on a single message field, defined by its
 // descriptor.
@@ -37,10 +45,6 @@ type field struct {
 	IgnoreDefault bool
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
-	// Whether the evaluator applies to either map keys or map items.
-	ForMap bool
-	// Whether the evaluator applies to items of a map or repeated field.
-	ForItems bool
 }
 
 func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
@@ -49,12 +53,15 @@ func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
 
 func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
 	if f.Required && !msg.Has(f.Descriptor) {
-		return &errors.ValidationError{Violations: []errors.Violation{{
-			FieldPath:    string(f.Descriptor.Name()),
+		err := &errors.ValidationError{Violations: []errors.Violation{{
+			FieldPath: errors.NewFieldPath([]*validate.FieldPathElement{
+				errors.FieldPathElement(f.Descriptor),
+			}),
+			RulePath:     errors.NewFieldPath(requiredRulePath),
 			ConstraintID: "required",
-			RulePath:     "required",
 			Message:      "value is required",
 		}}}
+		return err
 	}
 
 	if f.IgnoreEmpty && !msg.Has(f.Descriptor) {
@@ -66,7 +73,11 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 		return nil
 	}
 	if err = f.Value.Evaluate(val, failFast); err != nil {
-		errors.PrefixErrorPaths(err, "%s", f.Descriptor.Name())
+		errors.AppendFieldPath(
+			err,
+			errors.FieldPathElement(f.Descriptor),
+			f.Descriptor.Cardinality() == protoreflect.Repeated,
+		)
 	}
 	return err
 }

@@ -18,12 +18,29 @@ import (
 	"fmt"
 	"strconv"
 
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
+)
+
+//nolint:gochecknoglobals
+var (
+	mapKeysRulePath = []*validate.FieldPathElement{
+		{FieldName: proto.String("map"), FieldNumber: proto.Int32(19), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+		{FieldName: proto.String("keys"), FieldNumber: proto.Int32(4), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+	}
+	mapValuesRulePath = []*validate.FieldPathElement{
+		{FieldName: proto.String("map"), FieldNumber: proto.Int32(19), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+		{FieldName: proto.String("values"), FieldNumber: proto.Int32(5), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+	}
 )
 
 // kvPairs performs validation on a map field's KV Pairs.
 type kvPairs struct {
+	// Descriptor is the FieldDescriptor targeted by this evaluator
+	Descriptor protoreflect.FieldDescriptor
 	// KeyConstraints are checked on the map keys
 	KeyConstraints value
 	// ValueConstraints are checked on the map values
@@ -35,7 +52,29 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 		evalErr := m.evalPairs(key, value, failFast)
 		if evalErr != nil {
-			errors.PrefixErrorPaths(evalErr, "[%s]", m.formatKey(key.Interface()))
+			element := errors.FieldPathElement(m.Descriptor)
+			switch m.Descriptor.MapKey().Kind() {
+			case protoreflect.BoolKind:
+				element.Subscript = &validate.FieldPathElement_BoolKey{BoolKey: key.Bool()}
+			case protoreflect.Int32Kind, protoreflect.Int64Kind,
+				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind:
+				element.Subscript = &validate.FieldPathElement_IntKey{IntKey: key.Int()}
+			case protoreflect.Sint32Kind, protoreflect.Sint64Kind:
+				element.Subscript = &validate.FieldPathElement_SintKey{SintKey: key.Int()}
+			case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
+				protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
+				element.Subscript = &validate.FieldPathElement_UintKey{UintKey: key.Uint()}
+			case protoreflect.StringKind:
+				element.Subscript = &validate.FieldPathElement_StringKey{StringKey: key.String()}
+			case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
+				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+				err = errors.NewCompilationErrorf(
+					"unexpected map key type %s",
+					m.Descriptor.MapKey().Kind(),
+				)
+				return false
+			}
+			errors.AppendFieldPath(evalErr, element, false)
 		}
 		ok, err = errors.Merge(err, evalErr, failFast)
 		return ok
@@ -70,4 +109,36 @@ func (m kvPairs) formatKey(key any) string {
 	}
 }
 
-var _ evaluator = kvPairs{}
+// keysWrapper wraps the evaluation of nested map key rules.
+type keysWrapper struct {
+	evaluator
+}
+
+func newKeysWrapper(evaluator evaluator) evaluator { return keysWrapper{evaluator} }
+
+func (e keysWrapper) Evaluate(val protoreflect.Value, failFast bool) error {
+	err := e.evaluator.Evaluate(val, failFast)
+	errors.PrependRulePath(err, mapKeysRulePath)
+	return err
+}
+
+// valuesWrapper wraps the evaluation of nested map value rules.
+type valuesWrapper struct {
+	evaluator
+}
+
+func newValuesWrapper(evaluator evaluator) evaluator { return valuesWrapper{evaluator} }
+
+func (e valuesWrapper) Evaluate(val protoreflect.Value, failFast bool) error {
+	err := e.evaluator.Evaluate(val, failFast)
+	errors.PrependRulePath(err, mapValuesRulePath)
+	return err
+}
+
+var (
+	_ evaluator = kvPairs{}
+	_ evaluator = keysWrapper{}
+	_ wrapper   = newKeysWrapper
+	_ evaluator = valuesWrapper{}
+	_ wrapper   = newValuesWrapper
+)

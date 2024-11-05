@@ -101,7 +101,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 			require.NoError(t, err)
 			c := NewCache()
 
-			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, false, test.forItems)
+			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems)
 			if test.exErr {
 				assert.Error(t, err)
 			} else {
@@ -118,6 +118,8 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	env, err := celext.DefaultEnv(false)
 	require.NoError(t, err)
 
+	constraints := &validate.FieldConstraints{}
+	oneOfDesc := constraints.ProtoReflect().Descriptor().Oneofs().ByName("type").Fields().ByName("float")
 	msg := &cases.FloatIn{}
 	desc := getFieldDesc(t, msg, "val")
 	require.NotNil(t, desc)
@@ -126,7 +128,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	_, ok := cache.cache[desc]
 	assert.False(t, ok)
 
-	asts, err := cache.loadOrCompileStandardConstraint(env, desc)
+	asts, err := cache.loadOrCompileStandardConstraint(env, oneOfDesc, desc)
 	require.NoError(t, err)
 	assert.NotNil(t, asts)
 
@@ -134,7 +136,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, cached, asts)
 
-	asts, err = cache.loadOrCompileStandardConstraint(env, desc)
+	asts, err = cache.loadOrCompileStandardConstraint(env, oneOfDesc, desc)
 	require.NoError(t, err)
 	assert.Equal(t, cached, asts)
 }
