@@ -39,7 +39,7 @@ func TestCompiled(t *testing.T) {
 		name   string
 		prog   cel.Program
 		src    *validate.Constraint
-		exViol *pverr.Violation
+		exViol *validate.Violation
 		exErr  bool
 	}{
 		{
@@ -54,13 +54,13 @@ func TestCompiled(t *testing.T) {
 			name:   "invalid bool",
 			prog:   mockProgram{Val: types.False},
 			src:    &validate.Constraint{Id: proto.String("foo"), Message: proto.String("bar")},
-			exViol: &pverr.Violation{ConstraintID: "foo", Message: "bar"},
+			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:   "invalid string",
 			prog:   mockProgram{Val: types.String("bar")},
 			src:    &validate.Constraint{Id: proto.String("foo")},
-			exViol: &pverr.Violation{ConstraintID: "foo", Message: "bar"},
+			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:  "eval error",
@@ -89,7 +89,7 @@ func TestCompiled(t *testing.T) {
 				if test.exViol == nil {
 					assert.Nil(t, violation)
 				} else {
-					assert.True(t, pverr.EqualViolation(*test.exViol, *violation))
+					assert.True(t, proto.Equal(test.exViol, violation.ToProto()))
 				}
 			}
 		})
@@ -103,7 +103,7 @@ func TestSet(t *testing.T) {
 		name     string
 		set      ProgramSet
 		failFast bool
-		exViols  []pverr.Violation
+		exViols  *validate.Violations
 		exErr    bool
 	}{
 		{
@@ -148,9 +148,11 @@ func TestSet(t *testing.T) {
 					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
-			exViols: []pverr.Violation{
-				{ConstraintID: "foo", Message: "fizz"},
-				{ConstraintID: "bar", Message: "buzz"},
+			exViols: &validate.Violations{
+				Violations: []*validate.Violation{
+					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+					{ConstraintId: proto.String("bar"), Message: proto.String("buzz")},
+				},
 			},
 		},
 		{
@@ -166,8 +168,10 @@ func TestSet(t *testing.T) {
 					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
-			exViols: []pverr.Violation{
-				{ConstraintID: "foo", Message: "fizz"},
+			exViols: &validate.Violations{
+				Violations: []*validate.Violation{
+					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+				},
 			},
 		},
 	}
@@ -182,7 +186,7 @@ func TestSet(t *testing.T) {
 			case test.exViols != nil:
 				var viols *pverr.ValidationError
 				require.ErrorAs(t, err, &viols)
-				require.True(t, pverr.EqualViolations(test.exViols, viols.Violations))
+				require.True(t, proto.Equal(test.exViols, viols.ToProto()))
 			case test.exErr:
 				require.Error(t, err)
 			default:

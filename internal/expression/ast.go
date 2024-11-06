@@ -19,6 +19,7 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // ASTSet represents a collection of compiledAST and their associated cel.Env.
@@ -111,10 +112,19 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 	return out, nil
 }
 
+// SetRuleValue sets the rule value for the programs in the ASTSet.
+func (set *ASTSet) SetRuleValue(ruleValue protoreflect.Value) {
+	set.asts = append([]compiledAST{}, set.asts...)
+	for i := range set.asts {
+		set.asts[i].Value = ruleValue
+	}
+}
+
 type compiledAST struct {
 	AST    *cel.Ast
 	Source *validate.Constraint
 	Path   []*validate.FieldPathElement
+	Value  protoreflect.Value
 }
 
 func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out compiledProgram, err error) {
@@ -127,5 +137,6 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 		Program: prog,
 		Source:  ast.Source,
 		Path:    ast.Path,
+		Value:   ast.Value,
 	}, nil
 }

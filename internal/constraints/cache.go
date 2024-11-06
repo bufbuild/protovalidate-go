@@ -71,12 +71,12 @@ func (c *Cache) Build(
 	}
 
 	var asts expression.ASTSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, ruleValue protoreflect.Value) bool {
+	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
 				"rule",
 				celext.ProtoFieldToCELType(desc, true, false),
-				celext.ProtoFieldToCELValue(desc, ruleValue, false),
+				celext.ProtoFieldToCELValue(desc, rule, false),
 			),
 		)
 		if compileErr != nil {
@@ -88,6 +88,7 @@ func (c *Cache) Build(
 			err = compileErr
 			return false
 		}
+		precomputedASTs.SetRuleValue(rule)
 		asts = asts.Merge(precomputedASTs)
 		return true
 	})

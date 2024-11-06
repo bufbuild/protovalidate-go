@@ -53,8 +53,8 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	err := &errors.ValidationError{}
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
-			err.Violations = append(err.Violations, errors.Violation{
-				RulePath:     errors.NewFieldPath(anyInRulePath),
+			err.Violations = append(err.Violations, &errors.ViolationData{
+				RulePath:     anyInRulePath,
 				ConstraintID: "any.in",
 				Message:      "type URL must be in the allow list",
 			})
@@ -66,8 +66,8 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
-			err.Violations = append(err.Violations, errors.Violation{
-				RulePath:     errors.NewFieldPath(anyNotInRulePath),
+			err.Violations = append(err.Violations, &errors.ViolationData{
+				RulePath:     anyNotInRulePath,
 				ConstraintID: "any.not_in",
 				Message:      "type URL must not be in the block list",
 			})

@@ -47,7 +47,8 @@ func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
 			return err
 		}
 		if violation != nil {
-			violations = append(violations, *violation)
+			violation.FieldValue = val
+			violations = append(violations, violation)
 			if failFast {
 				break
 			}
@@ -90,10 +91,11 @@ type compiledProgram struct {
 	Program cel.Program
 	Source  *validate.Constraint
 	Path    []*validate.FieldPathElement
+	Value   protoreflect.Value
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) {
+func (expr compiledProgram) eval(bindings *Variable) (*errors.ViolationData, error) {
 	now := nowPool.Get()
 	defer nowPool.Put(now)
 	bindings.Next = now
@@ -108,8 +110,9 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		if val == "" {
 			return nil, nil
 		}
-		return &errors.Violation{
-			RulePath:     errors.NewFieldPath(expr.Path),
+		return &errors.ViolationData{
+			RulePath:     expr.Path,
+			RuleValue:    expr.Value,
 			ConstraintID: expr.Source.GetId(),
 			Message:      val,
 		}, nil
@@ -117,8 +120,9 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		if val {
 			return nil, nil
 		}
-		return &errors.Violation{
-			RulePath:     errors.NewFieldPath(expr.Path),
+		return &errors.ViolationData{
+			RulePath:     expr.Path,
+			RuleValue:    expr.Value,
 			ConstraintID: expr.Source.GetId(),
 			Message:      expr.Source.GetMessage(),
 		}, nil

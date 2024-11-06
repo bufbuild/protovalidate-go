@@ -43,7 +43,7 @@ type (
 	//    }
 	ValidationError = errors.ValidationError
 
-	// A Violation contains information about one constraint violation.
+	// A Violation provides information about one constraint violation.
 	Violation = errors.Violation
 
 	// A CompilationError is returned if a CEL expression cannot be compiled &
@@ -122,6 +122,12 @@ func Validate(msg proto.Message) error {
 		return err
 	}
 	return globalValidator.Validate(msg)
+}
+
+// FieldPathString returns a dotted path string for the provided
+// validate.FieldPath.
+func FieldPathString(path *validate.FieldPath) string {
+	return errors.FieldPathString(path.GetElements())
 }
 
 type config struct {

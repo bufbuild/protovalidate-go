@@ -55,15 +55,6 @@ func Merge(dst, src error, failFast bool) (ok bool, err error) {
 	return !(failFast && len(dstValErrs.Violations) > 0), dst
 }
 
-func MarkForKey(err error) {
-	var valErr *ValidationError
-	if errors.As(err, &valErr) {
-		for i := range valErr.Violations {
-			valErr.Violations[i].ForKey = true
-		}
-	}
-}
-
 func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathElement {
 	return &validate.FieldPathElement{
 		FieldNumber: proto.Int32(int32(field.Number())),
@@ -82,18 +73,19 @@ func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathEle
 func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript bool) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
-		for i := range valErr.Violations {
-			violation := &valErr.Violations[i]
-			// Special case: Here we skip appending if the last element had a
-			// subscript. This is a weird special case that makes it
-			// significantly simpler to handle reverse-constructing paths with
-			// maps and slices.
-			if skipSubscript &&
-				len(violation.FieldPath.path) > 0 &&
-				violation.FieldPath.path[len(violation.FieldPath.path)-1].Subscript != nil {
-				continue
+		for _, violation := range valErr.Violations {
+			if violation, ok := violation.(*ViolationData); ok {
+				// Special case: Here we skip appending if the last element had a
+				// subscript. This is a weird special case that makes it
+				// significantly simpler to handle reverse-constructing paths with
+				// maps and slices.
+				if skipSubscript &&
+					len(violation.FieldPath) > 0 &&
+					violation.FieldPath[len(violation.FieldPath)-1].Subscript != nil {
+					continue
+				}
+				violation.FieldPath = append(violation.FieldPath, suffix)
 			}
-			violation.FieldPath.path = append(violation.FieldPath.path, suffix)
 		}
 	}
 }
@@ -106,11 +98,13 @@ func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript
 func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
-		for i := range valErr.Violations {
-			valErr.Violations[i].RulePath.path = append(
-				append([]*validate.FieldPathElement{}, prefix...),
-				valErr.Violations[i].RulePath.path...,
-			)
+		for _, violation := range valErr.Violations {
+			if violation, ok := violation.(*ViolationData); ok {
+				violation.RulePath = append(
+					append([]*validate.FieldPathElement{}, prefix...),
+					violation.RulePath...,
+				)
+			}
 		}
 	}
 }
@@ -119,9 +113,10 @@ func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
 func ReverseFieldPaths(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
-		for i := range valErr.Violations {
-			violation := &valErr.Violations[i]
-			slices.Reverse(violation.FieldPath.path)
+		for _, violation := range valErr.Violations {
+			if violation, ok := violation.(*ViolationData); ok {
+				slices.Reverse(violation.FieldPath)
+			}
 		}
 	}
 }
@@ -130,9 +125,6 @@ func ReverseFieldPaths(err error) {
 // field path.
 func FieldPathString(path []*validate.FieldPathElement) string {
 	var result strings.Builder
-	if path == nil {
-		return ""
-	}
 	for i, element := range path {
 		if i > 0 {
 			result.WriteByte('.')
@@ -160,4 +152,15 @@ func FieldPathString(path []*validate.FieldPathElement) string {
 		result.WriteByte(']')
 	}
 	return result.String()
+}
+
+func MarkForKey(err error) {
+	var valErr *ValidationError
+	if errors.As(err, &valErr) {
+		for _, violation := range valErr.Violations {
+			if violation, ok := violation.(*ViolationData); ok {
+				violation.ForKey = true
+			}
+		}
+	}
 }
