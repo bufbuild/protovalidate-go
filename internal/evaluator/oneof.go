@@ -36,7 +36,7 @@ func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
 func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
 	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
 		return &errors.ValidationError{Violations: []errors.Violation{&errors.ViolationData{
-			FieldPath: []*validate.FieldPathElement{{
+			Field: []*validate.FieldPathElement{{
 				FieldName: proto.String(string(o.Descriptor.Name())),
 			}},
 			ConstraintID: "required",

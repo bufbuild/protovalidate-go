@@ -65,7 +65,7 @@ func (err *ValidationError) Error() string {
 	for _, violation := range err.Violations {
 		violation := violation.ToProto()
 		bldr.WriteString("\n - ")
-		if fieldPath := FieldPathString(violation.GetFieldPath().GetElements()); fieldPath != "" {
+		if fieldPath := FieldPathString(violation.GetField().GetElements()); fieldPath != "" {
 			bldr.WriteString(fieldPath)
 			bldr.WriteString(": ")
 		}
@@ -78,14 +78,13 @@ func (err *ValidationError) Error() string {
 
 // ViolationData is a simple implementation of Violation.
 type ViolationData struct {
-	FieldPath       []*validate.FieldPathElement
-	RulePath        []*validate.FieldPathElement
-	FieldValue      protoreflect.Value
-	RuleValue       protoreflect.Value
-	FieldDescriptor protoreflect.FieldDescriptor
-	ForKey          bool
-	ConstraintID    string
-	Message         string
+	Field        []*validate.FieldPathElement
+	Rule         []*validate.FieldPathElement
+	FieldValue   protoreflect.Value
+	RuleValue    protoreflect.Value
+	ConstraintID string
+	Message      string
+	ForKey       bool
 }
 
 func (v *ViolationData) GetFieldValue() protoreflect.Value {
@@ -98,20 +97,20 @@ func (v *ViolationData) GetRuleValue() protoreflect.Value {
 
 func (v *ViolationData) ToProto() *validate.Violation {
 	var fieldPathString *string
-	if len(v.FieldPath) > 0 {
-		fieldPathString = proto.String(FieldPathString(v.FieldPath))
+	if len(v.Field) > 0 {
+		fieldPathString = proto.String(FieldPathString(v.Field))
 	}
 	var forKey *bool
 	if v.ForKey {
 		forKey = proto.Bool(true)
 	}
 	return &validate.Violation{
-		FieldPathString: fieldPathString,
-		FieldPath:       fieldPathProto(v.FieldPath),
-		RulePath:        fieldPathProto(v.RulePath),
-		ConstraintId:    proto.String(v.ConstraintID),
-		Message:         proto.String(v.Message),
-		ForKey:          forKey,
+		Field:        fieldPathProto(v.Field),
+		Rule:         fieldPathProto(v.Rule),
+		FieldPath:    fieldPathString,
+		ConstraintId: proto.String(v.ConstraintID),
+		Message:      proto.String(v.Message),
+		ForKey:       forKey,
 	}
 }
 

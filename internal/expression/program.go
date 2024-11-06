@@ -111,7 +111,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.ViolationData, err
 			return nil, nil
 		}
 		return &errors.ViolationData{
-			RulePath:     expr.Path,
+			Rule:         expr.Path,
 			RuleValue:    expr.Value,
 			ConstraintID: expr.Source.GetId(),
 			Message:      val,
@@ -121,7 +121,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.ViolationData, err
 			return nil, nil
 		}
 		return &errors.ViolationData{
-			RulePath:     expr.Path,
+			Rule:         expr.Path,
 			RuleValue:    expr.Value,
 			ConstraintID: expr.Source.GetId(),
 			Message:      expr.Source.GetMessage(),

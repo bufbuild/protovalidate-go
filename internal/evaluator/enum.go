@@ -39,7 +39,9 @@ type definedEnum struct {
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []errors.Violation{&errors.ViolationData{
-			RulePath:     enumDefinedOnlyRulePath,
+			Rule:         enumDefinedOnlyRulePath,
+			FieldValue:   val,
+			RuleValue:    protoreflect.ValueOfBool(true),
 			ConstraintID: "enum.defined_only",
 			Message:      "value must be one of the defined enum values",
 		}}}

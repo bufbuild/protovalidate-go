@@ -391,10 +391,15 @@ func (bldr *Builder) processAnyConstraints(
 	}
 
 	typeURLDesc := fdesc.Message().Fields().ByName("type_url")
+	anyPbDesc := (&validate.AnyRules{}).ProtoReflect().Descriptor()
+	inField := anyPbDesc.Fields().ByName("in")
+	notInField := anyPbDesc.Fields().ByName("not_in")
 	anyEval := anyPB{
 		TypeURLDescriptor: typeURLDesc,
 		In:                stringsToSet(fieldConstraints.GetAny().GetIn()),
 		NotIn:             stringsToSet(fieldConstraints.GetAny().GetNotIn()),
+		InValue:           fieldConstraints.GetAny().ProtoReflect().Get(inField),
+		NotInValue:        fieldConstraints.GetAny().ProtoReflect().Get(notInField),
 	}
 	appendEvaluator(valEval, anyEval, itemsWrapper)
 	return nil

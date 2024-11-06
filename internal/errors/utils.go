@@ -80,11 +80,11 @@ func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript
 				// significantly simpler to handle reverse-constructing paths with
 				// maps and slices.
 				if skipSubscript &&
-					len(violation.FieldPath) > 0 &&
-					violation.FieldPath[len(violation.FieldPath)-1].Subscript != nil {
+					len(violation.Field) > 0 &&
+					violation.Field[len(violation.Field)-1].Subscript != nil {
 					continue
 				}
-				violation.FieldPath = append(violation.FieldPath, suffix)
+				violation.Field = append(violation.Field, suffix)
 			}
 		}
 	}
@@ -100,9 +100,9 @@ func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
 			if violation, ok := violation.(*ViolationData); ok {
-				violation.RulePath = append(
+				violation.Rule = append(
 					append([]*validate.FieldPathElement{}, prefix...),
-					violation.RulePath...,
+					violation.Rule...,
 				)
 			}
 		}
@@ -115,7 +115,7 @@ func ReverseFieldPaths(err error) {
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
 			if violation, ok := violation.(*ViolationData); ok {
-				slices.Reverse(violation.FieldPath)
+				slices.Reverse(violation.Field)
 			}
 		}
 	}

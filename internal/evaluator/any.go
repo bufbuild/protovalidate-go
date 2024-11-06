@@ -45,6 +45,10 @@ type anyPB struct {
 	In map[string]struct{}
 	// NotIn specifies which type URLs the value may not possess
 	NotIn map[string]struct{}
+	// InValue contains the original `in` rule value.
+	InValue protoreflect.Value
+	// NotInValue contains the original `not_in` rule value.
+	NotInValue protoreflect.Value
 }
 
 func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
@@ -54,7 +58,9 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, &errors.ViolationData{
-				RulePath:     anyInRulePath,
+				Rule:         anyInRulePath,
+				FieldValue:   val,
+				RuleValue:    a.InValue,
 				ConstraintID: "any.in",
 				Message:      "type URL must be in the allow list",
 			})
@@ -67,7 +73,9 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, &errors.ViolationData{
-				RulePath:     anyNotInRulePath,
+				Rule:         anyNotInRulePath,
+				FieldValue:   val,
+				RuleValue:    a.NotInValue,
 				ConstraintID: "any.not_in",
 				Message:      "type URL must not be in the block list",
 			})

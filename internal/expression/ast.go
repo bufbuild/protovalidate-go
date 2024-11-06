@@ -87,6 +87,7 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 				AST:    residual,
 				Source: ast.Source,
 				Path:   ast.Path,
+				Value:  ast.Value,
 			})
 		}
 	}
