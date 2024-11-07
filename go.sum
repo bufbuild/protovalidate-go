@@ -1,5 +1,5 @@
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.1-20240920164238-5a7b106cbb87.1 h1:9wP6ZZYWnF2Z0TxmII7m3XNykxnP4/w8oXeth6ekcRI=
-buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.1-20240920164238-5a7b106cbb87.1/go.mod h1:Duw/9JoXkXIydyASnLYIiufkzySThoqavOsF+IihqvM=
+buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.1-20241107000346-6ecee89ee0c9.1 h1:AG/SqE0AfoVJpTJeiOIZ1HnfpR+nYWdbW/vDB3qAKlk=
+buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.1-20241107000346-6ecee89ee0c9.1/go.mod h1:Cy8tc4XPqN8l0D+F/Jf4Hy9X9a3somHIH9BTkmJJTmo=
 github.com/antlr4-go/antlr/v4 v4.13.0 h1:lxCg3LAv+EUK6t1i0y1V6/SLeUi0eKEKdhQAlS8TVTI=
 github.com/antlr4-go/antlr/v4 v4.13.0/go.mod h1:pfChB/xh/Unjila75QW7+VU4TSnWnnk9UTnmpPaOR2g=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
