@@ -7,7 +7,7 @@ deps:
   - buf.build/envoyproxy/protoc-gen-validate
 lint:
   use:
-    - DEFAULT
+    - STANDARD
   ignore_only:
     PROTOVALIDATE:
       - proto/tests/example/v1/validations.proto
