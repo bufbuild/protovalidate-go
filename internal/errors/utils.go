@@ -142,8 +142,6 @@ func FieldPathString(path []*validate.FieldPathElement) string {
 			result.WriteString(strconv.FormatBool(value.BoolKey))
 		case *validate.FieldPathElement_IntKey:
 			result.WriteString(strconv.FormatInt(value.IntKey, 10))
-		case *validate.FieldPathElement_SintKey:
-			result.WriteString(strconv.FormatInt(value.SintKey, 10))
 		case *validate.FieldPathElement_UintKey:
 			result.WriteString(strconv.FormatUint(value.UintKey, 10))
 		case *validate.FieldPathElement_StringKey:

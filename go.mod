@@ -27,4 +27,4 @@ require (
 )
 
 // DO NOT MERGE!
-replace buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go => buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.1-20241107000346-6ecee89ee0c9.1
+replace buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go => buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.2-20241125171308-fd74cad4128d.1

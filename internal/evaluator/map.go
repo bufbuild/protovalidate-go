@@ -53,14 +53,15 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 		evalErr := m.evalPairs(key, value, failFast)
 		if evalErr != nil {
 			element := errors.FieldPathElement(m.Descriptor)
+			element.KeyType = descriptorpb.FieldDescriptorProto_Type(m.Descriptor.MapKey().Kind()).Enum()
+			element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.Descriptor.MapValue().Kind()).Enum()
 			switch m.Descriptor.MapKey().Kind() {
 			case protoreflect.BoolKind:
 				element.Subscript = &validate.FieldPathElement_BoolKey{BoolKey: key.Bool()}
 			case protoreflect.Int32Kind, protoreflect.Int64Kind,
-				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind:
+				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
+				protoreflect.Sint32Kind, protoreflect.Sint64Kind:
 				element.Subscript = &validate.FieldPathElement_IntKey{IntKey: key.Int()}
-			case protoreflect.Sint32Kind, protoreflect.Sint64Kind:
-				element.Subscript = &validate.FieldPathElement_SintKey{SintKey: key.Int()}
 			case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
 				protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
 				element.Subscript = &validate.FieldPathElement_UintKey{UintKey: key.Uint()}
