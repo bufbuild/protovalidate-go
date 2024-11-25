@@ -99,8 +99,9 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 		github.com/golangci/golangci-lint/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
+	# TODO: DO NOT MERGE
 	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+		github.com/bufbuild/protovalidate/tools/protovalidate-conformance@fab41785ae5758b533d64e40b3f400d84ebbba61
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)

@@ -24,10 +24,19 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
+
+//nolint:gochecknoglobals
+var celRuleField = validate.FieldPathElement{
+	FieldName:   proto.String("cel"),
+	FieldNumber: proto.Int32(23),
+	FieldType:   descriptorpb.FieldDescriptorProto_Type(11).Enum(),
+}
 
 // Builder is a build-through cache of message evaluators keyed off the provided
 // descriptor.
@@ -296,6 +305,18 @@ func (bldr *Builder) processFieldExpressions(
 	compiledExpressions, err := expression.Compile(exprs, bldr.env, opts...)
 	if err != nil {
 		return err
+	}
+	for i := range compiledExpressions {
+		compiledExpressions[i].Path = []*validate.FieldPathElement{
+			{
+				FieldNumber: proto.Int32(celRuleField.GetFieldNumber()),
+				FieldType:   celRuleField.GetFieldType().Enum(),
+				FieldName:   proto.String(celRuleField.GetFieldName()),
+				Subscript: &validate.FieldPathElement_Index{
+					Index: uint64(i),
+				},
+			},
+		}
 	}
 	if len(compiledExpressions) > 0 {
 		eval.Constraints = append(eval.Constraints, celPrograms(compiledExpressions))
