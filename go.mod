@@ -3,7 +3,7 @@ module github.com/bufbuild/protovalidate-go
 go 1.21.1
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20240920164238-5a7b106cbb87.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1
 	github.com/envoyproxy/protoc-gen-validate v1.1.0
 	github.com/google/cel-go v0.22.1
 	github.com/stretchr/testify v1.10.0
@@ -25,6 +25,3 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-// DO NOT MERGE!
-replace buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go => buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.2-20241125171308-fd74cad4128d.1
