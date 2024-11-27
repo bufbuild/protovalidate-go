@@ -1,7 +1,5 @@
 buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1 h1:jLd96rDDNJ+zIJxvV/L855VEtrjR0G4aePVDlCpf6kw=
 buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.35.2-20241127180247-a33202765966.1/go.mod h1:mnHCFccv4HwuIAOHNGdiIc5ZYbBCvbTWZcodLN5wITI=
-buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.2-20241125171308-fd74cad4128d.1 h1:0chXnVxmZm4tHhfMzhU9ge2ppgIDRon6qyKTJyq+hxo=
-buf.build/gen/go/jchadwick-buf/protovalidate/protocolbuffers/go v1.35.2-20241125171308-fd74cad4128d.1/go.mod h1:o4wyuJgZD4vOujqo012KwMjMv9PqJw/jk6swwGw3XIo=
 cel.dev/expr v0.18.0 h1:CJ6drgk+Hf96lkLikr4rFf19WrU0BOWEihyZnI2TAzo=
 cel.dev/expr v0.18.0/go.mod h1:MrpN08Q+lEBs+bGYdLxxHkZoUSsCp0nSKTs0nTymJgw=
 github.com/antlr4-go/antlr/v4 v4.13.0 h1:lxCg3LAv+EUK6t1i0y1V6/SLeUi0eKEKdhQAlS8TVTI=
