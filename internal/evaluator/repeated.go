@@ -17,16 +17,18 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 //nolint:gochecknoglobals
-var repeatedItemsFieldPath = []*validate.FieldPathElement{
-	{FieldName: proto.String("repeated"), FieldNumber: proto.Int32(18), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-	{FieldName: proto.String("items"), FieldNumber: proto.Int32(4), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-}
+var (
+	repeatedRuleDescriptor      = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("repeated")
+	repeatedItemsRuleDescriptor = (&validate.RepeatedRules{}).ProtoReflect().Descriptor().Fields().ByName("items")
+	repeatedItemsFieldPath      = []*validate.FieldPathElement{
+		errors.FieldPathElement(repeatedRuleDescriptor),
+		errors.FieldPathElement(repeatedItemsRuleDescriptor),
+	}
+)
 
 // listItems performs validation on the elements of a repeated field.
 type listItems struct {

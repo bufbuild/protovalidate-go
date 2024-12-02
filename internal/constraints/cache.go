@@ -88,7 +88,7 @@ func (c *Cache) Build(
 			err = compileErr
 			return false
 		}
-		precomputedASTs.SetRuleValue(rule)
+		precomputedASTs.SetRuleValue(rule, desc)
 		asts = asts.Merge(precomputedASTs)
 		return true
 	})

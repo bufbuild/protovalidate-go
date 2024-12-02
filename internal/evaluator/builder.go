@@ -27,16 +27,14 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
-	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 //nolint:gochecknoglobals
-var celRuleField = validate.FieldPathElement{
-	FieldName:   proto.String("cel"),
-	FieldNumber: proto.Int32(23),
-	FieldType:   descriptorpb.FieldDescriptorProto_Type(11).Enum(),
-}
+var (
+	celRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("cel")
+	celRuleField      = errors.FieldPathElement(celRuleDescriptor)
+)
 
 // Builder is a build-through cache of message evaluators keyed off the provided
 // descriptor.
@@ -317,6 +315,7 @@ func (bldr *Builder) processFieldExpressions(
 				},
 			},
 		}
+		compiledExpressions[i].Descriptor = celRuleDescriptor
 	}
 	if len(compiledExpressions) > 0 {
 		eval.Constraints = append(eval.Constraints, celPrograms(compiledExpressions))
@@ -416,6 +415,7 @@ func (bldr *Builder) processAnyConstraints(
 	inField := anyPbDesc.Fields().ByName("in")
 	notInField := anyPbDesc.Fields().ByName("not_in")
 	anyEval := anyPB{
+		Descriptor:        fdesc,
 		TypeURLDescriptor: typeURLDesc,
 		In:                stringsToSet(fieldConstraints.GetAny().GetIn()),
 		NotIn:             stringsToSet(fieldConstraints.GetAny().GetNotIn()),
@@ -438,6 +438,7 @@ func (bldr *Builder) processEnumConstraints(
 	}
 	if fieldConstraints.GetEnum().GetDefinedOnly() {
 		appendEvaluator(valEval, definedEnum{
+			Descriptor:       fdesc,
 			ValueDescriptors: fdesc.Enum().Values(),
 		}, itemsWrapper)
 	}

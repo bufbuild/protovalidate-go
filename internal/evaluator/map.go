@@ -20,20 +20,22 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 //nolint:gochecknoglobals
 var (
-	mapKeysRulePath = []*validate.FieldPathElement{
-		{FieldName: proto.String("map"), FieldNumber: proto.Int32(19), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-		{FieldName: proto.String("keys"), FieldNumber: proto.Int32(4), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+	mapRuleDescriptor     = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("map")
+	mapKeysRuleDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("keys")
+	mapKeysRulePath       = []*validate.FieldPathElement{
+		errors.FieldPathElement(mapRuleDescriptor),
+		errors.FieldPathElement(mapKeysRuleDescriptor),
 	}
-	mapValuesRulePath = []*validate.FieldPathElement{
-		{FieldName: proto.String("map"), FieldNumber: proto.Int32(19), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-		{FieldName: proto.String("values"), FieldNumber: proto.Int32(5), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
+	mapValuesDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("values")
+	mapValuesRulePath   = []*validate.FieldPathElement{
+		errors.FieldPathElement(mapRuleDescriptor),
+		errors.FieldPathElement(mapValuesDescriptor),
 	}
 )
 

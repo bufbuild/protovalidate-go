@@ -19,18 +19,20 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 //nolint:gochecknoglobals
 var (
-	anyInRulePath = []*validate.FieldPathElement{
-		{FieldName: proto.String("any"), FieldNumber: proto.Int32(20), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-		{FieldName: proto.String("in"), FieldNumber: proto.Int32(2), FieldType: descriptorpb.FieldDescriptorProto_Type(9).Enum()},
+	anyRuleDescriptor   = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("any")
+	anyInRuleDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("in")
+	anyInRulePath       = []*validate.FieldPathElement{
+		errors.FieldPathElement(anyRuleDescriptor),
+		errors.FieldPathElement(anyInRuleDescriptor),
 	}
-	anyNotInRulePath = []*validate.FieldPathElement{
-		{FieldName: proto.String("any"), FieldNumber: proto.Int32(20), FieldType: descriptorpb.FieldDescriptorProto_Type(11).Enum()},
-		{FieldName: proto.String("not_in"), FieldNumber: proto.Int32(3), FieldType: descriptorpb.FieldDescriptorProto_Type(9).Enum()},
+	anyNotInDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("not_in")
+	anyNotInRulePath   = []*validate.FieldPathElement{
+		errors.FieldPathElement(anyRuleDescriptor),
+		errors.FieldPathElement(anyNotInDescriptor),
 	}
 )
 
@@ -39,6 +41,8 @@ var (
 // hydrate anyPB's within an expression, breaking evaluation if the type is
 // unknown at runtime.
 type anyPB struct {
+	// Descriptor is the FieldDescriptor targeted by this evaluator
+	Descriptor protoreflect.FieldDescriptor
 	// TypeURLDescriptor is the descriptor for the TypeURL field
 	TypeURLDescriptor protoreflect.FieldDescriptor
 	// In specifies which type URLs the value may possess
@@ -63,8 +67,10 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 					ConstraintId: proto.String("any.in"),
 					Message:      proto.String("type URL must be in the allow list"),
 				},
-				FieldValue: val,
-				RuleValue:  a.InValue,
+				FieldValue:      val,
+				FieldDescriptor: a.Descriptor,
+				RuleValue:       a.InValue,
+				RuleDescriptor:  anyInRuleDescriptor,
 			})
 			if failFast {
 				return err
@@ -80,8 +86,10 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 					ConstraintId: proto.String("any.not_in"),
 					Message:      proto.String("type URL must not be in the block list"),
 				},
-				FieldValue: val,
-				RuleValue:  a.NotInValue,
+				FieldValue:      val,
+				FieldDescriptor: a.Descriptor,
+				RuleValue:       a.NotInValue,
+				RuleDescriptor:  anyNotInDescriptor,
 			})
 		}
 	}

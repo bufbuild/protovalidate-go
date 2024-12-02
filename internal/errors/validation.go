@@ -29,16 +29,24 @@ type Violation struct {
 	// Proto contains the violation's proto.Message form.
 	Proto *validate.Violation
 
-	// FieldValue returns the value of the specific field that failed
-	// validation. If there was no value, this will return an invalid value.
+	// FieldValue contains the value of the specific field that failed
+	// validation. If there was no value, this will contain an invalid value.
 	FieldValue protoreflect.Value
 
-	// RuleValue returns the value of the rule that specified the failed
+	// FieldDescriptor contains the field descriptor corresponding to the
+	// FieldValue, if there is a field value.
+	FieldDescriptor protoreflect.FieldDescriptor
+
+	// RuleValue contains the value of the rule that specified the failed
 	// constraint. Not all constraints have a value; only standard and
 	// predefined constraints have rule values. In violations caused by other
-	// kinds of constraints, like custom contraints, this will return an invalid
-	// value.
+	// kinds of constraints, like custom contraints, this will contain an
+	// invalid value.
 	RuleValue protoreflect.Value
+
+	// RuleDescriptor contains the field descriptor corresponding to the
+	// Rulevalue, if there is a rule value.
+	RuleDescriptor protoreflect.FieldDescriptor
 }
 
 // A ValidationError is returned if one or more constraint violations were

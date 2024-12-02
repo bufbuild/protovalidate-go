@@ -84,10 +84,11 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 			x := residual.Source().Content()
 			_ = x
 			residuals = append(residuals, compiledAST{
-				AST:    residual,
-				Source: ast.Source,
-				Path:   ast.Path,
-				Value:  ast.Value,
+				AST:        residual,
+				Source:     ast.Source,
+				Path:       ast.Path,
+				Value:      ast.Value,
+				Descriptor: ast.Descriptor,
 			})
 		}
 	}
@@ -114,18 +115,23 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 }
 
 // SetRuleValue sets the rule value for the programs in the ASTSet.
-func (set *ASTSet) SetRuleValue(ruleValue protoreflect.Value) {
+func (set *ASTSet) SetRuleValue(
+	ruleValue protoreflect.Value,
+	ruleDescriptor protoreflect.FieldDescriptor,
+) {
 	set.asts = append([]compiledAST{}, set.asts...)
 	for i := range set.asts {
 		set.asts[i].Value = ruleValue
+		set.asts[i].Descriptor = ruleDescriptor
 	}
 }
 
 type compiledAST struct {
-	AST    *cel.Ast
-	Source *validate.Constraint
-	Path   []*validate.FieldPathElement
-	Value  protoreflect.Value
+	AST        *cel.Ast
+	Source     *validate.Constraint
+	Path       []*validate.FieldPathElement
+	Value      protoreflect.Value
+	Descriptor protoreflect.FieldDescriptor
 }
 
 func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out compiledProgram, err error) {
@@ -135,9 +141,10 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 			"failed to compile program %s: %w", ast.Source.GetId(), err)
 	}
 	return compiledProgram{
-		Program: prog,
-		Source:  ast.Source,
-		Path:    ast.Path,
-		Value:   ast.Value,
+		Program:    prog,
+		Source:     ast.Source,
+		Path:       ast.Path,
+		Value:      ast.Value,
+		Descriptor: ast.Descriptor,
 	}, nil
 }

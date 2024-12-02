@@ -19,13 +19,15 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 //nolint:gochecknoglobals
-var requiredRulePath = []*validate.FieldPathElement{
-	{FieldName: proto.String("required"), FieldNumber: proto.Int32(25), FieldType: descriptorpb.FieldDescriptorProto_Type(8).Enum()},
-}
+var (
+	requiredRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("required")
+	requiredRulePath       = []*validate.FieldPathElement{
+		errors.FieldPathElement(requiredRuleDescriptor),
+	}
+)
 
 // field performs validation on a single message field, defined by its
 // descriptor.
@@ -62,7 +64,10 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 				ConstraintId: proto.String("required"),
 				Message:      proto.String("value is required"),
 			},
-			RuleValue: protoreflect.ValueOfBool(true),
+			FieldValue:      protoreflect.Value{},
+			FieldDescriptor: f.Descriptor,
+			RuleValue:       protoreflect.ValueOfBool(true),
+			RuleDescriptor:  requiredRuleDescriptor,
 		}}}
 	}
 

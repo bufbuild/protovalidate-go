@@ -89,10 +89,11 @@ func (s ProgramSet) bindThis(val any) *Variable {
 // compiledProgram is a parsed and type-checked cel.Program along with the
 // source Expression.
 type compiledProgram struct {
-	Program cel.Program
-	Source  *validate.Constraint
-	Path    []*validate.FieldPathElement
-	Value   protoreflect.Value
+	Program    cel.Program
+	Source     *validate.Constraint
+	Path       []*validate.FieldPathElement
+	Value      protoreflect.Value
+	Descriptor protoreflect.FieldDescriptor
 }
 
 //nolint:nilnil // non-existence of violations is intentional
@@ -117,7 +118,8 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 				ConstraintId: proto.String(expr.Source.GetId()),
 				Message:      proto.String(val),
 			},
-			RuleValue: expr.Value,
+			RuleValue:      expr.Value,
+			RuleDescriptor: expr.Descriptor,
 		}, nil
 	case bool:
 		if val {
@@ -129,7 +131,8 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 				ConstraintId: proto.String(expr.Source.GetId()),
 				Message:      proto.String(expr.Source.GetMessage()),
 			},
-			RuleValue: expr.Value,
+			RuleValue:      expr.Value,
+			RuleDescriptor: expr.Descriptor,
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(
