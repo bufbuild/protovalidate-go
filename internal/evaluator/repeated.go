@@ -17,6 +17,7 @@ package evaluator
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -24,16 +25,18 @@ import (
 var (
 	repeatedRuleDescriptor      = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("repeated")
 	repeatedItemsRuleDescriptor = (&validate.RepeatedRules{}).ProtoReflect().Descriptor().Fields().ByName("items")
-	repeatedItemsFieldPath      = []*validate.FieldPathElement{
-		errors.FieldPathElement(repeatedRuleDescriptor),
-		errors.FieldPathElement(repeatedItemsRuleDescriptor),
+	repeatedItemsRulePath       = &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			errors.FieldPathElement(repeatedRuleDescriptor),
+			errors.FieldPathElement(repeatedItemsRuleDescriptor),
+		},
 	}
 )
 
 // listItems performs validation on the elements of a repeated field.
 type listItems struct {
-	// Descriptor is the FieldDescriptor targeted by this evaluator
-	Descriptor protoreflect.FieldDescriptor
+	base
+
 	// ItemConstraints are checked on every item of the list
 	ItemConstraints value
 }
@@ -45,9 +48,13 @@ func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 	for i := 0; i < list.Len(); i++ {
 		itemErr := r.ItemConstraints.Evaluate(list.Get(i), failFast)
 		if itemErr != nil {
-			element := errors.FieldPathElement(r.Descriptor)
-			element.Subscript = &validate.FieldPathElement_Index{Index: uint64(i)}
-			errors.AppendFieldPath(itemErr, element, false)
+			errors.AppendFieldPath(itemErr, &validate.FieldPathElement{
+				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
+				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
+				FieldName:   proto.String(r.base.FieldPathElement.GetFieldName()),
+				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)},
+			})
+			errors.PrependRulePath(itemErr, r.base.RulePrefix.GetElements())
 		}
 		if ok, err = errors.Merge(err, itemErr, failFast); !ok {
 			return err
@@ -60,23 +67,6 @@ func (r listItems) Tautology() bool {
 	return r.ItemConstraints.Tautology()
 }
 
-// itemsWrapper wraps the evaluation of nested repeated field rules.
-type itemsWrapper struct {
-	evaluator
-}
-
-func newItemsWrapper(evaluator evaluator) evaluator {
-	return itemsWrapper{evaluator}
-}
-
-func (e itemsWrapper) Evaluate(val protoreflect.Value, failFast bool) error {
-	err := e.evaluator.Evaluate(val, failFast)
-	errors.PrependRulePath(err, repeatedItemsFieldPath)
-	return err
-}
-
 var (
 	_ evaluator = listItems{}
-	_ evaluator = itemsWrapper{}
-	_ wrapper   = newItemsWrapper
 )

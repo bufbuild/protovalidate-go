@@ -56,6 +56,9 @@ func Merge(dst, src error, failFast bool) (ok bool, err error) {
 }
 
 func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathElement {
+	if field == nil {
+		return nil
+	}
 	return &validate.FieldPathElement{
 		FieldNumber: proto.Int32(int32(field.Number())),
 		FieldName:   proto.String(field.TextName()),
@@ -63,25 +66,29 @@ func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathEle
 	}
 }
 
+func FieldPath(field protoreflect.FieldDescriptor) *validate.FieldPath {
+	if field == nil {
+		return nil
+	}
+	return &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			FieldPathElement(field),
+		},
+	}
+}
+
 // AppendFieldPath appends an element to the end of each field path in err.
-// As an exception, if skipSubscript is true, any field paths ending in a
-// subscript element will not have a suffix element appended to them.
 //
 // Note that this function is ordinarily used to append field paths in reverse
 // order, as the stack bubbles up through the evaluators. Then, at the end, the
 // path is reversed.
-func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript bool) {
+func AppendFieldPath(err error, suffix *validate.FieldPathElement) {
+	if suffix == nil {
+		return
+	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			// Special case: Here we skip appending if the last element had a
-			// subscript. This is a weird special case that makes it
-			// significantly simpler to handle reverse-constructing paths with
-			// maps and slices.
-			if elements := violation.Proto.GetField().GetElements(); skipSubscript &&
-				len(elements) > 0 && elements[len(elements)-1].Subscript != nil {
-				continue
-			}
 			if violation.Proto.GetField() == nil {
 				violation.Proto.Field = &validate.FieldPath{}
 			}
@@ -96,6 +103,9 @@ func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript
 // is better to avoid the copy instead if possible. This prepend is only used in
 // the error case for nested rules (repeated.items, map.keys, map.values.)
 func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
+	if len(prefix) == 0 {
+		return
+	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {

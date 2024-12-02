@@ -25,14 +25,18 @@ import (
 var (
 	anyRuleDescriptor   = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("any")
 	anyInRuleDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("in")
-	anyInRulePath       = []*validate.FieldPathElement{
-		errors.FieldPathElement(anyRuleDescriptor),
-		errors.FieldPathElement(anyInRuleDescriptor),
+	anyInRulePath       = &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			errors.FieldPathElement(anyRuleDescriptor),
+			errors.FieldPathElement(anyInRuleDescriptor),
+		},
 	}
 	anyNotInDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("not_in")
-	anyNotInRulePath   = []*validate.FieldPathElement{
-		errors.FieldPathElement(anyRuleDescriptor),
-		errors.FieldPathElement(anyNotInDescriptor),
+	anyNotInRulePath   = &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			errors.FieldPathElement(anyRuleDescriptor),
+			errors.FieldPathElement(anyNotInDescriptor),
+		},
 	}
 )
 
@@ -41,8 +45,8 @@ var (
 // hydrate anyPB's within an expression, breaking evaluation if the type is
 // unknown at runtime.
 type anyPB struct {
-	// Descriptor is the FieldDescriptor targeted by this evaluator
-	Descriptor protoreflect.FieldDescriptor
+	base base
+
 	// TypeURLDescriptor is the descriptor for the TypeURL field
 	TypeURLDescriptor protoreflect.FieldDescriptor
 	// In specifies which type URLs the value may possess
@@ -63,12 +67,13 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, &errors.Violation{
 				Proto: &validate.Violation{
-					Rule:         &validate.FieldPath{Elements: anyInRulePath},
+					Field:        a.base.fieldPath(),
+					Rule:         a.base.rulePath(anyInRulePath),
 					ConstraintId: proto.String("any.in"),
 					Message:      proto.String("type URL must be in the allow list"),
 				},
 				FieldValue:      val,
-				FieldDescriptor: a.Descriptor,
+				FieldDescriptor: a.base.Descriptor,
 				RuleValue:       a.InValue,
 				RuleDescriptor:  anyInRuleDescriptor,
 			})
@@ -82,12 +87,13 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, &errors.Violation{
 				Proto: &validate.Violation{
-					Rule:         &validate.FieldPath{Elements: anyNotInRulePath},
+					Field:        a.base.fieldPath(),
+					Rule:         a.base.rulePath(anyNotInRulePath),
 					ConstraintId: proto.String("any.not_in"),
 					Message:      proto.String("type URL must not be in the block list"),
 				},
 				FieldValue:      val,
-				FieldDescriptor: a.Descriptor,
+				FieldDescriptor: a.base.Descriptor,
 				RuleValue:       a.NotInValue,
 				RuleDescriptor:  anyNotInDescriptor,
 			})

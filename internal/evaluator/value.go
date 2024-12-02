@@ -18,17 +18,36 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+// nestedType specifies a kind of nested value, if the value is being evaluated
+// as a map key, map value, or repeated item.
+type nestedType uint8
+
+const (
+	// nestedNone specifies that the value is not being evaluated as a nested value.
+	nestedNone nestedType = iota
+	// nestedRepeatedItem specifies that the value is being evaluated as a repeated field item.
+	nestedRepeatedItem
+	// nestedMapKey specifies that the value is being evaluated as a map key.
+	nestedMapKey
+	// nestedMapValue specifies that the value is being evaluated as a map value.
+	nestedMapValue
+)
+
 // value performs validation on any concrete value contained within a singular
 // field, repeated elements, or the keys/values of a map.
 type value struct {
+	// Descriptor is the FieldDescriptor targeted by this evaluator
+	Descriptor protoreflect.FieldDescriptor
 	// Constraints are the individual evaluators applied to a value
 	Constraints evaluators
+	// Zero is the default or zero-value for this value's type
+	Zero protoreflect.Value
 	// IgnoreEmpty indicates that the Constraints should not be applied if the
 	// value is unset or the default (typically zero) value. This only applies to
 	// repeated elements or map keys/values with an ignore_empty rule.
 	IgnoreEmpty bool
-	// Zero is the default or zero-value for this value's type
-	Zero protoreflect.Value
+	// Nested specifies the kind of nested field the value is for.
+	Nested nestedType
 }
 
 func (v *value) Evaluate(val protoreflect.Value, failFast bool) error {

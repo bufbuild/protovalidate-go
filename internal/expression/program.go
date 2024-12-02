@@ -48,7 +48,6 @@ func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
 			return err
 		}
 		if violation != nil {
-			violation.FieldValue = val
 			violations = append(violations, violation)
 			if failFast {
 				break

@@ -25,9 +25,11 @@ import (
 var (
 	enumRuleDescriptor            = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("enum")
 	enumDefinedOnlyRuleDescriptor = (&validate.EnumRules{}).ProtoReflect().Descriptor().Fields().ByName("defined_only")
-	enumDefinedOnlyRulePath       = []*validate.FieldPathElement{
-		errors.FieldPathElement(enumRuleDescriptor),
-		errors.FieldPathElement(enumDefinedOnlyRuleDescriptor),
+	enumDefinedOnlyRulePath       = &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			errors.FieldPathElement(enumRuleDescriptor),
+			errors.FieldPathElement(enumDefinedOnlyRuleDescriptor),
+		},
 	}
 )
 
@@ -35,8 +37,8 @@ var (
 // the defined values exclusively. This check is handled outside CEL as enums
 // are completely type erased to integers.
 type definedEnum struct {
-	// Descriptor is the FieldDescriptor targeted by this evaluator
-	Descriptor protoreflect.FieldDescriptor
+	base
+
 	// ValueDescriptors captures all the defined values for this enum
 	ValueDescriptors protoreflect.EnumValueDescriptors
 }
@@ -45,12 +47,13 @@ func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &errors.ValidationError{Violations: []*errors.Violation{{
 			Proto: &validate.Violation{
-				Rule:         &validate.FieldPath{Elements: enumDefinedOnlyRulePath},
+				Field:        d.base.fieldPath(),
+				Rule:         d.base.rulePath(enumDefinedOnlyRulePath),
 				ConstraintId: proto.String("enum.defined_only"),
 				Message:      proto.String("value must be one of the defined enum values"),
 			},
 			FieldValue:      val,
-			FieldDescriptor: d.Descriptor,
+			FieldDescriptor: d.base.Descriptor,
 			RuleValue:       protoreflect.ValueOfBool(true),
 			RuleDescriptor:  enumDefinedOnlyRuleDescriptor,
 		}}}
