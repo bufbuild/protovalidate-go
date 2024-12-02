@@ -228,7 +228,7 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	err = val.Validate(msg)
 	valErr := &ValidationError{}
 	require.ErrorAs(t, err, &valErr)
-	assert.Equal(t, "paths.no_space", valErr.Violations[0].ToProto().GetConstraintId())
+	assert.Equal(t, "paths.no_space", valErr.Violations[0].Proto.GetConstraintId())
 }
 
 func TestValidator_Validate_Issue141(t *testing.T) {

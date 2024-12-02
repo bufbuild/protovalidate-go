@@ -18,6 +18,7 @@ import (
 	"errors"
 	"testing"
 
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -52,7 +53,7 @@ func TestMerge(t *testing.T) {
 
 		t.Run("validation", func(t *testing.T) {
 			t.Parallel()
-			exErr := &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: "foo"}}}
+			exErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
 			ok, err := Merge(nil, exErr, true)
 			var valErr *ValidationError
 			require.ErrorAs(t, err, &valErr)
@@ -71,7 +72,7 @@ func TestMerge(t *testing.T) {
 		t.Run("non-validation dst", func(t *testing.T) {
 			t.Parallel()
 			dstErr := errors.New("some error")
-			srcErr := &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: "foo"}}}
+			srcErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
 			ok, err := Merge(dstErr, srcErr, true)
 			assert.Equal(t, dstErr, err)
 			assert.False(t, ok)
@@ -82,7 +83,7 @@ func TestMerge(t *testing.T) {
 
 		t.Run("non-validation src", func(t *testing.T) {
 			t.Parallel()
-			dstErr := &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: "foo"}}}
+			dstErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
 			srcErr := errors.New("some error")
 			ok, err := Merge(dstErr, srcErr, true)
 			assert.Equal(t, srcErr, err)
@@ -95,18 +96,18 @@ func TestMerge(t *testing.T) {
 		t.Run("validation", func(t *testing.T) {
 			t.Parallel()
 
-			dstErr := &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: "foo"}}}
-			srcErr := &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: ("bar")}}}
-			exErr := &ValidationError{Violations: []Violation{
-				&ViolationData{ConstraintID: "foo"},
-				&ViolationData{ConstraintID: "bar"},
+			dstErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
+			srcErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("bar")}}}}
+			exErr := &ValidationError{Violations: []*Violation{
+				{Proto: &validate.Violation{ConstraintId: proto.String("foo")}},
+				{Proto: &validate.Violation{ConstraintId: proto.String("bar")}},
 			}}
 			ok, err := Merge(dstErr, srcErr, true)
 			var valErr *ValidationError
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))
 			assert.False(t, ok)
-			dstErr = &ValidationError{Violations: []Violation{&ViolationData{ConstraintID: "foo"}}}
+			dstErr = &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
 			ok, err = Merge(dstErr, srcErr, false)
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))

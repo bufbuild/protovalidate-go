@@ -18,6 +18,7 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -40,7 +41,7 @@ func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
 	binding := s.bindThis(val.Interface())
 	defer varPool.Put(binding)
 
-	var violations []errors.Violation
+	var violations []*errors.Violation
 	for _, expr := range s {
 		violation, err := expr.eval(binding)
 		if err != nil {
@@ -95,7 +96,7 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *Variable) (*errors.ViolationData, error) {
+func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) {
 	now := nowPool.Get()
 	defer nowPool.Put(now)
 	bindings.Next = now
@@ -110,24 +111,35 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.ViolationData, err
 		if val == "" {
 			return nil, nil
 		}
-		return &errors.ViolationData{
-			Rule:         expr.Path,
-			RuleValue:    expr.Value,
-			ConstraintID: expr.Source.GetId(),
-			Message:      val,
+		return &errors.Violation{
+			Proto: &validate.Violation{
+				Rule:         expr.rule(),
+				ConstraintId: proto.String(expr.Source.GetId()),
+				Message:      proto.String(val),
+			},
+			RuleValue: expr.Value,
 		}, nil
 	case bool:
 		if val {
 			return nil, nil
 		}
-		return &errors.ViolationData{
-			Rule:         expr.Path,
-			RuleValue:    expr.Value,
-			ConstraintID: expr.Source.GetId(),
-			Message:      expr.Source.GetMessage(),
+		return &errors.Violation{
+			Proto: &validate.Violation{
+				Rule:         expr.rule(),
+				ConstraintId: proto.String(expr.Source.GetId()),
+				Message:      proto.String(expr.Source.GetMessage()),
+			},
+			RuleValue: expr.Value,
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(
 			"resolved to an unexpected type %T", val)
 	}
+}
+
+func (expr compiledProgram) rule() *validate.FieldPath {
+	if len(expr.Path) > 0 {
+		return &validate.FieldPath{Elements: expr.Path}
+	}
+	return nil
 }

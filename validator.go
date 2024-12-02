@@ -109,6 +109,7 @@ func (v *Validator) Validate(msg proto.Message) error {
 	eval := v.builder.Load(refl.Descriptor())
 	err := eval.EvaluateMessage(refl, v.failFast)
 	errors.ReverseFieldPaths(err)
+	errors.PopulateFieldPathStrings(err)
 	return err
 }
 

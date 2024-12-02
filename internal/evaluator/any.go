@@ -57,12 +57,14 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	err := &errors.ValidationError{}
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
-			err.Violations = append(err.Violations, &errors.ViolationData{
-				Rule:         anyInRulePath,
-				FieldValue:   val,
-				RuleValue:    a.InValue,
-				ConstraintID: "any.in",
-				Message:      "type URL must be in the allow list",
+			err.Violations = append(err.Violations, &errors.Violation{
+				Proto: &validate.Violation{
+					Rule:         &validate.FieldPath{Elements: anyInRulePath},
+					ConstraintId: proto.String("any.in"),
+					Message:      proto.String("type URL must be in the allow list"),
+				},
+				FieldValue: val,
+				RuleValue:  a.InValue,
 			})
 			if failFast {
 				return err
@@ -72,12 +74,14 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
-			err.Violations = append(err.Violations, &errors.ViolationData{
-				Rule:         anyNotInRulePath,
-				FieldValue:   val,
-				RuleValue:    a.NotInValue,
-				ConstraintID: "any.not_in",
-				Message:      "type URL must not be in the block list",
+			err.Violations = append(err.Violations, &errors.Violation{
+				Proto: &validate.Violation{
+					Rule:         &validate.FieldPath{Elements: anyNotInRulePath},
+					ConstraintId: proto.String("any.not_in"),
+					Message:      proto.String("type URL must not be in the block list"),
+				},
+				FieldValue: val,
+				RuleValue:  a.NotInValue,
 			})
 		}
 	}

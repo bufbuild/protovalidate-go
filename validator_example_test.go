@@ -157,9 +157,8 @@ func ExampleValidationError() {
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
 		violation := valErr.Violations[0]
-		violationProto := violation.ToProto()
-		fmt.Println(FieldPathString(violationProto.GetField()), violationProto.GetConstraintId())
-		fmt.Println(violation.GetRuleValue(), violation.GetFieldValue())
+		fmt.Println(FieldPathString(violation.Proto.GetField()), violation.Proto.GetConstraintId())
+		fmt.Println(violation.RuleValue, violation.FieldValue)
 	}
 
 	// output: lat double.gte_lte

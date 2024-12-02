@@ -53,16 +53,17 @@ func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
 
 func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
 	if f.Required && !msg.Has(f.Descriptor) {
-		err := &errors.ValidationError{Violations: []errors.Violation{&errors.ViolationData{
-			Field: []*validate.FieldPathElement{
-				errors.FieldPathElement(f.Descriptor),
+		return &errors.ValidationError{Violations: []*errors.Violation{{
+			Proto: &validate.Violation{
+				Field: &validate.FieldPath{Elements: []*validate.FieldPathElement{
+					errors.FieldPathElement(f.Descriptor),
+				}},
+				Rule:         &validate.FieldPath{Elements: requiredRulePath},
+				ConstraintId: proto.String("required"),
+				Message:      proto.String("value is required"),
 			},
-			Rule:         requiredRulePath,
-			RuleValue:    protoreflect.ValueOfBool(true),
-			ConstraintID: "required",
-			Message:      "value is required",
+			RuleValue: protoreflect.ValueOfBool(true),
 		}}}
-		return err
 	}
 
 	if f.IgnoreEmpty && !msg.Has(f.Descriptor) {

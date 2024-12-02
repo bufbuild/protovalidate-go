@@ -74,18 +74,18 @@ func AppendFieldPath(err error, suffix *validate.FieldPathElement, skipSubscript
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			if violation, ok := violation.(*ViolationData); ok {
-				// Special case: Here we skip appending if the last element had a
-				// subscript. This is a weird special case that makes it
-				// significantly simpler to handle reverse-constructing paths with
-				// maps and slices.
-				if skipSubscript &&
-					len(violation.Field) > 0 &&
-					violation.Field[len(violation.Field)-1].Subscript != nil {
-					continue
-				}
-				violation.Field = append(violation.Field, suffix)
+			// Special case: Here we skip appending if the last element had a
+			// subscript. This is a weird special case that makes it
+			// significantly simpler to handle reverse-constructing paths with
+			// maps and slices.
+			if elements := violation.Proto.GetField().GetElements(); skipSubscript &&
+				len(elements) > 0 && elements[len(elements)-1].Subscript != nil {
+				continue
 			}
+			if violation.Proto.GetField() == nil {
+				violation.Proto.Field = &validate.FieldPath{}
+			}
+			violation.Proto.Field.Elements = append(violation.Proto.Field.Elements, suffix)
 		}
 	}
 }
@@ -99,12 +99,13 @@ func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			if violation, ok := violation.(*ViolationData); ok {
-				violation.Rule = append(
-					append([]*validate.FieldPathElement{}, prefix...),
-					violation.Rule...,
-				)
+			if violation.Proto.GetRule() == nil {
+				violation.Proto.Rule = &validate.FieldPath{}
 			}
+			violation.Proto.Rule.Elements = append(
+				append([]*validate.FieldPathElement{}, prefix...),
+				violation.Proto.GetRule().GetElements()...,
+			)
 		}
 	}
 }
@@ -114,8 +115,21 @@ func ReverseFieldPaths(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			if violation, ok := violation.(*ViolationData); ok {
-				slices.Reverse(violation.Field)
+			if violation.Proto.GetField() != nil {
+				slices.Reverse(violation.Proto.GetField().GetElements())
+			}
+		}
+	}
+}
+
+// PopulateFieldPathStrings populates the field path strings in the error.
+func PopulateFieldPathStrings(err error) {
+	var valErr *ValidationError
+	if errors.As(err, &valErr) {
+		for _, violation := range valErr.Violations {
+			if violation.Proto.GetField() != nil {
+				//nolint:staticcheck // Intentional use of deprecated field
+				violation.Proto.FieldPath = proto.String(FieldPathString(violation.Proto.GetField().GetElements()))
 			}
 		}
 	}
@@ -156,9 +170,7 @@ func MarkForKey(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			if violation, ok := violation.(*ViolationData); ok {
-				violation.ForKey = true
-			}
+			violation.Proto.ForKey = proto.Bool(true)
 		}
 	}
 }

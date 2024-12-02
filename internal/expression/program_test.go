@@ -89,7 +89,7 @@ func TestCompiled(t *testing.T) {
 				if test.exViol == nil {
 					assert.Nil(t, violation)
 				} else {
-					assert.True(t, proto.Equal(test.exViol, violation.ToProto()))
+					assert.True(t, proto.Equal(test.exViol, violation.Proto))
 				}
 			}
 		})
