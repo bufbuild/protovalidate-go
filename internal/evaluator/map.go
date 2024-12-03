@@ -129,6 +129,4 @@ func (m kvPairs) formatKey(key any) string {
 	}
 }
 
-var (
-	_ evaluator = kvPairs{}
-)
+var _ evaluator = kvPairs{}
