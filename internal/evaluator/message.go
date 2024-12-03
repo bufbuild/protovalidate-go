@@ -78,4 +78,26 @@ func (u unknownMessage) EvaluateMessage(_ protoreflect.Message, _ bool) error {
 	return u.Err()
 }
 
-var _ MessageEvaluator = (*message)(nil)
+// embeddedMessage is a wrapper for fields containing messages. It contains data that
+// may differ per embeddedMessage message so that it is not cached.
+type embeddedMessage struct {
+	base
+
+	message *message
+}
+
+func (m *embeddedMessage) Evaluate(val protoreflect.Value, failFast bool) error {
+	err := m.message.EvaluateMessage(val.Message(), failFast)
+	errors.UpdatePaths(err, m.base.FieldPathElement, nil)
+	return err
+}
+
+func (m *embeddedMessage) Tautology() bool {
+	return m.message.Tautology()
+}
+
+var (
+	_ MessageEvaluator = (*message)(nil)
+	_ MessageEvaluator = (*unknownMessage)(nil)
+	_ evaluator        = (*embeddedMessage)(nil)
+)

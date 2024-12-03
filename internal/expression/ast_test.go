@@ -59,9 +59,15 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	env, err := celext.DefaultEnv(false)
 	require.NoError(t, err)
 
-	expr := &validate.Constraint{Expression: proto.String("foo")}
-	asts, err := CompileASTs([]*validate.Constraint{expr}, env,
-		cel.Variable("foo", cel.BoolType))
+	asts, err := CompileASTs(
+		Expressions{
+			Constraints: []*validate.Constraint{
+				{Expression: proto.String("foo")},
+			},
+		},
+		env,
+		cel.Variable("foo", cel.BoolType),
+	)
 	require.NoError(t, err)
 	assert.Len(t, asts.asts, 1)
 	set, err := asts.ToProgramSet()
@@ -81,9 +87,15 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	env, err := celext.DefaultEnv(false)
 	require.NoError(t, err)
 
-	expr := &validate.Constraint{Expression: proto.String("foo")}
-	asts, err := CompileASTs([]*validate.Constraint{expr}, env,
-		cel.Variable("foo", cel.BoolType))
+	asts, err := CompileASTs(
+		Expressions{
+			Constraints: []*validate.Constraint{
+				{Expression: proto.String("foo")},
+			},
+		},
+		env,
+		cel.Variable("foo", cel.BoolType),
+	)
 	require.NoError(t, err)
 	assert.Len(t, asts.asts, 1)
 	set, err := asts.ReduceResiduals(cel.Globals(&Variable{Name: "foo", Val: true}))

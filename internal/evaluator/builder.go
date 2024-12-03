@@ -24,9 +24,16 @@ import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
+)
+
+//nolint:gochecknoglobals
+var (
+	celRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("cel")
+	celRuleField      = errors.FieldPathElement(celRuleDescriptor)
 )
 
 // Builder is a build-through cache of message evaluators keyed off the provided
@@ -154,8 +161,11 @@ func (bldr *Builder) processMessageExpressions(
 	msgEval *message,
 	_ MessageCache,
 ) {
+	exprs := expression.Expressions{
+		Constraints: msgConstraints.GetCel(),
+	}
 	compiledExprs, err := expression.Compile(
-		msgConstraints.GetCel(),
+		exprs,
 		bldr.env,
 		cel.Types(dynamicpb.NewMessage(desc)),
 		cel.Variable("this", cel.ObjectType(string(desc.FullName()))),
@@ -165,7 +175,9 @@ func (bldr *Builder) processMessageExpressions(
 		return
 	}
 
-	msgEval.Append(celPrograms(compiledExprs))
+	msgEval.Append(celPrograms{
+		ProgramSet: compiledExprs,
+	})
 }
 
 func (bldr *Builder) processOneofConstraints(
@@ -211,8 +223,10 @@ func (bldr *Builder) buildField(
 	cache MessageCache,
 ) (field, error) {
 	fld := field{
-		Descriptor: fieldDescriptor,
-		Required:   fieldConstraints.GetRequired(),
+		Value: value{
+			Descriptor: fieldDescriptor,
+		},
+		Required: fieldConstraints.GetRequired(),
 		IgnoreEmpty: fieldDescriptor.HasPresence() ||
 			bldr.shouldIgnoreEmpty(fieldConstraints),
 		IgnoreDefault: fieldDescriptor.HasPresence() &&
@@ -221,21 +235,19 @@ func (bldr *Builder) buildField(
 	if fld.IgnoreDefault {
 		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
 	}
-	err := bldr.buildValue(fieldDescriptor, fieldConstraints, false, &fld.Value, cache)
+	err := bldr.buildValue(fieldDescriptor, fieldConstraints, &fld.Value, cache)
 	return fld, err
 }
 
 func (bldr *Builder) buildValue(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	cache MessageCache,
 ) (err error) {
 	steps := []func(
 		fdesc protoreflect.FieldDescriptor,
 		fieldConstraints *validate.FieldConstraints,
-		forItems bool,
 		valEval *value,
 		cache MessageCache,
 	) error{
@@ -251,7 +263,7 @@ func (bldr *Builder) buildValue(
 	}
 
 	for _, step := range steps {
-		if err = step(fdesc, constraints, forItems, valEval, cache); err != nil {
+		if err = step(fdesc, constraints, valEval, cache); err != nil {
 			return err
 		}
 	}
@@ -261,15 +273,14 @@ func (bldr *Builder) buildValue(
 func (bldr *Builder) processIgnoreEmpty(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
-	forItems bool,
 	val *value,
 	_ MessageCache,
 ) error {
 	// the only time we need to ignore empty on a value is if it's evaluating a
 	// field item (repeated element or map key/value).
-	val.IgnoreEmpty = forItems && bldr.shouldIgnoreEmpty(constraints)
+	val.IgnoreEmpty = val.NestedRule != nil && bldr.shouldIgnoreEmpty(constraints)
 	if val.IgnoreEmpty {
-		val.Zero = bldr.zeroValue(fdesc, forItems)
+		val.Zero = bldr.zeroValue(fdesc, val.NestedRule != nil)
 	}
 	return nil
 }
@@ -277,16 +288,14 @@ func (bldr *Builder) processIgnoreEmpty(
 func (bldr *Builder) processFieldExpressions(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	forItems bool,
 	eval *value,
 	_ MessageCache,
 ) error {
-	exprs := fieldConstraints.GetCel()
-	if len(exprs) == 0 {
-		return nil
+	exprs := expression.Expressions{
+		Constraints: fieldConstraints.GetCel(),
 	}
 
-	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, forItems)
+	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, eval.NestedRule != nil)
 	opts := append(
 		celext.RequiredCELEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
@@ -295,8 +304,26 @@ func (bldr *Builder) processFieldExpressions(
 	if err != nil {
 		return err
 	}
+	for i := range compiledExpressions {
+		compiledExpressions[i].Path = []*validate.FieldPathElement{
+			{
+				FieldNumber: proto.Int32(celRuleField.GetFieldNumber()),
+				FieldType:   celRuleField.GetFieldType().Enum(),
+				FieldName:   proto.String(celRuleField.GetFieldName()),
+				Subscript: &validate.FieldPathElement_Index{
+					Index: uint64(i),
+				},
+			},
+		}
+		compiledExpressions[i].Descriptor = celRuleDescriptor
+	}
 	if len(compiledExpressions) > 0 {
-		eval.Constraints = append(eval.Constraints, celPrograms(compiledExpressions))
+		eval.Constraints = append(eval.Constraints,
+			celPrograms{
+				base:       newBase(eval),
+				ProgramSet: compiledExpressions,
+			},
+		)
 	}
 	return nil
 }
@@ -304,14 +331,13 @@ func (bldr *Builder) processFieldExpressions(
 func (bldr *Builder) processEmbeddedMessage(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	cache MessageCache,
 ) error {
 	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
-		(fdesc.IsList() && !forItems) {
+		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
 	}
 
@@ -321,7 +347,10 @@ func (bldr *Builder) processEmbeddedMessage(
 			"failed to compile embedded type %s for %s: %w",
 			fdesc.Message().FullName(), fdesc.FullName(), err)
 	}
-	valEval.Append(embedEval)
+	valEval.Append(&embeddedMessage{
+		base:    newBase(valEval),
+		message: embedEval,
+	})
 
 	return nil
 }
@@ -329,14 +358,13 @@ func (bldr *Builder) processEmbeddedMessage(
 func (bldr *Builder) processWrapperConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	cache MessageCache,
 ) error {
 	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
-		(fdesc.IsList() && !forItems) {
+		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
 	}
 
@@ -344,8 +372,11 @@ func (bldr *Builder) processWrapperConstraints(
 	if !ok || !rules.ProtoReflect().Has(expectedWrapperDescriptor) {
 		return nil
 	}
-	var unwrapped value
-	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, true, &unwrapped, cache)
+	unwrapped := value{
+		Descriptor: valEval.Descriptor,
+		NestedRule: valEval.NestedRule,
+	}
+	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, &unwrapped, cache)
 	if err != nil {
 		return err
 	}
@@ -356,7 +387,6 @@ func (bldr *Builder) processWrapperConstraints(
 func (bldr *Builder) processStandardConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	_ MessageCache,
 ) error {
@@ -366,33 +396,41 @@ func (bldr *Builder) processStandardConstraints(
 		constraints,
 		bldr.extensionTypeResolver,
 		bldr.allowUnknownFields,
-		forItems,
+		valEval.NestedRule != nil,
 	)
 	if err != nil {
 		return err
 	}
-	valEval.Append(celPrograms(stdConstraints))
+	valEval.Append(celPrograms{
+		base:       newBase(valEval),
+		ProgramSet: stdConstraints,
+	})
 	return nil
 }
 
 func (bldr *Builder) processAnyConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	_ MessageCache,
 ) error {
-	if (fdesc.IsList() && !forItems) ||
+	if (fdesc.IsList() && valEval.NestedRule == nil) ||
 		!isMessageField(fdesc) ||
 		fdesc.Message().FullName() != "google.protobuf.Any" {
 		return nil
 	}
 
 	typeURLDesc := fdesc.Message().Fields().ByName("type_url")
+	anyPbDesc := (&validate.AnyRules{}).ProtoReflect().Descriptor()
+	inField := anyPbDesc.Fields().ByName("in")
+	notInField := anyPbDesc.Fields().ByName("not_in")
 	anyEval := anyPB{
+		base:              newBase(valEval),
 		TypeURLDescriptor: typeURLDesc,
 		In:                stringsToSet(fieldConstraints.GetAny().GetIn()),
 		NotIn:             stringsToSet(fieldConstraints.GetAny().GetNotIn()),
+		InValue:           fieldConstraints.GetAny().ProtoReflect().Get(inField),
+		NotInValue:        fieldConstraints.GetAny().ProtoReflect().Get(notInField),
 	}
 	valEval.Append(anyEval)
 	return nil
@@ -401,7 +439,6 @@ func (bldr *Builder) processAnyConstraints(
 func (bldr *Builder) processEnumConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	_ bool,
 	valEval *value,
 	_ MessageCache,
 ) error {
@@ -409,7 +446,10 @@ func (bldr *Builder) processEnumConstraints(
 		return nil
 	}
 	if fieldConstraints.GetEnum().GetDefinedOnly() {
-		valEval.Append(definedEnum{ValueDescriptors: fdesc.Enum().Values()})
+		valEval.Append(definedEnum{
+			base:             newBase(valEval),
+			ValueDescriptors: fdesc.Enum().Values(),
+		})
 	}
 	return nil
 }
@@ -417,7 +457,6 @@ func (bldr *Builder) processEnumConstraints(
 func (bldr *Builder) processMapConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	constraints *validate.FieldConstraints,
-	_ bool,
 	valEval *value,
 	cache MessageCache,
 ) error {
@@ -425,12 +464,11 @@ func (bldr *Builder) processMapConstraints(
 		return nil
 	}
 
-	var mapEval kvPairs
+	mapEval := newKVPairs(valEval)
 
 	err := bldr.buildValue(
 		fieldDesc.MapKey(),
 		constraints.GetMap().GetKeys(),
-		true,
 		&mapEval.KeyConstraints,
 		cache)
 	if err != nil {
@@ -442,7 +480,6 @@ func (bldr *Builder) processMapConstraints(
 	err = bldr.buildValue(
 		fieldDesc.MapValue(),
 		constraints.GetMap().GetValues(),
-		true,
 		&mapEval.ValueConstraints,
 		cache)
 	if err != nil {
@@ -458,16 +495,16 @@ func (bldr *Builder) processMapConstraints(
 func (bldr *Builder) processRepeatedConstraints(
 	fdesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
-	forItems bool,
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if !fdesc.IsList() || forItems {
+	if !fdesc.IsList() || valEval.NestedRule != nil {
 		return nil
 	}
 
-	var listEval listItems
-	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), true, &listEval.ItemConstraints, cache)
+	listEval := newListItems(valEval)
+
+	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), &listEval.ItemConstraints, cache)
 	if err != nil {
 		return errors.NewCompilationErrorf(
 			"failed to compile items constraints for repeated %v: %w", fdesc.FullName(), err)

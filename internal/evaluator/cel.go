@@ -15,26 +15,44 @@
 package evaluator
 
 import (
+	"errors"
+
+	pverr "github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // celPrograms is an evaluator that executes an expression.ProgramSet.
-type celPrograms expression.ProgramSet
+type celPrograms struct {
+	base
+	expression.ProgramSet
+}
 
 func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
-	return expression.ProgramSet(c).Eval(val.Interface(), failFast)
+	err := c.ProgramSet.Eval(val, failFast)
+	if err != nil {
+		var valErr *pverr.ValidationError
+		if errors.As(err, &valErr) {
+			for _, violation := range valErr.Violations {
+				violation.Proto.Field = c.base.fieldPath()
+				violation.Proto.Rule = c.base.rulePath(violation.Proto.GetRule())
+				violation.FieldValue = val
+				violation.FieldDescriptor = c.base.Descriptor
+			}
+		}
+	}
+	return err
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, failFast bool) error {
-	return expression.ProgramSet(c).Eval(msg.Interface(), failFast)
+	return c.ProgramSet.Eval(protoreflect.ValueOfMessage(msg), failFast)
 }
 
 func (c celPrograms) Tautology() bool {
-	return len(c) == 0
+	return len(c.ProgramSet) == 0
 }
 
 var (
-	_ evaluator        = (celPrograms)(nil)
-	_ MessageEvaluator = (celPrograms)(nil)
+	_ evaluator        = celPrograms{}
+	_ MessageEvaluator = celPrograms{}
 )

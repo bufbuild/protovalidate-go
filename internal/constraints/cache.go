@@ -49,7 +49,7 @@ func (c *Cache) Build(
 	allowUnknownFields bool,
 	forItems bool,
 ) (set expression.ProgramSet, err error) {
-	constraints, done, err := c.resolveConstraints(
+	constraints, setOneof, done, err := c.resolveConstraints(
 		fieldDesc,
 		fieldConstraints,
 		forItems,
@@ -83,11 +83,12 @@ func (c *Cache) Build(
 			err = compileErr
 			return false
 		}
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, desc)
+		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, setOneof, desc)
 		if compileErr != nil {
 			err = compileErr
 			return false
 		}
+		precomputedASTs.SetRuleValue(rule, desc)
 		asts = asts.Merge(precomputedASTs)
 		return true
 	})
@@ -108,15 +109,15 @@ func (c *Cache) resolveConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
 	forItems bool,
-) (rules protoreflect.Message, done bool, err error) {
+) (rules protoreflect.Message, fieldRule protoreflect.FieldDescriptor, done bool, err error) {
 	constraints := fieldConstraints.ProtoReflect()
 	setOneof := constraints.WhichOneof(fieldConstraintsOneofDesc)
 	if setOneof == nil {
-		return nil, true, nil
+		return nil, nil, true, nil
 	}
 	expected, ok := c.getExpectedConstraintDescriptor(fieldDesc, forItems)
 	if ok && setOneof.FullName() != expected.FullName() {
-		return nil, true, errors.NewCompilationErrorf(
+		return nil, nil, true, errors.NewCompilationErrorf(
 			"expected constraint %q, got %q on field %q",
 			expected.FullName(),
 			setOneof.FullName(),
@@ -124,10 +125,10 @@ func (c *Cache) resolveConstraints(
 		)
 	}
 	if !ok || !constraints.Has(setOneof) {
-		return nil, true, nil
+		return nil, nil, true, nil
 	}
 	rules = constraints.Get(setOneof).Message()
-	return rules, false, nil
+	return rules, setOneof, false, nil
 }
 
 // prepareEnvironment prepares the environment for compiling standard constraint
@@ -157,16 +158,23 @@ func (c *Cache) prepareEnvironment(
 // CEL expressions.
 func (c *Cache) loadOrCompileStandardConstraint(
 	env *cel.Env,
+	setOneOf protoreflect.FieldDescriptor,
 	constraintFieldDesc protoreflect.FieldDescriptor,
 ) (set expression.ASTSet, err error) {
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs := extensions.Resolve[*validate.PredefinedConstraints](
-		constraintFieldDesc.Options(),
-		validate.E_Predefined,
-	)
-	set, err = expression.CompileASTs(exprs.GetCel(), env)
+	exprs := expression.Expressions{
+		Constraints: extensions.Resolve[*validate.PredefinedConstraints](
+			constraintFieldDesc.Options(),
+			validate.E_Predefined,
+		).GetCel(),
+		RulePath: []*validate.FieldPathElement{
+			errors.FieldPathElement(setOneOf),
+			errors.FieldPathElement(constraintFieldDesc),
+		},
+	}
+	set, err = expression.CompileASTs(exprs, env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
 			"failed to compile standard constraint %q: %w",

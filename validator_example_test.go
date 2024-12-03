@@ -156,9 +156,11 @@ func ExampleValidationError() {
 	err = validator.Validate(loc)
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
-		msg := valErr.ToProto()
-		fmt.Println(msg.GetViolations()[0].GetFieldPath(), msg.GetViolations()[0].GetConstraintId())
+		violation := valErr.Violations[0]
+		fmt.Println(FieldPathString(violation.Proto.GetField()), violation.Proto.GetConstraintId())
+		fmt.Println(violation.RuleValue, violation.FieldValue)
 	}
 
 	// output: lat double.gte_lte
+	// -90 999.999
 }
