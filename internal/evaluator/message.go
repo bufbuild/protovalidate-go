@@ -88,10 +88,7 @@ type embeddedMessage struct {
 
 func (m *embeddedMessage) Evaluate(val protoreflect.Value, failFast bool) error {
 	err := m.message.EvaluateMessage(val.Message(), failFast)
-	if err != nil && m.base.FieldPathElement != nil {
-		errors.AppendFieldPath(err, m.base.FieldPathElement)
-		errors.PrependRulePath(err, m.base.RulePrefix.GetElements())
-	}
+	errors.UpdatePaths(err, m.base.FieldPathElement, nil)
 	return err
 }
 

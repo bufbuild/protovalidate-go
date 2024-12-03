@@ -48,13 +48,12 @@ func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 	for i := 0; i < list.Len(); i++ {
 		itemErr := r.ItemConstraints.Evaluate(list.Get(i), failFast)
 		if itemErr != nil {
-			errors.AppendFieldPath(itemErr, &validate.FieldPathElement{
+			errors.UpdatePaths(itemErr, &validate.FieldPathElement{
 				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
 				FieldName:   proto.String(r.base.FieldPathElement.GetFieldName()),
 				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)},
-			})
-			errors.PrependRulePath(itemErr, r.base.RulePrefix.GetElements())
+			}, r.base.RulePrefix.GetElements())
 		}
 		if ok, err = errors.Merge(err, itemErr, failFast); !ok {
 			return err

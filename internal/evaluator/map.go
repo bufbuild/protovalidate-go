@@ -86,8 +86,7 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 				)
 				return false
 			}
-			errors.AppendFieldPath(evalErr, element)
-			errors.PrependRulePath(evalErr, m.base.RulePrefix.GetElements())
+			errors.UpdatePaths(evalErr, element, m.base.RulePrefix.GetElements())
 		}
 		ok, err = errors.Merge(err, evalErr, failFast)
 		return ok

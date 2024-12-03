@@ -77,67 +77,45 @@ func FieldPath(field protoreflect.FieldDescriptor) *validate.FieldPath {
 	}
 }
 
-// AppendFieldPath appends an element to the end of each field path in err.
+// UpdatePaths modifies the field and rule paths of an error, appending an
+// element to the end of each field path (if provided) and prepending a list of
+// elements to the beginning of each rule path (if provided.)
 //
 // Note that this function is ordinarily used to append field paths in reverse
 // order, as the stack bubbles up through the evaluators. Then, at the end, the
-// path is reversed.
-func AppendFieldPath(err error, suffix *validate.FieldPathElement) {
-	if suffix == nil {
+// path is reversed. Rule paths are generally static, so this optimization isn't
+// applied for rule paths.
+func UpdatePaths(err error, fieldSuffix *validate.FieldPathElement, rulePrefix []*validate.FieldPathElement) {
+	if fieldSuffix == nil && len(rulePrefix) == 0 {
 		return
 	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			if violation.Proto.GetField() == nil {
-				violation.Proto.Field = &validate.FieldPath{}
+			if fieldSuffix != nil {
+				if violation.Proto.GetField() == nil {
+					violation.Proto.Field = &validate.FieldPath{}
+				}
+				violation.Proto.Field.Elements = append(violation.Proto.Field.Elements, fieldSuffix)
 			}
-			violation.Proto.Field.Elements = append(violation.Proto.Field.Elements, suffix)
+			if len(rulePrefix) != 0 {
+				violation.Proto.Rule.Elements = append(
+					append([]*validate.FieldPathElement{}, rulePrefix...),
+					violation.Proto.GetRule().GetElements()...,
+				)
+			}
 		}
 	}
 }
 
-// PrependRulePath prepends some elements to the beginning of each rule path in
-// err. Note that unlike field paths, the rule path is not appended in reverse
-// order. This is because rule paths are very often fixed, simple paths, so it
-// is better to avoid the copy instead if possible. This prepend is only used in
-// the error case for nested rules (repeated.items, map.keys, map.values.)
-func PrependRulePath(err error, prefix []*validate.FieldPathElement) {
-	if len(prefix) == 0 {
-		return
-	}
-	var valErr *ValidationError
-	if errors.As(err, &valErr) {
-		for _, violation := range valErr.Violations {
-			if violation.Proto.GetRule() == nil {
-				violation.Proto.Rule = &validate.FieldPath{}
-			}
-			violation.Proto.Rule.Elements = append(
-				append([]*validate.FieldPathElement{}, prefix...),
-				violation.Proto.GetRule().GetElements()...,
-			)
-		}
-	}
-}
-
-// ReverseFieldPaths reverses all field paths in the error.
-func ReverseFieldPaths(err error) {
+// FinalizePaths reverses all field paths in the error and populates the
+// deprecated string-based field path.
+func FinalizePaths(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
 			if violation.Proto.GetField() != nil {
 				slices.Reverse(violation.Proto.GetField().GetElements())
-			}
-		}
-	}
-}
-
-// PopulateFieldPathStrings populates the field path strings in the error.
-func PopulateFieldPathStrings(err error) {
-	var valErr *ValidationError
-	if errors.As(err, &valErr) {
-		for _, violation := range valErr.Violations {
-			if violation.Proto.GetField() != nil {
 				//nolint:staticcheck // Intentional use of deprecated field
 				violation.Proto.FieldPath = proto.String(FieldPathString(violation.Proto.GetField().GetElements()))
 			}
