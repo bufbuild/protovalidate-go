@@ -55,17 +55,6 @@ type ValidationError struct {
 	Violations []*Violation
 }
 
-// ToProto converts this error into its proto.Message form.
-func (err *ValidationError) ToProto() *validate.Violations {
-	violations := &validate.Violations{
-		Violations: make([]*validate.Violation, len(err.Violations)),
-	}
-	for i, violation := range err.Violations {
-		violations.Violations[i] = violation.Proto
-	}
-	return violations
-}
-
 func (err *ValidationError) Error() string {
 	bldr := &strings.Builder{}
 	bldr.WriteString("validation error:")
@@ -80,4 +69,15 @@ func (err *ValidationError) Error() string {
 			violation.Proto.GetConstraintId())
 	}
 	return bldr.String()
+}
+
+// ToProto converts this error into its proto.Message form.
+func (err *ValidationError) ToProto() *validate.Violations {
+	violations := &validate.Violations{
+		Violations: make([]*validate.Violation, len(err.Violations)),
+	}
+	for i, violation := range err.Violations {
+		violations.Violations[i] = violation.Proto
+	}
+	return violations
 }
