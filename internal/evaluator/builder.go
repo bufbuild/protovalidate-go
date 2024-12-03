@@ -278,9 +278,9 @@ func (bldr *Builder) processIgnoreEmpty(
 ) error {
 	// the only time we need to ignore empty on a value is if it's evaluating a
 	// field item (repeated element or map key/value).
-	val.IgnoreEmpty = val.Nested != nestedNone && bldr.shouldIgnoreEmpty(constraints)
+	val.IgnoreEmpty = val.NestedRule != nil && bldr.shouldIgnoreEmpty(constraints)
 	if val.IgnoreEmpty {
-		val.Zero = bldr.zeroValue(fdesc, val.Nested != nestedNone)
+		val.Zero = bldr.zeroValue(fdesc, val.NestedRule != nil)
 	}
 	return nil
 }
@@ -295,7 +295,7 @@ func (bldr *Builder) processFieldExpressions(
 		Constraints: fieldConstraints.GetCel(),
 	}
 
-	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, eval.Nested != nestedNone)
+	celTyp := celext.ProtoFieldToCELType(fieldDesc, false, eval.NestedRule != nil)
 	opts := append(
 		celext.RequiredCELEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
@@ -337,7 +337,7 @@ func (bldr *Builder) processEmbeddedMessage(
 	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
-		(fdesc.IsList() && valEval.Nested == nestedNone) {
+		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
 	}
 
@@ -364,7 +364,7 @@ func (bldr *Builder) processWrapperConstraints(
 	if !isMessageField(fdesc) ||
 		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
-		(fdesc.IsList() && valEval.Nested == nestedNone) {
+		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
 	}
 
@@ -374,7 +374,7 @@ func (bldr *Builder) processWrapperConstraints(
 	}
 	unwrapped := value{
 		Descriptor: valEval.Descriptor,
-		Nested:     valEval.Nested,
+		NestedRule: valEval.NestedRule,
 	}
 	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, &unwrapped, cache)
 	if err != nil {
@@ -396,7 +396,7 @@ func (bldr *Builder) processStandardConstraints(
 		constraints,
 		bldr.extensionTypeResolver,
 		bldr.allowUnknownFields,
-		valEval.Nested != nestedNone,
+		valEval.NestedRule != nil,
 	)
 	if err != nil {
 		return err
@@ -414,7 +414,7 @@ func (bldr *Builder) processAnyConstraints(
 	valEval *value,
 	_ MessageCache,
 ) error {
-	if (fdesc.IsList() && valEval.Nested == nestedNone) ||
+	if (fdesc.IsList() && valEval.NestedRule == nil) ||
 		!isMessageField(fdesc) ||
 		fdesc.Message().FullName() != "google.protobuf.Any" {
 		return nil
@@ -464,15 +464,7 @@ func (bldr *Builder) processMapConstraints(
 		return nil
 	}
 
-	mapEval := kvPairs{
-		base: newBase(valEval),
-		KeyConstraints: value{
-			Nested: nestedMapKey,
-		},
-		ValueConstraints: value{
-			Nested: nestedMapValue,
-		},
-	}
+	mapEval := newKVPairs(valEval)
 
 	err := bldr.buildValue(
 		fieldDesc.MapKey(),
@@ -506,16 +498,11 @@ func (bldr *Builder) processRepeatedConstraints(
 	valEval *value,
 	cache MessageCache,
 ) error {
-	if !fdesc.IsList() || valEval.Nested != nestedNone {
+	if !fdesc.IsList() || valEval.NestedRule != nil {
 		return nil
 	}
 
-	listEval := listItems{
-		base: newBase(valEval),
-		ItemConstraints: value{
-			Nested: nestedRepeatedItem,
-		},
-	}
+	listEval := newListItems(valEval)
 
 	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), &listEval.ItemConstraints, cache)
 	if err != nil {

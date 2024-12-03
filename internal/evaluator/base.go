@@ -40,7 +40,7 @@ func newBase(valEval *value) base {
 	return base{
 		Descriptor:       valEval.Descriptor,
 		FieldPathElement: errors.FieldPathElement(valEval.Descriptor),
-		RulePrefix:       rulePrefixForNesting(valEval.Nested),
+		RulePrefix:       valEval.NestedRule,
 	}
 }
 
@@ -57,21 +57,6 @@ func (b *base) fieldPath() *validate.FieldPath {
 
 func (b *base) rulePath(suffix *validate.FieldPath) *validate.FieldPath {
 	return prefixRulePath(b.RulePrefix, suffix)
-}
-
-func rulePrefixForNesting(typ nestedType) *validate.FieldPath {
-	switch typ {
-	case nestedNone:
-		return nil
-	case nestedRepeatedItem:
-		return repeatedItemsRulePath
-	case nestedMapKey:
-		return mapKeysRulePath
-	case nestedMapValue:
-		return mapValuesRulePath
-	default:
-		return nil
-	}
 }
 
 func prefixRulePath(prefix *validate.FieldPath, suffix *validate.FieldPath) *validate.FieldPath {

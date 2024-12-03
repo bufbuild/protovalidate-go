@@ -58,7 +58,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 		return &errors.ValidationError{Violations: []*errors.Violation{{
 			Proto: &validate.Violation{
 				Field:        errors.FieldPath(f.Value.Descriptor),
-				Rule:         prefixRulePath(rulePrefixForNesting(f.Value.Nested), requiredRulePath),
+				Rule:         prefixRulePath(f.Value.NestedRule, requiredRulePath),
 				ConstraintId: proto.String("required"),
 				Message:      proto.String("value is required"),
 			},

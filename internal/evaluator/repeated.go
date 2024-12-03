@@ -41,6 +41,13 @@ type listItems struct {
 	ItemConstraints value
 }
 
+func newListItems(valEval *value) listItems {
+	return listItems{
+		base:            newBase(valEval),
+		ItemConstraints: value{NestedRule: repeatedItemsRulePath},
+	}
+}
+
 func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 	list := val.List()
 	var ok bool

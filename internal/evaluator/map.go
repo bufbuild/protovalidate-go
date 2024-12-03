@@ -54,6 +54,14 @@ type kvPairs struct {
 	ValueConstraints value
 }
 
+func newKVPairs(valEval *value) kvPairs {
+	return kvPairs{
+		base:             newBase(valEval),
+		KeyConstraints:   value{NestedRule: mapKeysRulePath},
+		ValueConstraints: value{NestedRule: mapValuesRulePath},
+	}
+}
+
 func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 	var ok bool
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
