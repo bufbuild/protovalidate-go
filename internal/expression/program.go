@@ -34,7 +34,7 @@ var nowPool = &NowPool{New: func() any { return &Now{} }}
 type ProgramSet []compiledProgram
 
 // Eval applies the contained expressions to the provided `this` val, returning
-// either errors.ValidationErrors if the input is invalid or errors.RuntimeError
+// either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
 func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
@@ -113,7 +113,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		}
 		return &errors.Violation{
 			Proto: &validate.Violation{
-				Rule:         expr.rule(),
+				Rule:         expr.rulePath(),
 				ConstraintId: proto.String(expr.Source.GetId()),
 				Message:      proto.String(val),
 			},
@@ -126,7 +126,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 		}
 		return &errors.Violation{
 			Proto: &validate.Violation{
-				Rule:         expr.rule(),
+				Rule:         expr.rulePath(),
 				ConstraintId: proto.String(expr.Source.GetId()),
 				Message:      proto.String(expr.Source.GetMessage()),
 			},
@@ -139,7 +139,7 @@ func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) 
 	}
 }
 
-func (expr compiledProgram) rule() *validate.FieldPath {
+func (expr compiledProgram) rulePath() *validate.FieldPath {
 	if len(expr.Path) > 0 {
 		return &validate.FieldPath{Elements: expr.Path}
 	}

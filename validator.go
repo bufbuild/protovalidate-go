@@ -32,8 +32,7 @@ var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New
 
 type (
 	// ValidationError is returned if one or more constraints on a message are
-	// violated. This error type is a composite of multiple ValidationError
-	// instances.
+	// violated. This error type is a composite of multiple Violation instances.
 	//
 	//    err = validator.Validate(msg)
 	//    var valErr *ValidationError

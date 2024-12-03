@@ -66,6 +66,4 @@ func (r listItems) Tautology() bool {
 	return r.ItemConstraints.Tautology()
 }
 
-var (
-	_ evaluator = listItems{}
-)
+var _ evaluator = listItems{}
