@@ -26,9 +26,9 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-// Merge is a utility to resolve and combine Errors resulting from
+// Merge is a utility to resolve and combine errors resulting from
 // evaluation. If ok is false, execution of validation should stop (either due
-// to failFast or the result is not a ValidationErrors).
+// to failFast or the result is not a ValidationError).
 //
 //nolint:errorlint
 func Merge(dst, src error, failFast bool) (ok bool, err error) {
