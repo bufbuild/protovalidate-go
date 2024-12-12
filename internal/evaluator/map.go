@@ -88,6 +88,8 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 				element.Subscript = &validate.FieldPathElement_StringKey{StringKey: key.String()}
 			case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
 				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+				fallthrough
+			default:
 				err = errors.NewCompilationErrorf(
 					"unexpected map key type %s",
 					m.base.Descriptor.MapKey().Kind(),

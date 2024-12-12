@@ -20,8 +20,9 @@ import (
 	"github.com/google/cel-go/cel"
 )
 
-// Expression is a container for the information needed to compile and evaluate
-// a list of CEL-based expression, originating from a validate.Constraint.
+// An Expressions instance is a container for the information needed to compile
+// and evaluate a list of CEL-based expressions, originating from a
+// validate.Constraint.
 type Expressions struct {
 	Constraints []*validate.Constraint
 	RulePath    []*validate.FieldPathElement

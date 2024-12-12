@@ -81,8 +81,6 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 		if err != nil {
 			residuals = append(residuals, ast)
 		} else {
-			x := residual.Source().Content()
-			_ = x
 			residuals = append(residuals, compiledAST{
 				AST:        residual,
 				Source:     ast.Source,
