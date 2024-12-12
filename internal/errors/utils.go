@@ -55,6 +55,9 @@ func Merge(dst, src error, failFast bool) (ok bool, err error) {
 	return !(failFast && len(dstValErrs.Violations) > 0), dst
 }
 
+// FieldPathElement returns a buf.validate.FieldPathElement that corresponds to
+// a provided FieldDescriptor. If the provided FieldDescriptor is nil, nil is
+// returned.
 func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathElement {
 	if field == nil {
 		return nil
@@ -66,6 +69,8 @@ func FieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathEle
 	}
 }
 
+// FieldPath returns a single-element buf.validate.FieldPath corresponding to
+// the provided FieldDescriptor, or nil if the provided FieldDescriptor is nil.
 func FieldPath(field protoreflect.FieldDescriptor) *validate.FieldPath {
 	if field == nil {
 		return nil
@@ -154,6 +159,8 @@ func FieldPathString(path []*validate.FieldPathElement) string {
 	return result.String()
 }
 
+// MarkForKey marks the provided error as being for a map key, by setting the
+// `for_key` flag on each violation within the validation error.
 func MarkForKey(err error) {
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {

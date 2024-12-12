@@ -34,7 +34,7 @@ type Violation struct {
 	FieldValue protoreflect.Value
 
 	// FieldDescriptor contains the field descriptor corresponding to the
-	// FieldValue, if there is a field value.
+	// field that failed validation.
 	FieldDescriptor protoreflect.FieldDescriptor
 
 	// RuleValue contains the value of the rule that specified the failed
@@ -45,7 +45,7 @@ type Violation struct {
 	RuleValue protoreflect.Value
 
 	// RuleDescriptor contains the field descriptor corresponding to the
-	// Rulevalue, if there is a rule value.
+	// rule that failed validation.
 	RuleDescriptor protoreflect.FieldDescriptor
 }
 
