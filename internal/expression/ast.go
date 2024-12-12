@@ -15,9 +15,11 @@
 package expression
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
+	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // ASTSet represents a collection of compiledAST and their associated cel.Env.
@@ -79,11 +81,12 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 		if err != nil {
 			residuals = append(residuals, ast)
 		} else {
-			x := residual.Source().Content()
-			_ = x
 			residuals = append(residuals, compiledAST{
-				AST:    residual,
-				Source: ast.Source,
+				AST:        residual,
+				Source:     ast.Source,
+				Path:       ast.Path,
+				Value:      ast.Value,
+				Descriptor: ast.Descriptor,
 			})
 		}
 	}
@@ -109,9 +112,24 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 	return out, nil
 }
 
+// SetRuleValue sets the rule value for the programs in the ASTSet.
+func (set *ASTSet) SetRuleValue(
+	ruleValue protoreflect.Value,
+	ruleDescriptor protoreflect.FieldDescriptor,
+) {
+	set.asts = append([]compiledAST{}, set.asts...)
+	for i := range set.asts {
+		set.asts[i].Value = ruleValue
+		set.asts[i].Descriptor = ruleDescriptor
+	}
+}
+
 type compiledAST struct {
-	AST    *cel.Ast
-	Source Expression
+	AST        *cel.Ast
+	Source     *validate.Constraint
+	Path       []*validate.FieldPathElement
+	Value      protoreflect.Value
+	Descriptor protoreflect.FieldDescriptor
 }
 
 func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out compiledProgram, err error) {
@@ -121,7 +139,10 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 			"failed to compile program %s: %w", ast.Source.GetId(), err)
 	}
 	return compiledProgram{
-		Program: prog,
-		Source:  ast.Source,
+		Program:    prog,
+		Source:     ast.Source,
+		Path:       ast.Path,
+		Value:      ast.Value,
+		Descriptor: ast.Descriptor,
 	}, nil
 }

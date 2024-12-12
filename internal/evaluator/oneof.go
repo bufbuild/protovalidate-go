@@ -35,10 +35,16 @@ func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
 
 func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
 	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
-		return &errors.ValidationError{Violations: []*validate.Violation{{
-			FieldPath:    proto.String(string(o.Descriptor.Name())),
-			ConstraintId: proto.String("required"),
-			Message:      proto.String("exactly one field is required in oneof"),
+		return &errors.ValidationError{Violations: []*errors.Violation{{
+			Proto: &validate.Violation{
+				Field: &validate.FieldPath{
+					Elements: []*validate.FieldPathElement{{
+						FieldName: proto.String(string(o.Descriptor.Name())),
+					}},
+				},
+				ConstraintId: proto.String("required"),
+				Message:      proto.String("exactly one field is required in oneof"),
+			},
 		}}}
 	}
 	return nil

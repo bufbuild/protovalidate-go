@@ -15,20 +15,25 @@
 package evaluator
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // value performs validation on any concrete value contained within a singular
 // field, repeated elements, or the keys/values of a map.
 type value struct {
+	// Descriptor is the FieldDescriptor targeted by this evaluator
+	Descriptor protoreflect.FieldDescriptor
 	// Constraints are the individual evaluators applied to a value
 	Constraints evaluators
+	// Zero is the default or zero-value for this value's type
+	Zero protoreflect.Value
+	// NestedRule specifies the nested rule type the value is for.
+	NestedRule *validate.FieldPath
 	// IgnoreEmpty indicates that the Constraints should not be applied if the
 	// value is unset or the default (typically zero) value. This only applies to
 	// repeated elements or map keys/values with an ignore_empty rule.
 	IgnoreEmpty bool
-	// Zero is the default or zero-value for this value's type
-	Zero protoreflect.Value
 }
 
 func (v *value) Evaluate(val protoreflect.Value, failFast bool) error {

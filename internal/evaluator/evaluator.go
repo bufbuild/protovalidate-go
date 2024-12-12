@@ -101,8 +101,3 @@ func (m messageEvaluators) Tautology() bool {
 	}
 	return true
 }
-
-var (
-	_ evaluator        = evaluators(nil)
-	_ MessageEvaluator = messageEvaluators(nil)
-)

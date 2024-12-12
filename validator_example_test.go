@@ -18,6 +18,8 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
+	"text/template"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -156,9 +158,50 @@ func ExampleValidationError() {
 	err = validator.Validate(loc)
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
-		msg := valErr.ToProto()
-		fmt.Println(msg.GetViolations()[0].GetFieldPath(), msg.GetViolations()[0].GetConstraintId())
+		violation := valErr.Violations[0]
+		fmt.Println(FieldPathString(violation.Proto.GetField()), violation.Proto.GetConstraintId())
+		fmt.Println(violation.RuleValue, violation.FieldValue)
 	}
 
 	// output: lat double.gte_lte
+	// -90 999.999
+}
+
+func ExampleValidationError_localized() {
+	validator, err := New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	type ErrorInfo struct {
+		FieldName  string
+		RuleValue  any
+		FieldValue any
+	}
+
+	var ruleMessages = map[string]string{
+		"string.email_empty": "{{.FieldName}}: メールアドレスは空であってはなりません。\n",
+		"string.pattern":     "{{.FieldName}}: 値はパターン「{{.RuleValue}}」一致する必要があります。\n",
+		"uint64.gt":          "{{.FieldName}}: 値は{{.RuleValue}}を超える必要があります。（価値：{{.FieldValue}}）\n",
+	}
+
+	loc := &pb.Person{Id: 900}
+	err = validator.Validate(loc)
+	var valErr *ValidationError
+	if ok := errors.As(err, &valErr); ok {
+		for _, violation := range valErr.Violations {
+			_ = template.
+				Must(template.New("").Parse(ruleMessages[violation.Proto.GetConstraintId()])).
+				Execute(os.Stdout, ErrorInfo{
+					FieldName:  FieldPathString(violation.Proto.GetField()),
+					RuleValue:  violation.RuleValue.Interface(),
+					FieldValue: violation.FieldValue.Interface(),
+				})
+		}
+	}
+
+	// output:
+	// id: 値は999を超える必要があります。（価値：900）
+	// email: メールアドレスは空であってはなりません。
+	// name: 値はパターン「^[[:alpha:]]+( [[:alpha:]]+)*$」一致する必要があります。
 }

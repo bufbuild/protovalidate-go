@@ -21,13 +21,21 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+//nolint:gochecknoglobals
+var (
+	requiredRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("required")
+	requiredRulePath       = &validate.FieldPath{
+		Elements: []*validate.FieldPathElement{
+			errors.FieldPathElement(requiredRuleDescriptor),
+		},
+	}
+)
+
 // field performs validation on a single message field, defined by its
 // descriptor.
 type field struct {
 	// Value is the evaluator to apply to the field's value
 	Value value
-	// Descriptor is the FieldDescriptor targeted by this evaluator
-	Descriptor protoreflect.FieldDescriptor
 	// Required indicates that the field must have a set value.
 	Required bool
 	// IgnoreEmpty indicates if a field should skip validation on its zero value.
@@ -46,26 +54,30 @@ func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
 }
 
 func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
-	if f.Required && !msg.Has(f.Descriptor) {
-		return &errors.ValidationError{Violations: []*validate.Violation{{
-			FieldPath:    proto.String(string(f.Descriptor.Name())),
-			ConstraintId: proto.String("required"),
-			Message:      proto.String("value is required"),
+	if f.Required && !msg.Has(f.Value.Descriptor) {
+		return &errors.ValidationError{Violations: []*errors.Violation{{
+			Proto: &validate.Violation{
+				Field:        errors.FieldPath(f.Value.Descriptor),
+				Rule:         prefixRulePath(f.Value.NestedRule, requiredRulePath),
+				ConstraintId: proto.String("required"),
+				Message:      proto.String("value is required"),
+			},
+			FieldValue:      protoreflect.Value{},
+			FieldDescriptor: f.Value.Descriptor,
+			RuleValue:       protoreflect.ValueOfBool(true),
+			RuleDescriptor:  requiredRuleDescriptor,
 		}}}
 	}
 
-	if f.IgnoreEmpty && !msg.Has(f.Descriptor) {
+	if f.IgnoreEmpty && !msg.Has(f.Value.Descriptor) {
 		return nil
 	}
 
-	val := msg.Get(f.Descriptor)
+	val := msg.Get(f.Value.Descriptor)
 	if f.IgnoreDefault && val.Equal(f.Zero) {
 		return nil
 	}
-	if err = f.Value.Evaluate(val, failFast); err != nil {
-		errors.PrefixErrorPaths(err, "%s", f.Descriptor.Name())
-	}
-	return err
+	return f.Value.Evaluate(val, failFast)
 }
 
 func (f field) Tautology() bool {

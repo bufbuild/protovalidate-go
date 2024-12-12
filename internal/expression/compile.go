@@ -15,27 +15,28 @@
 package expression
 
 import (
+	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 )
 
-// Expression is the read-only interface of either validate.Constraint or
-// private.Constraint which can be the source of a CEL expression.
-type Expression interface {
-	GetId() string
-	GetMessage() string
-	GetExpression() string
+// An Expressions instance is a container for the information needed to compile
+// and evaluate a list of CEL-based expressions, originating from a
+// validate.Constraint.
+type Expressions struct {
+	Constraints []*validate.Constraint
+	RulePath    []*validate.FieldPathElement
 }
 
 // Compile produces a ProgramSet from the provided expressions in the given
 // environment. If the generated cel.Program require cel.ProgramOption params,
 // use CompileASTs instead with a subsequent call to ASTSet.ToProgramSet.
-func Compile[T Expression](
-	expressions []T,
+func Compile(
+	expressions Expressions,
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
 ) (set ProgramSet, err error) {
-	if len(expressions) == 0 {
+	if len(expressions.Constraints) == 0 {
 		return nil, nil
 	}
 
@@ -47,11 +48,12 @@ func Compile[T Expression](
 		}
 	}
 
-	set = make(ProgramSet, len(expressions))
-	for i, expr := range expressions {
-		set[i].Source = expr
+	set = make(ProgramSet, len(expressions.Constraints))
+	for i, constraint := range expressions.Constraints {
+		set[i].Source = constraint
+		set[i].Path = expressions.RulePath
 
-		ast, err := compileAST(env, expr)
+		ast, err := compileAST(env, constraint, expressions.RulePath)
 		if err != nil {
 			return nil, err
 		}
@@ -69,13 +71,13 @@ func Compile[T Expression](
 // ASTSet.ToProgramSet or ASTSet.ReduceResiduals. Use Compile instead if no
 // cel.ProgramOption args need to be provided or residuals do not need to be
 // computed.
-func CompileASTs[T Expression](
-	expressions []T,
+func CompileASTs(
+	expressions Expressions,
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
 ) (set ASTSet, err error) {
 	set.env = env
-	if len(expressions) == 0 {
+	if len(expressions.Constraints) == 0 {
 		return set, nil
 	}
 
@@ -87,9 +89,9 @@ func CompileASTs[T Expression](
 		}
 	}
 
-	set.asts = make([]compiledAST, len(expressions))
-	for i, expr := range expressions {
-		set.asts[i], err = compileAST(set.env, expr)
+	set.asts = make([]compiledAST, len(expressions.Constraints))
+	for i, constraint := range expressions.Constraints {
+		set.asts[i], err = compileAST(set.env, constraint, expressions.RulePath)
 		if err != nil {
 			return set, err
 		}
@@ -98,22 +100,23 @@ func CompileASTs[T Expression](
 	return set, nil
 }
 
-func compileAST(env *cel.Env, expr Expression) (out compiledAST, err error) {
-	ast, issues := env.Compile(expr.GetExpression())
+func compileAST(env *cel.Env, constraint *validate.Constraint, rulePath []*validate.FieldPathElement) (out compiledAST, err error) {
+	ast, issues := env.Compile(constraint.GetExpression())
 	if err := issues.Err(); err != nil {
 		return out, errors.NewCompilationErrorf(
-			"failed to compile expression %s: %w", expr.GetId(), err)
+			"failed to compile expression %s: %w", constraint.GetId(), err)
 	}
 
 	outType := ast.OutputType()
 	if !(outType.IsAssignableType(cel.BoolType) || outType.IsAssignableType(cel.StringType)) {
 		return out, errors.NewCompilationErrorf(
 			"expression %s outputs %s, wanted either bool or string",
-			expr.GetId(), outType.String())
+			constraint.GetId(), outType.String())
 	}
 
 	return compiledAST{
 		AST:    ast,
-		Source: expr,
+		Source: constraint,
+		Path:   rulePath,
 	}, nil
 }

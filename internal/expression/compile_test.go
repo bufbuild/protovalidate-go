@@ -34,7 +34,7 @@ func TestCompile(t *testing.T) {
 
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		var exprs []*validate.Constraint
+		var exprs Expressions
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		require.NoError(t, err)
@@ -42,19 +42,23 @@ func TestCompile(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
-		exprs := []*validate.Constraint{
-			{Id: proto.String("foo"), Expression: proto.String("this == 123")},
-			{Id: proto.String("bar"), Expression: proto.String("'a string'")},
+		exprs := Expressions{
+			Constraints: []*validate.Constraint{
+				{Id: proto.String("foo"), Expression: proto.String("this == 123")},
+				{Id: proto.String("bar"), Expression: proto.String("'a string'")},
+			},
 		}
 		set, err := Compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
-		assert.Len(t, set, len(exprs))
+		assert.Len(t, set, len(exprs.Constraints))
 		require.NoError(t, err)
 	})
 
 	t.Run("env extension err", func(t *testing.T) {
 		t.Parallel()
-		exprs := []*validate.Constraint{
-			{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
+		exprs := Expressions{
+			Constraints: []*validate.Constraint{
+				{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
+			},
 		}
 		set, err := Compile(exprs, baseEnv, cel.Types(true))
 		assert.Nil(t, set)
@@ -64,8 +68,10 @@ func TestCompile(t *testing.T) {
 
 	t.Run("bad syntax", func(t *testing.T) {
 		t.Parallel()
-		exprs := []*validate.Constraint{
-			{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
+		exprs := Expressions{
+			Constraints: []*validate.Constraint{
+				{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
+			},
 		}
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)
@@ -75,8 +81,10 @@ func TestCompile(t *testing.T) {
 
 	t.Run("invalid output type", func(t *testing.T) {
 		t.Parallel()
-		exprs := []*validate.Constraint{
-			{Id: proto.String("foo"), Expression: proto.String("1.23")},
+		exprs := Expressions{
+			Constraints: []*validate.Constraint{
+				{Id: proto.String("foo"), Expression: proto.String("1.23")},
+			},
 		}
 		set, err := Compile(exprs, baseEnv)
 		assert.Nil(t, set)

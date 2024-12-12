@@ -37,11 +37,11 @@ type ProgramSet []compiledProgram
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
-func (s ProgramSet) Eval(val any, failFast bool) error {
-	binding := s.bindThis(val)
+func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
+	binding := s.bindThis(val.Interface())
 	defer varPool.Put(binding)
 
-	var violations []*validate.Violation
+	var violations []*errors.Violation
 	for _, expr := range s {
 		violation, err := expr.eval(binding)
 		if err != nil {
@@ -88,12 +88,15 @@ func (s ProgramSet) bindThis(val any) *Variable {
 // compiledProgram is a parsed and type-checked cel.Program along with the
 // source Expression.
 type compiledProgram struct {
-	Program cel.Program
-	Source  Expression
+	Program    cel.Program
+	Source     *validate.Constraint
+	Path       []*validate.FieldPathElement
+	Value      protoreflect.Value
+	Descriptor protoreflect.FieldDescriptor
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error) {
+func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) {
 	now := nowPool.Get()
 	defer nowPool.Put(now)
 	bindings.Next = now
@@ -108,20 +111,37 @@ func (expr compiledProgram) eval(bindings *Variable) (*validate.Violation, error
 		if val == "" {
 			return nil, nil
 		}
-		return &validate.Violation{
-			ConstraintId: proto.String(expr.Source.GetId()),
-			Message:      proto.String(val),
+		return &errors.Violation{
+			Proto: &validate.Violation{
+				Rule:         expr.rulePath(),
+				ConstraintId: proto.String(expr.Source.GetId()),
+				Message:      proto.String(val),
+			},
+			RuleValue:      expr.Value,
+			RuleDescriptor: expr.Descriptor,
 		}, nil
 	case bool:
 		if val {
 			return nil, nil
 		}
-		return &validate.Violation{
-			ConstraintId: proto.String(expr.Source.GetId()),
-			Message:      proto.String(expr.Source.GetMessage()),
+		return &errors.Violation{
+			Proto: &validate.Violation{
+				Rule:         expr.rulePath(),
+				ConstraintId: proto.String(expr.Source.GetId()),
+				Message:      proto.String(expr.Source.GetMessage()),
+			},
+			RuleValue:      expr.Value,
+			RuleDescriptor: expr.Descriptor,
 		}, nil
 	default:
 		return nil, errors.NewRuntimeErrorf(
 			"resolved to an unexpected type %T", val)
 	}
+}
+
+func (expr compiledProgram) rulePath() *validate.FieldPath {
+	if len(expr.Path) > 0 {
+		return &validate.FieldPath{Elements: expr.Path}
+	}
+	return nil
 }

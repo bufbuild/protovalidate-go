@@ -27,6 +27,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/structpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -85,7 +86,11 @@ func TestCompiled(t *testing.T) {
 			if test.exErr {
 				require.Error(t, err)
 			} else {
-				assert.True(t, proto.Equal(test.exViol, violation))
+				if test.exViol == nil {
+					assert.Nil(t, violation)
+				} else {
+					assert.True(t, proto.Equal(test.exViol, violation.Proto))
+				}
 			}
 		})
 	}
@@ -98,7 +103,7 @@ func TestSet(t *testing.T) {
 		name     string
 		set      ProgramSet
 		failFast bool
-		exViols  *pverr.ValidationError
+		exViols  *validate.Violations
 		exErr    bool
 	}{
 		{
@@ -143,10 +148,12 @@ func TestSet(t *testing.T) {
 					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
-			exViols: &pverr.ValidationError{Violations: []*validate.Violation{
-				{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
-				{ConstraintId: proto.String("bar"), Message: proto.String("buzz")},
-			}},
+			exViols: &validate.Violations{
+				Violations: []*validate.Violation{
+					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+					{ConstraintId: proto.String("bar"), Message: proto.String("buzz")},
+				},
+			},
 		},
 		{
 			name:     "invalid fail fast",
@@ -161,9 +168,11 @@ func TestSet(t *testing.T) {
 					Source:  &validate.Constraint{Id: proto.String("bar")},
 				},
 			},
-			exViols: &pverr.ValidationError{Violations: []*validate.Violation{
-				{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
-			}},
+			exViols: &validate.Violations{
+				Violations: []*validate.Violation{
+					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+				},
+			},
 		},
 	}
 
@@ -172,12 +181,12 @@ func TestSet(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := test.set.Eval(nil, test.failFast)
+			err := test.set.Eval(protoreflect.ValueOfBool(false), test.failFast)
 			switch {
 			case test.exViols != nil:
 				var viols *pverr.ValidationError
 				require.ErrorAs(t, err, &viols)
-				require.True(t, proto.Equal(test.exViols.ToProto(), viols.ToProto()))
+				require.True(t, proto.Equal(test.exViols, viols.ToProto()))
 			case test.exErr:
 				require.Error(t, err)
 			default:
