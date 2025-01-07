@@ -18,9 +18,7 @@ import (
 	"fmt"
 	"sync"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/resolve"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -40,7 +38,6 @@ type Validator struct {
 // individual ValidatorOption for how they impact the fallibility of New.
 func New(options ...ValidatorOption) (*Validator, error) {
 	cfg := config{
-		resolver:              resolve.DefaultResolver{},
 		extensionTypeResolver: protoregistry.GlobalTypes,
 	}
 	for _, opt := range options {
@@ -56,7 +53,6 @@ func New(options ...ValidatorOption) (*Validator, error) {
 	bldr := newBuilder(
 		env,
 		cfg.disableLazy,
-		cfg.resolver,
 		cfg.extensionTypeResolver,
 		cfg.allowUnknownFields,
 		cfg.desc...,
@@ -102,7 +98,6 @@ type config struct {
 	useUTC                bool
 	disableLazy           bool
 	desc                  []protoreflect.MessageDescriptor
-	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 }
@@ -160,28 +155,6 @@ func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOpt
 func WithDisableLazy(disable bool) ValidatorOption {
 	return func(cfg *config) {
 		cfg.disableLazy = disable
-	}
-}
-
-// StandardConstraintResolver is responsible for resolving the standard
-// constraints from the provided protoreflect.Descriptor. The default resolver
-// can be intercepted and modified using WithStandardConstraintInterceptor.
-type StandardConstraintResolver interface {
-	ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints
-	ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints
-	ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints
-}
-
-// StandardConstraintInterceptor can be provided to
-// WithStandardConstraintInterceptor to allow modifying a
-// StandardConstraintResolver.
-type StandardConstraintInterceptor func(res StandardConstraintResolver) StandardConstraintResolver
-
-// WithStandardConstraintInterceptor allows intercepting the
-// StandardConstraintResolver used by the Validator to modify or replace it.
-func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor) ValidatorOption {
-	return func(c *config) {
-		c.resolver = interceptor(c.resolver)
 	}
 }
 

@@ -21,6 +21,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	"github.com/bufbuild/protovalidate-go/resolve"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -41,7 +42,6 @@ type builder struct {
 	cache                 atomic.Pointer[messageCache] // copy-on-write cache.
 	env                   *cel.Env
 	constraints           cache
-	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 	Load                  func(desc protoreflect.MessageDescriptor) messageEvaluator
@@ -51,7 +51,6 @@ type builder struct {
 func newBuilder(
 	env *cel.Env,
 	disableLazy bool,
-	res StandardConstraintResolver,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	seedDesc ...protoreflect.MessageDescriptor,
@@ -59,7 +58,6 @@ func newBuilder(
 	bldr := &builder{
 		env:                   env,
 		constraints:           newCache(),
-		resolver:              res,
 		extensionTypeResolver: extensionTypeResolver,
 		allowUnknownFields:    allowUnknownFields,
 	}
@@ -124,7 +122,7 @@ func (bldr *builder) buildMessage(
 	desc protoreflect.MessageDescriptor, msgEval *message,
 	cache messageCache,
 ) {
-	msgConstraints := bldr.resolver.ResolveMessageConstraints(desc)
+	msgConstraints := resolve.MessageConstraints(desc)
 	if msgConstraints.GetDisabled() {
 		return
 	}
@@ -181,7 +179,7 @@ func (bldr *builder) processOneofConstraints(
 	oneofs := desc.Oneofs()
 	for i := 0; i < oneofs.Len(); i++ {
 		oneofDesc := oneofs.Get(i)
-		oneofConstraints := bldr.resolver.ResolveOneofConstraints(oneofDesc)
+		oneofConstraints := resolve.OneofConstraints(oneofDesc)
 		oneofEval := oneof{
 			Descriptor: oneofDesc,
 			Required:   oneofConstraints.GetRequired(),
@@ -199,7 +197,7 @@ func (bldr *builder) processFields(
 	fields := desc.Fields()
 	for i := 0; i < fields.Len(); i++ {
 		fdesc := fields.Get(i)
-		fieldConstraints := bldr.resolver.ResolveFieldConstraints(fdesc)
+		fieldConstraints := resolve.FieldConstraints(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldConstraints, cache)
 		if err != nil {
 			msgEval.Err = err

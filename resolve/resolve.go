@@ -20,31 +20,28 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// DefaultResolver resolves protovalidate constraints options from descriptors.
-type DefaultResolver struct{}
-
-// ResolveMessageConstraints returns the MessageConstraints option set for the
+// MessageConstraints returns the MessageConstraints option set for the
 // MessageDescriptor.
-func (r DefaultResolver) ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
+func MessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
 	return extensions.Resolve[*validate.MessageConstraints](desc.Options(), validate.E_Message)
 }
 
-// ResolveOneofConstraints returns the OneofConstraints option set for the
+// OneofConstraints returns the OneofConstraints option set for the
 // OneofDescriptor.
-func (r DefaultResolver) ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
+func OneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
 	return extensions.Resolve[*validate.OneofConstraints](desc.Options(), validate.E_Oneof)
 }
 
-// ResolveFieldConstraints returns the FieldConstraints option set for the
+// FieldConstraints returns the FieldConstraints option set for the
 // FieldDescriptor.
-func (r DefaultResolver) ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
+func FieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
 	return extensions.Resolve[*validate.FieldConstraints](desc.Options(), validate.E_Field)
 }
 
-// ResolvePredefinedConstraints returns the PredefinedConstraints option set for
+// PredefinedConstraints returns the PredefinedConstraints option set for
 // the FieldDescriptor. Note that this value is only meaningful if it is set on
 // a field or extension of a field rule message. This method is provided for
 // convenience.
-func (r DefaultResolver) ResolvePredefinedConstraints(desc protoreflect.FieldDescriptor) *validate.PredefinedConstraints {
+func PredefinedConstraints(desc protoreflect.FieldDescriptor) *validate.PredefinedConstraints {
 	return extensions.Resolve[*validate.PredefinedConstraints](desc.Options(), validate.E_Predefined)
 }
