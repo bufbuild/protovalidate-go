@@ -64,7 +64,7 @@ issues:
         - varnamelen
         - unparam
         - gosec
-    - path: cel/lib.go
+    - path: cel/library.go
       linters:
         # setting up custom functions/overloads appears duplicative (false positive)
         - dupl
