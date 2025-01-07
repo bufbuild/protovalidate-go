@@ -93,14 +93,14 @@ func ExampleWithMessages() {
 	// output: <nil>
 }
 
-func ExampleWithDescriptors() {
+func ExampleWithMessageDescriptors() {
 	pbType, err := protoregistry.GlobalTypes.FindMessageByName("tests.example.v1.Person")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	validator, err := New(
-		WithDescriptors(
+		WithMessageDescriptors(
 			pbType.Descriptor(),
 		),
 	)

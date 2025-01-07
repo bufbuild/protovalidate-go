@@ -124,13 +124,13 @@ func WithMessages(messages ...proto.Message) ValidatorOption {
 	for i, msg := range messages {
 		desc[i] = msg.ProtoReflect().Descriptor()
 	}
-	return WithDescriptors(desc...)
+	return WithMessageDescriptors(desc...)
 }
 
-// WithDescriptors allows warming up the Validator with message
+// WithMessageDescriptors allows warming up the Validator with message
 // descriptors that are expected to be validated. Messages included transitively
 // (i.e., fields with message values) are automatically handled.
-func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOption {
+func WithMessageDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOption {
 	return func(cfg *config) {
 		cfg.desc = append(cfg.desc, descriptors...)
 	}
@@ -142,7 +142,7 @@ func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOpt
 // read-only.
 //
 // Note: All expected messages must be provided by WithMessages or
-// WithDescriptors during initialization.
+// WithMessageDescriptors during initialization.
 func WithDisableLazy() ValidatorOption {
 	return func(cfg *config) {
 		cfg.disableLazy = true
