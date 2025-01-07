@@ -15,12 +15,12 @@
 package protovalidate
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -31,7 +31,7 @@ import (
 //nolint:gochecknoglobals
 var (
 	celRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("cel")
-	celRuleField      = errors.FieldPathElement(celRuleDescriptor)
+	celRuleField      = fieldPathElement(celRuleDescriptor)
 )
 
 // builder is a build-through cache of message evaluators keyed off the provided
@@ -335,9 +335,9 @@ func (bldr *builder) processEmbeddedMessage(
 
 	embedEval := bldr.build(fdesc.Message(), cache)
 	if err := embedEval.Err; err != nil {
-		return errors.NewCompilationErrorf(
+		return &CompilationError{cause: fmt.Errorf(
 			"failed to compile embedded type %s for %s: %w",
-			fdesc.Message().FullName(), fdesc.FullName(), err)
+			fdesc.Message().FullName(), fdesc.FullName(), err)}
 	}
 	valEval.Append(&embeddedMessage{
 		base:    newBase(valEval),
@@ -464,9 +464,9 @@ func (bldr *builder) processMapConstraints(
 		&mapEval.KeyConstraints,
 		cache)
 	if err != nil {
-		return errors.NewCompilationErrorf(
+		return &CompilationError{cause: fmt.Errorf(
 			"failed to compile key constraints for map %s: %w",
-			fieldDesc.FullName(), err)
+			fieldDesc.FullName(), err)}
 	}
 
 	err = bldr.buildValue(
@@ -475,9 +475,9 @@ func (bldr *builder) processMapConstraints(
 		&mapEval.ValueConstraints,
 		cache)
 	if err != nil {
-		return errors.NewCompilationErrorf(
+		return &CompilationError{cause: fmt.Errorf(
 			"failed to compile value constraints for map %s: %w",
-			fieldDesc.FullName(), err)
+			fieldDesc.FullName(), err)}
 	}
 
 	valEval.Append(mapEval)
@@ -498,8 +498,8 @@ func (bldr *builder) processRepeatedConstraints(
 
 	err := bldr.buildValue(fdesc, fieldConstraints.GetRepeated().GetItems(), &listEval.ItemConstraints, cache)
 	if err != nil {
-		return errors.NewCompilationErrorf(
-			"failed to compile items constraints for repeated %v: %w", fdesc.FullName(), err)
+		return &CompilationError{cause: fmt.Errorf(
+			"failed to compile items constraints for repeated %v: %w", fdesc.FullName(), err)}
 	}
 
 	valEval.Append(listEval)

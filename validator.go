@@ -20,7 +20,6 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/resolver"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -28,30 +27,6 @@ import (
 )
 
 var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New() })
-
-type (
-	// ValidationError is returned if one or more constraints on a message are
-	// violated. This error type is a composite of multiple Violation instances.
-	//
-	//    err = validator.Validate(msg)
-	//    var valErr *ValidationError
-	//    if ok := errors.As(err, &valErr); ok {
-	//      violations := valErrs.Violations
-	//      // ...
-	//    }
-	ValidationError = errors.ValidationError
-
-	// A Violation provides information about one constraint violation.
-	Violation = errors.Violation
-
-	// A CompilationError is returned if a CEL expression cannot be compiled &
-	// type-checked or if invalid standard constraints are applied to a field.
-	CompilationError = errors.CompilationError
-
-	// A RuntimeError is returned if a valid CEL expression evaluation is
-	// terminated, typically due to an unknown or mismatched type.
-	RuntimeError = errors.RuntimeError
-)
 
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
@@ -106,7 +81,7 @@ func (v *Validator) Validate(msg proto.Message) error {
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
 	err := eval.EvaluateMessage(refl, v.failFast)
-	errors.FinalizePaths(err)
+	finalizeViolationPaths(err)
 	return err
 }
 
@@ -120,12 +95,6 @@ func Validate(msg proto.Message) error {
 		return err
 	}
 	return globalValidator.Validate(msg)
-}
-
-// FieldPathString returns a dotted path string for the provided
-// validate.FieldPath.
-func FieldPathString(path *validate.FieldPath) string {
-	return errors.FieldPathString(path.GetElements())
 }
 
 type config struct {

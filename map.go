@@ -19,7 +19,6 @@ import (
 	"strconv"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
@@ -31,15 +30,15 @@ var (
 	mapKeysRuleDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("keys")
 	mapKeysRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(mapRuleDescriptor),
-			errors.FieldPathElement(mapKeysRuleDescriptor),
+			fieldPathElement(mapRuleDescriptor),
+			fieldPathElement(mapKeysRuleDescriptor),
 		},
 	}
 	mapValuesDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("values")
 	mapValuesRulePath   = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(mapRuleDescriptor),
-			errors.FieldPathElement(mapValuesDescriptor),
+			fieldPathElement(mapRuleDescriptor),
+			fieldPathElement(mapValuesDescriptor),
 		},
 	}
 )
@@ -90,15 +89,14 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
 				fallthrough
 			default:
-				err = errors.NewCompilationErrorf(
+				err = &CompilationError{cause: fmt.Errorf(
 					"unexpected map key type %s",
-					m.base.Descriptor.MapKey().Kind(),
-				)
+					m.base.Descriptor.MapKey().Kind())}
 				return false
 			}
-			errors.UpdatePaths(evalErr, element, m.base.RulePrefix.GetElements())
+			updateViolationPaths(evalErr, element, m.base.RulePrefix.GetElements())
 		}
-		ok, err = errors.Merge(err, evalErr, failFast)
+		ok, err = mergeViolations(err, evalErr, failFast)
 		return ok
 	})
 	return err
@@ -106,14 +104,14 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 
 func (m kvPairs) evalPairs(key protoreflect.MapKey, value protoreflect.Value, failFast bool) (err error) {
 	evalErr := m.KeyConstraints.Evaluate(key.Value(), failFast)
-	errors.MarkForKey(evalErr)
-	ok, err := errors.Merge(err, evalErr, failFast)
+	markViolationForKey(evalErr)
+	ok, err := mergeViolations(err, evalErr, failFast)
 	if !ok {
 		return err
 	}
 
 	evalErr = m.ValueConstraints.Evaluate(value, failFast)
-	_, err = errors.Merge(err, evalErr, failFast)
+	_, err = mergeViolations(err, evalErr, failFast)
 	return err
 }
 

@@ -72,7 +72,7 @@ issues:
         # type analysis is wrong
         - forcetypeassert
     # static unexported lookup tables
-    - path: internal/constraints/lookups.go
+    - path: lookups.go
       linters:
         - gochecknoglobals
     - path: resolver/resolver.go

@@ -15,7 +15,6 @@
 package protovalidate
 
 import (
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -58,7 +57,7 @@ func (e evaluators) Evaluate(val protoreflect.Value, failFast bool) (err error) 
 	var ok bool
 	for _, eval := range e {
 		evalErr := eval.Evaluate(val, failFast)
-		if ok, err = errors.Merge(err, evalErr, failFast); !ok {
+		if ok, err = mergeViolations(err, evalErr, failFast); !ok {
 			return err
 		}
 	}
@@ -86,7 +85,7 @@ func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, failFast bo
 	var ok bool
 	for _, eval := range m {
 		evalErr := eval.EvaluateMessage(msg, failFast)
-		if ok, err = errors.Merge(err, evalErr, failFast); !ok {
+		if ok, err = mergeViolations(err, evalErr, failFast); !ok {
 			return err
 		}
 	}

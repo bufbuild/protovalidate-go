@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -62,7 +61,7 @@ func TestCompile(t *testing.T) {
 		}
 		set, err := compile(exprs, baseEnv, cel.Types(true))
 		assert.Nil(t, set)
-		var compErr *errors.CompilationError
+		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})
 
@@ -75,7 +74,7 @@ func TestCompile(t *testing.T) {
 		}
 		set, err := compile(exprs, baseEnv)
 		assert.Nil(t, set)
-		var compErr *errors.CompilationError
+		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})
 
@@ -88,7 +87,7 @@ func TestCompile(t *testing.T) {
 		}
 		set, err := compile(exprs, baseEnv)
 		assert.Nil(t, set)
-		var compErr *errors.CompilationError
+		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})
 }

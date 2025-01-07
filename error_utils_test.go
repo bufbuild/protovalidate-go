@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errors
+package protovalidate
 
 import (
 	"errors"
@@ -29,10 +29,10 @@ func TestMerge(t *testing.T) {
 
 	t.Run("no errors", func(t *testing.T) {
 		t.Parallel()
-		ok, err := Merge(nil, nil, true)
+		ok, err := mergeViolations(nil, nil, true)
 		require.NoError(t, err)
 		assert.True(t, ok)
-		ok, err = Merge(nil, nil, false)
+		ok, err = mergeViolations(nil, nil, false)
 		require.NoError(t, err)
 		assert.True(t, ok)
 	})
@@ -43,10 +43,10 @@ func TestMerge(t *testing.T) {
 		t.Run("non-validation", func(t *testing.T) {
 			t.Parallel()
 			someErr := errors.New("some error")
-			ok, err := Merge(nil, someErr, true)
+			ok, err := mergeViolations(nil, someErr, true)
 			assert.Equal(t, someErr, err)
 			assert.False(t, ok)
-			ok, err = Merge(nil, someErr, false)
+			ok, err = mergeViolations(nil, someErr, false)
 			assert.Equal(t, someErr, err)
 			assert.False(t, ok)
 		})
@@ -54,12 +54,12 @@ func TestMerge(t *testing.T) {
 		t.Run("validation", func(t *testing.T) {
 			t.Parallel()
 			exErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
-			ok, err := Merge(nil, exErr, true)
+			ok, err := mergeViolations(nil, exErr, true)
 			var valErr *ValidationError
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))
 			assert.False(t, ok)
-			ok, err = Merge(nil, exErr, false)
+			ok, err = mergeViolations(nil, exErr, false)
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))
 			assert.True(t, ok)
@@ -73,10 +73,10 @@ func TestMerge(t *testing.T) {
 			t.Parallel()
 			dstErr := errors.New("some error")
 			srcErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
-			ok, err := Merge(dstErr, srcErr, true)
+			ok, err := mergeViolations(dstErr, srcErr, true)
 			assert.Equal(t, dstErr, err)
 			assert.False(t, ok)
-			ok, err = Merge(dstErr, srcErr, false)
+			ok, err = mergeViolations(dstErr, srcErr, false)
 			assert.Equal(t, dstErr, err)
 			assert.False(t, ok)
 		})
@@ -85,10 +85,10 @@ func TestMerge(t *testing.T) {
 			t.Parallel()
 			dstErr := &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
 			srcErr := errors.New("some error")
-			ok, err := Merge(dstErr, srcErr, true)
+			ok, err := mergeViolations(dstErr, srcErr, true)
 			assert.Equal(t, srcErr, err)
 			assert.False(t, ok)
-			ok, err = Merge(dstErr, srcErr, false)
+			ok, err = mergeViolations(dstErr, srcErr, false)
 			assert.Equal(t, srcErr, err)
 			assert.False(t, ok)
 		})
@@ -102,13 +102,13 @@ func TestMerge(t *testing.T) {
 				{Proto: &validate.Violation{ConstraintId: proto.String("foo")}},
 				{Proto: &validate.Violation{ConstraintId: proto.String("bar")}},
 			}}
-			ok, err := Merge(dstErr, srcErr, true)
+			ok, err := mergeViolations(dstErr, srcErr, true)
 			var valErr *ValidationError
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))
 			assert.False(t, ok)
 			dstErr = &ValidationError{Violations: []*Violation{{Proto: &validate.Violation{ConstraintId: proto.String("foo")}}}}
-			ok, err = Merge(dstErr, srcErr, false)
+			ok, err = mergeViolations(dstErr, srcErr, false)
 			require.ErrorAs(t, err, &valErr)
 			assert.True(t, proto.Equal(exErr.ToProto(), valErr.ToProto()))
 			assert.True(t, ok)

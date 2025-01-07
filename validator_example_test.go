@@ -159,7 +159,7 @@ func ExampleValidationError() {
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
 		violation := valErr.Violations[0]
-		fmt.Println(FieldPathString(violation.Proto.GetField()), violation.Proto.GetConstraintId())
+		fmt.Println(violation.Proto.GetField().GetElements()[0].GetFieldName(), violation.Proto.GetConstraintId())
 		fmt.Println(violation.RuleValue, violation.FieldValue)
 	}
 
@@ -193,7 +193,7 @@ func ExampleValidationError_localized() {
 			_ = template.
 				Must(template.New("").Parse(ruleMessages[violation.Proto.GetConstraintId()])).
 				Execute(os.Stdout, ErrorInfo{
-					FieldName:  FieldPathString(violation.Proto.GetField()),
+					FieldName:  violation.Proto.GetField().GetElements()[0].GetFieldName(),
 					RuleValue:  violation.RuleValue.Interface(),
 					FieldValue: violation.FieldValue.Interface(),
 				})

@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -26,7 +25,7 @@ var (
 	requiredRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("required")
 	requiredRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(requiredRuleDescriptor),
+			fieldPathElement(requiredRuleDescriptor),
 		},
 	}
 )
@@ -55,9 +54,9 @@ func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
 
 func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
 	if f.Required && !msg.Has(f.Value.Descriptor) {
-		return &errors.ValidationError{Violations: []*errors.Violation{{
+		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
-				Field:        errors.FieldPath(f.Value.Descriptor),
+				Field:        fieldPath(f.Value.Descriptor),
 				Rule:         prefixRulePath(f.Value.NestedRule, requiredRulePath),
 				ConstraintId: proto.String("required"),
 				Message:      proto.String("value is required"),

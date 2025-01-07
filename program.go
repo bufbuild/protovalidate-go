@@ -15,8 +15,9 @@
 package protovalidate
 
 import (
+	"fmt"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -41,7 +42,7 @@ func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
 	binding := s.bindThis(val.Interface())
 	defer globalVarPool.Put(binding)
 
-	var violations []*errors.Violation
+	var violations []*Violation
 	for _, expr := range s {
 		violation, err := expr.eval(binding)
 		if err != nil {
@@ -56,7 +57,7 @@ func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
 	}
 
 	if len(violations) > 0 {
-		return &errors.ValidationError{Violations: violations}
+		return &ValidationError{Violations: violations}
 	}
 
 	return nil
@@ -96,22 +97,22 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *variable) (*errors.Violation, error) {
+func (expr compiledProgram) eval(bindings *variable) (*Violation, error) {
 	now := globalNowPool.Get()
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 
 	value, _, err := expr.Program.Eval(bindings)
 	if err != nil {
-		return nil, errors.NewRuntimeErrorf(
-			"error evaluating %s: %w", expr.Source.GetId(), err)
+		return nil, &RuntimeError{cause: fmt.Errorf(
+			"error evaluating %s: %w", expr.Source.GetId(), err)}
 	}
 	switch val := value.Value().(type) {
 	case string:
 		if val == "" {
 			return nil, nil
 		}
-		return &errors.Violation{
+		return &Violation{
 			Proto: &validate.Violation{
 				Rule:         expr.rulePath(),
 				ConstraintId: proto.String(expr.Source.GetId()),
@@ -124,7 +125,7 @@ func (expr compiledProgram) eval(bindings *variable) (*errors.Violation, error) 
 		if val {
 			return nil, nil
 		}
-		return &errors.Violation{
+		return &Violation{
 			Proto: &validate.Violation{
 				Rule:         expr.rulePath(),
 				ConstraintId: proto.String(expr.Source.GetId()),
@@ -134,8 +135,8 @@ func (expr compiledProgram) eval(bindings *variable) (*errors.Violation, error) 
 			RuleDescriptor: expr.Descriptor,
 		}, nil
 	default:
-		return nil, errors.NewRuntimeErrorf(
-			"resolved to an unexpected type %T", val)
+		return nil, &RuntimeError{cause: fmt.Errorf(
+			"resolved to an unexpected type %T", val)}
 	}
 }
 

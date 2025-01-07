@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errors
+package protovalidate
 
 import (
 	"fmt"
@@ -24,17 +24,6 @@ import (
 // message does not contain the desired field.
 type RuntimeError struct {
 	cause error
-}
-
-// NewRuntimeError creates a new RuntimeError with the provided cause.
-func NewRuntimeError(cause error) *RuntimeError {
-	return &RuntimeError{cause: cause}
-}
-
-// NewRuntimeErrorf creates a new RuntimeError, constructing a causal error from
-// the provided format and args.
-func NewRuntimeErrorf(format string, args ...any) *RuntimeError {
-	return NewRuntimeError(fmt.Errorf(format, args...))
 }
 
 func (err *RuntimeError) Error() string {

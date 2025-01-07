@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -39,7 +38,7 @@ type base struct {
 func newBase(valEval *value) base {
 	return base{
 		Descriptor:       valEval.Descriptor,
-		FieldPathElement: errors.FieldPathElement(valEval.Descriptor),
+		FieldPathElement: fieldPathElement(valEval.Descriptor),
 		RulePrefix:       valEval.NestedRule,
 	}
 }

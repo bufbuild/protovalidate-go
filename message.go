@@ -15,7 +15,8 @@
 package protovalidate
 
 import (
-	"github.com/bufbuild/protovalidate-go/internal/errors"
+	"fmt"
+
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -63,9 +64,9 @@ type unknownMessage struct {
 }
 
 func (u unknownMessage) Err() error {
-	return errors.NewCompilationErrorf(
+	return &CompilationError{cause: fmt.Errorf(
 		"no evaluator available for %s",
-		u.desc.FullName())
+		u.desc.FullName())}
 }
 
 func (u unknownMessage) Tautology() bool { return false }
@@ -88,7 +89,7 @@ type embeddedMessage struct {
 
 func (m *embeddedMessage) Evaluate(val protoreflect.Value, failFast bool) error {
 	err := m.message.EvaluateMessage(val.Message(), failFast)
-	errors.UpdatePaths(err, m.base.FieldPathElement, nil)
+	updateViolationPaths(err, m.base.FieldPathElement, nil)
 	return err
 }
 

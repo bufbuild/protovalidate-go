@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -27,8 +26,8 @@ var (
 	repeatedItemsRuleDescriptor = (&validate.RepeatedRules{}).ProtoReflect().Descriptor().Fields().ByName("items")
 	repeatedItemsRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(repeatedRuleDescriptor),
-			errors.FieldPathElement(repeatedItemsRuleDescriptor),
+			fieldPathElement(repeatedRuleDescriptor),
+			fieldPathElement(repeatedItemsRuleDescriptor),
 		},
 	}
 )
@@ -55,14 +54,14 @@ func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 	for i := 0; i < list.Len(); i++ {
 		itemErr := r.ItemConstraints.Evaluate(list.Get(i), failFast)
 		if itemErr != nil {
-			errors.UpdatePaths(itemErr, &validate.FieldPathElement{
+			updateViolationPaths(itemErr, &validate.FieldPathElement{
 				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
 				FieldName:   proto.String(r.base.FieldPathElement.GetFieldName()),
 				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)},
 			}, r.base.RulePrefix.GetElements())
 		}
-		if ok, err = errors.Merge(err, itemErr, failFast); !ok {
+		if ok, err = mergeViolations(err, itemErr, failFast); !ok {
 			return err
 		}
 	}

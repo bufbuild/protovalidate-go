@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -27,8 +26,8 @@ var (
 	enumDefinedOnlyRuleDescriptor = (&validate.EnumRules{}).ProtoReflect().Descriptor().Fields().ByName("defined_only")
 	enumDefinedOnlyRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(enumRuleDescriptor),
-			errors.FieldPathElement(enumDefinedOnlyRuleDescriptor),
+			fieldPathElement(enumRuleDescriptor),
+			fieldPathElement(enumDefinedOnlyRuleDescriptor),
 		},
 	}
 )
@@ -45,7 +44,7 @@ type definedEnum struct {
 
 func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
-		return &errors.ValidationError{Violations: []*errors.Violation{{
+		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
 				Field:        d.base.fieldPath(),
 				Rule:         d.base.rulePath(enumDefinedOnlyRulePath),

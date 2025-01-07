@@ -20,7 +20,6 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pverr "github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"
@@ -184,7 +183,7 @@ func TestSet(t *testing.T) {
 			err := test.set.Eval(protoreflect.ValueOfBool(false), test.failFast)
 			switch {
 			case test.exViols != nil:
-				var viols *pverr.ValidationError
+				var viols *ValidationError
 				require.ErrorAs(t, err, &viols)
 				require.True(t, proto.Equal(test.exViols, viols.ToProto()))
 			case test.exErr:

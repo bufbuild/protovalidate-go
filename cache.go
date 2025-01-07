@@ -15,9 +15,10 @@
 package protovalidate
 
 import (
+	"fmt"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/extensions"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
@@ -58,10 +59,10 @@ func (c *cache) Build(
 	}
 
 	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
-		return nil, errors.NewCompilationErrorf("error reparsing message: %w", err)
+		return nil, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
 	}
 	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
-		return nil, errors.NewCompilationErrorf("unknown constraints in %s; see protovalidate.WithExtensionTypeResolver", constraints.Descriptor().FullName())
+		return nil, &CompilationError{cause: fmt.Errorf("unknown constraints in %s; see protovalidate.WithExtensionTypeResolver", constraints.Descriptor().FullName())}
 	}
 
 	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
@@ -116,12 +117,12 @@ func (c *cache) resolveConstraints(
 	}
 	expected, ok := c.getExpectedConstraintDescriptor(fieldDesc, forItems)
 	if ok && setOneof.FullName() != expected.FullName() {
-		return nil, nil, true, errors.NewCompilationErrorf(
+		return nil, nil, true, &CompilationError{cause: fmt.Errorf(
 			"expected constraint %q, got %q on field %q",
 			expected.FullName(),
 			setOneof.FullName(),
 			fieldDesc.FullName(),
-		)
+		)}
 	}
 	if !ok || !constraints.Has(setOneof) {
 		return nil, nil, true, nil
@@ -145,8 +146,8 @@ func (c *cache) prepareEnvironment(
 			cel.ObjectType(string(rules.Descriptor().FullName()))),
 	)
 	if err != nil {
-		return nil, errors.NewCompilationErrorf(
-			"failed to extend base environment: %w", err)
+		return nil, &CompilationError{cause: fmt.Errorf(
+			"failed to extend base environment: %w", err)}
 	}
 	return env, nil
 }
@@ -169,15 +170,15 @@ func (c *cache) loadOrCompileStandardConstraint(
 			validate.E_Predefined,
 		).GetCel(),
 		RulePath: []*validate.FieldPathElement{
-			errors.FieldPathElement(setOneOf),
-			errors.FieldPathElement(constraintFieldDesc),
+			fieldPathElement(setOneOf),
+			fieldPathElement(constraintFieldDesc),
 		},
 	}
 	set, err = compileASTs(exprs, env)
 	if err != nil {
-		return set, errors.NewCompilationErrorf(
+		return set, &CompilationError{cause: fmt.Errorf(
 			"failed to compile standard constraint %q: %w",
-			constraintFieldDesc.FullName(), err)
+			constraintFieldDesc.FullName(), err)}
 	}
 	c.cache[constraintFieldDesc] = set
 	return set, nil

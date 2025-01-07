@@ -15,8 +15,9 @@
 package protovalidate
 
 import (
+	"fmt"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -135,8 +136,7 @@ type compiledAST struct {
 func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out compiledProgram, err error) {
 	prog, err := env.Program(ast.AST, opts...)
 	if err != nil {
-		return out, errors.NewCompilationErrorf(
-			"failed to compile program %s: %w", ast.Source.GetId(), err)
+		return out, &CompilationError{cause: fmt.Errorf("failed to compile program %s: %w", ast.Source.GetId(), err)}
 	}
 	return compiledProgram{
 		Program:    prog,

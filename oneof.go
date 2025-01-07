@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -35,7 +34,7 @@ func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
 
 func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
 	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
-		return &errors.ValidationError{Violations: []*errors.Violation{{
+		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
 				Field: &validate.FieldPath{
 					Elements: []*validate.FieldPathElement{{

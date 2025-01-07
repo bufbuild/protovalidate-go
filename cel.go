@@ -17,7 +17,6 @@ package protovalidate
 import (
 	"errors"
 
-	pverr "github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -30,7 +29,7 @@ type celPrograms struct {
 func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
 	err := c.programSet.Eval(val, failFast)
 	if err != nil {
-		var valErr *pverr.ValidationError
+		var valErr *ValidationError
 		if errors.As(err, &valErr) {
 			for _, violation := range valErr.Violations {
 				violation.Proto.Field = c.base.fieldPath()

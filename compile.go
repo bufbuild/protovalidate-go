@@ -15,8 +15,9 @@
 package protovalidate
 
 import (
+	"fmt"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/google/cel-go/cel"
 )
 
@@ -43,8 +44,8 @@ func compile(
 	if len(envOpts) > 0 {
 		env, err = env.Extend(envOpts...)
 		if err != nil {
-			return nil, errors.NewCompilationErrorf(
-				"failed to extend environment: %w", err)
+			return nil, &CompilationError{cause: fmt.Errorf(
+				"failed to extend environment: %w", err)}
 		}
 	}
 
@@ -84,8 +85,8 @@ func compileASTs(
 	if len(envOpts) > 0 {
 		set.env, err = env.Extend(envOpts...)
 		if err != nil {
-			return set, errors.NewCompilationErrorf(
-				"failed to extend environment: %w", err)
+			return set, &CompilationError{cause: fmt.Errorf(
+				"failed to extend environment: %w", err)}
 		}
 	}
 
@@ -103,15 +104,15 @@ func compileASTs(
 func compileAST(env *cel.Env, constraint *validate.Constraint, rulePath []*validate.FieldPathElement) (out compiledAST, err error) {
 	ast, issues := env.Compile(constraint.GetExpression())
 	if err := issues.Err(); err != nil {
-		return out, errors.NewCompilationErrorf(
-			"failed to compile expression %s: %w", constraint.GetId(), err)
+		return out, &CompilationError{cause: fmt.Errorf(
+			"failed to compile expression %s: %w", constraint.GetId(), err)}
 	}
 
 	outType := ast.OutputType()
 	if !(outType.IsAssignableType(cel.BoolType) || outType.IsAssignableType(cel.StringType)) {
-		return out, errors.NewCompilationErrorf(
+		return out, &CompilationError{cause: fmt.Errorf(
 			"expression %s outputs %s, wanted either bool or string",
-			constraint.GetId(), outType.String())
+			constraint.GetId(), outType.String())}
 	}
 
 	return compiledAST{

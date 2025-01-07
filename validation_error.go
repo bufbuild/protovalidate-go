@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errors
+package protovalidate
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ func (err *ValidationError) Error() string {
 	bldr.WriteString("validation error:")
 	for _, violation := range err.Violations {
 		bldr.WriteString("\n - ")
-		if fieldPath := FieldPathString(violation.Proto.GetField().GetElements()); fieldPath != "" {
+		if fieldPath := fieldPathString(violation.Proto.GetField().GetElements()); fieldPath != "" {
 			bldr.WriteString(fieldPath)
 			bldr.WriteString(": ")
 		}

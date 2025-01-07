@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -27,15 +26,15 @@ var (
 	anyInRuleDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("in")
 	anyInRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(anyRuleDescriptor),
-			errors.FieldPathElement(anyInRuleDescriptor),
+			fieldPathElement(anyRuleDescriptor),
+			fieldPathElement(anyInRuleDescriptor),
 		},
 	}
 	anyNotInDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("not_in")
 	anyNotInRulePath   = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
-			errors.FieldPathElement(anyRuleDescriptor),
-			errors.FieldPathElement(anyNotInDescriptor),
+			fieldPathElement(anyRuleDescriptor),
+			fieldPathElement(anyNotInDescriptor),
 		},
 	}
 )
@@ -62,10 +61,10 @@ type anyPB struct {
 func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
 
-	err := &errors.ValidationError{}
+	err := &ValidationError{}
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
-			err.Violations = append(err.Violations, &errors.Violation{
+			err.Violations = append(err.Violations, &Violation{
 				Proto: &validate.Violation{
 					Field:        a.base.fieldPath(),
 					Rule:         a.base.rulePath(anyInRulePath),
@@ -85,7 +84,7 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
-			err.Violations = append(err.Violations, &errors.Violation{
+			err.Violations = append(err.Violations, &Violation{
 				Proto: &validate.Violation{
 					Field:        a.base.fieldPath(),
 					Rule:         a.base.rulePath(anyNotInRulePath),

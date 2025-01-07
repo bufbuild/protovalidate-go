@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package errors
+package protovalidate
 
 import (
 	"fmt"
@@ -22,17 +22,6 @@ import (
 // type-checked or if invalid standard constraints are applied.
 type CompilationError struct {
 	cause error
-}
-
-// NewCompilationError creates a new CompilationError with the provided cause.
-func NewCompilationError(cause error) *CompilationError {
-	return &CompilationError{cause: cause}
-}
-
-// NewCompilationErrorf creates a new CompilationError, constructing a causal error from
-// the provided format and args.
-func NewCompilationErrorf(format string, args ...any) *CompilationError {
-	return NewCompilationError(fmt.Errorf(format, args...))
 }
 
 func (err *CompilationError) Error() string {
