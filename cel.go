@@ -18,18 +18,17 @@ import (
 	"errors"
 
 	pverr "github.com/bufbuild/protovalidate-go/internal/errors"
-	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // celPrograms is an evaluator that executes an expression.ProgramSet.
 type celPrograms struct {
 	base
-	expression.ProgramSet
+	programSet
 }
 
 func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
-	err := c.ProgramSet.Eval(val, failFast)
+	err := c.programSet.Eval(val, failFast)
 	if err != nil {
 		var valErr *pverr.ValidationError
 		if errors.As(err, &valErr) {
@@ -45,11 +44,11 @@ func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, failFast bool) error {
-	return c.ProgramSet.Eval(protoreflect.ValueOfMessage(msg), failFast)
+	return c.programSet.Eval(protoreflect.ValueOfMessage(msg), failFast)
 }
 
 func (c celPrograms) Tautology() bool {
-	return len(c.ProgramSet) == 0
+	return len(c.programSet) == 0
 }
 
 var (

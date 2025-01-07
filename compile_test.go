@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"testing"
@@ -34,33 +34,33 @@ func TestCompile(t *testing.T) {
 
 	t.Run("empty", func(t *testing.T) {
 		t.Parallel()
-		var exprs Expressions
-		set, err := Compile(exprs, baseEnv)
+		var exprs expressions
+		set, err := compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		require.NoError(t, err)
 	})
 
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
-		exprs := Expressions{
+		exprs := expressions{
 			Constraints: []*validate.Constraint{
 				{Id: proto.String("foo"), Expression: proto.String("this == 123")},
 				{Id: proto.String("bar"), Expression: proto.String("'a string'")},
 			},
 		}
-		set, err := Compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
+		set, err := compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
 		assert.Len(t, set, len(exprs.Constraints))
 		require.NoError(t, err)
 	})
 
 	t.Run("env extension err", func(t *testing.T) {
 		t.Parallel()
-		exprs := Expressions{
+		exprs := expressions{
 			Constraints: []*validate.Constraint{
 				{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
 			},
 		}
-		set, err := Compile(exprs, baseEnv, cel.Types(true))
+		set, err := compile(exprs, baseEnv, cel.Types(true))
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
 		require.ErrorAs(t, err, &compErr)
@@ -68,12 +68,12 @@ func TestCompile(t *testing.T) {
 
 	t.Run("bad syntax", func(t *testing.T) {
 		t.Parallel()
-		exprs := Expressions{
+		exprs := expressions{
 			Constraints: []*validate.Constraint{
 				{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
 			},
 		}
-		set, err := Compile(exprs, baseEnv)
+		set, err := compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
 		require.ErrorAs(t, err, &compErr)
@@ -81,12 +81,12 @@ func TestCompile(t *testing.T) {
 
 	t.Run("invalid output type", func(t *testing.T) {
 		t.Parallel()
-		exprs := Expressions{
+		exprs := expressions{
 			Constraints: []*validate.Constraint{
 				{Id: proto.String("foo"), Expression: proto.String("1.23")},
 			},
 		}
-		set, err := Compile(exprs, baseEnv)
+		set, err := compile(exprs, baseEnv)
 		assert.Nil(t, set)
 		var compErr *errors.CompilationError
 		require.ErrorAs(t, err, &compErr)

@@ -18,7 +18,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/bufbuild/protovalidate-go/internal/extensions"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
@@ -28,13 +27,13 @@ import (
 
 // cache is a build-through cache to computed standard constraints.
 type cache struct {
-	cache map[protoreflect.FieldDescriptor]expression.ASTSet
+	cache map[protoreflect.FieldDescriptor]astSet
 }
 
 // newCache constructs a new build-through cache for the standard constraints.
 func newCache() cache {
 	return cache{
-		cache: map[protoreflect.FieldDescriptor]expression.ASTSet{},
+		cache: map[protoreflect.FieldDescriptor]astSet{},
 	}
 }
 
@@ -48,7 +47,7 @@ func (c *cache) Build(
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	forItems bool,
-) (set expression.ProgramSet, err error) {
+) (set programSet, err error) {
 	constraints, setOneof, done, err := c.resolveConstraints(
 		fieldDesc,
 		fieldConstraints,
@@ -70,7 +69,7 @@ func (c *cache) Build(
 		return nil, err
 	}
 
-	var asts expression.ASTSet
+	var asts astSet
 	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
@@ -96,7 +95,7 @@ func (c *cache) Build(
 		return nil, err
 	}
 
-	rulesGlobal := cel.Globals(&expression.Variable{Name: "rules", Val: constraints.Interface()})
+	rulesGlobal := cel.Globals(&variable{Name: "rules", Val: constraints.Interface()})
 	set, err = asts.ReduceResiduals(rulesGlobal)
 	return set, err
 }
@@ -160,11 +159,11 @@ func (c *cache) loadOrCompileStandardConstraint(
 	env *cel.Env,
 	setOneOf protoreflect.FieldDescriptor,
 	constraintFieldDesc protoreflect.FieldDescriptor,
-) (set expression.ASTSet, err error) {
+) (set astSet, err error) {
 	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
 		return cachedConstraint, nil
 	}
-	exprs := expression.Expressions{
+	exprs := expressions{
 		Constraints: extensions.Resolve[*validate.PredefinedConstraints](
 			constraintFieldDesc.Options(),
 			validate.E_Predefined,
@@ -174,7 +173,7 @@ func (c *cache) loadOrCompileStandardConstraint(
 			errors.FieldPathElement(constraintFieldDesc),
 		},
 	}
-	set, err = expression.CompileASTs(exprs, env)
+	set, err = compileASTs(exprs, env)
 	if err != nil {
 		return set, errors.NewCompilationErrorf(
 			"failed to compile standard constraint %q: %w",

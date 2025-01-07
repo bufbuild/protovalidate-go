@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -20,22 +20,22 @@ import (
 	"github.com/google/cel-go/cel"
 )
 
-// An Expressions instance is a container for the information needed to compile
+// An expressions instance is a container for the information needed to compile
 // and evaluate a list of CEL-based expressions, originating from a
 // validate.Constraint.
-type Expressions struct {
+type expressions struct {
 	Constraints []*validate.Constraint
 	RulePath    []*validate.FieldPathElement
 }
 
-// Compile produces a ProgramSet from the provided expressions in the given
+// compile produces a ProgramSet from the provided expressions in the given
 // environment. If the generated cel.Program require cel.ProgramOption params,
 // use CompileASTs instead with a subsequent call to ASTSet.ToProgramSet.
-func Compile(
-	expressions Expressions,
+func compile(
+	expressions expressions,
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
-) (set ProgramSet, err error) {
+) (set programSet, err error) {
 	if len(expressions.Constraints) == 0 {
 		return nil, nil
 	}
@@ -48,7 +48,7 @@ func Compile(
 		}
 	}
 
-	set = make(ProgramSet, len(expressions.Constraints))
+	set = make(programSet, len(expressions.Constraints))
 	for i, constraint := range expressions.Constraints {
 		set[i].Source = constraint
 		set[i].Path = expressions.RulePath
@@ -66,16 +66,16 @@ func Compile(
 	return set, nil
 }
 
-// CompileASTs parses and type checks a set of expressions, producing a resulting
+// compileASTs parses and type checks a set of expressions, producing a resulting
 // ASTSet. The value can then be converted to a ProgramSet via
 // ASTSet.ToProgramSet or ASTSet.ReduceResiduals. Use Compile instead if no
 // cel.ProgramOption args need to be provided or residuals do not need to be
 // computed.
-func CompileASTs(
-	expressions Expressions,
+func compileASTs(
+	expressions expressions,
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
-) (set ASTSet, err error) {
+) (set astSet, err error) {
 	set.env = env
 	if len(expressions.Constraints) == 0 {
 		return set, nil

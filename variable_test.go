@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"testing"
@@ -23,7 +23,7 @@ import (
 func TestVariable(t *testing.T) {
 	t.Parallel()
 
-	v := Variable{Name: "this", Val: "foo"}
+	v := variable{Name: "this", Val: "foo"}
 	out, ok := v.ResolveName("this")
 	assert.True(t, ok)
 	assert.Equal(t, v.Val, out)

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -23,23 +23,23 @@ import (
 )
 
 //nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
-var varPool = &VariablePool{New: func() any { return &Variable{} }}
+var globalVarPool = &variablePool{New: func() any { return &variable{} }}
 
 //nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
-var nowPool = &NowPool{New: func() any { return &Now{} }}
+var globalNowPool = &nowPool{New: func() any { return &now{} }}
 
-// ProgramSet is a list of compiledProgram expressions that are evaluated
-// together with the same input value. All expressions in a ProgramSet may refer
+// programSet is a list of compiledProgram expressions that are evaluated
+// together with the same input value. All expressions in a programSet may refer
 // to a `this` variable.
-type ProgramSet []compiledProgram
+type programSet []compiledProgram
 
 // Eval applies the contained expressions to the provided `this` val, returning
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
-func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
+func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
 	binding := s.bindThis(val.Interface())
-	defer varPool.Put(binding)
+	defer globalVarPool.Put(binding)
 
 	var violations []*errors.Violation
 	for _, expr := range s {
@@ -62,8 +62,8 @@ func (s ProgramSet) Eval(val protoreflect.Value, failFast bool) error {
 	return nil
 }
 
-func (s ProgramSet) bindThis(val any) *Variable {
-	binding := varPool.Get()
+func (s programSet) bindThis(val any) *variable {
+	binding := globalVarPool.Get()
 	binding.Name = "this"
 
 	switch value := val.(type) {
@@ -96,9 +96,9 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *Variable) (*errors.Violation, error) {
-	now := nowPool.Get()
-	defer nowPool.Put(now)
+func (expr compiledProgram) eval(bindings *variable) (*errors.Violation, error) {
+	now := globalNowPool.Get()
+	defer globalNowPool.Put(now)
 	bindings.Next = now
 
 	value, _, err := expr.Program.Eval(bindings)

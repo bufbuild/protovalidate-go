@@ -21,7 +21,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -154,10 +153,10 @@ func (bldr *builder) processMessageExpressions(
 	msgEval *message,
 	_ messageCache,
 ) {
-	exprs := expression.Expressions{
+	exprs := expressions{
 		Constraints: msgConstraints.GetCel(),
 	}
-	compiledExprs, err := expression.Compile(
+	compiledExprs, err := compile(
 		exprs,
 		bldr.env,
 		cel.Types(dynamicpb.NewMessage(desc)),
@@ -169,7 +168,7 @@ func (bldr *builder) processMessageExpressions(
 	}
 
 	msgEval.Append(celPrograms{
-		ProgramSet: compiledExprs,
+		programSet: compiledExprs,
 	})
 }
 
@@ -284,7 +283,7 @@ func (bldr *builder) processFieldExpressions(
 	eval *value,
 	_ messageCache,
 ) error {
-	exprs := expression.Expressions{
+	exprs := expressions{
 		Constraints: fieldConstraints.GetCel(),
 	}
 
@@ -293,7 +292,7 @@ func (bldr *builder) processFieldExpressions(
 		pvcel.RequiredCELEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
 	)
-	compiledExpressions, err := expression.Compile(exprs, bldr.env, opts...)
+	compiledExpressions, err := compile(exprs, bldr.env, opts...)
 	if err != nil {
 		return err
 	}
@@ -314,7 +313,7 @@ func (bldr *builder) processFieldExpressions(
 		eval.Constraints = append(eval.Constraints,
 			celPrograms{
 				base:       newBase(eval),
-				ProgramSet: compiledExpressions,
+				programSet: compiledExpressions,
 			},
 		)
 	}
@@ -396,7 +395,7 @@ func (bldr *builder) processStandardConstraints(
 	}
 	valEval.Append(celPrograms{
 		base:       newBase(valEval),
-		ProgramSet: stdConstraints,
+		programSet: stdConstraints,
 	})
 	return nil
 }

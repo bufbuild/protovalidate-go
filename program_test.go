@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"context"
@@ -82,7 +82,7 @@ func TestCompiled(t *testing.T) {
 				Program: test.prog,
 				Source:  test.src,
 			}
-			violation, err := expr.eval(&Variable{})
+			violation, err := expr.eval(&variable{})
 			if test.exErr {
 				require.Error(t, err)
 			} else {
@@ -101,7 +101,7 @@ func TestSet(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		set      ProgramSet
+		set      programSet
 		failFast bool
 		exViols  *validate.Violations
 		exErr    bool
@@ -111,7 +111,7 @@ func TestSet(t *testing.T) {
 		},
 		{
 			name: "success",
-			set: ProgramSet{
+			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.True},
 					Source:  &validate.Constraint{},
@@ -124,7 +124,7 @@ func TestSet(t *testing.T) {
 		},
 		{
 			name: "runtime error",
-			set: ProgramSet{
+			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
 					Source:  &validate.Constraint{},
@@ -138,7 +138,7 @@ func TestSet(t *testing.T) {
 		},
 		{
 			name: "invalid",
-			set: ProgramSet{
+			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
 					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
@@ -158,7 +158,7 @@ func TestSet(t *testing.T) {
 		{
 			name:     "invalid fail fast",
 			failFast: true,
-			set: ProgramSet{
+			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
 					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
@@ -252,7 +252,7 @@ func TestSet_BindThis(t *testing.T) {
 		},
 	}
 
-	set := ProgramSet{}
+	set := programSet{}
 
 	for _, tc := range tests {
 		test := tc

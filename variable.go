@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"sync"
@@ -21,9 +21,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Variable implements interpreter.Activation, providing a lightweight named
+// variable implements interpreter.Activation, providing a lightweight named
 // variable to cel.Program executions.
-type Variable struct {
+type variable struct {
 	// Next is the parent activation
 	Next interpreter.Activation
 	// Name is the variable's name
@@ -32,7 +32,7 @@ type Variable struct {
 	Val any
 }
 
-func (v *Variable) ResolveName(name string) (any, bool) {
+func (v *variable) ResolveName(name string) (any, bool) {
 	switch {
 	case name == v.Name:
 		return v.Val, true
@@ -43,29 +43,29 @@ func (v *Variable) ResolveName(name string) (any, bool) {
 	}
 }
 
-func (v *Variable) Parent() interpreter.Activation { return nil }
+func (v *variable) Parent() interpreter.Activation { return nil }
 
-type VariablePool sync.Pool
+type variablePool sync.Pool
 
-func (p *VariablePool) Put(v *Variable) {
+func (p *variablePool) Put(v *variable) {
 	(*sync.Pool)(p).Put(v)
 }
 
-func (p *VariablePool) Get() *Variable {
-	v := (*sync.Pool)(p).Get().(*Variable) //nolint:errcheck,forcetypeassert
+func (p *variablePool) Get() *variable {
+	v := (*sync.Pool)(p).Get().(*variable) //nolint:errcheck,forcetypeassert
 	v.Next = nil
 	return v
 }
 
-// Now implements interpreter.Activation, providing a lazily produced timestamp
+// now implements interpreter.Activation, providing a lazily produced timestamp
 // for accessing the variable `now` that's constant within an evaluation.
-type Now struct {
+type now struct {
 	// TS is the already resolved timestamp. If unset, the field is populated with
 	// timestamppb.Now.
 	TS *timestamppb.Timestamp
 }
 
-func (n *Now) ResolveName(name string) (any, bool) {
+func (n *now) ResolveName(name string) (any, bool) {
 	if name != "now" {
 		return nil, false
 	} else if n.TS == nil {
@@ -74,16 +74,16 @@ func (n *Now) ResolveName(name string) (any, bool) {
 	return n.TS, true
 }
 
-func (n *Now) Parent() interpreter.Activation { return nil }
+func (n *now) Parent() interpreter.Activation { return nil }
 
-type NowPool sync.Pool
+type nowPool sync.Pool
 
-func (p *NowPool) Put(v *Now) {
+func (p *nowPool) Put(v *now) {
 	(*sync.Pool)(p).Put(v)
 }
 
-func (p *NowPool) Get() *Now {
-	n := (*sync.Pool)(p).Get().(*Now) //nolint:errcheck,forcetypeassert
+func (p *nowPool) Get() *now {
+	n := (*sync.Pool)(p).Get().(*now) //nolint:errcheck,forcetypeassert
 	n.TS = nil
 	return n
 }

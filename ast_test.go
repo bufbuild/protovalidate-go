@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"testing"
@@ -28,8 +28,8 @@ import (
 func TestASTSet_Merge(t *testing.T) {
 	t.Parallel()
 
-	var set ASTSet
-	other := ASTSet{
+	var set astSet
+	other := astSet{
 		env: &cel.Env{},
 		asts: []compiledAST{
 			{AST: &cel.Ast{}},
@@ -40,7 +40,7 @@ func TestASTSet_Merge(t *testing.T) {
 	assert.Equal(t, other.env, merged.env)
 	assert.Equal(t, other.asts, merged.asts)
 
-	another := ASTSet{
+	another := astSet{
 		asts: []compiledAST{
 			{AST: &cel.Ast{}},
 			{AST: &cel.Ast{}},
@@ -59,8 +59,8 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	env, err := pvcel.DefaultEnv(false)
 	require.NoError(t, err)
 
-	asts, err := CompileASTs(
-		Expressions{
+	asts, err := compileASTs(
+		expressions{
 			Constraints: []*validate.Constraint{
 				{Expression: proto.String("foo")},
 			},
@@ -75,7 +75,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	assert.Len(t, set, 1)
 	assert.Equal(t, asts.asts[0].Source, set[0].Source)
 
-	empty := ASTSet{}
+	empty := astSet{}
 	set, err = empty.ToProgramSet()
 	assert.Empty(t, set)
 	require.NoError(t, err)
@@ -87,8 +87,8 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	env, err := pvcel.DefaultEnv(false)
 	require.NoError(t, err)
 
-	asts, err := CompileASTs(
-		Expressions{
+	asts, err := compileASTs(
+		expressions{
 			Constraints: []*validate.Constraint{
 				{Expression: proto.String("foo")},
 			},
@@ -98,7 +98,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	)
 	require.NoError(t, err)
 	assert.Len(t, asts.asts, 1)
-	set, err := asts.ReduceResiduals(cel.Globals(&Variable{Name: "foo", Val: true}))
+	set, err := asts.ReduceResiduals(cel.Globals(&variable{Name: "foo", Val: true}))
 	require.NoError(t, err)
 	assert.Empty(t, set)
 }

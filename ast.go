@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package expression
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -22,15 +22,15 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// ASTSet represents a collection of compiledAST and their associated cel.Env.
-type ASTSet struct {
+// astSet represents a collection of compiledAST and their associated cel.Env.
+type astSet struct {
 	env  *cel.Env
 	asts []compiledAST
 }
 
 // Merge combines a set with another, producing a new ASTSet.
-func (set ASTSet) Merge(other ASTSet) ASTSet {
-	out := ASTSet{
+func (set astSet) Merge(other astSet) astSet {
+	out := astSet{
 		env:  set.env,
 		asts: make([]compiledAST, 0, len(set.asts)+len(other.asts)),
 	}
@@ -47,7 +47,7 @@ func (set ASTSet) Merge(other ASTSet) ASTSet {
 // either a true or empty string constant result, no compiledProgram is
 // generated for it. The main usage of this is to elide tautological expressions
 // from the final result.
-func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error) {
+func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error) {
 	residuals := make([]compiledAST, 0, len(set.asts))
 	options := append([]cel.ProgramOption{
 		cel.EvalOptions(
@@ -91,18 +91,18 @@ func (set ASTSet) ReduceResiduals(opts ...cel.ProgramOption) (ProgramSet, error)
 		}
 	}
 
-	return ASTSet{
+	return astSet{
 		env:  set.env,
 		asts: residuals,
 	}.ToProgramSet(opts...)
 }
 
 // ToProgramSet generates a ProgramSet from the specified ASTs.
-func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err error) {
+func (set astSet) ToProgramSet(opts ...cel.ProgramOption) (out programSet, err error) {
 	if l := len(set.asts); l == 0 {
 		return nil, nil
 	}
-	out = make(ProgramSet, len(set.asts))
+	out = make(programSet, len(set.asts))
 	for i, ast := range set.asts {
 		out[i], err = ast.toProgram(set.env, opts...)
 		if err != nil {
@@ -113,7 +113,7 @@ func (set ASTSet) ToProgramSet(opts ...cel.ProgramOption) (out ProgramSet, err e
 }
 
 // SetRuleValue sets the rule value for the programs in the ASTSet.
-func (set *ASTSet) SetRuleValue(
+func (set *astSet) SetRuleValue(
 	ruleValue protoreflect.Value,
 	ruleDescriptor protoreflect.FieldDescriptor,
 ) {
