@@ -18,8 +18,9 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bufbuild/protovalidate-go/cel"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -30,7 +31,7 @@ import (
 func TestBuildCache(t *testing.T) {
 	t.Parallel()
 
-	env, err := cel.DefaultEnv(true)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := newBuilder(
 		env, false, protoregistry.GlobalTypes, false,

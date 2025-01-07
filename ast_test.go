@@ -56,7 +56,7 @@ func TestASTSet_Merge(t *testing.T) {
 func TestASTSet_ToProgramSet(t *testing.T) {
 	t.Parallel()
 
-	env, err := pvcel.DefaultEnv(false)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err)
 
 	asts, err := compileASTs(
@@ -84,7 +84,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 func TestASTSet_ReduceResiduals(t *testing.T) {
 	t.Parallel()
 
-	env, err := pvcel.DefaultEnv(false)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err)
 
 	asts, err := compileASTs(

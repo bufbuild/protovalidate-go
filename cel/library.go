@@ -35,41 +35,6 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
-// DefaultEnv produces a cel.Env with the necessary cel.EnvOption and
-// cel.ProgramOption values preconfigured for usage throughout the
-// module. If useUTC is true, timestamp operations use the UTC timezone instead
-// of the local timezone.
-func DefaultEnv(useUTC bool) (*cel.Env, error) {
-	return cel.NewEnv(
-		// we bind in the global type registry optimistically to ensure expressions
-		// operating against Any WKTs can resolve their underlying type if it's
-		// known to the application. They will otherwise fail with a runtime error
-		// if the type is unknown.
-		cel.TypeDescs(protoregistry.GlobalFiles),
-		cel.Lib(library{
-			useUTC: useUTC,
-		}),
-	)
-}
-
-// RequiredCELEnvOptions returns the options required to have expressions which
-// rely on the provided descriptor.
-func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption {
-	if fieldDesc.IsMap() {
-		return append(
-			RequiredCELEnvOptions(fieldDesc.MapKey()),
-			RequiredCELEnvOptions(fieldDesc.MapValue())...,
-		)
-	}
-	if fieldDesc.Kind() == protoreflect.MessageKind ||
-		fieldDesc.Kind() == protoreflect.GroupKind {
-		return []cel.EnvOption{
-			cel.Types(dynamicpb.NewMessage(fieldDesc.Message())),
-		}
-	}
-	return nil
-}
-
 // library is the collection of functions and settings required by protovalidate
 // beyond the standard definitions of the CEL Specification:
 //
@@ -77,14 +42,25 @@ func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOpti
 //
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
-type library struct {
-	useUTC bool
+type library struct{}
+
+// NewLibrary creates a new CEL library that specifies all of the functions and
+// settings required by protovalidate beyond the standard definitions of the CEL
+// Specification:
+//
+//	https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions
+//
+// Using this function, you can create a CEL environment that is identical to
+// the one used to evaluate protovalidate CEL expressions.
+func NewLibrary() cel.Library {
+	return library{}
 }
 
 //nolint:funlen
 func (l library) CompileOptions() []cel.EnvOption {
 	return []cel.EnvOption{
-		cel.DefaultUTCTimeZone(l.useUTC),
+		cel.TypeDescs(protoregistry.GlobalFiles),
+		cel.DefaultUTCTimeZone(true),
 		cel.CrossTypeNumericComparisons(true),
 		cel.EagerlyValidateDeclarations(true),
 		// TODO: reduce this to just the functionality we want to support
@@ -537,4 +513,22 @@ func (l library) isHostAndPort(val string, portRequired bool) bool {
 func (l library) validatePort(val string) bool {
 	n, err := strconv.ParseUint(val, 10, 32)
 	return err == nil && n <= 65535
+}
+
+// RequiredCELEnvOptions returns the options required to have expressions which
+// rely on the provided descriptor.
+func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption {
+	if fieldDesc.IsMap() {
+		return append(
+			RequiredCELEnvOptions(fieldDesc.MapKey()),
+			RequiredCELEnvOptions(fieldDesc.MapValue())...,
+		)
+	}
+	if fieldDesc.Kind() == protoreflect.MessageKind ||
+		fieldDesc.Kind() == protoreflect.GroupKind {
+		return []cel.EnvOption{
+			cel.Types(dynamicpb.NewMessage(fieldDesc.Message())),
+		}
+	}
+	return nil
 }

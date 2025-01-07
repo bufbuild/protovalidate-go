@@ -18,8 +18,9 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/cel"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
+	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -93,7 +94,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 		},
 	}
 
-	env, err := cel.DefaultEnv(false)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	for _, tc := range tests {
 		test := tc
 		t.Run(test.name, func(t *testing.T) {
@@ -115,7 +116,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	t.Parallel()
 
-	env, err := cel.DefaultEnv(false)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err)
 
 	constraints := &validate.FieldConstraints{}

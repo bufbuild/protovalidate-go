@@ -18,7 +18,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/bufbuild/protovalidate-go/cel"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -44,7 +45,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		opt(&cfg)
 	}
 
-	env, err := cel.DefaultEnv(cfg.useUTC)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to construct CEL environment: %w", err)
@@ -95,7 +96,6 @@ func Validate(msg proto.Message) error {
 
 type config struct {
 	failFast              bool
-	useUTC                bool
 	disableLazy           bool
 	desc                  []protoreflect.MessageDescriptor
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
@@ -106,15 +106,6 @@ type config struct {
 // individual options for their defaults and affects on the fallibility of
 // configuring a Validator.
 type ValidatorOption func(*config)
-
-// WithUTC specifies whether timestamp operations should use UTC or the OS's
-// local timezone for timestamp related values. By default, the local timezone
-// is used.
-func WithUTC(useUTC bool) ValidatorOption {
-	return func(c *config) {
-		c.useUTC = useUTC
-	}
-}
 
 // WithFailFast specifies whether validation should fail on the first constraint
 // violation encountered or if all violations should be accumulated. By default,
