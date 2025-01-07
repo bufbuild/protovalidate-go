@@ -21,7 +21,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"github.com/bufbuild/protovalidate-go/internal/evaluator"
 	"github.com/bufbuild/protovalidate-go/resolver"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -57,7 +56,7 @@ type (
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
 type Validator struct {
-	builder  *evaluator.Builder
+	builder  *builder
 	failFast bool
 }
 
@@ -79,7 +78,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 			"failed to construct CEL environment: %w", err)
 	}
 
-	bldr := evaluator.NewBuilder(
+	bldr := newBuilder(
 		env,
 		cfg.disableLazy,
 		cfg.resolver,

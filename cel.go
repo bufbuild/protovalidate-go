@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package protovalidate
 
 import (
 	"errors"
@@ -54,5 +54,5 @@ func (c celPrograms) Tautology() bool {
 
 var (
 	_ evaluator        = celPrograms{}
-	_ MessageEvaluator = celPrograms{}
+	_ messageEvaluator = celPrograms{}
 )

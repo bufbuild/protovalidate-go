@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package protovalidate
 
 import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
@@ -39,9 +39,9 @@ type evaluator interface {
 	Evaluate(val protoreflect.Value, failFast bool) error
 }
 
-// MessageEvaluator is essentially the same as evaluator, but specialized for
+// messageEvaluator is essentially the same as evaluator, but specialized for
 // messages as an optimization. See evaluator for behavior.
-type MessageEvaluator interface {
+type messageEvaluator interface {
 	evaluator
 
 	// EvaluateMessage checks that the provided msg is valid. See
@@ -76,7 +76,7 @@ func (e evaluators) Tautology() bool {
 
 // messageEvaluators are a specialization of evaluators. See evaluators for
 // behavior details.
-type messageEvaluators []MessageEvaluator
+type messageEvaluators []messageEvaluator
 
 func (m messageEvaluators) Evaluate(val protoreflect.Value, failFast bool) error {
 	return m.EvaluateMessage(val.Message(), failFast)

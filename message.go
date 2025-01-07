@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package protovalidate
 
 import (
 	"github.com/bufbuild/protovalidate-go/internal/errors"
@@ -49,7 +49,7 @@ func (m *message) Tautology() bool {
 	return false
 }
 
-func (m *message) Append(eval MessageEvaluator) {
+func (m *message) Append(eval messageEvaluator) {
 	if eval != nil && !eval.Tautology() {
 		m.evaluators = append(m.evaluators, eval)
 	}
@@ -97,7 +97,7 @@ func (m *embeddedMessage) Tautology() bool {
 }
 
 var (
-	_ MessageEvaluator = (*message)(nil)
-	_ MessageEvaluator = (*unknownMessage)(nil)
+	_ messageEvaluator = (*message)(nil)
+	_ messageEvaluator = (*unknownMessage)(nil)
 	_ evaluator        = (*embeddedMessage)(nil)
 )

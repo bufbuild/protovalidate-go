@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -84,4 +84,4 @@ func (f field) Tautology() bool {
 	return !f.Required && f.Value.Tautology()
 }
 
-var _ MessageEvaluator = field{}
+var _ messageEvaluator = field{}

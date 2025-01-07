@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package evaluator
+package protovalidate
 
 import (
 	"sync"
@@ -33,7 +33,7 @@ func TestBuildCache(t *testing.T) {
 
 	env, err := cel.DefaultEnv(true)
 	require.NoError(t, err, "failed to construct CEL environment")
-	bldr := NewBuilder(
+	bldr := newBuilder(
 		env, false, resolver.DefaultResolver{}, protoregistry.GlobalTypes, false,
 	)
 	wg := sync.WaitGroup{}
