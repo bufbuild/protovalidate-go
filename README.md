@@ -182,23 +182,9 @@ validator, err := protovalidate.New(
 )
 ```
 
-### Support legacy `protoc-gen-validate` constraints
+### Legacy `protoc-gen-validate` constraints
 
-The `protovalidate-go` module comes with a `legacy` package which adds opt-in support
-for existing `protoc-gen-validate` constraints. Provide the`legacy.WithLegacySupport`
-option when initializing the validator:
-
-```go
-validator, err := protovalidate.New(
-  legacy.WithLegacySupport(legacy.ModeMerge),
-)
-```
-
-`protoc-gen-validate` code generation is **not** used by `protovalidate-go`. The
-`legacy` package assumes the `protoc-gen-validate` extensions are imported into
-the generated code via `github.com/envoyproxy/protoc-gen-validate/validate`.
-
-A [migration tool](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-migrate) is also available to incrementally upgrade legacy constraints in `.proto` files.
+`protoc-gen-validate` code generation is **not** used by `protovalidate-go`. A [migration tool](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-migrate) is available to upgrade legacy constraints in `.proto` files.
 
 ## Performance
 
