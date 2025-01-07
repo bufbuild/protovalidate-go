@@ -19,7 +19,7 @@ import (
 	"sync"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
+	"github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/evaluator"
 	"github.com/bufbuild/protovalidate-go/resolver"
@@ -73,7 +73,7 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		opt(&cfg)
 	}
 
-	env, err := celext.DefaultEnv(cfg.useUTC)
+	env, err := cel.DefaultEnv(cfg.useUTC)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to construct CEL environment: %w", err)

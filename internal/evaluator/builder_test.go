@@ -18,7 +18,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/bufbuild/protovalidate-go/celext"
+	"github.com/bufbuild/protovalidate-go/cel"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/bufbuild/protovalidate-go/resolver"
 	"github.com/stretchr/testify/assert"
@@ -31,7 +31,7 @@ import (
 func TestBuildCache(t *testing.T) {
 	t.Parallel()
 
-	env, err := celext.DefaultEnv(true)
+	env, err := cel.DefaultEnv(true)
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := NewBuilder(
 		env, false, resolver.DefaultResolver{}, protoregistry.GlobalTypes, false,

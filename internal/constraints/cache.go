@@ -16,7 +16,7 @@ package constraints
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/bufbuild/protovalidate-go/internal/extensions"
@@ -75,8 +75,8 @@ func (c *Cache) Build(
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
 				"rule",
-				celext.ProtoFieldToCELType(desc, true, false),
-				celext.ProtoFieldToCELValue(desc, rule, false),
+				pvcel.ProtoFieldToCELType(desc, true, false),
+				pvcel.ProtoFieldToCELValue(desc, rule, false),
 			),
 		)
 		if compileErr != nil {
@@ -141,7 +141,7 @@ func (c *Cache) prepareEnvironment(
 ) (*cel.Env, error) {
 	env, err := env.Extend(
 		cel.Types(rules.Interface()),
-		cel.Variable("this", celext.ProtoFieldToCELType(fieldDesc, true, forItems)),
+		cel.Variable("this", pvcel.ProtoFieldToCELType(fieldDesc, true, forItems)),
 		cel.Variable("rules",
 			cel.ObjectType(string(rules.Descriptor().FullName()))),
 	)

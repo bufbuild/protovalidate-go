@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -56,7 +56,7 @@ func TestASTSet_Merge(t *testing.T) {
 func TestASTSet_ToProgramSet(t *testing.T) {
 	t.Parallel()
 
-	env, err := celext.DefaultEnv(false)
+	env, err := pvcel.DefaultEnv(false)
 	require.NoError(t, err)
 
 	asts, err := CompileASTs(
@@ -84,7 +84,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 func TestASTSet_ReduceResiduals(t *testing.T) {
 	t.Parallel()
 
-	env, err := celext.DefaultEnv(false)
+	env, err := pvcel.DefaultEnv(false)
 	require.NoError(t, err)
 
 	asts, err := CompileASTs(

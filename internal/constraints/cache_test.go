@@ -18,7 +18,7 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
+	"github.com/bufbuild/protovalidate-go/cel"
 	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -93,7 +93,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 		},
 	}
 
-	env, err := celext.DefaultEnv(false)
+	env, err := cel.DefaultEnv(false)
 	for _, tc := range tests {
 		test := tc
 		t.Run(test.name, func(t *testing.T) {
@@ -115,7 +115,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	t.Parallel()
 
-	env, err := celext.DefaultEnv(false)
+	env, err := cel.DefaultEnv(false)
 	require.NoError(t, err)
 
 	constraints := &validate.FieldConstraints{}
