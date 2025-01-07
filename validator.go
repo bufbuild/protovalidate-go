@@ -110,9 +110,9 @@ type ValidatorOption func(*config)
 // WithFailFast specifies whether validation should fail on the first constraint
 // violation encountered or if all violations should be accumulated. By default,
 // all violations are accumulated.
-func WithFailFast(failFast bool) ValidatorOption {
+func WithFailFast() ValidatorOption {
 	return func(cfg *config) {
-		cfg.failFast = failFast
+		cfg.failFast = true
 	}
 }
 
@@ -143,9 +143,9 @@ func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOpt
 //
 // Note: All expected messages must be provided by WithMessages or
 // WithDescriptors during initialization.
-func WithDisableLazy(disable bool) ValidatorOption {
+func WithDisableLazy() ValidatorOption {
 	return func(cfg *config) {
-		cfg.disableLazy = disable
+		cfg.disableLazy = true
 	}
 }
 
@@ -169,8 +169,8 @@ func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionType
 // present in the extension type resolver, or when passing dynamic messages with
 // standard constraints defined in a newer version of protovalidate. The default
 // value is false, to prevent silently-incorrect validation from occurring.
-func WithAllowUnknownFields(allowUnknownFields bool) ValidatorOption {
+func WithAllowUnknownFields() ValidatorOption {
 	return func(c *config) {
-		c.allowUnknownFields = allowUnknownFields
+		c.allowUnknownFields = true
 	}
 }

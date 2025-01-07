@@ -59,7 +59,7 @@ func ExampleWithFailFast() {
 	err = validator.Validate(loc)
 	fmt.Println("default:", err)
 
-	validator, err = New(WithFailFast(true))
+	validator, err = New(WithFailFast())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -132,7 +132,7 @@ func ExampleWithDisableLazy() {
 
 	validator, err := New(
 		WithMessages(&pb.Coordinates{}),
-		WithDisableLazy(true),
+		WithDisableLazy(),
 	)
 	if err != nil {
 		log.Fatal(err)
