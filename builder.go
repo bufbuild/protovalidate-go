@@ -20,7 +20,6 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/constraints"
 	"github.com/bufbuild/protovalidate-go/internal/errors"
 	"github.com/bufbuild/protovalidate-go/internal/expression"
 	"github.com/google/cel-go/cel"
@@ -42,7 +41,7 @@ type builder struct {
 	mtx                   sync.Mutex                   // serializes cache writes.
 	cache                 atomic.Pointer[messageCache] // copy-on-write cache.
 	env                   *cel.Env
-	constraints           constraints.Cache
+	constraints           cache
 	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
@@ -60,7 +59,7 @@ func newBuilder(
 ) *builder {
 	bldr := &builder{
 		env:                   env,
-		constraints:           constraints.NewCache(),
+		constraints:           newCache(),
 		resolver:              res,
 		extensionTypeResolver: extensionTypeResolver,
 		allowUnknownFields:    allowUnknownFields,
@@ -362,7 +361,7 @@ func (bldr *builder) processWrapperConstraints(
 		return nil
 	}
 
-	expectedWrapperDescriptor, ok := constraints.ExpectedWrapperConstraints(fdesc.Message().FullName())
+	expectedWrapperDescriptor, ok := expectedWrapperConstraints(fdesc.Message().FullName())
 	if !ok || !rules.ProtoReflect().Has(expectedWrapperDescriptor) {
 		return nil
 	}

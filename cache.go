@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package constraints
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -26,14 +26,14 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// Cache is a build-through cache to computed standard constraints.
-type Cache struct {
+// cache is a build-through cache to computed standard constraints.
+type cache struct {
 	cache map[protoreflect.FieldDescriptor]expression.ASTSet
 }
 
-// NewCache constructs a new build-through cache for the standard constraints.
-func NewCache() Cache {
-	return Cache{
+// newCache constructs a new build-through cache for the standard constraints.
+func newCache() cache {
+	return cache{
 		cache: map[protoreflect.FieldDescriptor]expression.ASTSet{},
 	}
 }
@@ -41,7 +41,7 @@ func NewCache() Cache {
 // Build creates the standard constraints for the given field. If forItems is
 // true, the constraints for repeated list items is built instead of the
 // constraints on the list itself.
-func (c *Cache) Build(
+func (c *cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
@@ -105,7 +105,7 @@ func (c *Cache) Build(
 // error is returned if the wrong constraints are applied to a field (typically
 // if there is a type-mismatch). The done result is true if an error is returned
 // or if there are now standard constraints to apply to this field.
-func (c *Cache) resolveConstraints(
+func (c *cache) resolveConstraints(
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldConstraints *validate.FieldConstraints,
 	forItems bool,
@@ -133,7 +133,7 @@ func (c *Cache) resolveConstraints(
 
 // prepareEnvironment prepares the environment for compiling standard constraint
 // expressions.
-func (c *Cache) prepareEnvironment(
+func (c *cache) prepareEnvironment(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	rules protoreflect.Message,
@@ -156,7 +156,7 @@ func (c *Cache) prepareEnvironment(
 // specified constraint field from the Cache if present or precomputes them
 // otherwise. The result may be empty if the constraint does not have associated
 // CEL expressions.
-func (c *Cache) loadOrCompileStandardConstraint(
+func (c *cache) loadOrCompileStandardConstraint(
 	env *cel.Env,
 	setOneOf protoreflect.FieldDescriptor,
 	constraintFieldDesc protoreflect.FieldDescriptor,
@@ -188,7 +188,7 @@ func (c *Cache) loadOrCompileStandardConstraint(
 // validate.FieldConstraints 'type' oneof that matches the provided target
 // field descriptor. If ok is false, the field does not expect any standard
 // constraints.
-func (c *Cache) getExpectedConstraintDescriptor(
+func (c *cache) getExpectedConstraintDescriptor(
 	targetFieldDesc protoreflect.FieldDescriptor,
 	forItems bool,
 ) (expected protoreflect.FieldDescriptor, ok bool) {

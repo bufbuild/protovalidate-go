@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package constraints
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -63,10 +63,10 @@ var expectedWKTConstraints = map[protoreflect.FullName]protoreflect.FieldDescrip
 	"google.protobuf.Timestamp": fieldConstraintsDesc.Fields().ByName("timestamp"),
 }
 
-// ExpectedWrapperConstraints returns the validate.FieldConstraints field that
+// expectedWrapperConstraints returns the validate.FieldConstraints field that
 // is expected for the given wrapper well-known type's full name. If ok is
 // false, no standard constraints exist for that type.
-func ExpectedWrapperConstraints(fqn protoreflect.FullName) (desc protoreflect.FieldDescriptor, ok bool) {
+func expectedWrapperConstraints(fqn protoreflect.FullName) (desc protoreflect.FieldDescriptor, ok bool) {
 	switch fqn {
 	case "google.protobuf.BoolValue":
 		return expectedStandardConstraints[protoreflect.BoolKind], true

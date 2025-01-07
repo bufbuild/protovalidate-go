@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package constraints
+package protovalidate
 
 import (
 	"testing"
@@ -42,7 +42,7 @@ func TestExpectedWrapperConstraints(t *testing.T) {
 		fqn, constraint := name, cons
 		t.Run(string(fqn), func(t *testing.T) {
 			t.Parallel()
-			desc, ok := ExpectedWrapperConstraints(fqn)
+			desc, ok := expectedWrapperConstraints(fqn)
 			if constraint != nil {
 				assert.Equal(t, *constraint, string(desc.FullName()))
 				assert.True(t, ok)

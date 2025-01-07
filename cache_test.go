@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package constraints
+package protovalidate
 
 import (
 	"testing"
@@ -99,7 +99,7 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 			require.NoError(t, err)
-			c := NewCache()
+			c := newCache()
 
 			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems)
 			if test.exErr {
@@ -124,7 +124,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	desc := getFieldDesc(t, msg, "val")
 	require.NotNil(t, desc)
 
-	cache := NewCache()
+	cache := newCache()
 	_, ok := cache.cache[desc]
 	assert.False(t, ok)
 
@@ -184,7 +184,7 @@ func TestCache_GetExpectedConstraintDescriptor(t *testing.T) {
 		},
 	}
 
-	c := NewCache()
+	c := newCache()
 	for _, tc := range tests {
 		test := tc
 		t.Run(string(test.desc.FullName()), func(t *testing.T) {
