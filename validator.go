@@ -25,19 +25,25 @@ import (
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New() })
+var getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
 
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
-type Validator struct {
-	builder  *builder
-	failFast bool
+
+type Validator interface {
+	// Validate checks that message satisfies its constraints. Constraints are
+	// defined within the Protobuf file as options from the buf.validate
+	// package. An error is returned if the constraints are violated
+	// (ValidationError), the evaluation logic for the message cannot be built
+	// (CompilationError), or there is a type error when attempting to evaluate
+	// a CEL expression associated with the message (RuntimeError).
+	Validate(msg proto.Message) error
 }
 
 // New creates a Validator with the given options. An error may occur in setting
 // up the CEL execution environment if the configuration is invalid. See the
 // individual ValidatorOption for how they impact the fallibility of New.
-func New(options ...ValidatorOption) (*Validator, error) {
+func New(options ...ValidatorOption) (Validator, error) {
 	cfg := config{
 		extensionTypeResolver: protoregistry.GlobalTypes,
 	}
@@ -59,19 +65,18 @@ func New(options ...ValidatorOption) (*Validator, error) {
 		cfg.desc...,
 	)
 
-	return &Validator{
+	return &validator{
 		failFast: cfg.failFast,
 		builder:  bldr,
 	}, nil
 }
 
-// Validate checks that message satisfies its constraints. Constraints are
-// defined within the Protobuf file as options from the buf.validate package.
-// An error is returned if the constraints are violated (ValidationError), the
-// evaluation logic for the message cannot be built (CompilationError), or
-// there is a type error when attempting to evaluate a CEL expression
-// associated with the message (RuntimeError).
-func (v *Validator) Validate(msg proto.Message) error {
+type validator struct {
+	builder  *builder
+	failFast bool
+}
+
+func (v *validator) Validate(msg proto.Message) error {
 	if msg == nil {
 		return nil
 	}
