@@ -19,35 +19,7 @@ import (
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/reflect/protoreflect"
 )
-
-// Violation represents a single instance where a validation rule was not met.
-// It provides information about the field that caused the violation, the
-// specific unfulfilled constraint, and a human-readable error message.
-type Violation struct {
-	// Proto contains the violation's proto.Message form.
-	Proto *validate.Violation
-
-	// FieldValue contains the value of the specific field that failed
-	// validation. If there was no value, this will contain an invalid value.
-	FieldValue protoreflect.Value
-
-	// FieldDescriptor contains the field descriptor corresponding to the
-	// field that failed validation.
-	FieldDescriptor protoreflect.FieldDescriptor
-
-	// RuleValue contains the value of the rule that specified the failed
-	// constraint. Not all constraints have a value; only standard and
-	// predefined constraints have rule values. In violations caused by other
-	// kinds of constraints, like custom contraints, this will contain an
-	// invalid value.
-	RuleValue protoreflect.Value
-
-	// RuleDescriptor contains the field descriptor corresponding to the
-	// rule that failed validation.
-	RuleDescriptor protoreflect.FieldDescriptor
-}
 
 // A ValidationError is returned if one or more constraint violations were
 // detected.
