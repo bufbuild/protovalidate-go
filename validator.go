@@ -20,7 +20,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/resolver"
+	"github.com/bufbuild/protovalidate-go/resolve"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -40,7 +40,7 @@ type Validator struct {
 // individual ValidatorOption for how they impact the fallibility of New.
 func New(options ...ValidatorOption) (*Validator, error) {
 	cfg := config{
-		resolver:              resolver.DefaultResolver{},
+		resolver:              resolve.DefaultResolver{},
 		extensionTypeResolver: protoregistry.GlobalTypes,
 	}
 	for _, opt := range options {

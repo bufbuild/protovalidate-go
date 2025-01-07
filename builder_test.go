@@ -20,7 +20,7 @@ import (
 
 	"github.com/bufbuild/protovalidate-go/cel"
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
-	"github.com/bufbuild/protovalidate-go/resolver"
+	"github.com/bufbuild/protovalidate-go/resolve"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -34,7 +34,7 @@ func TestBuildCache(t *testing.T) {
 	env, err := cel.DefaultEnv(true)
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := newBuilder(
-		env, false, resolver.DefaultResolver{}, protoregistry.GlobalTypes, false,
+		env, false, resolve.DefaultResolver{}, protoregistry.GlobalTypes, false,
 	)
 	wg := sync.WaitGroup{}
 	for i := 0; i < 100; i++ {
