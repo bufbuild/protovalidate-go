@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package extensions
+package resolve
 
 import (
 	"testing"
@@ -110,7 +110,7 @@ func TestResolve(t *testing.T) {
 			t.Parallel()
 
 			pb := test.builder()
-			extension := Resolve[*validate.FieldConstraints](pb, validate.E_Field)
+			extension := resolve[*validate.FieldConstraints](pb, validate.E_Field)
 			require.NotNil(t, extension)
 			require.Equal(t, "test", extension.GetCel()[0].GetMessage())
 		})
@@ -120,7 +120,7 @@ func TestResolve(t *testing.T) {
 func TestResolveNone(t *testing.T) {
 	t.Parallel()
 
-	require.Nil(t, Resolve[*validate.FieldConstraints](
+	require.Nil(t, resolve[*validate.FieldConstraints](
 		&descriptorpb.FieldOptions{},
 		validate.E_Field,
 	))

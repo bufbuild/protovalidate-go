@@ -19,7 +19,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/extensions"
+	"github.com/bufbuild/protovalidate-go/resolve"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -165,9 +165,8 @@ func (c *cache) loadOrCompileStandardConstraint(
 		return cachedConstraint, nil
 	}
 	exprs := expressions{
-		Constraints: extensions.Resolve[*validate.PredefinedConstraints](
-			constraintFieldDesc.Options(),
-			validate.E_Predefined,
+		Constraints: resolve.PredefinedConstraints(
+			constraintFieldDesc,
 		).GetCel(),
 		RulePath: []*validate.FieldPathElement{
 			fieldPathElement(setOneOf),

@@ -35,15 +35,6 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
-// library is the collection of functions and settings required by protovalidate
-// beyond the standard definitions of the CEL Specification:
-//
-//	https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions
-//
-// All implementations of protovalidate MUST implement these functions and
-// should avoid exposing additional functions as they will not be portable.
-type library struct{}
-
 // NewLibrary creates a new CEL library that specifies all of the functions and
 // settings required by protovalidate beyond the standard definitions of the CEL
 // Specification:
@@ -55,6 +46,15 @@ type library struct{}
 func NewLibrary() cel.Library {
 	return library{}
 }
+
+// library is the collection of functions and settings required by protovalidate
+// beyond the standard definitions of the CEL Specification:
+//
+//	https://github.com/google/cel-spec/blob/master/doc/langdef.md#list-of-standard-definitions
+//
+// All implementations of protovalidate MUST implement these functions and
+// should avoid exposing additional functions as they will not be portable.
+type library struct{}
 
 //nolint:funlen
 func (l library) CompileOptions() []cel.EnvOption {
