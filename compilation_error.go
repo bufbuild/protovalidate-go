@@ -27,7 +27,7 @@ func (err *CompilationError) Error() string {
 		return ""
 	}
 	var sb strings.Builder
-	_, _ = sb.WriteString("compilation error: ")
+	_, _ = sb.WriteString("compilation error")
 	if err.cause != nil {
 		_, _ = sb.WriteString(": ")
 		_, _ = sb.WriteString(err.cause.Error())
