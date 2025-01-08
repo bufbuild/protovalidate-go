@@ -18,96 +18,72 @@ import (
 	"fmt"
 	"sync"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/bufbuild/protovalidate-go/celext"
-	"github.com/bufbuild/protovalidate-go/internal/errors"
-	"github.com/bufbuild/protovalidate-go/internal/evaluator"
-	"github.com/bufbuild/protovalidate-go/resolver"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-var getGlobalValidator = sync.OnceValues(func() (*Validator, error) { return New() })
-
-type (
-	// ValidationError is returned if one or more constraints on a message are
-	// violated. This error type is a composite of multiple Violation instances.
-	//
-	//    err = validator.Validate(msg)
-	//    var valErr *ValidationError
-	//    if ok := errors.As(err, &valErr); ok {
-	//      violations := valErrs.Violations
-	//      // ...
-	//    }
-	ValidationError = errors.ValidationError
-
-	// A Violation provides information about one constraint violation.
-	Violation = errors.Violation
-
-	// A CompilationError is returned if a CEL expression cannot be compiled &
-	// type-checked or if invalid standard constraints are applied to a field.
-	CompilationError = errors.CompilationError
-
-	// A RuntimeError is returned if a valid CEL expression evaluation is
-	// terminated, typically due to an unknown or mismatched type.
-	RuntimeError = errors.RuntimeError
-)
+var getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
 
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
-type Validator struct {
-	builder  *evaluator.Builder
-	failFast bool
+
+type Validator interface {
+	// Validate checks that message satisfies its constraints. Constraints are
+	// defined within the Protobuf file as options from the buf.validate
+	// package. An error is returned if the constraints are violated
+	// (ValidationError), the evaluation logic for the message cannot be built
+	// (CompilationError), or there is a type error when attempting to evaluate
+	// a CEL expression associated with the message (RuntimeError).
+	Validate(msg proto.Message) error
 }
 
 // New creates a Validator with the given options. An error may occur in setting
 // up the CEL execution environment if the configuration is invalid. See the
 // individual ValidatorOption for how they impact the fallibility of New.
-func New(options ...ValidatorOption) (*Validator, error) {
+func New(options ...ValidatorOption) (Validator, error) {
 	cfg := config{
-		resolver:              resolver.DefaultResolver{},
 		extensionTypeResolver: protoregistry.GlobalTypes,
 	}
 	for _, opt := range options {
 		opt(&cfg)
 	}
 
-	env, err := celext.DefaultEnv(cfg.useUTC)
+	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to construct CEL environment: %w", err)
 	}
 
-	bldr := evaluator.NewBuilder(
+	bldr := newBuilder(
 		env,
 		cfg.disableLazy,
-		cfg.resolver,
 		cfg.extensionTypeResolver,
 		cfg.allowUnknownFields,
 		cfg.desc...,
 	)
 
-	return &Validator{
+	return &validator{
 		failFast: cfg.failFast,
 		builder:  bldr,
 	}, nil
 }
 
-// Validate checks that message satisfies its constraints. Constraints are
-// defined within the Protobuf file as options from the buf.validate package.
-// An error is returned if the constraints are violated (ValidationError), the
-// evaluation logic for the message cannot be built (CompilationError), or
-// there is a type error when attempting to evaluate a CEL expression
-// associated with the message (RuntimeError).
-func (v *Validator) Validate(msg proto.Message) error {
+type validator struct {
+	builder  *builder
+	failFast bool
+}
+
+func (v *validator) Validate(msg proto.Message) error {
 	if msg == nil {
 		return nil
 	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
 	err := eval.EvaluateMessage(refl, v.failFast)
-	errors.FinalizePaths(err)
+	finalizeViolationPaths(err)
 	return err
 }
 
@@ -123,18 +99,10 @@ func Validate(msg proto.Message) error {
 	return globalValidator.Validate(msg)
 }
 
-// FieldPathString returns a dotted path string for the provided
-// validate.FieldPath.
-func FieldPathString(path *validate.FieldPath) string {
-	return errors.FieldPathString(path.GetElements())
-}
-
 type config struct {
 	failFast              bool
-	useUTC                bool
 	disableLazy           bool
 	desc                  []protoreflect.MessageDescriptor
-	resolver              StandardConstraintResolver
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 }
@@ -144,21 +112,12 @@ type config struct {
 // configuring a Validator.
 type ValidatorOption func(*config)
 
-// WithUTC specifies whether timestamp operations should use UTC or the OS's
-// local timezone for timestamp related values. By default, the local timezone
-// is used.
-func WithUTC(useUTC bool) ValidatorOption {
-	return func(c *config) {
-		c.useUTC = useUTC
-	}
-}
-
 // WithFailFast specifies whether validation should fail on the first constraint
 // violation encountered or if all violations should be accumulated. By default,
 // all violations are accumulated.
-func WithFailFast(failFast bool) ValidatorOption {
+func WithFailFast() ValidatorOption {
 	return func(cfg *config) {
-		cfg.failFast = failFast
+		cfg.failFast = true
 	}
 }
 
@@ -170,13 +129,13 @@ func WithMessages(messages ...proto.Message) ValidatorOption {
 	for i, msg := range messages {
 		desc[i] = msg.ProtoReflect().Descriptor()
 	}
-	return WithDescriptors(desc...)
+	return WithMessageDescriptors(desc...)
 }
 
-// WithDescriptors allows warming up the Validator with message
+// WithMessageDescriptors allows warming up the Validator with message
 // descriptors that are expected to be validated. Messages included transitively
 // (i.e., fields with message values) are automatically handled.
-func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOption {
+func WithMessageDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOption {
 	return func(cfg *config) {
 		cfg.desc = append(cfg.desc, descriptors...)
 	}
@@ -188,32 +147,10 @@ func WithDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOpt
 // read-only.
 //
 // Note: All expected messages must be provided by WithMessages or
-// WithDescriptors during initialization.
-func WithDisableLazy(disable bool) ValidatorOption {
+// WithMessageDescriptors during initialization.
+func WithDisableLazy() ValidatorOption {
 	return func(cfg *config) {
-		cfg.disableLazy = disable
-	}
-}
-
-// StandardConstraintResolver is responsible for resolving the standard
-// constraints from the provided protoreflect.Descriptor. The default resolver
-// can be intercepted and modified using WithStandardConstraintInterceptor.
-type StandardConstraintResolver interface {
-	ResolveMessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints
-	ResolveOneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints
-	ResolveFieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints
-}
-
-// StandardConstraintInterceptor can be provided to
-// WithStandardConstraintInterceptor to allow modifying a
-// StandardConstraintResolver.
-type StandardConstraintInterceptor func(res StandardConstraintResolver) StandardConstraintResolver
-
-// WithStandardConstraintInterceptor allows intercepting the
-// StandardConstraintResolver used by the Validator to modify or replace it.
-func WithStandardConstraintInterceptor(interceptor StandardConstraintInterceptor) ValidatorOption {
-	return func(c *config) {
-		c.resolver = interceptor(c.resolver)
+		cfg.disableLazy = true
 	}
 }
 
@@ -237,8 +174,8 @@ func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionType
 // present in the extension type resolver, or when passing dynamic messages with
 // standard constraints defined in a newer version of protovalidate. The default
 // value is false, to prevent silently-incorrect validation from occurring.
-func WithAllowUnknownFields(allowUnknownFields bool) ValidatorOption {
+func WithAllowUnknownFields() ValidatorOption {
 	return func(c *config) {
-		c.allowUnknownFields = allowUnknownFields
+		c.allowUnknownFields = true
 	}
 }

@@ -66,7 +66,7 @@ func BenchmarkValidator(b *testing.B) {
 
 	b.Run("Lazy/FailFast", func(b *testing.B) {
 		b.ReportAllocs()
-		val, err := New(WithFailFast(true))
+		val, err := New(WithFailFast())
 		require.NoError(b, err)
 		b.ResetTimer()
 		b.RunParallel(func(p *testing.PB) {
@@ -81,7 +81,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.ReportAllocs()
 		val, err := New(
 			WithMessages(successMsg),
-			WithDisableLazy(true),
+			WithDisableLazy(),
 		)
 		require.NoError(b, err)
 		b.ResetTimer()
@@ -97,7 +97,7 @@ func BenchmarkValidator(b *testing.B) {
 		b.ReportAllocs()
 		val, err := New(
 			WithMessages(failureMsg),
-			WithDisableLazy(true),
+			WithDisableLazy(),
 		)
 		require.NoError(b, err)
 		b.ResetTimer()
@@ -112,9 +112,9 @@ func BenchmarkValidator(b *testing.B) {
 	b.Run("PreWarmed/FailFast", func(b *testing.B) {
 		b.ReportAllocs()
 		val, err := New(
-			WithFailFast(true),
+			WithFailFast(),
 			WithMessages(failureMsg),
-			WithDisableLazy(true),
+			WithDisableLazy(),
 		)
 		require.NoError(b, err)
 		b.ResetTimer()

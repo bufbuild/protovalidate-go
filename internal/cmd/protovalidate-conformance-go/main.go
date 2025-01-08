@@ -84,7 +84,7 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 	return resp, nil
 }
 
-func TestCase(val *protovalidate.Validator, files *protoregistry.Files, testCase *anypb.Any) *harness.TestResult {
+func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase *anypb.Any) *harness.TestResult {
 	urlParts := strings.Split(testCase.GetTypeUrl(), "/")
 	fullName := protoreflect.FullName(urlParts[len(urlParts)-1])
 	desc, err := files.FindDescriptorByName(fullName)
