@@ -14,9 +14,7 @@
 
 package protovalidate
 
-import (
-	"fmt"
-)
+import "strings"
 
 // A CompilationError is returned if a CEL expression cannot be compiled &
 // type-checked or if invalid standard constraints are applied.
@@ -25,7 +23,21 @@ type CompilationError struct {
 }
 
 func (err *CompilationError) Error() string {
-	return fmt.Sprintf("compilation error: %v", err.cause)
+	if err == nil {
+		return ""
+	}
+	var sb strings.Builder
+	_, _ = sb.WriteString("compilation error: ")
+	if err.cause != nil {
+		_, _ = sb.WriteString(": ")
+		_, _ = sb.WriteString(err.cause.Error())
+	}
+	return sb.String()
 }
 
-func (err *CompilationError) Unwrap() error { return err.cause }
+func (err *CompilationError) Unwrap() error {
+	if err == nil {
+		return nil
+	}
+	return err.cause
+}
