@@ -14,9 +14,7 @@
 
 package protovalidate
 
-import (
-	"fmt"
-)
+import "strings"
 
 // A RuntimeError is returned if a valid CEL expression evaluation is terminated.
 // The two built-in reasons are 'no_matching_overload' when a CEL function has
@@ -27,7 +25,21 @@ type RuntimeError struct {
 }
 
 func (err *RuntimeError) Error() string {
-	return fmt.Sprintf("runtime error: %v", err.cause)
+	if err == nil {
+		return ""
+	}
+	var builder strings.Builder
+	_, _ = builder.WriteString("runtime error")
+	if err.cause != nil {
+		_, _ = builder.WriteString(": ")
+		_, _ = builder.WriteString(err.cause.Error())
+	}
+	return builder.String()
 }
 
-func (err *RuntimeError) Unwrap() error { return err.cause }
+func (err *RuntimeError) Unwrap() error {
+	if err == nil {
+		return nil
+	}
+	return err.cause
+}
