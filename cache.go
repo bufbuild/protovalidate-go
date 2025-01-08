@@ -75,8 +75,8 @@ func (c *cache) Build(
 		fieldEnv, compileErr := env.Extend(
 			cel.Constant(
 				"rule",
-				pvcel.ProtoFieldToCELType(desc, true, false),
-				pvcel.ProtoFieldToCELValue(desc, rule, false),
+				pvcel.ProtoFieldToType(desc, true, false),
+				pvcel.ProtoFieldToValue(desc, rule, false),
 			),
 		)
 		if compileErr != nil {
@@ -141,7 +141,7 @@ func (c *cache) prepareEnvironment(
 ) (*cel.Env, error) {
 	env, err := env.Extend(
 		cel.Types(rules.Interface()),
-		cel.Variable("this", pvcel.ProtoFieldToCELType(fieldDesc, true, forItems)),
+		cel.Variable("this", pvcel.ProtoFieldToType(fieldDesc, true, forItems)),
 		cel.Variable("rules",
 			cel.ObjectType(string(rules.Descriptor().FullName()))),
 	)

@@ -21,25 +21,25 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// ProtoFieldToCELType resolves the CEL value type for the provided
+// ProtoFieldToType resolves the CEL value type for the provided
 // FieldDescriptor. If generic is true, the specific subtypes of map and
 // repeated fields will be replaced with cel.DynType. If forItems is true, the
 // type for the repeated list items is returned instead of the list type itself.
-func ProtoFieldToCELType(fieldDesc protoreflect.FieldDescriptor, generic, forItems bool) *cel.Type {
+func ProtoFieldToType(fieldDesc protoreflect.FieldDescriptor, generic, forItems bool) *cel.Type {
 	if !forItems {
 		switch {
 		case fieldDesc.IsMap():
 			if generic {
 				return cel.MapType(cel.DynType, cel.DynType)
 			}
-			keyType := ProtoFieldToCELType(fieldDesc.MapKey(), false, true)
-			valType := ProtoFieldToCELType(fieldDesc.MapValue(), false, true)
+			keyType := ProtoFieldToType(fieldDesc.MapKey(), false, true)
+			valType := ProtoFieldToType(fieldDesc.MapValue(), false, true)
 			return cel.MapType(keyType, valType)
 		case fieldDesc.IsList():
 			if generic {
 				return cel.ListType(cel.DynType)
 			}
-			itemType := ProtoFieldToCELType(fieldDesc, false, true)
+			itemType := ProtoFieldToType(fieldDesc, false, true)
 			return cel.ListType(itemType)
 		}
 	}
@@ -57,10 +57,10 @@ func ProtoFieldToCELType(fieldDesc protoreflect.FieldDescriptor, generic, forIte
 			return cel.ObjectType(string(fqn))
 		}
 	}
-	return protoKindToCELType(fieldDesc.Kind())
+	return protoKindToType(fieldDesc.Kind())
 }
 
-func ProtoFieldToCELValue(fieldDesc protoreflect.FieldDescriptor, value protoreflect.Value, forItems bool) ref.Val {
+func ProtoFieldToValue(fieldDesc protoreflect.FieldDescriptor, value protoreflect.Value, forItems bool) ref.Val {
 	switch {
 	case fieldDesc.IsList() && !forItems:
 		return types.NewProtoList(types.DefaultTypeAdapter, value.List())
@@ -69,8 +69,8 @@ func ProtoFieldToCELValue(fieldDesc protoreflect.FieldDescriptor, value protoref
 	}
 }
 
-// protoKindToCELType maps a protoreflect.Kind to a compatible cel.Type.
-func protoKindToCELType(kind protoreflect.Kind) *cel.Type {
+// protoKindToType maps a protoreflect.Kind to a compatible cel.Type.
+func protoKindToType(kind protoreflect.Kind) *cel.Type {
 	switch kind {
 	case
 		protoreflect.FloatKind,

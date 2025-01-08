@@ -83,7 +83,7 @@ func TestCache_GetCELType(t *testing.T) {
 		test := tc
 		t.Run(string(test.desc.FullName()), func(t *testing.T) {
 			t.Parallel()
-			typ := ProtoFieldToCELType(test.desc, test.generic, test.forItems)
+			typ := ProtoFieldToType(test.desc, test.generic, test.forItems)
 			assert.Equal(t, test.ex.String(), typ.String())
 		})
 	}
@@ -118,7 +118,7 @@ func TestProtoKindToCELType(t *testing.T) {
 		kind, typ := k, ty
 		t.Run(kind.String(), func(t *testing.T) {
 			t.Parallel()
-			assert.Equal(t, typ, protoKindToCELType(kind))
+			assert.Equal(t, typ, protoKindToType(kind))
 		})
 	}
 }

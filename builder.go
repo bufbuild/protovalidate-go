@@ -285,9 +285,9 @@ func (bldr *builder) processFieldExpressions(
 		Constraints: fieldConstraints.GetCel(),
 	}
 
-	celTyp := pvcel.ProtoFieldToCELType(fieldDesc, false, eval.NestedRule != nil)
+	celTyp := pvcel.ProtoFieldToType(fieldDesc, false, eval.NestedRule != nil)
 	opts := append(
-		pvcel.RequiredCELEnvOptions(fieldDesc),
+		pvcel.RequiredEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
 	)
 	compiledExpressions, err := compile(exprs, bldr.env, opts...)

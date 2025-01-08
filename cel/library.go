@@ -515,13 +515,13 @@ func (l library) validatePort(val string) bool {
 	return err == nil && n <= 65535
 }
 
-// RequiredCELEnvOptions returns the options required to have expressions which
+// RequiredEnvOptions returns the options required to have expressions which
 // rely on the provided descriptor.
-func RequiredCELEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption {
+func RequiredEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption {
 	if fieldDesc.IsMap() {
 		return append(
-			RequiredCELEnvOptions(fieldDesc.MapKey()),
-			RequiredCELEnvOptions(fieldDesc.MapValue())...,
+			RequiredEnvOptions(fieldDesc.MapKey()),
+			RequiredEnvOptions(fieldDesc.MapValue())...,
 		)
 	}
 	if fieldDesc.Kind() == protoreflect.MessageKind ||
