@@ -26,13 +26,13 @@ func (err *CompilationError) Error() string {
 	if err == nil {
 		return ""
 	}
-	var sb strings.Builder
-	_, _ = sb.WriteString("compilation error")
+	var builder strings.Builder
+	_, _ = builder.WriteString("compilation error")
 	if err.cause != nil {
-		_, _ = sb.WriteString(": ")
-		_, _ = sb.WriteString(err.cause.Error())
+		_, _ = builder.WriteString(": ")
+		_, _ = builder.WriteString(err.cause.Error())
 	}
-	return sb.String()
+	return builder.String()
 }
 
 func (err *CompilationError) Unwrap() error {
