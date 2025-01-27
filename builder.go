@@ -505,13 +505,11 @@ func (bldr *builder) processRepeatedConstraints(
 }
 
 func (bldr *builder) shouldSkip(constraints *validate.FieldConstraints) bool {
-	return constraints.GetSkipped() ||
-		constraints.GetIgnore() == validate.Ignore_IGNORE_ALWAYS
+	return constraints.GetIgnore() == validate.Ignore_IGNORE_ALWAYS
 }
 
 func (bldr *builder) shouldIgnoreEmpty(constraints *validate.FieldConstraints) bool {
-	return constraints.GetIgnoreEmpty() ||
-		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
+	return constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
 		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
 }
 

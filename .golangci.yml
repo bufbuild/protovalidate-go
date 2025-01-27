@@ -47,10 +47,6 @@ linters:
     - wsl               # over-generous whitespace violates house style
 issues:
   exclude-use-default: true
-  exclude:
-    # we will continue to support the deprecated field until it's removed
-    - "IgnoreEmpty is deprecated"
-    - "Skipped is deprecated"
   exclude-rules:
     # Loosen requirements on conformance executor
     - path: internal/cmd/
