@@ -232,7 +232,7 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateUri(s, true))
+					return types.Bool(l.validateURI(s, true))
 				}),
 			),
 		),
@@ -246,7 +246,7 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateUri(s, false))
+					return types.Bool(l.validateURI(s, false))
 				}),
 			),
 		),
@@ -477,7 +477,7 @@ func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
 	}
 }
 
-func (l library) validateUri(val string, checkAbs bool) bool {
+func (l library) validateURI(val string, checkAbs bool) bool {
 	uri, err := url.Parse(val)
 	if err != nil {
 		return false
