@@ -232,8 +232,7 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.Bool(false)
 					}
-					uri, err := url.Parse(s)
-					return types.Bool(err == nil && uri.IsAbs())
+					return types.Bool(l.validateUri(s, true))
 				}),
 			),
 		),
@@ -247,8 +246,7 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.Bool(false)
 					}
-					_, err := url.Parse(s)
-					return types.Bool(err == nil)
+					return types.Bool(l.validateUri(s, false))
 				}),
 			),
 		),
@@ -477,6 +475,24 @@ func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
 	default:
 		return false
 	}
+}
+
+func (l library) validateUri(val string, checkAbs bool) bool {
+	uri, err := url.Parse(val)
+	if err != nil {
+		return false
+	}
+	if checkAbs {
+		ok := uri.IsAbs()
+		if !ok {
+			return false
+		}
+	}
+	if _, err := url.ParseQuery(uri.RawQuery); err != nil {
+		return false
+	}
+
+	return true
 }
 
 func (l library) isHostAndPort(val string, portRequired bool) bool {
