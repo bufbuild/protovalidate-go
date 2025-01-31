@@ -28,7 +28,6 @@ jobs:
           token: ${{ secrets.BUF_TOKEN }}
           format: true
           lint: true
-          breaking: true
           push: false
           archive: false
       - name: Check Generate

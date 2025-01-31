@@ -121,8 +121,6 @@ func finalizeViolationPaths(err error) {
 		for _, violation := range valErr.Violations {
 			if violation.Proto.GetField() != nil {
 				slices.Reverse(violation.Proto.GetField().GetElements())
-				//nolint:staticcheck // Intentional use of deprecated field
-				violation.Proto.FieldPath = proto.String(fieldPathString(violation.Proto.GetField().GetElements()))
 			}
 		}
 	}
