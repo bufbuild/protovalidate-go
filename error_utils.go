@@ -128,9 +128,9 @@ func finalizeViolationPaths(err error) {
 
 // FieldPathString takes a FieldPath and encodes it to a string-based dotted
 // field path.
-func FieldPathString(path []*validate.FieldPathElement) string {
+func FieldPathString(path *validate.FieldPath) string {
 	var result strings.Builder
-	for i, element := range path {
+	for i, element := range path.GetElements() {
 		if i > 0 {
 			result.WriteByte('.')
 		}
