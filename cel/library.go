@@ -488,11 +488,8 @@ func (l library) validateURI(val string, checkAbs bool) bool {
 			return false
 		}
 	}
-	if _, err := url.ParseQuery(uri.RawQuery); err != nil {
-		return false
-	}
-
-	return true
+	_, err := url.ParseQuery(uri.RawQuery)
+	return err == nil
 }
 
 func (l library) isHostAndPort(val string, portRequired bool) bool {
