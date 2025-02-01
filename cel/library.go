@@ -483,12 +483,11 @@ func (l library) validateURI(val string, checkAbs bool) bool {
 		return false
 	}
 	if checkAbs && !uri.IsAbs() {
-			return false
-		}
+		return false
 	}
 
 	// Parse the query string to validate it is formed and encoded properly
-	_, err := url.ParseQuery(uri.RawQuery)
+	_, err = url.ParseQuery(uri.RawQuery)
 	return err == nil
 }
 
