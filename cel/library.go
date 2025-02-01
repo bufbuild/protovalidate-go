@@ -482,9 +482,7 @@ func (l library) validateURI(val string, checkAbs bool) bool {
 	if err != nil {
 		return false
 	}
-	if checkAbs {
-		ok := uri.IsAbs()
-		if !ok {
+	if checkAbs && !uri.IsAbs() {
 			return false
 		}
 	}
