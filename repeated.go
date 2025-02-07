@@ -47,12 +47,12 @@ func newListItems(valEval *value) listItems {
 	}
 }
 
-func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
+func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	list := val.List()
 	var ok bool
 	var err error
 	for i := 0; i < list.Len(); i++ {
-		itemErr := r.ItemConstraints.Evaluate(list.Get(i), failFast)
+		itemErr := r.ItemConstraints.Evaluate(msg, list.Get(i), cfg)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, &validate.FieldPathElement{
 				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
@@ -61,7 +61,7 @@ func (r listItems) Evaluate(val protoreflect.Value, failFast bool) error {
 				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)},
 			}, r.base.RulePrefix.GetElements())
 		}
-		if ok, err = mergeViolations(err, itemErr, failFast); !ok {
+		if ok, err = mergeViolations(err, itemErr, cfg); !ok {
 			return err
 		}
 	}

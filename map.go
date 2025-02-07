@@ -61,10 +61,10 @@ func newKVPairs(valEval *value) kvPairs {
 	}
 }
 
-func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
+func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
-		evalErr := m.evalPairs(key, value, failFast)
+		evalErr := m.evalPairs(msg, key, value, cfg)
 		if evalErr != nil {
 			element := &validate.FieldPathElement{
 				FieldNumber: proto.Int32(m.base.FieldPathElement.GetFieldNumber()),
@@ -96,22 +96,22 @@ func (m kvPairs) Evaluate(val protoreflect.Value, failFast bool) (err error) {
 			}
 			updateViolationPaths(evalErr, element, m.base.RulePrefix.GetElements())
 		}
-		ok, err = mergeViolations(err, evalErr, failFast)
+		ok, err = mergeViolations(err, evalErr, cfg)
 		return ok
 	})
 	return err
 }
 
-func (m kvPairs) evalPairs(key protoreflect.MapKey, value protoreflect.Value, failFast bool) (err error) {
-	evalErr := m.KeyConstraints.Evaluate(key.Value(), failFast)
+func (m kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
+	evalErr := m.KeyConstraints.Evaluate(msg, key.Value(), cfg)
 	markViolationForKey(evalErr)
-	ok, err := mergeViolations(err, evalErr, failFast)
+	ok, err := mergeViolations(err, evalErr, cfg)
 	if !ok {
 		return err
 	}
 
-	evalErr = m.ValueConstraints.Evaluate(value, failFast)
-	_, err = mergeViolations(err, evalErr, failFast)
+	evalErr = m.ValueConstraints.Evaluate(msg, value, cfg)
+	_, err = mergeViolations(err, evalErr, cfg)
 	return err
 }
 

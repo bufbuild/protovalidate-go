@@ -48,11 +48,15 @@ type field struct {
 	Zero protoreflect.Value
 }
 
-func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
-	return f.EvaluateMessage(val.Message(), failFast)
+func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return f.EvaluateMessage(val.Message(), cfg)
 }
 
-func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
+func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
+		return nil
+	}
+
 	if f.Required && !msg.Has(f.Value.Descriptor) {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
@@ -76,7 +80,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 	if f.IgnoreDefault && val.Equal(f.Zero) {
 		return nil
 	}
-	return f.Value.Evaluate(val, failFast)
+	return f.Value.Evaluate(msg, val, cfg)
 }
 
 func (f field) Tautology() bool {

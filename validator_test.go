@@ -21,6 +21,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
@@ -229,6 +230,28 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	valErr := &ValidationError{}
 	require.ErrorAs(t, err, &valErr)
 	assert.Equal(t, "paths.no_space", valErr.Violations[0].Proto.GetConstraintId())
+	pathsFd := msg.ProtoReflect().Descriptor().Fields().ByName("paths")
+	err = val.Validate(msg, WithFilter(FilterFunc(func(m protoreflect.Message, d protoreflect.Descriptor) bool {
+		return !(m.Interface() == msg && d == pathsFd)
+	})))
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_FilterFields(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.Person{}
+	err = val.Validate(msg)
+	valErr := &ValidationError{}
+	require.ErrorAs(t, err, &valErr)
+	require.Len(t, valErr.Violations, 3)
+	idFd := msg.ProtoReflect().Descriptor().Fields().ByName("id")
+	err = val.Validate(msg, WithFilter(FilterFunc(func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+		return d == idFd
+	})))
+	require.ErrorAs(t, err, &valErr)
+	require.Len(t, valErr.Violations, 1)
 }
 
 func TestValidator_Validate_Issue141(t *testing.T) {

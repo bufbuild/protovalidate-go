@@ -28,25 +28,26 @@ type oneof struct {
 	Required bool
 }
 
-func (o oneof) Evaluate(val protoreflect.Value, failFast bool) error {
-	return o.EvaluateMessage(val.Message(), failFast)
+func (o oneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return o.EvaluateMessage(val.Message(), cfg)
 }
 
-func (o oneof) EvaluateMessage(msg protoreflect.Message, _ bool) error {
-	if o.Required && msg.WhichOneof(o.Descriptor) == nil {
-		return &ValidationError{Violations: []*Violation{{
-			Proto: &validate.Violation{
-				Field: &validate.FieldPath{
-					Elements: []*validate.FieldPathElement{{
-						FieldName: proto.String(string(o.Descriptor.Name())),
-					}},
-				},
-				ConstraintId: proto.String("required"),
-				Message:      proto.String("exactly one field is required in oneof"),
-			},
-		}}}
+func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	if !cfg.filter.ShouldValidate(msg, o.Descriptor) ||
+		!o.Required || msg.WhichOneof(o.Descriptor) != nil {
+		return nil
 	}
-	return nil
+	return &ValidationError{Violations: []*Violation{{
+		Proto: &validate.Violation{
+			Field: &validate.FieldPath{
+				Elements: []*validate.FieldPathElement{{
+					FieldName: proto.String(string(o.Descriptor.Name())),
+				}},
+			},
+			ConstraintId: proto.String("required"),
+			Message:      proto.String("exactly one field is required in oneof"),
+		},
+	}}}
 }
 
 func (o oneof) Tautology() bool {

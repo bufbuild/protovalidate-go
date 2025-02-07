@@ -26,6 +26,9 @@ type value struct {
 	Descriptor protoreflect.FieldDescriptor
 	// Constraints are the individual evaluators applied to a value
 	Constraints evaluators
+	// NestedConstraints are constraints applied to constraints nested under a
+	// value.
+	NestedConstraints evaluators
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
 	// NestedRule specifies the nested rule type the value is for.
@@ -36,20 +39,36 @@ type value struct {
 	IgnoreEmpty bool
 }
 
-func (v *value) Evaluate(val protoreflect.Value, failFast bool) error {
-	if v.IgnoreEmpty && val.Equal(v.Zero) {
-		return nil
+func (v *value) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	var (
+		err error
+		ok  bool
+	)
+	if cfg.filter.ShouldValidate(msg, v.Descriptor) {
+		if v.IgnoreEmpty && val.Equal(v.Zero) {
+			return nil
+		}
+		if ok, err = mergeViolations(err, v.Constraints.Evaluate(msg, val, cfg), cfg); !ok {
+			return err
+		}
 	}
-	return v.Constraints.Evaluate(val, failFast)
+	_, err = mergeViolations(err, v.NestedConstraints.Evaluate(msg, val, cfg), cfg)
+	return err
 }
 
 func (v *value) Tautology() bool {
-	return v.Constraints.Tautology()
+	return v.Constraints.Tautology() && v.NestedConstraints.Tautology()
 }
 
 func (v *value) Append(eval evaluator) {
 	if !eval.Tautology() {
 		v.Constraints = append(v.Constraints, eval)
+	}
+}
+
+func (v *value) AppendNested(eval evaluator) {
+	if !eval.Tautology() {
+		v.NestedConstraints = append(v.NestedConstraints, eval)
 	}
 }
 
