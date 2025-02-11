@@ -52,7 +52,7 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 	var ok bool
 	var err error
 	for i := 0; i < list.Len(); i++ {
-		itemErr := r.ItemConstraints.Evaluate(msg, list.Get(i), cfg)
+		itemErr := r.ItemConstraints.EvaluateField(msg, list.Get(i), cfg, true)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, &validate.FieldPathElement{
 				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),

@@ -80,7 +80,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 	if f.IgnoreDefault && val.Equal(f.Zero) {
 		return nil
 	}
-	return f.Value.Evaluate(msg, val, cfg)
+	return f.Value.EvaluateField(msg, val, cfg, true)
 }
 
 func (f field) Tautology() bool {

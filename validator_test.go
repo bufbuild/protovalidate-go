@@ -237,21 +237,92 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestValidator_Validate_FilterFields(t *testing.T) {
+func TestValidator_Validate_Filter(t *testing.T) {
 	t.Parallel()
-	val, err := New()
-	require.NoError(t, err)
-	msg := &pb.Person{}
-	err = val.Validate(msg)
-	valErr := &ValidationError{}
-	require.ErrorAs(t, err, &valErr)
-	require.Len(t, valErr.Violations, 3)
-	idFd := msg.ProtoReflect().Descriptor().Fields().ByName("id")
-	err = val.Validate(msg, WithFilter(FilterFunc(func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
-		return d == idFd
-	})))
-	require.ErrorAs(t, err, &valErr)
-	require.Len(t, valErr.Violations, 1)
+
+	t.Run("FilterField", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.Person{}
+		err = val.Validate(msg)
+		valErr := &ValidationError{}
+		require.ErrorAs(t, err, &valErr)
+		require.Len(t, valErr.Violations, 3)
+		idFd := msg.ProtoReflect().Descriptor().Fields().ByName("id")
+		err = val.Validate(msg, WithFilter(FilterFunc(func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+			return d == idFd
+		})))
+		require.ErrorAs(t, err, &valErr)
+		require.Len(t, valErr.Violations, 1)
+	})
+
+	t.Run("FilterInvalid", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.InvalidConstraints{}
+		err = val.Validate(msg)
+		require.Error(t, err)
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, _ protoreflect.Descriptor) bool {
+				return false
+			},
+		)))
+		require.NoError(t, err)
+	})
+
+	t.Run("FilterNested", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.NestedConstraints{
+			Field:         &pb.AllConstraintTypes{},
+			RepeatedField: []*pb.AllConstraintTypes{{}},
+			MapField:      map[string]*pb.AllConstraintTypes{"test": {}},
+		}
+		descs := []string{}
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+				descs = append(descs, string(d.FullName()))
+				return false
+			},
+		)))
+		require.Equal(t, []string{
+			"tests.example.v1.NestedConstraints",
+			"tests.example.v1.NestedConstraints.required_oneof",
+			"tests.example.v1.NestedConstraints.field",
+			"tests.example.v1.NestedConstraints.field2",
+			"tests.example.v1.NestedConstraints.repeated_field",
+			"tests.example.v1.NestedConstraints.map_field",
+		}, descs)
+		require.NoError(t, err)
+		descs = []string{}
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+				descs = append(descs, string(d.FullName()))
+				return true
+			},
+		)))
+		require.Equal(t, []string{
+			"tests.example.v1.NestedConstraints",
+			"tests.example.v1.NestedConstraints.required_oneof",
+			"tests.example.v1.NestedConstraints.field",
+			"tests.example.v1.AllConstraintTypes",
+			"tests.example.v1.AllConstraintTypes.required_oneof",
+			"tests.example.v1.AllConstraintTypes.field",
+			"tests.example.v1.NestedConstraints.field2",
+			"tests.example.v1.NestedConstraints.repeated_field",
+			"tests.example.v1.AllConstraintTypes",
+			"tests.example.v1.AllConstraintTypes.required_oneof",
+			"tests.example.v1.AllConstraintTypes.field",
+			"tests.example.v1.NestedConstraints.map_field",
+			"tests.example.v1.AllConstraintTypes",
+			"tests.example.v1.AllConstraintTypes.required_oneof",
+			"tests.example.v1.AllConstraintTypes.field",
+		}, descs)
+		require.Error(t, err)
+	})
 }
 
 func TestValidator_Validate_Issue141(t *testing.T) {

@@ -103,14 +103,14 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 }
 
 func (m kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
-	evalErr := m.KeyConstraints.Evaluate(msg, key.Value(), cfg)
+	evalErr := m.KeyConstraints.EvaluateField(msg, key.Value(), cfg, true)
 	markViolationForKey(evalErr)
 	ok, err := mergeViolations(err, evalErr, cfg)
 	if !ok {
 		return err
 	}
 
-	evalErr = m.ValueConstraints.Evaluate(msg, value, cfg)
+	evalErr = m.ValueConstraints.EvaluateField(msg, value, cfg, true)
 	_, err = mergeViolations(err, evalErr, cfg)
 	return err
 }

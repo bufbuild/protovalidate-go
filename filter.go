@@ -18,11 +18,12 @@ import "google.golang.org/protobuf/reflect/protoreflect"
 
 // The Filter interface determines which constraints should be validated.
 type Filter interface {
-	// ShouldValidate returns whether or not a given message, field or oneof
-	// should be validated. Note that this only determines whether constraints
-	// on the message, field, or oneof itself will be evaluated: nested
-	// constraints will still be evaluated unless ShouldValidate returns false
-	// for those, too.
+	// ShouldValidate returns whether constraints for a given message, field, or
+	// oneof should be evaluated. For a message or oneof, this only determines
+	// whether message-level or oneof-level constraints should be evaluated, and
+	// ShouldValidate will still be called for each field in the message. If
+	// ShouldValidate returns false for a specific field, all constraints nested
+	// in submessages of that field will be skipped as well.
 	// For a message, the message argument provides the message itself. For a
 	// field or oneof, the message argument provides the containing message.
 	ShouldValidate(message protoreflect.Message, descriptor protoreflect.Descriptor) bool
@@ -33,7 +34,10 @@ type Filter interface {
 // as the ShouldValidate method of Filter.
 type FilterFunc func(protoreflect.Message, protoreflect.Descriptor) bool
 
-func (f FilterFunc) ShouldValidate(message protoreflect.Message, descriptor protoreflect.Descriptor) bool {
+func (f FilterFunc) ShouldValidate(
+	message protoreflect.Message,
+	descriptor protoreflect.Descriptor,
+) bool {
 	return f(message, descriptor)
 }
 

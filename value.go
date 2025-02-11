@@ -40,11 +40,20 @@ type value struct {
 }
 
 func (v *value) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return v.EvaluateField(msg, val, cfg, cfg.filter.ShouldValidate(msg, v.Descriptor))
+}
+
+func (v *value) EvaluateField(
+	msg protoreflect.Message,
+	val protoreflect.Value,
+	cfg *validationConfig,
+	shouldValidate bool,
+) error {
 	var (
 		err error
 		ok  bool
 	)
-	if cfg.filter.ShouldValidate(msg, v.Descriptor) {
+	if shouldValidate {
 		if v.IgnoreEmpty && val.Equal(v.Zero) {
 			return nil
 		}
