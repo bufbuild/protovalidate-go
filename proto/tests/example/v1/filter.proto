@@ -20,29 +20,29 @@ import "buf/validate/validate.proto";
 
 message InvalidConstraints {
   option (buf.validate.message).cel = {
-    id: "message_constraint",
-    message: "this message constraint is invalid",
+    id: "message_constraint"
+    message: "this message constraint is invalid"
     expression: "this.invalid"
   };
 
   int32 field = 1 [(buf.validate.field).cel = {
-    id: "field_constraint",
-    message: "this field constraint is invalid",
-    expression: "this.invalid",
+    id: "field_constraint"
+    message: "this field constraint is invalid"
+    expression: "this.invalid"
   }];
 }
 
 message AllConstraintTypes {
   option (buf.validate.message).cel = {
-    id: "message_constraint",
-    message: "this message constraint always fails",
+    id: "message_constraint"
+    message: "this message constraint always fails"
     expression: "false"
   };
 
   int32 field = 1 [(buf.validate.field).cel = {
-    id: "field_constraint",
-    message: "this field constraint always fails",
-    expression: "false",
+    id: "field_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
   }];
 
   oneof required_oneof {
@@ -53,15 +53,15 @@ message AllConstraintTypes {
 
 message NestedConstraints {
   AllConstraintTypes field = 1 [(buf.validate.field).cel = {
-    id: "parent_field_constraint",
-    message: "this field constraint always fails",
-    expression: "false",
+    id: "parent_field_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
   }];
 
   string field2 = 2 [(buf.validate.field).cel = {
-    id: "parent_field_2_constraint",
-    message: "this field constraint always fails",
-    expression: "false",
+    id: "parent_field_2_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
   }];
 
   repeated AllConstraintTypes repeated_field = 3;
