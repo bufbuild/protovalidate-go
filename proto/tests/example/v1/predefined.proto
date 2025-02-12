@@ -26,10 +26,23 @@ message Issue148 {
   ];
 }
 
+// https://github.com/bufbuild/protovalidate-go/issues/187
+message Issue187 {
+  optional bool false_field = 1 [(buf.validate.field).bool.(this_equals_rule) = false];
+  optional bool true_field = 2 [(buf.validate.field).bool.(this_equals_rule) = true];
+}
+
 extend buf.validate.Int32Rules {
   repeated int32 abs_not_in = 1800 [(buf.validate.predefined).cel = {
     id: "int32.abs_not_in"
     expression: "this in rule || this in rule.map(n, -n)"
     message: "value must not be in absolute value of list"
+  }];
+}
+
+extend buf.validate.BoolRules {
+  optional bool this_equals_rule = 1800 [(buf.validate.predefined).cel = {
+    id: "bool.this_equals_rule"
+    expression: "this == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])"
   }];
 }
