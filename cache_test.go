@@ -131,7 +131,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 
 	asts, err := cache.loadOrCompileStandardConstraint(env, oneOfDesc, desc)
 	require.NoError(t, err)
-	assert.NotNil(t, asts)
+	assert.Nil(t, asts)
 
 	cached, ok := cache.cache[desc]
 	assert.True(t, ok)

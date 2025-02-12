@@ -16,30 +16,23 @@ package protovalidate
 
 import (
 	"fmt"
+	"slices"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	pvcel "github.com/bufbuild/protovalidate-go/cel"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
 // astSet represents a collection of compiledAST and their associated cel.Env.
-type astSet struct {
-	env  *cel.Env
-	asts []compiledAST
-}
+type astSet []compiledAST
 
 // Merge combines a set with another, producing a new ASTSet.
 func (set astSet) Merge(other astSet) astSet {
-	out := astSet{
-		env:  set.env,
-		asts: make([]compiledAST, 0, len(set.asts)+len(other.asts)),
-	}
-	if out.env == nil {
-		out.env = other.env
-	}
-	out.asts = append(out.asts, set.asts...)
-	out.asts = append(out.asts, other.asts...)
+	out := make([]compiledAST, 0, len(set)+len(other))
+	out = append(out, set...)
+	out = append(out, other...)
 	return out
 }
 
@@ -49,7 +42,7 @@ func (set astSet) Merge(other astSet) astSet {
 // generated for it. The main usage of this is to elide tautological expressions
 // from the final result.
 func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error) {
-	residuals := make([]compiledAST, 0, len(set.asts))
+	residuals := make(astSet, 0, len(set))
 	options := append([]cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptTrackState,
@@ -59,8 +52,12 @@ func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error)
 		),
 	}, opts...)
 
-	for _, ast := range set.asts {
-		program, err := ast.toProgram(set.env, options...)
+	for _, ast := range set {
+		options := slices.Clone(options)
+		if ast.Value.IsValid() {
+			options = append(options, cel.Globals(&variable{Name: "rule", Val: ast.Value.Interface()}))
+		}
+		program, err := ast.toProgram(ast.Env, options...)
 		if err != nil {
 			residuals = append(residuals, ast)
 			continue
@@ -78,12 +75,13 @@ func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error)
 				}
 			}
 		}
-		residual, err := set.env.ResidualAst(ast.AST, details)
+		residual, err := ast.Env.ResidualAst(ast.AST, details)
 		if err != nil {
 			residuals = append(residuals, ast)
 		} else {
 			residuals = append(residuals, compiledAST{
 				AST:        residual,
+				Env:        ast.Env,
 				Source:     ast.Source,
 				Path:       ast.Path,
 				Value:      ast.Value,
@@ -92,20 +90,17 @@ func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error)
 		}
 	}
 
-	return astSet{
-		env:  set.env,
-		asts: residuals,
-	}.ToProgramSet(opts...)
+	return residuals.ToProgramSet(opts...)
 }
 
 // ToProgramSet generates a ProgramSet from the specified ASTs.
 func (set astSet) ToProgramSet(opts ...cel.ProgramOption) (out programSet, err error) {
-	if l := len(set.asts); l == 0 {
+	if l := len(set); l == 0 {
 		return nil, nil
 	}
-	out = make(programSet, len(set.asts))
-	for i, ast := range set.asts {
-		out[i], err = ast.toProgram(set.env, opts...)
+	out = make(programSet, len(set))
+	for i, ast := range set {
+		out[i], err = ast.toProgram(ast.Env, opts...)
 		if err != nil {
 			return nil, err
 		}
@@ -114,19 +109,31 @@ func (set astSet) ToProgramSet(opts ...cel.ProgramOption) (out programSet, err e
 }
 
 // SetRuleValue sets the rule value for the programs in the ASTSet.
-func (set *astSet) SetRuleValue(
+func (set astSet) WithRuleValue(
 	ruleValue protoreflect.Value,
 	ruleDescriptor protoreflect.FieldDescriptor,
-) {
-	set.asts = append([]compiledAST{}, set.asts...)
-	for i := range set.asts {
-		set.asts[i].Value = ruleValue
-		set.asts[i].Descriptor = ruleDescriptor
+) (out astSet, err error) {
+	out = slices.Clone(set)
+	for i := range set {
+		out[i].Env, err = out[i].Env.Extend(
+			cel.Constant(
+				"rule",
+				pvcel.ProtoFieldToType(ruleDescriptor, true, false),
+				pvcel.ProtoFieldToValue(ruleDescriptor, ruleValue, false),
+			),
+		)
+		if err != nil {
+			return nil, err
+		}
+		out[i].Value = ruleValue
+		out[i].Descriptor = ruleDescriptor
 	}
+	return out, nil
 }
 
 type compiledAST struct {
 	AST        *cel.Ast
+	Env        *cel.Env
 	Source     *validate.Constraint
 	Path       []*validate.FieldPathElement
 	Value      protoreflect.Value
