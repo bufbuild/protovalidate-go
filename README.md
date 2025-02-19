@@ -101,6 +101,7 @@ Offered under the [Apache 2 license][license].
 [pv-python]: https://github.com/bufbuild/protovalidate-python
 [pv-cc]: https://github.com/bufbuild/protovalidate-cc
 
+[buf-mod]: https://buf.build/bufbuild/protovalidate
 [license]: LICENSE
 [contributing]: CONTRIBUTING
 
