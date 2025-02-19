@@ -93,17 +93,23 @@ We genuinely appreciate any help! If you'd like to contribute, the following wil
 
 Offered under the [Apache 2 license][license].
 
-[pv-cc]: https://github.com/bufbuild/protovalidate-cc
-[pv-java]: https://github.com/bufbuild/protovalidate-java
-[pv-python]: https://github.com/bufbuild/protovalidate-python
-[license]: LICENSE
-[contributing]: CONTRIBUTING
 [buf]: https://buf.build
 [cel]: https://cel.dev
+
+[pv-go]: https://github.com/bufbuild/protovalidate-go
+[pv-java]: https://github.com/bufbuild/protovalidate-java
+[pv-python]: https://github.com/bufbuild/protovalidate-python
+[pv-cc]: https://github.com/bufbuild/protovalidate-cc
+
+[license]: LICENSE
+[contributing]: CONTRIBUTING
+
 [protoc-gen-validate]: https://github.com/bufbuild/protoc-gen-validate
-[cel]: https://cel.dev
+
 [protovalidate]: https://buf.build/docs/protovalidate/overview/
 [quickstart]: https://buf.build/docs/protovalidate/quickstart/
 [connect-go]: https://buf.build/docs/protovalidate/how-to/connect-go/
 [grpc-go]: https://buf.build/docs/protovalidate/how-to/grpc-go/
+[grpc-java]: https://buf.build/docs/protovalidate/how-to/grpc-java/
+[grpc-python]: https://buf.build/docs/protovalidate/how-to/grpc-python/
 [migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
