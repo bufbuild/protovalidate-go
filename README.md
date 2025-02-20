@@ -39,13 +39,13 @@ message MoneyTransfer {
 
 Once you've added `protovalidate-go` to your project, validation is idiomatic Go:
 
-```Go
+```go
 if err = protovalidate.Validate(moneyTransfer); err != nil {
     // Handle failure.
 }
 ```
 
-## Installation
+# Installation
 
 > [!TIP]
 > The easiest way to get started with Protovalidate for RPC APIs are the how-to's in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
@@ -77,7 +77,7 @@ Protovalidate isn't just for Go! You might be interested in sibling repositories
 
 For a peek into how Protovalidate works, you might also want to check out [`protovalidate's core repository`](https://github.com/bufbuild/protovalidate), where `validate.proto` defines the entire cross-language API.
 
-## Related Sites
+# Related Sites
 
 - [Buf][buf] - Enterprise-grade Kafka and gRPC for the modern age
 - [Common Expression Language (CEL)][cel] - The open-source technology at the core of Protovalidate
@@ -86,7 +86,7 @@ For a peek into how Protovalidate works, you might also want to check out [`prot
 
 We genuinely appreciate any help! If you'd like to contribute, the following will be of interest:
 
-- [Contributing Guidelines][contributing] - Guidelines to make your contribution process straightforward and meaningful.
+- [Contributing Guidelines][contributing] - Guidelines to make your contribution process straightforward and meaningful
 - [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md) - Utilities providing acceptance testing of `protovalidate` implementations
 
 # Legal
@@ -103,7 +103,7 @@ Offered under the [Apache 2 license][license].
 
 [buf-mod]: https://buf.build/bufbuild/protovalidate
 [license]: LICENSE
-[contributing]: CONTRIBUTING
+[contributing]: .github/CONTRIBUTING.md
 
 [protoc-gen-validate]: https://github.com/bufbuild/protoc-gen-validate
 
