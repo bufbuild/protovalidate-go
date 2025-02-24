@@ -58,7 +58,7 @@ type anyPB struct {
 	NotInValue protoreflect.Value
 }
 
-func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
+func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
 
 	err := &ValidationError{}
@@ -76,7 +76,7 @@ func (a anyPB) Evaluate(val protoreflect.Value, failFast bool) error {
 				RuleValue:       a.InValue,
 				RuleDescriptor:  anyInRuleDescriptor,
 			})
-			if failFast {
+			if cfg.failFast {
 				return err
 			}
 		}

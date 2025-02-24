@@ -35,7 +35,7 @@ type evaluator interface {
 	//   - errors.CompilationError: this evaluator (or child evaluator) failed to
 	//       build. This error is not recoverable.
 	//
-	Evaluate(val protoreflect.Value, failFast bool) error
+	Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error
 }
 
 // messageEvaluator is essentially the same as evaluator, but specialized for
@@ -45,7 +45,7 @@ type messageEvaluator interface {
 
 	// EvaluateMessage checks that the provided msg is valid. See
 	// evaluator.Evaluate for behavior
-	EvaluateMessage(msg protoreflect.Message, failFast bool) error
+	EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error
 }
 
 // evaluators are a set of evaluator applied together to a value. Evaluation
@@ -53,11 +53,11 @@ type messageEvaluator interface {
 // true or a different error is returned.
 type evaluators []evaluator
 
-func (e evaluators) Evaluate(val protoreflect.Value, failFast bool) (err error) {
+func (e evaluators) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range e {
-		evalErr := eval.Evaluate(val, failFast)
-		if ok, err = mergeViolations(err, evalErr, failFast); !ok {
+		evalErr := eval.Evaluate(msg, val, cfg)
+		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err
 		}
 	}
@@ -77,15 +77,15 @@ func (e evaluators) Tautology() bool {
 // behavior details.
 type messageEvaluators []messageEvaluator
 
-func (m messageEvaluators) Evaluate(val protoreflect.Value, failFast bool) error {
-	return m.EvaluateMessage(val.Message(), failFast)
+func (m messageEvaluators) Evaluate(val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateMessage(val.Message(), cfg)
 }
 
-func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
+func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range m {
-		evalErr := eval.EvaluateMessage(msg, failFast)
-		if ok, err = mergeViolations(err, evalErr, failFast); !ok {
+		evalErr := eval.EvaluateMessage(msg, cfg)
+		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err
 		}
 	}

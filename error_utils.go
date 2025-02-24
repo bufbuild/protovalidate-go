@@ -31,7 +31,7 @@ import (
 // to failFast or the result is not a ValidationError).
 //
 //nolint:errorlint
-func mergeViolations(dst, src error, failFast bool) (ok bool, err error) {
+func mergeViolations(dst, src error, cfg *validationConfig) (ok bool, err error) {
 	if src == nil {
 		return true, dst
 	}
@@ -42,7 +42,7 @@ func mergeViolations(dst, src error, failFast bool) (ok bool, err error) {
 	}
 
 	if dst == nil {
-		return !(failFast && len(srcValErrs.Violations) > 0), src
+		return !(cfg.failFast && len(srcValErrs.Violations) > 0), src
 	}
 
 	dstValErrs, ok := dst.(*ValidationError)
@@ -52,7 +52,7 @@ func mergeViolations(dst, src error, failFast bool) (ok bool, err error) {
 	}
 
 	dstValErrs.Violations = append(dstValErrs.Violations, srcValErrs.Violations...)
-	return !(failFast && len(dstValErrs.Violations) > 0), dst
+	return !(cfg.failFast && len(dstValErrs.Violations) > 0), dst
 }
 
 // fieldPathElement returns a buf.validate.fieldPathElement that corresponds to

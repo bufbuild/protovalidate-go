@@ -28,17 +28,31 @@ type message struct {
 
 	// evaluators are the individual evaluators that are applied to a message.
 	evaluators messageEvaluators
+
+	// nestedEvaluators are the evaluators that are applied to nested fields and
+	// oneofs.
+	nestedEvaluators messageEvaluators
 }
 
-func (m *message) Evaluate(val protoreflect.Value, failFast bool) error {
-	return m.EvaluateMessage(val.Message(), failFast)
+func (m *message) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateMessage(val.Message(), cfg)
 }
 
-func (m *message) EvaluateMessage(msg protoreflect.Message, failFast bool) error {
-	if m.Err != nil {
-		return m.Err
+func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	var (
+		err error
+		ok  bool
+	)
+	if cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
+		if m.Err != nil {
+			return m.Err
+		}
+		if ok, err = mergeViolations(err, m.evaluators.EvaluateMessage(msg, cfg), cfg); !ok {
+			return err
+		}
 	}
-	return m.evaluators.EvaluateMessage(msg, failFast)
+	_, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessage(msg, cfg), cfg)
+	return err
 }
 
 func (m *message) Tautology() bool {
@@ -53,6 +67,12 @@ func (m *message) Tautology() bool {
 func (m *message) Append(eval messageEvaluator) {
 	if eval != nil && !eval.Tautology() {
 		m.evaluators = append(m.evaluators, eval)
+	}
+}
+
+func (m *message) AppendNested(eval messageEvaluator) {
+	if eval != nil && !eval.Tautology() {
+		m.nestedEvaluators = append(m.nestedEvaluators, eval)
 	}
 }
 
@@ -71,11 +91,11 @@ func (u unknownMessage) Err() error {
 
 func (u unknownMessage) Tautology() bool { return false }
 
-func (u unknownMessage) Evaluate(_ protoreflect.Value, _ bool) error {
+func (u unknownMessage) Evaluate(_ protoreflect.Message, _ protoreflect.Value, _ *validationConfig) error {
 	return u.Err()
 }
 
-func (u unknownMessage) EvaluateMessage(_ protoreflect.Message, _ bool) error {
+func (u unknownMessage) EvaluateMessage(_ protoreflect.Message, _ *validationConfig) error {
 	return u.Err()
 }
 
@@ -87,8 +107,8 @@ type embeddedMessage struct {
 	message *message
 }
 
-func (m *embeddedMessage) Evaluate(val protoreflect.Value, failFast bool) error {
-	err := m.message.EvaluateMessage(val.Message(), failFast)
+func (m *embeddedMessage) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	err := m.message.EvaluateMessage(val.Message(), cfg)
 	updateViolationPaths(err, m.base.FieldPathElement, nil)
 	return err
 }

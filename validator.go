@@ -37,7 +37,7 @@ type Validator interface {
 	// (ValidationError), the evaluation logic for the message cannot be built
 	// (CompilationError), or there is a type error when attempting to evaluate
 	// a CEL expression associated with the message (RuntimeError).
-	Validate(msg proto.Message) error
+	Validate(msg proto.Message, options ...ValidationOption) error
 }
 
 // New creates a Validator with the given options. An error may occur in setting
@@ -76,13 +76,23 @@ type validator struct {
 	failFast bool
 }
 
-func (v *validator) Validate(msg proto.Message) error {
+func (v *validator) Validate(
+	msg proto.Message,
+	options ...ValidationOption,
+) error {
 	if msg == nil {
 		return nil
 	}
+	cfg := validationConfig{
+		failFast: v.failFast,
+		filter:   nopFilter{},
+	}
+	for _, opt := range options {
+		opt(&cfg)
+	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	err := eval.EvaluateMessage(refl, v.failFast)
+	err := eval.EvaluateMessage(refl, &cfg)
 	finalizeViolationPaths(err)
 	return err
 }
@@ -177,5 +187,22 @@ func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionType
 func WithAllowUnknownFields() ValidatorOption {
 	return func(c *config) {
 		c.allowUnknownFields = true
+	}
+}
+
+type validationConfig struct {
+	failFast bool
+	filter   Filter
+}
+
+// A ValidationOption specifies per-validation configuration. See the individual
+// options for their defaults and effects.
+type ValidationOption func(*validationConfig)
+
+// WithFilter specifies a filter to use for this validation. A filter can
+// control which fields are evaluated by the validator.
+func WithFilter(filter Filter) ValidationOption {
+	return func(c *validationConfig) {
+		c.filter = filter
 	}
 }

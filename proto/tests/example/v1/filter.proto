@@ -1,0 +1,75 @@
+// Copyright 2023-2024 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package tests.example.v1;
+
+import "buf/validate/validate.proto";
+
+message InvalidConstraints {
+  option (buf.validate.message).cel = {
+    id: "message_constraint"
+    message: "this message constraint is invalid"
+    expression: "this.invalid"
+  };
+
+  int32 field = 1 [(buf.validate.field).cel = {
+    id: "field_constraint"
+    message: "this field constraint is invalid"
+    expression: "this.invalid"
+  }];
+}
+
+message AllConstraintTypes {
+  option (buf.validate.message).cel = {
+    id: "message_constraint"
+    message: "this message constraint always fails"
+    expression: "false"
+  };
+
+  int32 field = 1 [(buf.validate.field).cel = {
+    id: "field_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
+  }];
+
+  oneof required_oneof {
+    option (buf.validate.oneof).required = true;
+    string oneof_field = 2;
+  }
+}
+
+message NestedConstraints {
+  AllConstraintTypes field = 1 [(buf.validate.field).cel = {
+    id: "parent_field_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
+  }];
+
+  string field2 = 2 [(buf.validate.field).cel = {
+    id: "parent_field_2_constraint"
+    message: "this field constraint always fails"
+    expression: "false"
+  }];
+
+  repeated AllConstraintTypes repeated_field = 3;
+
+  map<string, AllConstraintTypes> map_field = 4;
+
+  oneof required_oneof {
+    option (buf.validate.oneof).required = true;
+    string oneof_field = 5;
+  }
+}

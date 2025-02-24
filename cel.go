@@ -26,8 +26,8 @@ type celPrograms struct {
 	programSet
 }
 
-func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
-	err := c.programSet.Eval(val, failFast)
+func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	err := c.programSet.Eval(val, cfg)
 	if err != nil {
 		var valErr *ValidationError
 		if errors.As(err, &valErr) {
@@ -42,8 +42,8 @@ func (c celPrograms) Evaluate(val protoreflect.Value, failFast bool) error {
 	return err
 }
 
-func (c celPrograms) EvaluateMessage(msg protoreflect.Message, failFast bool) error {
-	return c.programSet.Eval(protoreflect.ValueOfMessage(msg), failFast)
+func (c celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return c.programSet.Eval(protoreflect.ValueOfMessage(msg), cfg)
 }
 
 func (c celPrograms) Tautology() bool {

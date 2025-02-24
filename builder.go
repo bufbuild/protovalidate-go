@@ -184,7 +184,7 @@ func (bldr *builder) processOneofConstraints(
 			Descriptor: oneofDesc,
 			Required:   oneofConstraints.GetRequired(),
 		}
-		msgEval.Append(oneofEval)
+		msgEval.AppendNested(oneofEval)
 	}
 }
 
@@ -203,7 +203,7 @@ func (bldr *builder) processFields(
 			msgEval.Err = err
 			return
 		}
-		msgEval.Append(fldEval)
+		msgEval.AppendNested(fldEval)
 	}
 }
 
@@ -337,7 +337,7 @@ func (bldr *builder) processEmbeddedMessage(
 			"failed to compile embedded type %s for %s: %w",
 			fdesc.Message().FullName(), fdesc.FullName(), err)}
 	}
-	valEval.Append(&embeddedMessage{
+	valEval.AppendNested(&embeddedMessage{
 		base:    newBase(valEval),
 		message: embedEval,
 	})
