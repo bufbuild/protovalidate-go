@@ -19,12 +19,12 @@ import "buf/validate/validate.proto";
 
 message MoneyTransfer {
   string to_account_id = 1 [
-    // Standard rule: `to_account_id` must be a UUID
+    // Standard rule: `to_account_id` must be a UUID.
     (buf.validate.field).string.uuid = true
   ];
 
   string from_account_id = 2 [
-    // Standard rule: `from_account_id` must be a UUID
+    // Standard rule: `from_account_id` must be a UUID.
     (buf.validate.field).string.uuid = true
   ];
 
@@ -50,7 +50,7 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 > [!TIP]
 > The easiest way to get started with Protovalidate for RPC APIs are the how-to's in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
 
-To install the package, use the `go get` command from within your Go module:
+To install the package, use `go get` from within your Go module:
 
 ```shell
 go get github.com/bufbuild/protovalidate-go
@@ -66,6 +66,8 @@ Highlights for Go developers include:
 * Comprehensive RPC how-to's for [Connect][connect-go] and [gRPC][grpc-go]
 * A [migration guide for protoc-gen-validate][migration-guide] users
 
+API documentation for Go is available on [pkg.go.dev][pkg-go].
+
 # Additional Languages and Repositories
 
 Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 
@@ -75,19 +77,25 @@ Protovalidate isn't just for Go! You might be interested in sibling repositories
 - [`protovalidate-cc`][pv-cc] (C++)
 - `protovalidate-ts` (TypeScript, coming soon!)
 
-For a peek into how Protovalidate works, you might also want to check out [`protovalidate's core repository`](https://github.com/bufbuild/protovalidate), where `validate.proto` defines the entire cross-language API.
+Additionally, [protovalidate's core repository](https://github.com/bufbuild/protovalidate) provides:
 
-# Related Sites
-
-- [Buf][buf] - Enterprise-grade Kafka and gRPC for the modern age
-- [Common Expression Language (CEL)][cel] - The open-source technology at the core of Protovalidate
+- [Protovalidate's Protobuf API][validate-proto]
+- [Migration tooling][migrate] for `protoc-gen-validate` users
+- [Example][examples] `.proto` files using `protovalidate`
+- [Conformance testing utilities][conformance] for acceptance testing of `protovalidate` implementations
 
 # Contribution
 
 We genuinely appreciate any help! If you'd like to contribute, the following will be of interest:
 
-- [Contributing Guidelines][contributing] - Guidelines to make your contribution process straightforward and meaningful
-- [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md) - Utilities providing acceptance testing of `protovalidate` implementations
+- [Contributing Guidelines][contributing]: Guidelines to make your contribution process straightforward and meaningful
+- [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): Utilities providing acceptance testing of `protovalidate` implementations
+- [Go conformance executor][conformance-executable]: [Conformance testing executor](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-conformance) for `protovalidate-go`
+
+# Related Sites
+
+- [Buf][buf]: Enterprise-grade Kafka and gRPC for the modern age
+- [Common Expression Language (CEL)][cel]: The open-source technology at the core of Protovalidate
 
 # Legal
 
@@ -114,3 +122,10 @@ Offered under the [Apache 2 license][license].
 [grpc-java]: https://buf.build/docs/protovalidate/how-to/grpc-java/
 [grpc-python]: https://buf.build/docs/protovalidate/how-to/grpc-python/
 [migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
+[conformance-executable]: ./internal/cmd/protovalidate-conformance-go/README.md
+[pkg-go]: https://pkg.go.dev/github.com/bufbuild/protovalidate-go
+
+[validate-proto]: https://buf.build/bufbuild/protovalidate/docs/main:buf.validate
+[conformance]: https://github.com/bufbuild/protovalidate/blob/main/docs/conformance.md
+[examples]: https://github.com/bufbuild/protovalidate/tree/main/examples
+[migrate]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
