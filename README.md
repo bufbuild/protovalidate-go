@@ -45,7 +45,7 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 }
 ```
 
-# Installation
+## Installation
 
 > [!TIP]
 > The easiest way to get started with Protovalidate for RPC APIs are the how-to's in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
@@ -56,7 +56,7 @@ To install the package, use `go get` from within your Go module:
 go get github.com/bufbuild/protovalidate-go
 ```
 
-# Documentation
+## Documentation
 
 Comprehensive documentation for Protovalidate is available in [Buf's documentation library][protovalidate]. 
 
@@ -68,7 +68,7 @@ Highlights for Go developers include:
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
-# Additional Languages and Repositories
+## Additional Languages and Repositories
 
 Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 
 
@@ -83,7 +83,7 @@ Additionally, [protovalidate's core repository](https://github.com/bufbuild/prot
 - [Example][examples] `.proto` files using `protovalidate`
 - [Conformance testing utilities][conformance] for acceptance testing of `protovalidate` implementations
 
-# Contribution
+## Contribution
 
 We genuinely appreciate any help! If you'd like to contribute, the following will be of interest:
 
@@ -91,12 +91,12 @@ We genuinely appreciate any help! If you'd like to contribute, the following wil
 - [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): Utilities providing acceptance testing of `protovalidate` implementations
 - [Go conformance executor][conformance-executable]: Conformance testing executor for `protovalidate-go`
 
-# Related Sites
+## Related Sites
 
 - [Buf][buf]: Enterprise-grade Kafka and gRPC for the modern age
 - [Common Expression Language (CEL)][cel]: The open-source technology at the core of Protovalidate
 
-# Legal
+## Legal
 
 Offered under the [Apache 2 license][license].
 
