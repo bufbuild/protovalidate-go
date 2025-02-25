@@ -89,7 +89,7 @@ We genuinely appreciate any help! If you'd like to contribute, the following wil
 
 - [Contributing Guidelines][contributing]: Guidelines to make your contribution process straightforward and meaningful
 - [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): Utilities providing acceptance testing of `protovalidate` implementations
-- [Go conformance executor][conformance-executable]: [Conformance testing executor](https://github.com/bufbuild/protovalidate/tree/main/tools/protovalidate-conformance) for `protovalidate-go`
+- [Go conformance executor][conformance-executable]: Conformance testing executor for `protovalidate-go`
 
 # Related Sites
 
