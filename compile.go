@@ -77,22 +77,21 @@ func compileASTs(
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
 ) (set astSet, err error) {
-	set.env = env
 	if len(expressions.Constraints) == 0 {
 		return set, nil
 	}
 
-	if len(envOpts) > 0 {
-		set.env, err = env.Extend(envOpts...)
-		if err != nil {
-			return set, &CompilationError{cause: fmt.Errorf(
-				"failed to extend environment: %w", err)}
-		}
-	}
-
-	set.asts = make([]compiledAST, len(expressions.Constraints))
+	set = make([]compiledAST, len(expressions.Constraints))
 	for i, constraint := range expressions.Constraints {
-		set.asts[i], err = compileAST(set.env, constraint, expressions.RulePath)
+		set[i].Env = env
+		if len(envOpts) > 0 {
+			set[i].Env, err = env.Extend(envOpts...)
+			if err != nil {
+				return set, &CompilationError{cause: fmt.Errorf(
+					"failed to extend environment: %w", err)}
+			}
+		}
+		set[i], err = compileAST(set[i].Env, constraint, expressions.RulePath)
 		if err != nil {
 			return set, err
 		}
@@ -117,6 +116,7 @@ func compileAST(env *cel.Env, constraint *validate.Constraint, rulePath []*valid
 
 	return compiledAST{
 		AST:    ast,
+		Env:    env,
 		Source: constraint,
 		Path:   rulePath,
 	}, nil

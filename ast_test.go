@@ -30,27 +30,20 @@ func TestASTSet_Merge(t *testing.T) {
 
 	var set astSet
 	other := astSet{
-		env: &cel.Env{},
-		asts: []compiledAST{
-			{AST: &cel.Ast{}},
-			{AST: &cel.Ast{}},
-		},
+		{AST: &cel.Ast{}},
+		{AST: &cel.Ast{}},
 	}
 	merged := set.Merge(other)
-	assert.Equal(t, other.env, merged.env)
-	assert.Equal(t, other.asts, merged.asts)
+	assert.Equal(t, other, merged)
 
 	another := astSet{
-		asts: []compiledAST{
-			{AST: &cel.Ast{}},
-			{AST: &cel.Ast{}},
-			{AST: &cel.Ast{}},
-		},
+		{AST: &cel.Ast{}},
+		{AST: &cel.Ast{}},
+		{AST: &cel.Ast{}},
 	}
 	merged = other.Merge(another)
-	assert.Equal(t, other.env, merged.env)
-	assert.Equal(t, other.asts, merged.asts[0:2])
-	assert.Equal(t, another.asts, merged.asts[2:])
+	assert.Equal(t, other, merged[0:2])
+	assert.Equal(t, another, merged[2:])
 }
 
 func TestASTSet_ToProgramSet(t *testing.T) {
@@ -69,11 +62,11 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 		cel.Variable("foo", cel.BoolType),
 	)
 	require.NoError(t, err)
-	assert.Len(t, asts.asts, 1)
+	assert.Len(t, asts, 1)
 	set, err := asts.ToProgramSet()
 	require.NoError(t, err)
 	assert.Len(t, set, 1)
-	assert.Equal(t, asts.asts[0].Source, set[0].Source)
+	assert.Equal(t, asts[0].Source, set[0].Source)
 
 	empty := astSet{}
 	set, err = empty.ToProgramSet()
@@ -97,7 +90,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 		cel.Variable("foo", cel.BoolType),
 	)
 	require.NoError(t, err)
-	assert.Len(t, asts.asts, 1)
+	assert.Len(t, asts, 1)
 	set, err := asts.ReduceResiduals(cel.Globals(&variable{Name: "foo", Val: true}))
 	require.NoError(t, err)
 	assert.Empty(t, set)

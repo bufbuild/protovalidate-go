@@ -375,3 +375,15 @@ func TestValidator_Validate_Issue148(t *testing.T) {
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
+
+func TestValidator_Validate_Issue187(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := pb.Issue187_builder{
+		FalseField: proto.Bool(false),
+		TrueField:  proto.Bool(true),
+	}.Build()
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
