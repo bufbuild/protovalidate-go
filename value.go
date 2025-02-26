@@ -26,7 +26,7 @@ type value struct {
 	Descriptor protoreflect.FieldDescriptor
 	// Constraints are the individual evaluators applied to a value
 	Constraints evaluators
-	// NestedConstraints are constraints applied to constraints nested under a
+	// NestedConstraints are constraints applied to messages nested under a
 	// value.
 	NestedConstraints evaluators
 	// Zero is the default or zero-value for this value's type
