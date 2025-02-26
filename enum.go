@@ -42,7 +42,7 @@ type definedEnum struct {
 	ValueDescriptors protoreflect.EnumValueDescriptors
 }
 
-func (d definedEnum) Evaluate(val protoreflect.Value, _ bool) error {
+func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
