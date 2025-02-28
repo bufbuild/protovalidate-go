@@ -72,17 +72,22 @@ func (c *cache) Build(
 
 	var asts astSet
 	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
-		fieldEnv, compileErr := env.Extend(
-			cel.Variable("rule", pvcel.ProtoFieldToType(desc, true, false)),
-		)
+		// Try compiling without the rule variable first. Extending a cel
+		// environment is expensive.
+		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, setOneof, desc)
 		if compileErr != nil {
-			err = compileErr
-			return false
-		}
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(fieldEnv, setOneof, desc)
-		if compileErr != nil {
-			err = compileErr
-			return false
+			fieldEnv, compileErr := env.Extend(
+				cel.Variable("rule", pvcel.ProtoFieldToType(desc, true, false)),
+			)
+			if compileErr != nil {
+				err = compileErr
+				return false
+			}
+			precomputedASTs, compileErr = c.loadOrCompileStandardConstraint(fieldEnv, setOneof, desc)
+			if compileErr != nil {
+				err = compileErr
+				return false
+			}
 		}
 		precomputedASTs, compileErr = precomputedASTs.WithRuleValue(rule, desc)
 		if compileErr != nil {
