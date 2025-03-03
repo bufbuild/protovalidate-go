@@ -56,8 +56,7 @@ func NewLibrary() cel.Library {
 // should avoid exposing additional functions as they will not be portable.
 type library struct{}
 
-//nolint:funlen
-func (l library) CompileOptions() []cel.EnvOption {
+func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	return []cel.EnvOption{
 		cel.TypeDescs(protoregistry.GlobalFiles),
 		cel.DefaultUTCTimeZone(true),
@@ -258,7 +257,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(strings.Contains(lhs.Value().(string), substr))
+					value, ok := lhs.Value().(string)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(strings.Contains(value, substr))
 				}),
 			),
 			cel.MemberOverload("contains_bytes", []*cel.Type{cel.BytesType, cel.BytesType}, cel.BoolType,
@@ -267,7 +270,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(bytes.Contains(lhs.Value().([]byte), substr))
+					value, ok := lhs.Value().([]byte)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(bytes.Contains(value, substr))
 				}),
 			),
 		),
@@ -279,7 +286,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(strings.HasSuffix(lhs.Value().(string), suffix))
+					value, ok := lhs.Value().(string)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(strings.HasSuffix(value, suffix))
 				}),
 			),
 			cel.MemberOverload("ends_with_bytes", []*cel.Type{cel.BytesType, cel.BytesType}, cel.BoolType,
@@ -288,7 +299,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(bytes.HasSuffix(lhs.Value().([]byte), suffix))
+					value, ok := lhs.Value().([]byte)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(bytes.HasSuffix(value, suffix))
 				}),
 			),
 		),
@@ -300,7 +315,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(strings.HasPrefix(lhs.Value().(string), prefix))
+					value, ok := lhs.Value().(string)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(strings.HasPrefix(value, prefix))
 				}),
 			),
 			cel.MemberOverload("starts_with_bytes", []*cel.Type{cel.BytesType, cel.BytesType}, cel.BoolType,
@@ -309,7 +328,11 @@ func (l library) CompileOptions() []cel.EnvOption {
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					return types.Bool(bytes.HasPrefix(lhs.Value().([]byte), prefix))
+					value, ok := lhs.Value().([]byte)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(lhs)
+					}
+					return types.Bool(bytes.HasPrefix(value, prefix))
 				}),
 			),
 		),
