@@ -235,7 +235,6 @@ func (bldr *builder) buildValue(
 	valEval *value,
 	cache messageCache,
 ) (err error) {
-
 	if bldr.shouldSkip(constraints) {
 		return nil
 	}
@@ -325,7 +324,7 @@ func (bldr *builder) processFieldExpressions(
 
 func (bldr *builder) processEmbeddedMessage(
 	fdesc protoreflect.FieldDescriptor,
-	rules *validate.FieldConstraints,
+	_ *validate.FieldConstraints,
 	valEval *value,
 	cache messageCache,
 ) error {
