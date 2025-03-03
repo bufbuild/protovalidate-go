@@ -257,7 +257,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.UnsupportedRefValConversionErr(rhs)
 					}
-					value, ok := rhs.Value().(string)
+					value, ok := lhs.Value().(string)
 					if !ok {
 						return types.UnsupportedRefValConversionErr(lhs)
 					}
