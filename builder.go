@@ -305,7 +305,7 @@ func (bldr *builder) processFieldExpressions(
 				FieldType:   celRuleField.GetFieldType().Enum(),
 				FieldName:   proto.String(celRuleField.GetFieldName()),
 				Subscript: &validate.FieldPathElement_Index{
-					Index: uint64(i),
+					Index: uint64(i), //nolint:gosec // indices are guaranteed to be non-negative
 				},
 			},
 		}

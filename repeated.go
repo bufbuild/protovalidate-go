@@ -58,7 +58,7 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
 				FieldName:   proto.String(r.base.FieldPathElement.GetFieldName()),
-				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)},
+				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)}, //nolint:gosec // indices are guaranteed to be non-negative
 			}, r.base.RulePrefix.GetElements())
 		}
 		if ok, err = mergeViolations(err, itemErr, cfg); !ok {
