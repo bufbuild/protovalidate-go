@@ -235,6 +235,11 @@ func (bldr *builder) buildValue(
 	valEval *value,
 	cache messageCache,
 ) (err error) {
+
+	if bldr.shouldSkip(constraints) {
+		return nil
+	}
+
 	steps := []func(
 		fdesc protoreflect.FieldDescriptor,
 		fieldConstraints *validate.FieldConstraints,
@@ -325,7 +330,6 @@ func (bldr *builder) processEmbeddedMessage(
 	cache messageCache,
 ) error {
 	if !isMessageField(fdesc) ||
-		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
@@ -352,7 +356,6 @@ func (bldr *builder) processWrapperConstraints(
 	cache messageCache,
 ) error {
 	if !isMessageField(fdesc) ||
-		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
