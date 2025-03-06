@@ -53,3 +53,11 @@ func (err *ValidationError) ToProto() *validate.Violations {
 	}
 	return violations
 }
+
+func FromProto(proto *validate.Violations) *ValidationError {
+	validationErr := &ValidationError{Violations: make([]*Violation, len(proto.GetViolations()))}
+	for i, violation := range proto.GetViolations() {
+		validationErr.Violations[i] = &Violation{Proto: violation}
+	}
+	return validationErr
+}
