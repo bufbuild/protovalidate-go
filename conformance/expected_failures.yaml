@@ -1,0 +1,67 @@
+library/is_email:
+  - valid/label_all_digits
+  - valid/empty_atext
+  - valid/multiple_empty_atext
+  - invalid/non_ascii
+  - valid/exhaust_atext
+library/is_ip:
+  - version/omitted/valid/ipv6_zone-id
+  - version/omitted/valid/ipv6_zone-id_any_non_null_character
+library/is_uri:
+  - invalid/path-absolute_segment_bad_caret
+  - invalid/fragment_bad_control_character
+  - invalid/fragment_bad_hash
+  - invalid/path-rootless_segment_bad_caret
+  - valid/host_ipv6_zone-id_pct-encoded_utf8
+  - invalid/host_ipv6_zone-id_empty
+  - invalid/query_bad_caret
+  - invalid/host_ipfuture
+  - invalid/path-rootless_segment-nz_bad_pct-encoded
+  - invalid/path-rootless_segment-nz_bad_caret
+  - invalid/fragment_bad_caret
+  - valid/host_reg-name_pct-encoded_ascii
+  - invalid/host_ipv6/a
+  - invalid/path-absolute_segment-nz-bad_caret
+  - invalid/host/c
+  - invalid/userinfo_reserved_at
+  - invalid/path-rootless_segment_bad_pct-encoded
+  - valid/query_sub-delim_semicolon
+  - valid/query_exhaust
+  - valid/extreme
+  - invalid/host_reg-name_pct-encoded_invalid_utf8
+  - valid/host_ipv6_zone-id_pct-encoded_ascii
+  - invalid/authority_path-abempty_segment_bad_caret
+  - invalid/host_ipv6/b
+library/is_uri_ref:
+  - invalid/path-absolute_fragment_bad_caret
+  - invalid/path-noscheme_fragment_bad_fragment
+  - valid/path-noscheme_exhaust_query
+  - invalid/path-abempty_fragment_bad_fragment
+  - invalid/path-empty_fragment_bad_fragment
+  - invalid/path-abempty_fragment_bad_control_character
+  - invalid/trailing_space
+  - invalid/path-noscheme_segment-nz_bad_caret
+  - invalid/leading_space
+  - invalid/path-absolute_segment-nz_bad_caret
+  - valid/extreme
+  - invalid/path-empty_fragment_bad_control_character
+  - invalid/path-noscheme_query_bad_caret
+  - invalid/path-absolute_segment_bad_caret
+  - valid/path-empty_exhaust_query
+  - invalid/path-absolute_query_bad_caret
+  - invalid/path-noscheme_fragment_bad_control_character
+  - invalid/space
+  - invalid/path-absolute_fragment_bad_control_character
+  - invalid/path-noscheme_fragment_bad_caret
+  - invalid/path-abempty_query_bad_caret
+  - valid/path-abempty_exhaust_query
+  - invalid/path-absolute_fragment_bad_fragment
+  - invalid/path-empty_fragment_bad_caret
+  - valid/path-absolute_exhaust_query
+  - invalid/path-empty_query_bad_caret
+  - invalid/path-noscheme_segment_bad_caret
+  - invalid/path-abempty_fragment_bad_caret
+library/is_host_and_port:
+  - port_required/false/valid/ipv6_zone-id_any_non_null_character
+  - port_required/false/valid/ipv6_with_zone-id
+  - port_required/false/valid/ipv6_embedded_ipv4
