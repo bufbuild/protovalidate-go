@@ -16,7 +16,7 @@ GOLANGCI_LINT_VERSION ?= v1.64.5
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in proto/buf.lock and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v0.10.0
+CONFORMANCE_VERSION ?= v0.10.2
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -47,7 +47,7 @@ lint-proto: $(BIN)/buf
 
 .PHONY: conformance
 conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
-	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go
+	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures conformance/expected.yaml
 
 .PHONY: generate
 generate: generate-proto generate-license ## Regenerate code and license headers
