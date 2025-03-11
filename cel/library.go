@@ -18,9 +18,9 @@ import (
 	"bytes"
 	"math"
 	"net"
-	"net/mail"
 	"net/netip"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -35,6 +35,11 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
+const (
+	// The regular expression to use when validating emails.
+	emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+)
+
 // NewLibrary creates a new CEL library that specifies all of the functions and
 // settings required by protovalidate beyond the standard definitions of the CEL
 // Specification:
@@ -44,7 +49,9 @@ import (
 // Using this function, you can create a CEL environment that is identical to
 // the one used to evaluate protovalidate CEL expressions.
 func NewLibrary() cel.Library {
-	return library{}
+	return library{
+		emailRegex: regexp.MustCompile(emailRegex),
+	}
 }
 
 // library is the collection of functions and settings required by protovalidate
@@ -54,7 +61,9 @@ func NewLibrary() cel.Library {
 //
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
-type library struct{}
+type library struct {
+	emailRegex *regexp.Regexp
+}
 
 func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	return []cel.EnvOption{
@@ -420,19 +429,14 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
+// validateEmail returns true if addr is a valid email address.
+//
+// This regex conforms to the definition for a valid email address from the HTML standard.
+// Note that this standard willfully deviates from RFC 5322, which allows many
+// unexpected forms of email addresses and will easily match a typographical
+// error.
 func (l library) validateEmail(addr string) bool {
-	a, err := mail.ParseAddress(addr)
-	if err != nil || strings.ContainsRune(addr, '<') || a.Address != addr {
-		return false
-	}
-
-	addr = a.Address
-	if len(addr) > 254 {
-		return false
-	}
-
-	parts := strings.SplitN(addr, "@", 2)
-	return len(parts[0]) <= 64 && l.validateHostname(parts[1])
+	return l.emailRegex.MatchString(addr)
 }
 
 func (l library) validateHostname(host string) bool {
