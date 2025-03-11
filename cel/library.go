@@ -18,9 +18,9 @@ import (
 	"bytes"
 	"math"
 	"net"
-	"net/mail"
 	"net/netip"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -420,19 +420,15 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
+// validateEmail returns true if addr is a valid email address.
+//
+// This regex conforms to the definition for a valid email address from the HTML standard.
+// Note that this standard willfully deviates from RFC 5322, which allows many
+// unexpected forms of email addresses and will easily match a typographical
+// error.
 func (l library) validateEmail(addr string) bool {
-	a, err := mail.ParseAddress(addr)
-	if err != nil || strings.ContainsRune(addr, '<') || a.Address != addr {
-		return false
-	}
-
-	addr = a.Address
-	if len(addr) > 254 {
-		return false
-	}
-
-	parts := strings.SplitN(addr, "@", 2)
-	return len(parts[0]) <= 64 && l.validateHostname(parts[1])
+	r := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+	return r.MatchString(addr)
 }
 
 func (l library) validateHostname(host string) bool {
