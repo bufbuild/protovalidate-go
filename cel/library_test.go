@@ -15,6 +15,7 @@
 package cel
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/google/cel-go/cel"
@@ -26,7 +27,9 @@ import (
 func TestCELLib(t *testing.T) {
 	t.Parallel()
 
-	env, err := cel.NewEnv(cel.Lib(library{}))
+	env, err := cel.NewEnv(cel.Lib(library{
+		emailRegex: regexp.MustCompile(emailRegex),
+	}))
 	require.NoError(t, err)
 
 	t.Run("ext", func(t *testing.T) {
