@@ -47,7 +47,7 @@ lint-proto: $(BIN)/buf
 
 .PHONY: conformance
 conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
-	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures conformance/expected.yaml
+	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go
 
 .PHONY: generate
 generate: generate-proto generate-license ## Regenerate code and license headers
