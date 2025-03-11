@@ -1,9 +1,3 @@
-library/is_email:
-  - valid/label_all_digits
-  - valid/empty_atext
-  - valid/multiple_empty_atext
-  - invalid/non_ascii
-  - valid/exhaust_atext
 library/is_ip:
   - version/omitted/valid/ipv6_zone-id
   - version/omitted/valid/ipv6_zone-id_any_non_null_character
