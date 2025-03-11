@@ -36,7 +36,7 @@ import (
 )
 
 const (
-	// The regular expression to use when validating emails.
+	// See https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
 	emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 )
 
