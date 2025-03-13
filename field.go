@@ -46,6 +46,7 @@ type field struct {
 	IgnoreDefault bool
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
+	Err  error
 }
 
 func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
@@ -55,6 +56,10 @@ func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
 	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
 		return nil
+	}
+
+	if f.Err != nil {
+		return f.Err
 	}
 
 	if f.Required && !msg.Has(f.Value.Descriptor) {
@@ -84,7 +89,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 }
 
 func (f field) Tautology() bool {
-	return !f.Required && f.Value.Tautology()
+	return !f.Required && f.Value.Tautology() && f.Err == nil
 }
 
 var _ messageEvaluator = field{}

@@ -139,9 +139,7 @@ func (bldr *builder) buildMessage(
 	}
 
 	for _, step := range steps {
-		if step(desc, msgConstraints, msgEval, cache); msgEval.Err != nil {
-			break
-		}
+		step(desc, msgConstraints, msgEval, cache)
 	}
 }
 
@@ -200,8 +198,7 @@ func (bldr *builder) processFields(
 		fieldConstraints := resolve.FieldConstraints(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldConstraints, cache)
 		if err != nil {
-			msgEval.Err = err
-			return
+			fldEval.Err = err
 		}
 		msgEval.AppendNested(fldEval)
 	}
