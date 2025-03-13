@@ -444,7 +444,7 @@ func (l library) validateIP(addr string, ver int64) bool {
 }
 
 func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
-	return isIpPrefix(p, ver, strict)
+	return isIPPrefix(p, ver, strict)
 }
 
 func (l library) isURI(val string) bool {

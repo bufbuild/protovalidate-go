@@ -53,7 +53,7 @@ func isIP(str string, version int64) bool {
  * The same principle applies to IPv4 addresses. "192.168.1.0/24" designates
  * the first 24 bits of the 32-bit IPv4 as the network prefix.
  */
-func isIpPrefix(
+func isIPPrefix(
 	str string,
 	version int64,
 	strict bool,
@@ -67,7 +67,7 @@ func isIpPrefix(
 		return ip.addressPrefix() && (!strict || ip.isPrefixOnly())
 	}
 	if version == 0 {
-		return isIpPrefix(str, 6, strict) || isIpPrefix(str, 4, strict)
+		return isIPPrefix(str, 6, strict) || isIPPrefix(str, 4, strict)
 	}
 	return false
 }
@@ -83,19 +83,19 @@ func isIpPrefix(
  * - The name can have a trailing dot, for example "foo.example.com.".
  * - The name can be 253 characters at most, excluding the optional trailing dot.
  */
-func isHostname(str string) bool {
-	if len(str) > 253 {
+func isHostname(val string) bool {
+	if len(val) > 253 {
 		return false
 	}
-	var s string
-	if strings.HasSuffix(str, ".") {
-		s = str[0 : len(str)-1]
+	var str string
+	if strings.HasSuffix(val, ".") {
+		str = val[0 : len(val)-1]
 	} else {
-		s = str
+		str = val
 	}
 
 	allDigits := false
-	parts := strings.Split(strings.ToLower(s), ".")
+	parts := strings.Split(strings.ToLower(str), ".")
 
 	// split hostname on '.' and validate each part
 	for _, part := range parts {
@@ -212,10 +212,10 @@ func (u *URI) log(s string) {
 	fmt.Fprintf(os.Stderr, "%s: index:%d strlen:%d\n", s, u.index, u.l)
 }
 
-// hier-part = "//" authority path-abempty
-// path-absolute
-// path-rootless
-// path-empty
+// hier-part = "//" authority path-abempty.
+// path-absolute.
+// path-rootless.
+// path-empty.
 func (u *URI) hierPart() bool {
 	u.log("hierpart START")
 	start := u.index
@@ -258,10 +258,10 @@ func (u *URI) relativeRef() bool {
 	return true
 }
 
-// relative-part = "//" authority path-abempty
-// path-absolute
-// path-noscheme
-// path-empty
+// relative-part = "//" authority path-abempty.
+// path-absolute.
+// path-noscheme.
+// path-empty.
 func (u *URI) relativePart() bool {
 	u.log("relativePart")
 	start := u.index
@@ -275,7 +275,7 @@ func (u *URI) relativePart() bool {
 	return u.pathAbsolute() || u.pathNoscheme() || u.pathEmpty()
 }
 
-// scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+// scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." ).
 // Terminated by ":".
 func (u *URI) scheme() bool {
 	u.log("scheme")
@@ -338,9 +338,9 @@ func (u *URI) isAuthorityEnd() bool {
 		u.str[u.index] == '/'
 }
 
-// userinfo = *( unreserved / pct-encoded / sub-delims / ":" )
+// userinfo = *( unreserved / pct-encoded / sub-delims / ":" ).
 // Terminated by "@" in authority.
-// If the end of the string is found before the "@" terminator, false is returned
+// If the end of the string is found before the "@" terminator, false is returned.
 func (u *URI) userinfo() bool {
 	start := u.index
 	for {
@@ -361,7 +361,7 @@ func (u *URI) userinfo() bool {
 	}
 }
 
-// host = IP-literal / IPv4address / reg-name
+// host = IP-literal / IPv4address / reg-name.
 func (u *URI) host() bool {
 	u.log("host")
 	if u.index >= u.l {
@@ -373,6 +373,7 @@ func (u *URI) host() bool {
 	if (u.str[u.index] == '[' && u.ipLiteral()) || u.regName() {
 		if u.pctEncodedFound {
 			rawHost := u.str[start:u.index]
+			u.log("unescaping path -- NEEDS DECODEURI")
 			// RFC 3986:
 			// > URI producing applications must not use percent-encoding in host
 			// > unless it is used to represent a UTF-8 character sequence.
@@ -414,8 +415,7 @@ func (u *URI) port() bool {
 	}
 }
 
-// RFC 6874:
-// IP-literal = "[" ( IPv6address / IPv6addrz / IPvFuture  ) "]"
+// RFC 6874: IP-literal = "[" ( IPv6address / IPv6addrz / IPvFuture  ) "]".
 func (u *URI) ipLiteral() bool {
 	u.log("ipLiteral")
 	start := u.index
@@ -457,8 +457,7 @@ func (u *URI) ipv6Address() bool {
 	return false
 }
 
-// RFC 6874:
-// IPv6addrz = IPv6address "%25" ZoneID
+// RFC 6874: IPv6addrz = IPv6address "%25" ZoneID.
 func (u *URI) ipv6addrz() bool {
 	start := u.index
 	if u.ipv6Address() &&
@@ -472,8 +471,7 @@ func (u *URI) ipv6addrz() bool {
 	return false
 }
 
-// RFC 6874:
-// ZoneID = 1*( unreserved / pct-encoded )
+// RFC 6874: ZoneID = 1*( unreserved / pct-encoded ).
 func (u *URI) zoneID() bool {
 	start := u.index
 	for {
@@ -488,7 +486,7 @@ func (u *URI) zoneID() bool {
 	return false
 }
 
-// IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
+// IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" ).
 func (u *URI) ipvFuture() bool {
 	start := u.index
 	if u.take('v') && u.hexdig() { //nolint:nestif
@@ -514,7 +512,7 @@ func (u *URI) ipvFuture() bool {
 	return false
 }
 
-// reg-name = *( unreserved / pct-encoded / sub-delims )
+// reg-name = *( unreserved / pct-encoded / sub-delims ).
 // Terminates on start of port (":") or end of authority.
 func (u *URI) regName() bool {
 	u.log("regname")
@@ -625,7 +623,7 @@ func (u *URI) pathEmpty() bool {
 	return u.isPathEnd()
 }
 
-// segment = *pchar
+// segment = *pchar.
 func (u *URI) segment() bool {
 	u.log("segment")
 	for {
@@ -636,7 +634,7 @@ func (u *URI) segment() bool {
 	return true
 }
 
-// segment-nz = 1*pchar
+// segment-nz = 1*pchar.
 func (u *URI) segmentNz() bool {
 	start := u.index
 	if u.pchar() {
@@ -646,8 +644,8 @@ func (u *URI) segmentNz() bool {
 	return false
 }
 
-// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
-//               ; non-zero-length segment without any colon ":"
+// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ).
+// ; non-zero-length segment without any colon ":".
 func (u *URI) segmentNzNc() bool {
 	start := u.index
 	for {
@@ -665,7 +663,7 @@ func (u *URI) segmentNzNc() bool {
 	return false
 }
 
-// pchar = unreserved / pct-encoded / sub-delims / ":" / "@"
+// pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
 func (u *URI) pchar() bool {
 	return (u.unreserved() ||
 		u.pctEncoded() ||
@@ -706,8 +704,8 @@ func (u *URI) fragment() bool {
 	}
 }
 
-// pct-encoded = "%"+HEXDIG+HEXDIG
-// Sets `pctEncodedFound` to true if a valid triplet was found
+// pct-encoded = "%"+HEXDIG+HEXDIG.
+// Sets `pctEncodedFound` to true if a valid triplet was found.
 func (u *URI) pctEncoded() bool {
 	start := u.index
 	if u.take('%') && u.hexdig() && u.hexdig() {
@@ -718,7 +716,7 @@ func (u *URI) pctEncoded() bool {
 	return false
 }
 
-// unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~"
+// unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *URI) unreserved() bool {
 	u.log("unreserved")
 	return (u.alpha() ||
@@ -729,8 +727,8 @@ func (u *URI) unreserved() bool {
 		u.take('~'))
 }
 
-// sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
-//   / "*" / "+" / "," / ";" / "="
+// sub-delims  = "!" / "$" / "&" / "'" / "(" / ")".
+// / "*" / "+" / "," / ";" / "=".
 func (u *URI) subDelims() bool {
 	u.log("subdelims")
 	return (u.take('!') ||
@@ -775,7 +773,7 @@ func (u *URI) digit() bool {
 	return false
 }
 
-// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
 func (u *URI) hexdig() bool {
 	u.log("hexdig")
 	if u.index >= u.l {

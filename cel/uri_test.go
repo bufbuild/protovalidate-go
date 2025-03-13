@@ -58,11 +58,11 @@ func TestUri(t *testing.T) {
 		// 	"https://example.com:65536",
 		// 	true,
 		// },
-		// {
-		// 	"invalid/host_reg-name_pct-encoded_invalid_utf8",
-		// 	"https://foo%c3x%96",
-		// 	false,
-		// },
+		{
+			"invalid/host_reg-name_pct-encoded_invalid_utf8",
+			"https://[::1%25foo%c3x%96]",
+			false,
+		},
 	}
 
 	for _, tc := range tests {
@@ -126,9 +126,14 @@ func TestIPPrefix(t *testing.T) {
 		// 	"*",
 		// 	true,
 		// },
+		// {
+		// 	"ipv6_prefix/invalid/not_network_address",
+		// 	"2001:db8:1::1/48",
+		// 	false,
+		// },
 		{
-			"ipv6_prefix/invalid/not_network_address",
-			"2001:db8:1::1/48",
+			"version/omitted/strict/true/invalid/ipv6_dotted_decimal_double_colon",
+			"::ffff:192.1.128.0/112",
 			false,
 		},
 	}
@@ -138,9 +143,9 @@ func TestIPPrefix(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 			if test.valid {
-				assert.True(t, isIpPrefix(test.str, 6, true))
+				assert.True(t, isIPPrefix(test.str, 6, true))
 			} else {
-				assert.False(t, isIpPrefix(test.str, 6, true))
+				assert.False(t, isIPPrefix(test.str, 6, true))
 			}
 		})
 	}

@@ -1,9 +1,12 @@
 library/is_uri:
-  # Need a decodeURIComponent equivalent
+  # Both need a decodeURIComponent equivalent
   - invalid/host_reg-name_pct-encoded_invalid_utf8
   - invalid/host_ipv6_zone-id_pct-encoded_invalid_utf8
 library/is_ip_prefix:
+  # ipv6 prefix
+  # {val:"::ffff:192.1.128.0/112" strict:true}
   - version/omitted/strict/true/invalid/ipv6_dotted_decimal_double_colon
 standard_constraints/string:
+  # {val:"2001:db8:1::1/48"}
   - ipv6_prefix/invalid/not_network_address
 

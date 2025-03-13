@@ -17,9 +17,8 @@ package cel
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
-
-	"golang.org/x/exp/slices"
 )
 
 type Ipv6 struct {
@@ -30,7 +29,7 @@ type Ipv6 struct {
 	doubleColonAt   int     // number of 16-bit pieces found when double colon was found
 	doubleColonSeen bool
 	dottedRaw       string // dotted notation for right-most 32 bits
-	dottedAddr      *Ipv4  // dotted notation succesfully parsed as IPv4
+	dottedAddr      *Ipv4  // dotted notation successfully parsed as IPv4
 	zoneIDFound     bool
 	prefixLen       int64 // 0 - 128
 }
@@ -75,11 +74,12 @@ func (i *Ipv6) getBits() [4]int64 {
 // Behavior is undefined if addressPrefix() has not been called before, or has
 // returned false.
 func (i *Ipv6) isPrefixOnly() bool {
+	i.log("isprefixonly")
 	// For each 32-bit piece of the address, require that values to the right of the prefix are zero
 	for idx, p32 := range i.getBits() {
 		size := i.prefixLen - 32*int64(idx)
 		var mask int64
-		if size >= 32 {
+		if size >= 32 { //nolint:gocritic
 			mask = 0xffffffff
 		} else if size < 0 {
 			mask = 0x00000000
@@ -108,7 +108,7 @@ func (i *Ipv6) addressPrefix() bool {
 		i.index == i.l
 }
 
-// Stores value in `prefixLen`
+// Stores value in `prefixLen`.
 func (i *Ipv6) prefixLength() bool {
 	i.log("prefixLength")
 	start := i.index
@@ -164,7 +164,7 @@ func (i *Ipv6) addressPart() bool {
 			continue
 		}
 		i.log("after h16")
-		if i.take(':') {
+		if i.take(':') { //nolint:nestif
 			i.log("take 1")
 			if i.take(':') {
 				i.log("take 2")
@@ -182,23 +182,21 @@ func (i *Ipv6) addressPart() bool {
 			}
 			continue
 		}
-		i.log("zoneId")
-		if i.str[i.index] == '%' && !i.zoneId() {
-			i.log("zoneId returning false")
+		i.log("zoneID")
+		if i.str[i.index] == '%' && !i.zoneID() {
+			i.log("zoneID returning false")
 			return false
 		}
 		break
 	}
-	i.log(fmt.Sprintf("%d", len(i.pieces)))
-	i.log(fmt.Sprintf("%t", i.doubleColonSeen))
 	return i.doubleColonSeen || len(i.pieces) == 8
 }
 
 // There is no definition for the character set allowed in the zone
 // identifier. RFC 4007 permits basically any non-null string.
 //
-// RFC 6874: ZoneID = 1*( unreserved / pct-encoded )
-func (i *Ipv6) zoneId() bool {
+// RFC 6874: ZoneID = 1*( unreserved / pct-encoded ).
+func (i *Ipv6) zoneID() bool {
 	i.log("zoneIDDDD")
 	start := i.index
 	if i.take('%') {
@@ -238,7 +236,7 @@ func (i *Ipv6) dotted() bool {
 }
 
 // h16 = 1*4HEXDIG
-// Stores 16-bit value in `pieces`
+// Stores 16-bit value in `pieces`.
 func (i *Ipv6) h16() bool {
 	i.log("h16")
 	start := i.index
@@ -265,7 +263,7 @@ func (i *Ipv6) h16() bool {
 	return true
 }
 
-// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
 func (i *Ipv6) hexdig() bool {
 	i.log("hexdig")
 	c := i.str[i.index]
@@ -278,7 +276,7 @@ func (i *Ipv6) hexdig() bool {
 	return false
 }
 
-// DIGIT = %x30-39  ; 0-9
+// DIGIT = %x30-39  ; 0-9.
 func (i *Ipv6) digit() bool {
 	i.log("digit")
 	i.log(i.str)
