@@ -19,7 +19,6 @@ import (
 	"math"
 	"net"
 	"net/netip"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
@@ -240,7 +239,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateURI(s, true))
+					return types.Bool(l.isURI(s))
 				}),
 			),
 		),
@@ -254,7 +253,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateURI(s, false))
+					return types.Bool(l.isURIRef(s))
 				}),
 			),
 		),
@@ -504,18 +503,12 @@ func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
 	}
 }
 
-func (l library) validateURI(val string, checkAbs bool) bool {
-	uri, err := url.Parse(val)
-	if err != nil {
-		return false
-	}
-	if checkAbs && !uri.IsAbs() {
-		return false
-	}
+func (l library) isURI(val string) bool {
+	return NewURI(val).uri()
+}
 
-	// Parse the query string to validate it is formed and encoded properly
-	_, err = url.ParseQuery(uri.RawQuery)
-	return err == nil
+func (l library) isURIRef(val string) bool {
+	return NewURI(val).uriReference()
 }
 
 func (l library) isHostAndPort(val string, portRequired bool) bool {

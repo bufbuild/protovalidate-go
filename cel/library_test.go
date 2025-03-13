@@ -197,6 +197,10 @@ func TestCELLib(t *testing.T) {
 				"'foo@example.com    '.isEmail()",
 				false,
 			},
+			{
+				"'https://example.com##'.isUri()",
+				false,
+			},
 		}
 
 		for _, tc := range tests {
