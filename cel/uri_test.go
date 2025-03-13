@@ -28,42 +28,41 @@ func TestUri(t *testing.T) {
 		str   string
 		valid bool
 	}{
-		// {"bad_hash", "https://example.com##", false},
-		// {
-		// 	"valid/authority_path-abempty_with_query_and_fragment",
-		// 	"foo://example.com/0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20!$&'()*+,;=:@%20",
-		// 	true,
-		// },
-		// {
-		// 	"valid/authority_path-abempty_with_query_and_fragment",
-		// 	"foo://example.com/0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20!$&'()*+,;=:@%20",
-		// 	true,
-		// },
-		// {
-		// 	"invalid/fragment_bad_pct-encoded/b",
-		// 	"https://example.com#%",
-		// 	false,
-		// },
-		// {
-		// 	"valid/query-extra",
-		// 	"https://example.com?/?",
-		// 	true,
-		// },
-		// {
-		// 	"valid/userinfo_sub-delims",
-		// 	"https://!$&'()*+,;=@example.com",
-		// 	true,
-		// },
-		// {
-		// 	"valid/port_65536",
-		// 	"https://example.com:65536",
-		// 	true,
-		// },
 		{
-			"invalid/host_reg-name_pct-encoded_invalid_utf8",
-			"https://foo%c3x%96",
+			"bad_hash",
+			"https://example.com##",
 			false,
 		},
+		{
+			"valid/authority_path-abempty_with_query_and_fragment",
+			"foo://example.com/0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20!$&'()*+,;=:@%20",
+			true,
+		},
+		{
+			"invalid/fragment_bad_pct-encoded/b",
+			"https://example.com#%",
+			false,
+		},
+		{
+			"valid/query-extra",
+			"https://example.com?/?",
+			true,
+		},
+		{
+			"valid/userinfo_sub-delims",
+			"https://!$&'()*+,;=@example.com",
+			true,
+		},
+		{
+			"valid/port_65536",
+			"https://example.com:65536",
+			true,
+		},
+		// {
+		// 	"invalid/host_reg-name_pct-encoded_invalid_utf8",
+		// 	"https://foo%c3x%96",
+		// 	false,
+		// },
 	}
 
 	for _, tc := range tests {
