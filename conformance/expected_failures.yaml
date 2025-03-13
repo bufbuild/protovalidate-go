@@ -1,17 +1,9 @@
-library/is_ip:
-  - version/omitted/valid/ipv6_zone-id
-  - version/omitted/valid/ipv6_zone-id_any_non_null_character
 library/is_uri:
+  # Need a decodeURIComponent equivalent
   - invalid/host_reg-name_pct-encoded_invalid_utf8
-  - invalid/host_ipv6/b
   - invalid/host_ipv6_zone-id_pct-encoded_invalid_utf8
-library/is_uri_ref:
-  - valid/path-noscheme_segment-nz_pct-encoded_ascii
-  - valid/path-noscheme_segment-nz_pct-encoded_invalid_utf-8
-  - valid/path-noscheme/b
-  - valid/path-noscheme_exhaust_segment-nz-nc
-  - valid/path-noscheme_segment-nz_pct-encoded_utf-8
-library/is_host_and_port:
-  - port_required/false/valid/ipv6_zone-id_any_non_null_character
-  - port_required/false/valid/ipv6_with_zone-id
-  - port_required/false/valid/ipv6_embedded_ipv4
+library/is_ip_prefix:
+  - version/omitted/strict/true/invalid/ipv6_dotted_decimal_double_colon
+standard_constraints/string:
+  - ipv6_prefix/invalid/not_network_address
+

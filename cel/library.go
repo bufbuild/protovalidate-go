@@ -17,10 +17,7 @@ package cel
 import (
 	"bytes"
 	"math"
-	"net"
-	"net/netip"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/google/cel-go/cel"
@@ -353,7 +350,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !vok || !pok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.isHostAndPort(val, portReq))
+					return types.Bool(l.validateHostAndPort(val, portReq))
 				}),
 			),
 		),
@@ -439,68 +436,15 @@ func (l library) validateEmail(addr string) bool {
 }
 
 func (l library) validateHostname(host string) bool {
-	if len(host) > 253 {
-		return false
-	}
-
-	s := strings.ToLower(strings.TrimSuffix(host, "."))
-	allDigits := false
-	// split hostname on '.' and validate each part
-	for _, part := range strings.Split(s, ".") {
-		allDigits = true
-		// if part is empty, longer than 63 chars, or starts/ends with '-', it is invalid
-		if l := len(part); l == 0 || l > 63 || part[0] == '-' || part[l-1] == '-' {
-			return false
-		}
-		// for each character in part
-		for _, ch := range part {
-			// if the character is not a-z, 0-9, or '-', it is invalid
-			if (ch < 'a' || ch > 'z') && (ch < '0' || ch > '9') && ch != '-' {
-				return false
-			}
-			allDigits = allDigits && ch >= '0' && ch <= '9'
-		}
-	}
-
-	// the last part cannot be all numbers
-	return !allDigits
+	return isHostname(host)
 }
 
 func (l library) validateIP(addr string, ver int64) bool {
-	address := net.ParseIP(addr)
-	if address == nil {
-		return false
-	}
-	switch ver {
-	case 0:
-		return true
-	case 4:
-		return address.To4() != nil
-	case 6:
-		return address.To4() == nil
-	default:
-		return false
-	}
+	return isIP(addr, ver)
 }
 
 func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
-	prefix, err := netip.ParsePrefix(p)
-	if err != nil {
-		return false
-	}
-	if strict && (prefix.Addr() != prefix.Masked().Addr()) {
-		return false
-	}
-	switch ver {
-	case 0:
-		return true
-	case 4:
-		return prefix.Addr().Is4()
-	case 6:
-		return prefix.Addr().Is6()
-	default:
-		return false
-	}
+	return isIpPrefix(p, ver, strict)
 }
 
 func (l library) isURI(val string) bool {
@@ -511,40 +455,8 @@ func (l library) isURIRef(val string) bool {
 	return NewURI(val).uriReference()
 }
 
-func (l library) isHostAndPort(val string, portRequired bool) bool {
-	if len(val) == 0 {
-		return false
-	}
-
-	splitIdx := strings.LastIndexByte(val, ':')
-	if val[0] == '[' { // ipv6
-		end := strings.IndexByte(val, ']')
-		switch end + 1 {
-		case len(val): // no port
-			return !portRequired && l.validateIP(val[1:end], 6)
-		case splitIdx: // port
-			return l.validateIP(val[1:end], 6) &&
-				l.validatePort(val[splitIdx+1:])
-		default: // malformed
-			return false
-		}
-	}
-
-	if splitIdx < 0 {
-		return !portRequired &&
-			(l.validateHostname(val) ||
-				l.validateIP(val, 4))
-	}
-
-	host, port := val[:splitIdx], val[splitIdx+1:]
-	return (l.validateHostname(host) ||
-		l.validateIP(host, 4)) &&
-		l.validatePort(port)
-}
-
-func (l library) validatePort(val string) bool {
-	n, err := strconv.ParseUint(val, 10, 32)
-	return err == nil && n <= 65535
+func (l library) validateHostAndPort(val string, portRequired bool) bool {
+	return isHostAndPort(val, portRequired)
 }
 
 // RequiredEnvOptions returns the options required to have expressions which

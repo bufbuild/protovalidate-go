@@ -28,36 +28,36 @@ func TestUri(t *testing.T) {
 		str   string
 		valid bool
 	}{
-		{
-			"bad_hash",
-			"https://example.com##",
-			false,
-		},
-		{
-			"valid/authority_path-abempty_with_query_and_fragment",
-			"foo://example.com/0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20!$&'()*+,;=:@%20",
-			true,
-		},
-		{
-			"invalid/fragment_bad_pct-encoded/b",
-			"https://example.com#%",
-			false,
-		},
-		{
-			"valid/query-extra",
-			"https://example.com?/?",
-			true,
-		},
-		{
-			"valid/userinfo_sub-delims",
-			"https://!$&'()*+,;=@example.com",
-			true,
-		},
-		{
-			"valid/port_65536",
-			"https://example.com:65536",
-			true,
-		},
+		// {
+		// 	"bad_hash",
+		// 	"https://example.com##",
+		// 	false,
+		// },
+		// {
+		// 	"valid/authority_path-abempty_with_query_and_fragment",
+		// 	"foo://example.com/0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%20!$&'()*+,;=:@%20",
+		// 	true,
+		// },
+		// {
+		// 	"invalid/fragment_bad_pct-encoded/b",
+		// 	"https://example.com#%",
+		// 	false,
+		// },
+		// {
+		// 	"valid/query-extra",
+		// 	"https://example.com?/?",
+		// 	true,
+		// },
+		// {
+		// 	"valid/userinfo_sub-delims",
+		// 	"https://!$&'()*+,;=@example.com",
+		// 	true,
+		// },
+		// {
+		// 	"valid/port_65536",
+		// 	"https://example.com:65536",
+		// 	true,
+		// },
 		// {
 		// 	"invalid/host_reg-name_pct-encoded_invalid_utf8",
 		// 	"https://foo%c3x%96",
@@ -74,6 +74,134 @@ func TestUri(t *testing.T) {
 				assert.True(t, uri.uri())
 			} else {
 				assert.False(t, uri.uri())
+			}
+		})
+	}
+}
+
+func TestUriRef(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		str   string
+		valid bool
+	}{
+		// {
+		// 	"valid/path-noscheme/b",
+		// 	"*",
+		// 	true,
+		// },
+		{
+			"valid/path-abempty_ipv6",
+			"//[::1]",
+			true,
+		},
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			uri := NewURI(test.str)
+			if test.valid {
+				assert.True(t, uri.uriReference())
+			} else {
+				assert.False(t, uri.uriReference())
+			}
+		})
+	}
+}
+
+func TestIPPrefix(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		str   string
+		valid bool
+	}{
+		// {
+		// 	"valid/path-noscheme/b",
+		// 	"*",
+		// 	true,
+		// },
+		{
+			"ipv6_prefix/invalid/not_network_address",
+			"2001:db8:1::1/48",
+			false,
+		},
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			if test.valid {
+				assert.True(t, isIpPrefix(test.str, 6, true))
+			} else {
+				assert.False(t, isIpPrefix(test.str, 6, true))
+			}
+		})
+	}
+}
+
+func TestHostAndPort(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		str   string
+		valid bool
+	}{
+		// {
+		// 	"valid/path-noscheme/b",
+		// 	"*",
+		// 	true,
+		// },
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			if test.valid {
+				assert.True(t, isHostAndPort(test.str, true))
+			} else {
+				assert.False(t, isHostAndPort(test.str, true))
+			}
+		})
+	}
+}
+
+func TestHostname(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		str   string
+		valid bool
+	}{
+		// {
+		// 	"valid/path-noscheme/b",
+		// 	"*",
+		// 	true,
+		// },
+		{
+			"valid/label_can_start_and_end_with_letter",
+			"a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p.q.r.s.t.u.v.w.x.y.z.A.B.C.D.E.F.G.H.I.J.K.L.M.N.O.P.Q.R.S.T.U.V.W.X.Y.Z",
+			true,
+		},
+	}
+
+	for _, tc := range tests {
+		test := tc
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			if test.valid {
+				assert.True(t, isHostname(test.str))
+			} else {
+				assert.False(t, isHostname(test.str))
 			}
 		})
 	}

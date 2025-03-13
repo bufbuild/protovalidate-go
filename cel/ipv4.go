@@ -14,7 +14,11 @@
 
 package cel
 
-import "strconv"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
 type Ipv4 struct {
 	str       string
@@ -22,6 +26,10 @@ type Ipv4 struct {
 	l         int64
 	octets    []int64
 	prefixLen int64
+}
+
+func (i *Ipv4) log(s string) {
+	fmt.Fprintf(os.Stderr, "ipv4 -- %s: index:%d strlen:%d\n", s, i.index, i.l)
 }
 
 // Return the 32-bit value of an address parsed through address() or addressPrefix().
@@ -55,6 +63,7 @@ func (i *Ipv4) address() bool {
 
 // Parse Ipv4 Address prefix.
 func (i *Ipv4) addressPrefix() bool {
+	i.log("addressPrefix")
 	return i.addressPart() &&
 		i.take('/') &&
 		i.prefixLength() &&
@@ -63,9 +72,10 @@ func (i *Ipv4) addressPrefix() bool {
 
 // Stores value in `prefixLen`.
 func (i *Ipv4) prefixLength() bool {
+	i.log("prefixLength")
 	start := i.index
 	for {
-		if !i.digit() {
+		if i.index >= i.l || !i.digit() {
 			break
 		}
 		if i.index-start > 2 {
@@ -96,6 +106,7 @@ func (i *Ipv4) prefixLength() bool {
 }
 
 func (i *Ipv4) addressPart() bool {
+	i.log("addressPart")
 	start := i.index
 	if i.decOctet() &&
 		i.take('.') &&
@@ -104,6 +115,7 @@ func (i *Ipv4) addressPart() bool {
 		i.decOctet() &&
 		i.take('.') &&
 		i.decOctet() {
+		i.log("safe")
 		return true
 	}
 	i.index = start
@@ -111,9 +123,10 @@ func (i *Ipv4) addressPart() bool {
 }
 
 func (i *Ipv4) decOctet() bool {
+	i.log("decOctet")
 	start := i.index
 	for {
-		if !i.digit() {
+		if i.index >= i.l || !i.digit() {
 			break
 		}
 		if i.index-start > 3 {
@@ -121,6 +134,7 @@ func (i *Ipv4) decOctet() bool {
 			return false
 		}
 	}
+	i.log("decOctet loop done")
 	str := i.str[start:i.index]
 	if len(str) == 0 {
 		// too short
@@ -138,11 +152,13 @@ func (i *Ipv4) decOctet() bool {
 		return false
 	}
 	i.octets = append(i.octets, value)
+	i.log("decOctet returning true")
 	return true
 }
 
 // DIGIT = %x30-39  ; 0-9.
 func (i *Ipv4) digit() bool {
+	i.log("digit")
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
 		i.index++
@@ -152,6 +168,9 @@ func (i *Ipv4) digit() bool {
 }
 
 func (i *Ipv4) take(char byte) bool {
+	if i.index >= i.l {
+		return false
+	}
 	if i.str[i.index] == char {
 		i.index++
 		return true
