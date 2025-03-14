@@ -15,9 +15,7 @@
 package cel
 
 import (
-	"fmt"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -212,10 +210,6 @@ func (u *URI) uri() bool {
 // i.e., it follows the syntax URI-reference = URI / relative-ref.
 func (u *URI) uriReference() bool {
 	return u.uri() || u.relativeRef()
-}
-
-func (u *URI) log(s string) {
-	fmt.Fprintf(os.Stderr, "%s: index:%d strlen:%d\n", s, u.index, u.strLen)
 }
 
 // Parses str from the current index to determine if it contains a valid

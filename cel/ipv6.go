@@ -15,8 +15,6 @@
 package cel
 
 import (
-	"fmt"
-	"os"
 	"slices"
 	"strconv"
 )
@@ -32,10 +30,6 @@ type Ipv6 struct {
 	dottedAddr      *Ipv4  // dotted notation successfully parsed as IPv4
 	zoneIDFound     bool
 	prefixLen       int64 // 0 - 128
-}
-
-func (i *Ipv6) log(s string) {
-	fmt.Fprintf(os.Stderr, "ipv6 -- %s: index:%d strlen:%d\n", s, i.index, i.strLen)
 }
 
 // Return the 128-bit value of an address parsed through address() or addressPrefix(),

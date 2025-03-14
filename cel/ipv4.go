@@ -15,8 +15,6 @@
 package cel
 
 import (
-	"fmt"
-	"os"
 	"strconv"
 )
 
@@ -26,10 +24,6 @@ type Ipv4 struct {
 	l         int64
 	octets    []int64
 	prefixLen int64
-}
-
-func (i *Ipv4) log(s string) {
-	fmt.Fprintf(os.Stderr, "ipv4 -- %s: index:%d strlen:%d\n", s, i.index, i.l)
 }
 
 // Return the 32-bit value of an address parsed through address() or addressPrefix().
