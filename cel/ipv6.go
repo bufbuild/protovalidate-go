@@ -101,7 +101,7 @@ func (i *Ipv6) addressPrefix() bool {
 		i.index == i.strLen
 }
 
-// Stores value in `prefixLen`.
+// Determines the prefix length. Stores value in `prefixLen`.
 func (i *Ipv6) prefixLength() bool {
 	start := i.index
 	for {
@@ -175,7 +175,7 @@ func (i *Ipv6) addressPart() bool {
 // There is no definition for the character set allowed in the zone
 // identifier. RFC 4007 permits basically any non-null string.
 //
-// RFC 6874: ZoneID = 1*( unreserved / pct-encoded ).
+// RFC 6874 defines it as ZoneID = 1*( unreserved / pct-encoded ).
 func (i *Ipv6) zoneID() bool {
 	start := i.index
 	if i.take('%') {
@@ -191,6 +191,9 @@ func (i *Ipv6) zoneID() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// dotted sequence defined as:
+//
 // 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT
 // Stores match in `dottedRaw`.
 func (i *Ipv6) dotted() bool {
@@ -210,6 +213,9 @@ func (i *Ipv6) dotted() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// h16 defined as:
+//
 // h16 = 1*4HEXDIG
 // Stores 16-bit value in `pieces`.
 func (i *Ipv6) h16() bool {
@@ -237,7 +243,9 @@ func (i *Ipv6) h16() bool {
 	return true
 }
 
-// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
+// Returns whether the byte at the current index is a hexadecimal digit (defined
+// as HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F". If true, it
+// increments the index.
 func (i *Ipv6) hexdig() bool {
 	c := i.str[i.index]
 	if ('0' <= c && c <= '9') ||
@@ -249,7 +257,8 @@ func (i *Ipv6) hexdig() bool {
 	return false
 }
 
-// DIGIT = %x30-39  ; 0-9.
+// Returns whether the byte at the current index is a digit (defined as
+// %x30-39  ; 0-9). If true, it increments the index.
 func (i *Ipv6) digit() bool {
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {

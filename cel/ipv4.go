@@ -21,7 +21,7 @@ import (
 type Ipv4 struct {
 	str       string
 	index     int64
-	l         int64
+	strLen    int64
 	octets    []int64
 	prefixLen int64
 }
@@ -52,7 +52,7 @@ func (i *Ipv4) isPrefixOnly() bool {
 
 // Parse Ipv4 Address in dotted decimal notation.
 func (i *Ipv4) address() bool {
-	return i.addressPart() && i.index == i.l
+	return i.addressPart() && i.index == i.strLen
 }
 
 // Parse Ipv4 Address prefix.
@@ -60,14 +60,14 @@ func (i *Ipv4) addressPrefix() bool {
 	return i.addressPart() &&
 		i.take('/') &&
 		i.prefixLength() &&
-		i.index == i.l
+		i.index == i.strLen
 }
 
-// Stores value in `prefixLen`.
+// Determines the prefix length. Stores value in `prefixLen`.
 func (i *Ipv4) prefixLength() bool {
 	start := i.index
 	for {
-		if i.index >= i.l || !i.digit() {
+		if i.index >= i.strLen || !i.digit() {
 			break
 		}
 		if i.index-start > 2 {
@@ -97,6 +97,7 @@ func (i *Ipv4) prefixLength() bool {
 	return true
 }
 
+// Parses str from the current index to determine an address part.
 func (i *Ipv4) addressPart() bool {
 	start := i.index
 	if i.decOctet() &&
@@ -112,10 +113,11 @@ func (i *Ipv4) addressPart() bool {
 	return false
 }
 
+// Parses str from the current index to determine a decimal octet.
 func (i *Ipv4) decOctet() bool {
 	start := i.index
 	for {
-		if i.index >= i.l || !i.digit() {
+		if i.index >= i.strLen || !i.digit() {
 			break
 		}
 		if i.index-start > 3 {
@@ -158,7 +160,7 @@ func (i *Ipv4) digit() bool {
 // If char is not at the current index or the end of str has been reached,
 // return false.
 func (i *Ipv4) take(char byte) bool {
-	if i.index >= i.l {
+	if i.index >= i.strLen {
 		return false
 	}
 	if i.str[i.index] == char {
@@ -168,11 +170,12 @@ func (i *Ipv4) take(char byte) bool {
 	return false
 }
 
+// NewIpv4 creates a new Ipv4 based on str.
 func NewIpv4(str string) *Ipv4 {
 	return &Ipv4{
 		str:       str,
 		index:     0,
-		l:         int64(len(str)),
+		strLen:    int64(len(str)),
 		octets:    make([]int64, 0),
 		prefixLen: 0,
 	}
