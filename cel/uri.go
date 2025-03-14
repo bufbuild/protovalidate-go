@@ -472,7 +472,10 @@ func (u *URI) ipv6Address() bool {
 	return false
 }
 
-// RFC 6874: IPv6addrz = IPv6address "%25" ZoneID.
+// Parses str from the current index to determine if it contains a valid
+// IPv6addrz defined by RFC 6874 as:
+//
+// IPv6addrz = IPv6address "%25" ZoneID.
 func (u *URI) ipv6addrz() bool {
 	start := u.index
 	if u.ipv6Address() &&
@@ -486,7 +489,10 @@ func (u *URI) ipv6addrz() bool {
 	return false
 }
 
-// RFC 6874: ZoneID = 1*( unreserved / pct-encoded ).
+// Parses str from the current index to determine if it contains a valid
+// ZoneID defined by RFC 6874 as:
+//
+// ZoneID = 1*( unreserved / pct-encoded ).
 func (u *URI) zoneID() bool {
 	start := u.index
 	for {
@@ -501,6 +507,9 @@ func (u *URI) zoneID() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// IPvFuture defined as:
+//
 // IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" ).
 func (u *URI) ipvFuture() bool {
 	start := u.index
@@ -527,7 +536,11 @@ func (u *URI) ipvFuture() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// reg-name defined as:
+//
 // reg-name = *( unreserved / pct-encoded / sub-delims ).
+//
 // Terminates on start of port (":") or end of authority.
 func (u *URI) regName() bool {
 	start := u.index
@@ -547,13 +560,17 @@ func (u *URI) regName() bool {
 	}
 }
 
-// > The path is terminated by the first question mark ("?") or
-// > number sign ("#") character, or by the end of the URI.
+// The path is terminated by the first question mark ("?") or
+// number sign ("#") character, or by the end of the URI.
 func (u *URI) isPathEnd() bool {
 	return u.index >= u.strLen || u.str[u.index] == '?' || u.str[u.index] == '#'
 }
 
+// Parses str from the current index to determine if it contains a valid
+// path-abempty defined as:
+//
 // path-abempty = *( "/" segment )
+//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathAbempty() bool {
 	start := u.index
@@ -569,7 +586,11 @@ func (u *URI) pathAbempty() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// path-absolute defined as:
+//
 // path-absolute = "/" [ segment-nz *( "/" segment ) ]
+//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathAbsolute() bool {
 	start := u.index
@@ -589,7 +610,11 @@ func (u *URI) pathAbsolute() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// path-noscheme defined as:
+//
 // path-noscheme = segment-nz-nc *( "/" segment )
+//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathNoscheme() bool {
 	start := u.index
@@ -607,7 +632,11 @@ func (u *URI) pathNoscheme() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// path-rootless defined as:
+//
 // path-rootless = segment-nz *( "/" segment )
+//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathRootless() bool {
 	start := u.index
@@ -625,12 +654,19 @@ func (u *URI) pathRootless() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// path-empty defined as:
+//
 // path-empty = 0<pchar>
+//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathEmpty() bool {
 	return u.isPathEnd()
 }
 
+// Parses str from the current index to determine if it contains a valid
+// segment defined as:
+//
 // segment = *pchar.
 func (u *URI) segment() bool {
 	for {
@@ -641,6 +677,9 @@ func (u *URI) segment() bool {
 	return true
 }
 
+// Parses str from the current index to determine if it contains a valid
+// segment-nz defined as:
+//
 // segment-nz = 1*pchar.
 func (u *URI) segmentNz() bool {
 	start := u.index
@@ -651,8 +690,11 @@ func (u *URI) segmentNz() bool {
 	return false
 }
 
-// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" ).
-// ; non-zero-length segment without any colon ":".
+// Parses str from the current index to determine if it contains a valid
+// segment-nz-nc defined as:
+//
+// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" );
+// non-zero-length segment without any colon ":".
 func (u *URI) segmentNzNc() bool {
 	start := u.index
 	for {
@@ -670,6 +712,9 @@ func (u *URI) segmentNzNc() bool {
 	return false
 }
 
+// Parses str from the current index to determine if it contains a valid
+// pchar defined as:
+//
 // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
 func (u *URI) pchar() bool {
 	return (u.unreserved() ||
@@ -679,6 +724,9 @@ func (u *URI) pchar() bool {
 		u.take('@'))
 }
 
+// Parses str from the current index to determine if it contains a valid
+// query defined as:
+//
 // query = *( pchar / "/" / "?" )
 // Terminated by "#" or end of URI.
 func (u *URI) query() bool {
@@ -695,6 +743,9 @@ func (u *URI) query() bool {
 	}
 }
 
+// Parses str from the current index to determine if it contains a valid
+// fragment defined as:
+//
 // fragment = *( pchar / "/" / "?" )
 // Terminated by end of URI.
 func (u *URI) fragment() bool {
@@ -711,6 +762,9 @@ func (u *URI) fragment() bool {
 	}
 }
 
+// Parses str from the current index to determine if it contains a valid
+// pct encoding defined as:
+//
 // pct-encoded = "%"+HEXDIG+HEXDIG.
 // Sets `pctEncodedFound` to true if a valid triplet was found.
 func (u *URI) pctEncoded() bool {
@@ -723,6 +777,9 @@ func (u *URI) pctEncoded() bool {
 	return false
 }
 
+// Returns whether the byte at the current index is an unreserved character
+// defined as:
+//
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *URI) unreserved() bool {
 	return (u.alpha() ||
@@ -733,6 +790,8 @@ func (u *URI) unreserved() bool {
 		u.take('~'))
 }
 
+// Returns whether the byte at the current index is a subdelim defined as:
+//
 // sub-delims  = "!" / "$" / "&" / "'" / "(" / ")".
 // / "*" / "+" / "," / ";" / "=".
 func (u *URI) subDelims() bool {
@@ -749,7 +808,9 @@ func (u *URI) subDelims() bool {
 		u.take('='))
 }
 
-// ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
+// Returns whether the byte at the current index is an alpha character (defined
+// as ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
+// If true, it increments the index.
 func (u *URI) alpha() bool {
 	if u.index >= u.strLen {
 		return false
