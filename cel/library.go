@@ -236,7 +236,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.isURI(s))
+					return types.Bool(l.validateURI(s))
 				}),
 			),
 		),
@@ -250,7 +250,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.isURIRef(s))
+					return types.Bool(l.validateURIRef(s))
 				}),
 			),
 		),
@@ -435,26 +435,46 @@ func (l library) validateEmail(addr string) bool {
 	return l.emailRegex.MatchString(addr)
 }
 
+// validateHostname validates whether host is a valid hostname.
 func (l library) validateHostname(host string) bool {
 	return isHostname(host)
 }
 
+// validateIP validates whether addr is a valid IP address for the given version.
+// If ver is 4, it will validate str as an ipv4 address. If ver is 6,
+// it will validate as ipv6. If ver is 0, it will validate that str is
+// _either_ ipv4 or ipv6.
+//
+// If ver is any value other than 4, 6, or 0, returns false.
 func (l library) validateIP(addr string, ver int64) bool {
 	return isIP(addr, ver)
 }
 
+// validateIPPrefix validates whether p is a valid IP address for the given
+// version, taking into account the specified strict mode.
+// If ver is 4, it will validate p as an ipv4 prefix. If ver is 6,
+// it will validate as ipv6. If ver is 0, it will validate that p is
+// _either_ a valid ipv4 or valid ipv6.
+//
+// If ver is any value other than 4, 6, or 0, returns false.
 func (l library) validateIPPrefix(p string, ver int64, strict bool) bool {
 	return isIPPrefix(p, ver, strict)
 }
 
-func (l library) isURI(val string) bool {
+// validateURI validates whether val is a valid URI.
+func (l library) validateURI(val string) bool {
 	return NewURI(val).uri()
 }
 
-func (l library) isURIRef(val string) bool {
+// validateURI validates whether val is a valid URI reference.
+func (l library) validateURIRef(val string) bool {
 	return NewURI(val).uriReference()
 }
 
+// validateHostAndPort validates whether val contains a valid host and port.
+//
+// If the argument `portRequired` is true, the port is required. If the argument
+// is false, the port is optional.
 func (l library) validateHostAndPort(val string, portRequired bool) bool {
 	return isHostAndPort(val, portRequired)
 }
