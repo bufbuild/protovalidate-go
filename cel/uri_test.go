@@ -126,14 +126,9 @@ func TestIPPrefix(t *testing.T) {
 		// 	"*",
 		// 	true,
 		// },
-		// {
-		// 	"ipv6_prefix/invalid/not_network_address",
-		// 	"2001:db8:1::1/48",
-		// 	false,
-		// },
 		{
-			"version/omitted/strict/true/invalid/ipv6_dotted_decimal_double_colon",
-			"::ffff:192.1.128.0/112",
+			"ipv6_prefix/invalid/not_network_address",
+			"2001:db8:1::1/48",
 			false,
 		},
 	}

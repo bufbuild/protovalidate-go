@@ -63,7 +63,6 @@ func (i *Ipv4) address() bool {
 
 // Parse Ipv4 Address prefix.
 func (i *Ipv4) addressPrefix() bool {
-	i.log("addressPrefix")
 	return i.addressPart() &&
 		i.take('/') &&
 		i.prefixLength() &&
@@ -72,7 +71,6 @@ func (i *Ipv4) addressPrefix() bool {
 
 // Stores value in `prefixLen`.
 func (i *Ipv4) prefixLength() bool {
-	i.log("prefixLength")
 	start := i.index
 	for {
 		if i.index >= i.l || !i.digit() {
@@ -106,7 +104,6 @@ func (i *Ipv4) prefixLength() bool {
 }
 
 func (i *Ipv4) addressPart() bool {
-	i.log("addressPart")
 	start := i.index
 	if i.decOctet() &&
 		i.take('.') &&
@@ -115,7 +112,6 @@ func (i *Ipv4) addressPart() bool {
 		i.decOctet() &&
 		i.take('.') &&
 		i.decOctet() {
-		i.log("safe")
 		return true
 	}
 	i.index = start
@@ -123,7 +119,6 @@ func (i *Ipv4) addressPart() bool {
 }
 
 func (i *Ipv4) decOctet() bool {
-	i.log("decOctet")
 	start := i.index
 	for {
 		if i.index >= i.l || !i.digit() {
@@ -134,7 +129,6 @@ func (i *Ipv4) decOctet() bool {
 			return false
 		}
 	}
-	i.log("decOctet loop done")
 	str := i.str[start:i.index]
 	if len(str) == 0 {
 		// too short
@@ -152,13 +146,12 @@ func (i *Ipv4) decOctet() bool {
 		return false
 	}
 	i.octets = append(i.octets, value)
-	i.log("decOctet returning true")
 	return true
 }
 
-// DIGIT = %x30-39  ; 0-9.
+// Returns whether the byte at the current index is a digit (defined as
+// %x30-39  ; 0-9). If true, it increments the index.
 func (i *Ipv4) digit() bool {
-	i.log("digit")
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
 		i.index++
@@ -167,6 +160,9 @@ func (i *Ipv4) digit() bool {
 	return false
 }
 
+// If char is at the current index, return true and increment the index.
+// If char is not at the current index or the end of str has been reached,
+// return false.
 func (i *Ipv4) take(char byte) bool {
 	if i.index >= i.l {
 		return false
