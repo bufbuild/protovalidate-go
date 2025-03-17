@@ -327,9 +327,9 @@ func (u *URI) authority() bool {
 	return true
 }
 
-// The authority component [...] is terminated by the next slash ("/"),
-// question mark ("?"), or number > sign ("#") character, or by the
-// end of the URI.
+// > The authority component [...] is terminated by the next slash ("/"),
+// > question mark ("?"), or number sign ("#") character, or by the
+// > end of the URI.
 func (u *URI) isAuthorityEnd() bool {
 	return u.index >= u.strLen ||
 		u.str[u.index] == '?' ||
