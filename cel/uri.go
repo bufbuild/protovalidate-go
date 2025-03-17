@@ -169,7 +169,7 @@ func isHostAndPort(str string, portRequired bool) bool {
 	return (isHostname(host) || isIP(host, 4)) && isPort(port)
 }
 
-// Returns true if the string is a valid port for isHostAndPort.
+// Returns true if the string is a valid port.
 func isPort(str string) bool {
 	if len(str) == 0 {
 		return false
@@ -269,10 +269,11 @@ func (u *URI) relativeRef() bool {
 // Parses str from the current index to determine if it contains a valid
 // relative-part defined as:
 //
-//	relative-part = "//" authority path-abempty
-//	              / path-absolute
-//	              / path-noscheme
-//	              / path-empty
+// relative-part = "//" authority path-abempty.
+// path-absolute.
+// path-noscheme.
+// path-empty.
+func (u *URI) relativePart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
 		u.take('/') &&
@@ -337,9 +338,9 @@ func (u *URI) authority() bool {
 	return true
 }
 
-// > The authority component [...] is terminated by the next slash ("/"),
-// > question mark ("?"), or number sign ("#") character, or by the
-// > end of the URI.
+// The authority component [...] is terminated by the next slash ("/"),
+// question mark ("?"), or number > sign ("#") character, or by the
+// end of the URI.
 func (u *URI) isAuthorityEnd() bool {
 	return u.index >= u.strLen ||
 		u.str[u.index] == '?' ||
@@ -353,7 +354,6 @@ func (u *URI) isAuthorityEnd() bool {
 // userinfo = *( unreserved / pct-encoded / sub-delims / ":" ).
 //
 // Terminated by "@" in authority.
-// If the end of the string is found before the "@" terminator, false is returned.
 func (u *URI) userinfo() bool {
 	start := u.index
 	for {
@@ -792,12 +792,12 @@ func (u *URI) pctEncoded() bool {
 //
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *URI) unreserved() bool {
-	return u.alpha() ||
+	return (u.alpha() ||
 		u.digit() ||
 		u.take('-') ||
 		u.take('_') ||
 		u.take('.') ||
-		u.take('~')
+		u.take('~'))
 }
 
 // Returns whether the byte at the current index is a subdelim defined as:
@@ -805,7 +805,7 @@ func (u *URI) unreserved() bool {
 // sub-delims  = "!" / "$" / "&" / "'" / "(" / ")".
 // / "*" / "+" / "," / ";" / "=".
 func (u *URI) subDelims() bool {
-	return u.take('!') ||
+	return (u.take('!') ||
 		u.take('$') ||
 		u.take('&') ||
 		u.take('\'') ||
@@ -815,7 +815,7 @@ func (u *URI) subDelims() bool {
 		u.take('+') ||
 		u.take(',') ||
 		u.take(';') ||
-		u.take('=')
+		u.take('='))
 }
 
 // Returns whether the byte at the current index is an alpha character (defined
