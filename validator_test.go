@@ -323,6 +323,80 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		}, descs)
 		require.Error(t, err)
 	})
+
+	t.Run("FilterIncludeCompilationError", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.MixedValidInvalidConstraints{
+			StringFieldBoolConstraint: "foo",
+			ValidStringConstraint:     "bar",
+		}
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+				return d == msg.ProtoReflect().Descriptor().Fields().Get(0)
+			},
+		)))
+		require.Error(t, err)
+		compErr := &CompilationError{}
+		require.ErrorAs(t, err, &compErr)
+		valErr := &ValidationError{}
+		require.NotErrorAs(t, err, &valErr)
+	})
+
+	t.Run("FilterExcludeCompilationError", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.MixedValidInvalidConstraints{
+			ValidStringConstraint:     "bar",
+			StringFieldBoolConstraint: "foo",
+		}
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+				return d == msg.ProtoReflect().Descriptor().Fields().Get(1)
+			},
+		)))
+		require.Error(t, err)
+		compErr := &CompilationError{}
+		require.NotErrorAs(t, err, &compErr)
+		valErr := &ValidationError{}
+		require.ErrorAs(t, err, &valErr)
+		require.Len(t, valErr.Violations, 1)
+	})
+}
+
+func TestValidator_ValidateCompilationError(t *testing.T) {
+	t.Parallel()
+
+	t.Run("CompilationErrorNoViolations", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.MismatchConstraints{}
+		err = val.Validate(msg)
+		require.Error(t, err)
+		compErr := &CompilationError{}
+		require.ErrorAs(t, err, &compErr)
+		valErr := &ValidationError{}
+		require.NotErrorAs(t, err, &valErr)
+	})
+
+	t.Run("CompilationErrorWithViolations", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.MixedValidInvalidConstraints{
+			StringFieldBoolConstraint: "foo",
+			ValidStringConstraint:     "bar",
+		}
+		err = val.Validate(msg)
+		require.Error(t, err)
+		compErr := &CompilationError{}
+		require.ErrorAs(t, err, &compErr)
+		valErr := &ValidationError{}
+		require.NotErrorAs(t, err, &valErr)
+	})
 }
 
 func TestValidator_Validate_Issue141(t *testing.T) {
