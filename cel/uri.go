@@ -795,7 +795,7 @@ func (u *URI) unreserved() bool {
 // sub-delims  = "!" / "$" / "&" / "'" / "(" / ")".
 // / "*" / "+" / "," / ";" / "=".
 func (u *URI) subDelims() bool {
-	return (u.take('!') ||
+	return u.take('!') ||
 		u.take('$') ||
 		u.take('&') ||
 		u.take('\'') ||
@@ -805,7 +805,7 @@ func (u *URI) subDelims() bool {
 		u.take('+') ||
 		u.take(',') ||
 		u.take(';') ||
-		u.take('='))
+		u.take('=')
 }
 
 // Returns whether the byte at the current index is an alpha character (defined
