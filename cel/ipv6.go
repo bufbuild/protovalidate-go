@@ -23,8 +23,8 @@ type Ipv6 struct {
 	str             string
 	index           int
 	strLen          int
-	pieces          []int64 // 16-bit pieces found
-	doubleColonAt   int     // number of 16-bit pieces found when double colon was found
+	pieces          []uint16 // 16-bit pieces found
+	doubleColonAt   int      // number of 16-bit pieces found when double colon was found
 	doubleColonSeen bool
 	dottedRaw       string // dotted notation for right-most 32 bits
 	dottedAddr      *Ipv4  // dotted notation successfully parsed as IPv4
@@ -33,15 +33,17 @@ type Ipv6 struct {
 }
 
 // Return the 128-bit value of an address parsed through address() or addressPrefix(),
-// as a 4-tuple of 32-bit values.
-// Return [0,0,0,0] if no address was parsed successfully.
-func (i *Ipv6) getBits() [4]int64 {
+// as a 2-tuple of 64-bit values.
+// Return [0,0] if no address was parsed successfully.
+func (i *Ipv6) getBits() [4]uint32 {
 	p16 := i.pieces
 	// handle dotted decimal, add to p16
 	if i.dottedAddr != nil {
 		dotted32 := i.dottedAddr.getBits() // right-most 32 bits
-		p16 = append(p16, dotted32>>16)    // high 16 bits
-		p16 = append(p16, dotted32)        // low 16 bits
+		// high 16 bits
+		p16 = append(p16, uint16(dotted32>>16)) //nolint:gosec
+		// low 16 bits
+		p16 = append(p16, uint16(dotted32)) //nolint:gosec
 	}
 	// handle double colon, fill pieces with 0
 	if i.doubleColonSeen {
@@ -54,13 +56,13 @@ func (i *Ipv6) getBits() [4]int64 {
 		}
 	}
 	if len(p16) != 8 {
-		return [4]int64{0, 0, 0, 0}
+		return [4]uint32{0, 0, 0, 0}
 	}
-	return [4]int64{
-		((p16[0] << 16) | p16[1]),
-		((p16[2] << 16) | p16[3]),
-		((p16[4] << 16) | p16[5]),
-		((p16[6] << 16) | p16[7]),
+	return [4]uint32{
+		((uint32(p16[0]) << 16) | uint32(p16[1])),
+		((uint32(p16[2]) << 16) | uint32(p16[3])),
+		((uint32(p16[4]) << 16) | uint32(p16[5])),
+		((uint32(p16[6]) << 16) | uint32(p16[7])),
 	}
 }
 
@@ -71,7 +73,7 @@ func (i *Ipv6) isPrefixOnly() bool {
 	// For each 32-bit piece of the address, require that values to the right of the prefix are zero
 	for idx, p32 := range i.getBits() {
 		size := i.prefixLen - 32*int64(idx)
-		var mask int64
+		var mask uint32
 		if size >= 32 { //nolint:gocritic
 			mask = 0xffffffff
 		} else if size < 0 {
@@ -232,11 +234,11 @@ func (i *Ipv6) h16() bool {
 		return false
 	}
 
-	value, err := strconv.ParseInt(str, 16, 32)
+	value, err := strconv.ParseUint(str, 16, 16)
 	if err != nil {
 		return false
 	}
-	i.pieces = append(i.pieces, value)
+	i.pieces = append(i.pieces, uint16(value))
 	return true
 }
 
@@ -281,7 +283,7 @@ func NewIpv6(str string) *Ipv6 {
 	return &Ipv6{
 		str:           str,
 		strLen:        len(str),
-		pieces:        make([]int64, 0),
+		pieces:        make([]uint16, 0),
 		doubleColonAt: -1,
 		dottedAddr:    nil,
 	}
