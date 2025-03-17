@@ -20,10 +20,20 @@ import (
 	"strings"
 )
 
-// Returns whether the given string is a valid IP address for the given version.
-// If version is 4, it will validate str as an ipv4 address. If version is 6,
-// it will validate as ipv6. If version is 0, it will validate that str is
-// _either_ ipv4 or ipv6.
+/**
+ * Returns true if the string is an IPv4 or IPv6 address, optionally limited to
+ * a specific version.
+ *
+ * Version 0 means either 4 or 6. Passing a version other than 0, 4, or 6 always
+ * returns false.
+ *
+ * IPv4 addresses are expected in the dotted decimal format, for example "192.168.5.21".
+ * IPv6 addresses are expected in their text representation, for example "::1",
+ * or "2001:0DB8:ABCD:0012::0".
+ *
+ * Both formats are well-defined in the internet standard RFC 3986. Zone
+ * identifiers for IPv6 addresses (for example "fe80::a%en1") are supported.
+ */
 func isIP(str string, version int64) bool {
 	if version == 6 {
 		return NewIpv6(str).address()
@@ -212,13 +222,14 @@ func (u *URI) uriReference() bool {
 	return u.uri() || u.relativeRef()
 }
 
-// Parses str from the current index to determine if it contains a valid
-// hier-part defined as:
-//
-// hier-part = "//" authority path-abempty
-// / path-absolute
-// / path-rootless
-// / path-empty.
+/* Parses str from the current index to determine if it contains a valid
+ * hier-part defined as:
+ *
+ * hier-part = "//" authority path-abempty
+ *               / path-absolute
+ *                / path-rootless
+ *                / path-empty.
+ */
 func (u *URI) hierPart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck

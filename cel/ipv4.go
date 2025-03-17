@@ -27,12 +27,12 @@ type Ipv4 struct {
 }
 
 // Return the 32-bit value of an address parsed through address() or addressPrefix().
-// Return -1 if no address was parsed successfully.
+// Return 0 if no address was parsed successfully.
 func (i *Ipv4) getBits() int64 {
 	if len(i.octets) != 4 {
-		return -1
+		return 0
 	}
-	return ((i.octets[0] << 24) | (i.octets[1] << 16) | (i.octets[2] << 8) | i.octets[3]>>0)
+	return (i.octets[0] << 24) | (i.octets[1] << 16) | (i.octets[2] << 8) | i.octets[3]>>0
 }
 
 // Return true if all bits to the right of the prefix-length are all zeros.
@@ -63,7 +63,7 @@ func (i *Ipv4) addressPrefix() bool {
 		i.index == i.strLen
 }
 
-// Determines the prefix length. Stores value in `prefixLen`.
+// Stores value in `prefixLen`.
 func (i *Ipv4) prefixLength() bool {
 	start := i.index
 	for {
