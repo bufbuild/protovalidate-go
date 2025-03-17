@@ -159,7 +159,7 @@ func isHostAndPort(str string, portRequired bool) bool {
 	return (isHostname(host) || isIP(host, 4)) && isPort(port)
 }
 
-// Returns true if the string is a valid port.
+// Returns true if the string is a valid port for isHostAndPort.
 func isPort(str string) bool {
 	if len(str) == 0 {
 		return false
