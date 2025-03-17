@@ -782,12 +782,12 @@ func (u *URI) pctEncoded() bool {
 //
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *URI) unreserved() bool {
-	return (u.alpha() ||
+	return u.alpha() ||
 		u.digit() ||
 		u.take('-') ||
 		u.take('_') ||
 		u.take('.') ||
-		u.take('~'))
+		u.take('~')
 }
 
 // Returns whether the byte at the current index is a subdelim defined as:
