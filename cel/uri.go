@@ -692,8 +692,8 @@ func (u *URI) segmentNz() bool {
 // Parses str from the current index to determine if it contains a valid
 // segment-nz-nc defined as:
 //
-// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" );
-// non-zero-length segment without any colon ":".
+//	segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+//	              ; non-zero-length segment without any colon ":"
 func (u *URI) segmentNzNc() bool {
 	start := u.index
 	for {
