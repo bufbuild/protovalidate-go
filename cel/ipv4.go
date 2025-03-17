@@ -20,8 +20,8 @@ import (
 
 type Ipv4 struct {
 	str       string
-	index     int64
-	strLen    int64
+	index     int
+	strLen    int
 	octets    []int64
 	prefixLen int64
 }
@@ -32,7 +32,7 @@ func (i *Ipv4) getBits() int64 {
 	if len(i.octets) != 4 {
 		return 0
 	}
-	return (i.octets[0] << 24) | (i.octets[1] << 16) | (i.octets[2] << 8) | i.octets[3]>>0
+	return (i.octets[0] << 24) | (i.octets[1] << 16) | (i.octets[2] << 8) | i.octets[3]
 }
 
 // Return true if all bits to the right of the prefix-length are all zeros.
@@ -44,9 +44,9 @@ func (i *Ipv4) isPrefixOnly() bool {
 	if i.prefixLen == 32 {
 		mask = 0xffffffff
 	} else {
-		mask = ^(0xffffffff >> i.prefixLen) >> 0
+		mask = ^(0xffffffff >> i.prefixLen)
 	}
-	masked := (bits & mask) >> 0
+	masked := (bits & mask)
 	return bits == masked
 }
 
@@ -145,8 +145,7 @@ func (i *Ipv4) decOctet() bool {
 	return true
 }
 
-// Returns whether the byte at the current index is a digit (defined as
-// %x30-39  ; 0-9). If true, it increments the index.
+// DIGIT = %x30-39  ; 0-9.
 func (i *Ipv4) digit() bool {
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
@@ -173,10 +172,8 @@ func (i *Ipv4) take(char byte) bool {
 // NewIpv4 creates a new Ipv4 based on str.
 func NewIpv4(str string) *Ipv4 {
 	return &Ipv4{
-		str:       str,
-		index:     0,
-		strLen:    int64(len(str)),
-		octets:    make([]int64, 0),
-		prefixLen: 0,
+		str:    str,
+		strLen: len(str),
+		octets: make([]int64, 0),
 	}
 }

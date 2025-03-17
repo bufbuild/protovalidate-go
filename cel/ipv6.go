@@ -21,8 +21,8 @@ import (
 
 type Ipv6 struct {
 	str             string
-	index           int64
-	strLen          int64
+	index           int
+	strLen          int
 	pieces          []int64 // 16-bit pieces found
 	doubleColonAt   int     // number of 16-bit pieces found when double colon was found
 	doubleColonSeen bool
@@ -39,9 +39,9 @@ func (i *Ipv6) getBits() [4]int64 {
 	p16 := i.pieces
 	// handle dotted decimal, add to p16
 	if i.dottedAddr != nil {
-		dotted32 := i.dottedAddr.getBits()      // right-most 32 bits
-		p16 = append(p16, dotted32>>16)         // high 16 bits
-		p16 = append(p16, dotted32&(0xffff>>0)) // low 16 bits
+		dotted32 := i.dottedAddr.getBits() // right-most 32 bits
+		p16 = append(p16, dotted32>>16)    // high 16 bits
+		p16 = append(p16, dotted32)        // low 16 bits
 	}
 	// handle double colon, fill pieces with 0
 	if i.doubleColonSeen {
@@ -57,10 +57,10 @@ func (i *Ipv6) getBits() [4]int64 {
 		return [4]int64{0, 0, 0, 0}
 	}
 	return [4]int64{
-		((p16[0] << 16) | p16[1]) >> 0,
-		((p16[2] << 16) | p16[3]) >> 0,
-		((p16[4] << 16) | p16[5]) >> 0,
-		((p16[6] << 16) | p16[7]) >> 0,
+		((p16[0] << 16) | p16[1]),
+		((p16[2] << 16) | p16[3]),
+		((p16[4] << 16) | p16[5]),
+		((p16[6] << 16) | p16[7]),
 	}
 }
 
@@ -77,9 +77,9 @@ func (i *Ipv6) isPrefixOnly() bool {
 		} else if size < 0 {
 			mask = 0x00000000
 		} else {
-			mask = ^(0xffffffff >> size) >> 0
+			mask = ^(0xffffffff >> size)
 		}
-		masked := (p32 & mask) >> 0
+		masked := (p32 & mask)
 		if p32 != masked {
 			return false
 		}
@@ -213,9 +213,6 @@ func (i *Ipv6) dotted() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// h16 defined as:
-//
 // h16 = 1*4HEXDIG
 // Stores 16-bit value in `pieces`.
 func (i *Ipv6) h16() bool {
@@ -243,9 +240,7 @@ func (i *Ipv6) h16() bool {
 	return true
 }
 
-// Returns whether the byte at the current index is a hexadecimal digit (defined
-// as HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F". If true, it
-// increments the index.
+// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
 func (i *Ipv6) hexdig() bool {
 	c := i.str[i.index]
 	if ('0' <= c && c <= '9') ||
@@ -257,8 +252,7 @@ func (i *Ipv6) hexdig() bool {
 	return false
 }
 
-// Returns whether the byte at the current index is a digit (defined as
-// %x30-39  ; 0-9). If true, it increments the index.
+// DIGIT = %x30-39  ; 0-9.
 func (i *Ipv6) digit() bool {
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
@@ -286,13 +280,9 @@ func (i *Ipv6) take(char byte) bool {
 func NewIpv6(str string) *Ipv6 {
 	return &Ipv6{
 		str:           str,
-		index:         0,
-		strLen:        int64(len(str)),
+		strLen:        len(str),
 		pieces:        make([]int64, 0),
 		doubleColonAt: -1,
-		dottedRaw:     "",
 		dottedAddr:    nil,
-		zoneIDFound:   false,
-		prefixLen:     0,
 	}
 }

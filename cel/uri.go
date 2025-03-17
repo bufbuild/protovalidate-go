@@ -195,8 +195,7 @@ type URI struct {
 	pctEncodedFound bool
 }
 
-// Returns true if the string used for instantiation is a valid URI, i.e. it
-// follows the syntax URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ].
+// URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ].
 func (u *URI) uri() bool {
 	start := u.index
 	if !(u.scheme() && u.take(':') && u.hierPart()) {
@@ -216,19 +215,15 @@ func (u *URI) uri() bool {
 	return true
 }
 
-// Returns true if the string used for instantiation is a valid URI reference,
-// i.e., it follows the syntax URI-reference = URI / relative-ref.
+// URI-reference = URI / relative-ref.
 func (u *URI) uriReference() bool {
 	return u.uri() || u.relativeRef()
 }
 
-/* Parses str from the current index to determine if it contains a valid
- * hier-part defined as:
- *
- * hier-part = "//" authority path-abempty
- *               / path-absolute
- *                / path-rootless
- *                / path-empty.
+/* hier-part = "//" authority path-abempty.
+ *		     / path-absolute
+ *           / path-rootless
+ *           / path-empty.
  */
 func (u *URI) hierPart() bool {
 	start := u.index
@@ -242,9 +237,6 @@ func (u *URI) hierPart() bool {
 	return u.pathAbsolute() || u.pathRootless() || u.pathEmpty()
 }
 
-// Parses str from the current index to determine if it contains a valid
-// relative-ref defined as:
-//
 // relative-ref = relative-part [ "?" query ] [ "#" fragment ].
 func (u *URI) relativeRef() bool {
 	start := u.index
@@ -266,13 +258,11 @@ func (u *URI) relativeRef() bool {
 	return true
 }
 
-// Parses str from the current index to determine if it contains a valid
-// relative-part defined as:
-//
-// relative-part = "//" authority path-abempty.
-// path-absolute.
-// path-noscheme.
-// path-empty.
+/* relative-part = "//" authority path-abempty.
+ *			     / path-absolute
+ *               / path-noscheme
+ *               / path-empty.
+ */
 func (u *URI) relativePart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
@@ -285,9 +275,6 @@ func (u *URI) relativePart() bool {
 	return u.pathAbsolute() || u.pathNoscheme() || u.pathEmpty()
 }
 
-// Parses str from the current index to determine if it contains a valid
-// scheme defined as:
-//
 // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 //
 // Terminated by ":".
@@ -307,9 +294,6 @@ func (u *URI) scheme() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// authority defined as:
-//
 // authority = [ userinfo "@" ] host [ ":" port ]
 //
 // Lead by double slash ("") and terminated by "/", "?", "#", or end of URI.
@@ -348,10 +332,7 @@ func (u *URI) isAuthorityEnd() bool {
 		u.str[u.index] == '/'
 }
 
-// Parses str from the current index to determine if it contains a valid
-// userinfo defined as:
-//
-// userinfo = *( unreserved / pct-encoded / sub-delims / ":" ).
+// userinfo = *( unreserved / pct-encoded / sub-delims / ":" )
 //
 // Terminated by "@" in authority.
 func (u *URI) userinfo() bool {
@@ -396,9 +377,6 @@ func (u *URI) decodeURIComponent(str string) bool {
 	return true
 }
 
-// Parses str from the current index to determine if it contains a valid
-// host defined as:
-//
 // host = IP-literal / IPv4address / reg-name.
 func (u *URI) host() bool {
 	if u.index >= u.strLen {
@@ -422,9 +400,6 @@ func (u *URI) host() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// port defined as:
-//
 // port = *DIGIT
 // Terminated by end of authority.
 func (u *URI) port() bool {
@@ -441,8 +416,7 @@ func (u *URI) port() bool {
 	}
 }
 
-// Parses str from the current index to determine if it contains a valid
-// IP-literal defined by RFC-6874 as:
+// RFC-6874:
 //
 // IP-literal = "[" ( IPv6address / IPv6addrz / IPvFuture  ) "]".
 func (u *URI) ipLiteral() bool {
@@ -465,9 +439,8 @@ func (u *URI) ipLiteral() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// IPv6 address. Relies on the implementation of isIP(str, 6) to match RFC 3986
-// grammar.
+// IPv6address
+// Relies on the implementation of isIP(str, 6) to match RFC 3986 grammar.
 func (u *URI) ipv6Address() bool {
 	start := u.index
 	for {
@@ -482,9 +455,7 @@ func (u *URI) ipv6Address() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// IPv6addrz defined by RFC 6874 as:
-//
+// RFC 6874:
 // IPv6addrz = IPv6address "%25" ZoneID.
 func (u *URI) ipv6addrz() bool {
 	start := u.index
@@ -499,9 +470,7 @@ func (u *URI) ipv6addrz() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// ZoneID defined by RFC 6874 as:
-//
+// RFC 6874:
 // ZoneID = 1*( unreserved / pct-encoded ).
 func (u *URI) zoneID() bool {
 	start := u.index
@@ -517,9 +486,6 @@ func (u *URI) zoneID() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// IPvFuture defined as:
-//
 // IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" ).
 func (u *URI) ipvFuture() bool {
 	start := u.index
@@ -546,10 +512,7 @@ func (u *URI) ipvFuture() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// reg-name defined as:
-//
-// reg-name = *( unreserved / pct-encoded / sub-delims ).
+// reg-name = *( unreserved / pct-encoded / sub-delims )
 //
 // Terminates on start of port (":") or end of authority.
 func (u *URI) regName() bool {
@@ -576,11 +539,7 @@ func (u *URI) isPathEnd() bool {
 	return u.index >= u.strLen || u.str[u.index] == '?' || u.str[u.index] == '#'
 }
 
-// Parses str from the current index to determine if it contains a valid
-// path-abempty defined as:
-//
 // path-abempty = *( "/" segment )
-//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathAbempty() bool {
 	start := u.index
@@ -596,11 +555,7 @@ func (u *URI) pathAbempty() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// path-absolute defined as:
-//
 // path-absolute = "/" [ segment-nz *( "/" segment ) ]
-//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathAbsolute() bool {
 	start := u.index
@@ -620,11 +575,7 @@ func (u *URI) pathAbsolute() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// path-noscheme defined as:
-//
 // path-noscheme = segment-nz-nc *( "/" segment )
-//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathNoscheme() bool {
 	start := u.index
@@ -642,11 +593,7 @@ func (u *URI) pathNoscheme() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// path-rootless defined as:
-//
 // path-rootless = segment-nz *( "/" segment )
-//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathRootless() bool {
 	start := u.index
@@ -664,19 +611,12 @@ func (u *URI) pathRootless() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// path-empty defined as:
-//
 // path-empty = 0<pchar>
-//
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *URI) pathEmpty() bool {
 	return u.isPathEnd()
 }
 
-// Parses str from the current index to determine if it contains a valid
-// segment defined as:
-//
 // segment = *pchar.
 func (u *URI) segment() bool {
 	for {
@@ -687,9 +627,6 @@ func (u *URI) segment() bool {
 	return true
 }
 
-// Parses str from the current index to determine if it contains a valid
-// segment-nz defined as:
-//
 // segment-nz = 1*pchar.
 func (u *URI) segmentNz() bool {
 	start := u.index
@@ -700,11 +637,9 @@ func (u *URI) segmentNz() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// segment-nz-nc defined as:
-//
-//	segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
-//	              ; non-zero-length segment without any colon ":"
+/*	segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+ *	              ; non-zero-length segment without any colon ":".
+ */
 func (u *URI) segmentNzNc() bool {
 	start := u.index
 	for {
@@ -722,9 +657,6 @@ func (u *URI) segmentNzNc() bool {
 	return false
 }
 
-// Parses str from the current index to determine if it contains a valid
-// pchar defined as:
-//
 // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
 func (u *URI) pchar() bool {
 	return u.unreserved() ||
@@ -734,9 +666,6 @@ func (u *URI) pchar() bool {
 		u.take('@')
 }
 
-// Parses str from the current index to determine if it contains a valid
-// query defined as:
-//
 // query = *( pchar / "/" / "?" )
 // Terminated by "#" or end of URI.
 func (u *URI) query() bool {
@@ -753,9 +682,6 @@ func (u *URI) query() bool {
 	}
 }
 
-// Parses str from the current index to determine if it contains a valid
-// fragment defined as:
-//
 // fragment = *( pchar / "/" / "?" )
 // Terminated by end of URI.
 func (u *URI) fragment() bool {
@@ -772,9 +698,6 @@ func (u *URI) fragment() bool {
 	}
 }
 
-// Parses str from the current index to determine if it contains a valid
-// pct encoding defined as:
-//
 // pct-encoded = "%"+HEXDIG+HEXDIG.
 // Sets `pctEncodedFound` to true if a valid triplet was found.
 func (u *URI) pctEncoded() bool {
@@ -787,9 +710,6 @@ func (u *URI) pctEncoded() bool {
 	return false
 }
 
-// Returns whether the byte at the current index is an unreserved character
-// defined as:
-//
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *URI) unreserved() bool {
 	return (u.alpha() ||
@@ -800,10 +720,10 @@ func (u *URI) unreserved() bool {
 		u.take('~'))
 }
 
-// Returns whether the byte at the current index is a subdelim defined as:
-//
-// sub-delims  = "!" / "$" / "&" / "'" / "(" / ")".
-// / "*" / "+" / "," / ";" / "=".
+/*
+ * sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
+ *   / "*" / "+" / "," / ";" / "=".
+ */
 func (u *URI) subDelims() bool {
 	return (u.take('!') ||
 		u.take('$') ||
@@ -818,9 +738,7 @@ func (u *URI) subDelims() bool {
 		u.take('='))
 }
 
-// Returns whether the byte at the current index is an alpha character (defined
-// as ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
-// If true, it increments the index.
+// ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
 func (u *URI) alpha() bool {
 	if u.index >= u.strLen {
 		return false
@@ -833,8 +751,7 @@ func (u *URI) alpha() bool {
 	return false
 }
 
-// Returns whether the byte at the current index is a digit (defined as
-// %x30-39  ; 0-9). If true, it increments the index.
+// DIGIT = %x30-39  ; 0-9).
 func (u *URI) digit() bool {
 	if u.index >= u.strLen {
 		return false
@@ -847,9 +764,7 @@ func (u *URI) digit() bool {
 	return false
 }
 
-// Returns whether the byte at the current index is a hexadecimal digit (defined
-// as HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F". If true, it
-// increments the index.
+// HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
 func (u *URI) hexdig() bool {
 	if u.index >= u.strLen {
 		return false
@@ -881,9 +796,7 @@ func (u *URI) take(char byte) bool {
 // NewURI creates a new URI based on str.
 func NewURI(str string) *URI {
 	return &URI{
-		str:             str,
-		index:           0,
-		strLen:          int64(len(str)),
-		pctEncodedFound: false,
+		str:    str,
+		strLen: int64(len(str)),
 	}
 }
