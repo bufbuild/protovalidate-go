@@ -258,11 +258,10 @@ func (u *URI) relativeRef() bool {
 // Parses str from the current index to determine if it contains a valid
 // relative-part defined as:
 //
-// relative-part = "//" authority path-abempty.
-// path-absolute.
-// path-noscheme.
-// path-empty.
-func (u *URI) relativePart() bool {
+//	relative-part = "//" authority path-abempty
+//	              / path-absolute
+//	              / path-noscheme
+//	              / path-empty
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
 		u.take('/') &&
