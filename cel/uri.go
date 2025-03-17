@@ -716,11 +716,11 @@ func (u *URI) segmentNzNc() bool {
 //
 // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
 func (u *URI) pchar() bool {
-	return (u.unreserved() ||
+	return u.unreserved() ||
 		u.pctEncoded() ||
 		u.subDelims() ||
 		u.take(':') ||
-		u.take('@'))
+		u.take('@')
 }
 
 // Parses str from the current index to determine if it contains a valid
