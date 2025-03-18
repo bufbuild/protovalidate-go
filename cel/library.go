@@ -440,12 +440,12 @@ func (l library) validateEmail(addr string) bool {
 
 // validateURI validates whether val is a valid URI.
 func (l library) validateURI(val string) bool {
-	return NewURI(val).uri()
+	return newURI(val).uri()
 }
 
 // validateURI validates whether val is a valid URI reference.
 func (l library) validateURIRef(val string) bool {
-	return NewURI(val).uriReference()
+	return newURI(val).uriReference()
 }
 
 // RequiredEnvOptions returns the options required to have expressions which
@@ -646,12 +646,9 @@ func (i *ipv6) getBits() [2]uint64 {
 	p16 := i.pieces
 	// handle dotted decimal, add to p16
 	if i.dottedAddr != nil {
-		// right-most 32 bits
-		dotted32 := i.dottedAddr.getBits()
-		// high 16 bits
-		p16 = append(p16, uint16(dotted32>>16)) //nolint:gosec
-		// low 16 bits
-		p16 = append(p16, uint16(dotted32)) //nolint:gosec
+		dotted32 := i.dottedAddr.getBits()      // right-most 32 bits
+		p16 = append(p16, uint16(dotted32>>16)) //nolint:gosec // this is ok, we only want the high 16 bits
+		p16 = append(p16, uint16(dotted32))     //nolint:gosec // this is ok, we only want the low 16 bits
 	}
 	// handle double colon, fill pieces with 0
 	if i.doubleColonSeen {
@@ -1063,7 +1060,7 @@ func isPort(str string) bool {
 	return val <= 65535
 }
 
-type URI struct {
+type uri struct {
 	str             string
 	index           int64
 	strLen          int64
@@ -1071,7 +1068,7 @@ type URI struct {
 }
 
 // URI = scheme ":" hier-part [ "?" query ] [ "#" fragment ].
-func (u *URI) uri() bool {
+func (u *uri) uri() bool {
 	start := u.index
 	if !(u.scheme() && u.take(':') && u.hierPart()) {
 		u.index = start
@@ -1091,7 +1088,7 @@ func (u *URI) uri() bool {
 }
 
 // URI-reference = URI / relative-ref.
-func (u *URI) uriReference() bool {
+func (u *uri) uriReference() bool {
 	return u.uri() || u.relativeRef()
 }
 
@@ -1100,7 +1097,7 @@ func (u *URI) uriReference() bool {
  *           / path-rootless
  *           / path-empty.
  */
-func (u *URI) hierPart() bool {
+func (u *uri) hierPart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
 		u.take('/') &&
@@ -1113,7 +1110,7 @@ func (u *URI) hierPart() bool {
 }
 
 // relative-ref = relative-part [ "?" query ] [ "#" fragment ].
-func (u *URI) relativeRef() bool {
+func (u *uri) relativeRef() bool {
 	start := u.index
 	if !u.relativePart() {
 		return false
@@ -1138,7 +1135,7 @@ func (u *URI) relativeRef() bool {
  *               / path-noscheme
  *               / path-empty.
  */
-func (u *URI) relativePart() bool {
+func (u *uri) relativePart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
 		u.take('/') &&
@@ -1153,7 +1150,7 @@ func (u *URI) relativePart() bool {
 // scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 //
 // Terminated by ":".
-func (u *URI) scheme() bool {
+func (u *uri) scheme() bool {
 	start := u.index
 	if u.alpha() {
 		for {
@@ -1172,7 +1169,7 @@ func (u *URI) scheme() bool {
 // authority = [ userinfo "@" ] host [ ":" port ]
 //
 // Lead by double slash ("") and terminated by "/", "?", "#", or end of URI.
-func (u *URI) authority() bool {
+func (u *uri) authority() bool {
 	start := u.index
 	if u.userinfo() {
 		if !u.take('@') {
@@ -1200,7 +1197,7 @@ func (u *URI) authority() bool {
 // The authority component [...] is terminated by the next slash ("/"),
 // question mark ("?"), or number > sign ("#") character, or by the
 // end of the URI.
-func (u *URI) isAuthorityEnd() bool {
+func (u *uri) isAuthorityEnd() bool {
 	return u.index >= u.strLen ||
 		u.str[u.index] == '?' ||
 		u.str[u.index] == '#' ||
@@ -1210,7 +1207,7 @@ func (u *URI) isAuthorityEnd() bool {
 // userinfo = *( unreserved / pct-encoded / sub-delims / ":" )
 //
 // Terminated by "@" in authority.
-func (u *URI) userinfo() bool {
+func (u *uri) userinfo() bool {
 	start := u.index
 	for {
 		if u.unreserved() ||
@@ -1230,7 +1227,7 @@ func (u *URI) userinfo() bool {
 }
 
 // Verify that str is correctly percent-encoded.
-func (u *URI) checkHostPctEncoded(str string) bool {
+func (u *uri) checkHostPctEncoded(str string) bool {
 	unhex := func(char byte) byte {
 		switch {
 		case '0' <= char && char <= '9':
@@ -1257,7 +1254,7 @@ func (u *URI) checkHostPctEncoded(str string) bool {
 }
 
 // host = IP-literal / IPv4address / reg-name.
-func (u *URI) host() bool {
+func (u *uri) host() bool {
 	if u.index >= u.strLen {
 		return false
 	}
@@ -1281,7 +1278,7 @@ func (u *URI) host() bool {
 
 // port = *DIGIT
 // Terminated by end of authority.
-func (u *URI) port() bool {
+func (u *uri) port() bool {
 	start := u.index
 	for {
 		if u.digit() {
@@ -1298,7 +1295,7 @@ func (u *URI) port() bool {
 // RFC-6874:
 //
 // IP-literal = "[" ( IPv6address / IPv6addrz / IPvFuture  ) "]".
-func (u *URI) ipLiteral() bool {
+func (u *uri) ipLiteral() bool {
 	start := u.index
 	if u.take('[') {
 		currIdx := u.index
@@ -1320,7 +1317,7 @@ func (u *URI) ipLiteral() bool {
 
 // IPv6address
 // Relies on the implementation of isIP(str, 6) to match RFC 3986 grammar.
-func (u *URI) ipv6Address() bool {
+func (u *uri) ipv6Address() bool {
 	start := u.index
 	for {
 		if !u.hexdig() && !u.take(':') {
@@ -1336,7 +1333,7 @@ func (u *URI) ipv6Address() bool {
 
 // RFC 6874:
 // IPv6addrz = IPv6address "%25" ZoneID.
-func (u *URI) ipv6addrz() bool {
+func (u *uri) ipv6addrz() bool {
 	start := u.index
 	if u.ipv6Address() &&
 		u.take('%') &&
@@ -1351,7 +1348,7 @@ func (u *URI) ipv6addrz() bool {
 
 // RFC 6874:
 // ZoneID = 1*( unreserved / pct-encoded ).
-func (u *URI) zoneID() bool {
+func (u *uri) zoneID() bool {
 	start := u.index
 	for {
 		if !u.unreserved() && !u.pctEncoded() {
@@ -1366,7 +1363,7 @@ func (u *URI) zoneID() bool {
 }
 
 // IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" ).
-func (u *URI) ipvFuture() bool {
+func (u *uri) ipvFuture() bool {
 	start := u.index
 	if u.take('v') && u.hexdig() { //nolint:nestif
 		for {
@@ -1394,7 +1391,7 @@ func (u *URI) ipvFuture() bool {
 // reg-name = *( unreserved / pct-encoded / sub-delims )
 //
 // Terminates on start of port (":") or end of authority.
-func (u *URI) regName() bool {
+func (u *uri) regName() bool {
 	start := u.index
 	for {
 		if u.unreserved() || u.pctEncoded() || u.subDelims() {
@@ -1414,13 +1411,13 @@ func (u *URI) regName() bool {
 
 // The path is terminated by the first question mark ("?") or
 // number sign ("#") character, or by the end of the URI.
-func (u *URI) isPathEnd() bool {
+func (u *uri) isPathEnd() bool {
 	return u.index >= u.strLen || u.str[u.index] == '?' || u.str[u.index] == '#'
 }
 
 // path-abempty = *( "/" segment )
 // Terminated by end of path: "?", "#", or end of URI.
-func (u *URI) pathAbempty() bool {
+func (u *uri) pathAbempty() bool {
 	start := u.index
 	for {
 		if !u.take('/') || !u.segment() {
@@ -1436,7 +1433,7 @@ func (u *URI) pathAbempty() bool {
 
 // path-absolute = "/" [ segment-nz *( "/" segment ) ]
 // Terminated by end of path: "?", "#", or end of URI.
-func (u *URI) pathAbsolute() bool {
+func (u *uri) pathAbsolute() bool {
 	start := u.index
 	if u.take('/') {
 		if u.segmentNz() {
@@ -1456,7 +1453,7 @@ func (u *URI) pathAbsolute() bool {
 
 // path-noscheme = segment-nz-nc *( "/" segment )
 // Terminated by end of path: "?", "#", or end of URI.
-func (u *URI) pathNoscheme() bool {
+func (u *uri) pathNoscheme() bool {
 	start := u.index
 	if u.segmentNzNc() {
 		for {
@@ -1474,7 +1471,7 @@ func (u *URI) pathNoscheme() bool {
 
 // path-rootless = segment-nz *( "/" segment )
 // Terminated by end of path: "?", "#", or end of URI.
-func (u *URI) pathRootless() bool {
+func (u *uri) pathRootless() bool {
 	start := u.index
 	if u.segmentNz() {
 		for {
@@ -1492,12 +1489,12 @@ func (u *URI) pathRootless() bool {
 
 // path-empty = 0<pchar>
 // Terminated by end of path: "?", "#", or end of URI.
-func (u *URI) pathEmpty() bool {
+func (u *uri) pathEmpty() bool {
 	return u.isPathEnd()
 }
 
 // segment = *pchar.
-func (u *URI) segment() bool {
+func (u *uri) segment() bool {
 	for {
 		if !u.pchar() {
 			break
@@ -1507,7 +1504,7 @@ func (u *URI) segment() bool {
 }
 
 // segment-nz = 1*pchar.
-func (u *URI) segmentNz() bool {
+func (u *uri) segmentNz() bool {
 	start := u.index
 	if u.pchar() {
 		return u.segment()
@@ -1519,7 +1516,7 @@ func (u *URI) segmentNz() bool {
 /*	segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
  *	              ; non-zero-length segment without any colon ":".
  */
-func (u *URI) segmentNzNc() bool {
+func (u *uri) segmentNzNc() bool {
 	start := u.index
 	for {
 		if !u.unreserved() &&
@@ -1537,7 +1534,7 @@ func (u *URI) segmentNzNc() bool {
 }
 
 // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
-func (u *URI) pchar() bool {
+func (u *uri) pchar() bool {
 	return (u.unreserved() ||
 		u.pctEncoded() ||
 		u.subDelims() ||
@@ -1547,7 +1544,7 @@ func (u *URI) pchar() bool {
 
 // query = *( pchar / "/" / "?" )
 // Terminated by "#" or end of URI.
-func (u *URI) query() bool {
+func (u *uri) query() bool {
 	start := u.index
 	for {
 		if u.pchar() || u.take('/') || u.take('?') {
@@ -1563,7 +1560,7 @@ func (u *URI) query() bool {
 
 // fragment = *( pchar / "/" / "?" )
 // Terminated by end of URI.
-func (u *URI) fragment() bool {
+func (u *uri) fragment() bool {
 	start := u.index
 	for {
 		if u.pchar() || u.take('/') || u.take('?') {
@@ -1579,7 +1576,7 @@ func (u *URI) fragment() bool {
 
 // pct-encoded = "%"+HEXDIG+HEXDIG.
 // Sets `pctEncodedFound` to true if a valid triplet was found.
-func (u *URI) pctEncoded() bool {
+func (u *uri) pctEncoded() bool {
 	start := u.index
 	if u.take('%') && u.hexdig() && u.hexdig() {
 		u.pctEncodedFound = true
@@ -1590,7 +1587,7 @@ func (u *URI) pctEncoded() bool {
 }
 
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
-func (u *URI) unreserved() bool {
+func (u *uri) unreserved() bool {
 	return (u.alpha() ||
 		u.digit() ||
 		u.take('-') ||
@@ -1603,7 +1600,7 @@ func (u *URI) unreserved() bool {
  * sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
  *   / "*" / "+" / "," / ";" / "=".
  */
-func (u *URI) subDelims() bool {
+func (u *uri) subDelims() bool {
 	return (u.take('!') ||
 		u.take('$') ||
 		u.take('&') ||
@@ -1618,7 +1615,7 @@ func (u *URI) subDelims() bool {
 }
 
 // ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
-func (u *URI) alpha() bool {
+func (u *uri) alpha() bool {
 	if u.index >= u.strLen {
 		return false
 	}
@@ -1631,7 +1628,7 @@ func (u *URI) alpha() bool {
 }
 
 // DIGIT = %x30-39  ; 0-9).
-func (u *URI) digit() bool {
+func (u *uri) digit() bool {
 	if u.index >= u.strLen {
 		return false
 	}
@@ -1644,7 +1641,7 @@ func (u *URI) digit() bool {
 }
 
 // HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
-func (u *URI) hexdig() bool {
+func (u *uri) hexdig() bool {
 	if u.index >= u.strLen {
 		return false
 	}
@@ -1661,7 +1658,7 @@ func (u *URI) hexdig() bool {
 // If char is at the current index, return true and increment the index.
 // If char is not at the current index or the end of str has been reached,
 // return false.
-func (u *URI) take(char byte) bool {
+func (u *uri) take(char byte) bool {
 	if u.index >= u.strLen {
 		return false
 	}
@@ -1672,9 +1669,9 @@ func (u *URI) take(char byte) bool {
 	return false
 }
 
-// NewURI creates a new URI based on str.
-func NewURI(str string) *URI {
-	return &URI{
+// newURI creates a new URI based on str.
+func newURI(str string) *uri {
+	return &uri{
 		str:    str,
 		strLen: int64(len(str)),
 	}
