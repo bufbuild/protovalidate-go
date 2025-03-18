@@ -494,7 +494,7 @@ func (i *ipv4) isPrefixOnly() bool {
 	} else {
 		mask = ^(0xffffffff >> i.prefixLen)
 	}
-	masked := (bits & mask)
+	masked := bits & mask
 	return bits == masked
 }
 
@@ -664,8 +664,8 @@ func (i *ipv6) getBits() [2]uint64 {
 		return [2]uint64{0, 0}
 	}
 	return [2]uint64{
-		((uint64(p16[0]) << 48) | (uint64(p16[1]) << 32) | (uint64(p16[2]) << 16) | uint64(p16[3])),
-		((uint64(p16[4]) << 48) | (uint64(p16[5]) << 32) | (uint64(p16[6]) << 16) | uint64(p16[7])),
+		(uint64(p16[0]) << 48) | (uint64(p16[1]) << 32) | (uint64(p16[2]) << 16) | uint64(p16[3]),
+		(uint64(p16[4]) << 48) | (uint64(p16[5]) << 32) | (uint64(p16[6]) << 16) | uint64(p16[7]),
 	}
 }
 
@@ -684,7 +684,7 @@ func (i *ipv6) isPrefixOnly() bool {
 		} else {
 			mask = ^(0xFFFFFFFFFFFFFFFF >> size)
 		}
-		masked := (p64 & mask)
+		masked := p64 & mask
 		if p64 != masked {
 			return false
 		}
@@ -1535,11 +1535,11 @@ func (u *uri) segmentNzNc() bool {
 
 // pchar = unreserved / pct-encoded / sub-delims / ":" / "@".
 func (u *uri) pchar() bool {
-	return (u.unreserved() ||
+	return u.unreserved() ||
 		u.pctEncoded() ||
 		u.subDelims() ||
 		u.take(':') ||
-		u.take('@'))
+		u.take('@')
 }
 
 // query = *( pchar / "/" / "?" )
@@ -1588,12 +1588,12 @@ func (u *uri) pctEncoded() bool {
 
 // unreserved = ALPHA / DIGIT / "-" / "." / "_" / "~".
 func (u *uri) unreserved() bool {
-	return (u.alpha() ||
+	return u.alpha() ||
 		u.digit() ||
 		u.take('-') ||
 		u.take('_') ||
 		u.take('.') ||
-		u.take('~'))
+		u.take('~')
 }
 
 /*
@@ -1601,7 +1601,7 @@ func (u *uri) unreserved() bool {
  *   / "*" / "+" / "," / ";" / "=".
  */
 func (u *uri) subDelims() bool {
-	return (u.take('!') ||
+	return u.take('!') ||
 		u.take('$') ||
 		u.take('&') ||
 		u.take('\'') ||
@@ -1611,7 +1611,7 @@ func (u *uri) subDelims() bool {
 		u.take('+') ||
 		u.take(',') ||
 		u.take(';') ||
-		u.take('='))
+		u.take('=')
 }
 
 // ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
