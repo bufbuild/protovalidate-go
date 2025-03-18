@@ -891,20 +891,18 @@ func newIpv6(str string) *ipv6 {
 	}
 }
 
-/**
- * Returns true if the string is an IPv4 or IPv6 address, optionally limited to
- * a specific version.
- *
- * Version 0 means either 4 or 6. Passing a version other than 0, 4, or 6 always
- * returns false.
- *
- * IPv4 addresses are expected in the dotted decimal format, for example "192.168.5.21".
- * IPv6 addresses are expected in their text representation, for example "::1",
- * or "2001:0DB8:ABCD:0012::0".
- *
- * Both formats are well-defined in the internet standard RFC 3986. Zone
- * identifiers for IPv6 addresses (for example "fe80::a%en1") are supported.
- */
+// Returns true if the string is an IPv4 or IPv6 address, optionally limited to
+// a specific version.
+//
+// Version 0 means either 4 or 6. Passing a version other than 0, 4, or 6 always
+// returns false.
+//
+// IPv4 addresses are expected in the dotted decimal format, for example "192.168.5.21".
+// IPv6 addresses are expected in their text representation, for example "::1",
+// or "2001:0DB8:ABCD:0012::0".
+//
+// Both formats are well-defined in the internet standard RFC 3986. Zone
+// identifiers for IPv6 addresses (for example "fe80::a%en1") are supported.
 func isIP(str string, version int64) bool {
 	if version == 6 {
 		return newIpv6(str).address()
@@ -918,24 +916,22 @@ func isIP(str string, version int64) bool {
 	return false
 }
 
-/**
- * Returns true if the string is a valid IP with prefix length, optionally
- * limited to a specific version (v4 or v6), and optionally requiring the host
- * portion to be all zeros.
- *
- * An address prefix divides an IP address into a network portion, and a host
- * portion. The prefix length specifies how many bits the network portion has.
- * For example, the IPv6 prefix "2001:db8:abcd:0012::0/64" designates the
- * left-most 64 bits as the network prefix. The range of the network is 2**64
- * addresses, from 2001:db8:abcd:0012::0 to 2001:db8:abcd:0012:ffff:ffff:ffff:ffff.
- *
- * An address prefix may include a specific host address, for example
- * "2001:db8:abcd:0012::1f/64". With strict = true, this is not permitted. The
- * host portion must be all zeros, as in "2001:db8:abcd:0012::0/64".
- *
- * The same principle applies to IPv4 addresses. "192.168.1.0/24" designates
- * the first 24 bits of the 32-bit IPv4 as the network prefix.
- */
+// Returns true if the string is a valid IP with prefix length, optionally
+// limited to a specific version (v4 or v6), and optionally requiring the host
+// portion to be all zeros.
+//
+// An address prefix divides an IP address into a network portion, and a host
+// portion. The prefix length specifies how many bits the network portion has.
+// For example, the IPv6 prefix "2001:db8:abcd:0012::0/64" designates the
+// left-most 64 bits as the network prefix. The range of the network is 2**64
+// addresses, from 2001:db8:abcd:0012::0 to 2001:db8:abcd:0012:ffff:ffff:ffff:ffff.
+//
+// An address prefix may include a specific host address, for example
+// "2001:db8:abcd:0012::1f/64". With strict = true, this is not permitted. The
+// host portion must be all zeros, as in "2001:db8:abcd:0012::0/64".
+//
+// The same principle applies to IPv4 addresses. "192.168.1.0/24" designates
+// the first 24 bits of the 32-bit IPv4 as the network prefix.
 func isIPPrefix(
 	str string,
 	version int64,
@@ -955,17 +951,15 @@ func isIPPrefix(
 	return false
 }
 
-/**
- * Returns true if the string is a valid hostname, for example "foo.example.com".
- *
- * A valid hostname follows the rules below:
- * - The name consists of one or more labels, separated by a dot (".").
- * - Each label can be 1 to 63 alphanumeric characters.
- * - A label can contain hyphens ("-"), but must not start or end with a hyphen.
- * - The right-most label must not be digits only.
- * - The name can have a trailing dot, for example "foo.example.com.".
- * - The name can be 253 characters at most, excluding the optional trailing dot.
- */
+// Returns true if the string is a valid hostname, for example "foo.example.com".
+//
+// A valid hostname follows the rules below:
+// - The name consists of one or more labels, separated by a dot (".").
+// - Each label can be 1 to 63 alphanumeric characters.
+// - A label can contain hyphens ("-"), but must not start or end with a hyphen.
+// - The right-most label must not be digits only.
+// - The name can have a trailing dot, for example "foo.example.com.".
+// - The name can be 253 characters at most, excluding the optional trailing dot.
 func isHostname(val string) bool {
 	if len(val) > 253 {
 		return false
@@ -1002,20 +996,18 @@ func isHostname(val string) bool {
 	return !allDigits
 }
 
-/**
- * Returns true if the string is a valid host/port pair, for example "example.com:8080".
- *
- * If the argument `portRequired` is true, the port is required. If the argument
- * is false, the port is optional.
- *
- * The host can be one of:
- * - An IPv4 address in dotted decimal format, for example "192.168.0.1".
- * - An IPv6 address enclosed in square brackets, for example "[::1]".
- * - A hostname, for example "example.com".
- *
- * The port is separated by a colon. It must be non-empty, with a decimal number
- * in the range of 0-65535, inclusive.
- */
+// Returns true if the string is a valid host/port pair, for example "example.com:8080".
+//
+// If the argument `portRequired` is true, the port is required. If the argument
+// is false, the port is optional.
+//
+// The host can be one of:
+// - An IPv4 address in dotted decimal format, for example "192.168.0.1".
+// - An IPv6 address enclosed in square brackets, for example "[::1]".
+// - A hostname, for example "example.com".
+//
+// The port is separated by a colon. It must be non-empty, with a decimal number
+// in the range of 0-65535, inclusive.
 func isHostAndPort(str string, portRequired bool) bool {
 	if len(str) == 0 {
 		return false
@@ -1090,11 +1082,11 @@ func (u *uri) uriReference() bool {
 	return u.uri() || u.relativeRef()
 }
 
-/* hier-part = "//" authority path-abempty.
- *		     / path-absolute
- *           / path-rootless
- *           / path-empty.
- */
+// hier-part = "//" authority path-abempty.
+//
+//			 / path-absolute
+//	         / path-rootless
+//	         / path-empty.
 func (u *uri) hierPart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
@@ -1665,11 +1657,4 @@ func (u *uri) take(char byte) bool {
 		return true
 	}
 	return false
-}
-
-// newURI creates a new URI based on str.
-func newURI(str string) *uri {
-	return &uri{
-		str: str,
-	}
 }
