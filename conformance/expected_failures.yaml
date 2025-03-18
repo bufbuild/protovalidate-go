@@ -1,4 +1,1 @@
-library/is_uri:
-  # Both need a decodeURIComponent equivalent. See the TODO in uri.go.
-  - invalid/host_reg-name_pct-encoded_invalid_utf8
-  - invalid/host_ipv6_zone-id_pct-encoded_invalid_utf8
+# Intentionally left blank so that 0.10.3 failures can be added

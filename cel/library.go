@@ -17,11 +17,11 @@ package cel
 import (
 	"bytes"
 	"math"
-	"net/url"
 	"regexp"
 	"slices"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/overloads"
@@ -642,11 +642,12 @@ type ipv6 struct {
 // Return the 128-bit value of an address parsed through address() or addressPrefix(),
 // as a 2-tuple of 64-bit values.
 // Return [0,0] if no address was parsed successfully.
-func (i *ipv6) getBits() [4]uint32 {
+func (i *ipv6) getBits() [2]uint64 {
 	p16 := i.pieces
 	// handle dotted decimal, add to p16
 	if i.dottedAddr != nil {
-		dotted32 := i.dottedAddr.getBits() // right-most 32 bits
+		// right-most 32 bits
+		dotted32 := i.dottedAddr.getBits()
 		// high 16 bits
 		p16 = append(p16, uint16(dotted32>>16)) //nolint:gosec
 		// low 16 bits
@@ -663,13 +664,11 @@ func (i *ipv6) getBits() [4]uint32 {
 		}
 	}
 	if len(p16) != 8 {
-		return [4]uint32{0, 0, 0, 0}
+		return [2]uint64{0, 0}
 	}
-	return [4]uint32{
-		((uint32(p16[0]) << 16) | uint32(p16[1])),
-		((uint32(p16[2]) << 16) | uint32(p16[3])),
-		((uint32(p16[4]) << 16) | uint32(p16[5])),
-		((uint32(p16[6]) << 16) | uint32(p16[7])),
+	return [2]uint64{
+		((uint64(p16[0]) << 48) | (uint64(p16[1]) << 32) | (uint64(p16[2]) << 16) | uint64(p16[3])),
+		((uint64(p16[4]) << 48) | (uint64(p16[5]) << 32) | (uint64(p16[6]) << 16) | uint64(p16[7])),
 	}
 }
 
@@ -677,19 +676,19 @@ func (i *ipv6) getBits() [4]uint32 {
 // Behavior is undefined if addressPrefix() has not been called before, or has
 // returned false.
 func (i *ipv6) isPrefixOnly() bool {
-	// For each 32-bit piece of the address, require that values to the right of the prefix are zero
-	for idx, p32 := range i.getBits() {
-		size := i.prefixLen - 32*int64(idx)
-		var mask uint32
-		if size >= 32 { //nolint:gocritic
-			mask = 0xffffffff
+	// For each 64-bit piece of the address, require that values to the right of the prefix are zero
+	for idx, p64 := range i.getBits() {
+		size := i.prefixLen - 64*int64(idx)
+		var mask uint64
+		if size >= 64 { //nolint:gocritic
+			mask = 0xFFFFFFFFFFFFFFFF
 		} else if size < 0 {
-			mask = 0x00000000
+			mask = 0x0
 		} else {
-			mask = ^(0xffffffff >> size)
+			mask = ^(0xFFFFFFFFFFFFFFFF >> size)
 		}
-		masked := (p32 & mask)
-		if p32 != masked {
+		masked := (p64 & mask)
+		if p64 != masked {
 			return false
 		}
 	}
@@ -1230,27 +1229,31 @@ func (u *URI) userinfo() bool {
 	}
 }
 
-/* TODO - JavaScript's implementation of decodeURIComponent() throws an error if
- * a pct-encoded escape sequence does not encode a valid UTF-8 character.
- *
- * Go does not have an equivalent function and the closest it has is
- * url.PathUnescape, which is what we use below. However, this is not
- * consistent with JavaScript's stricter implementation so we will have to
- * implement our own.
- * For example:
- * - Decode pct-encoded rawHost
- *   - Allocate an octet array
- *   - For every octet in rawHost
- *     - For "%", percent-decode the following two hex digits to an
- *       octet, add it to the octet array
- *     - For every other octet, add it to the octet array
- * - Check that the octet array is valid UTF-8.
- */
-func (u *URI) decodeURIComponent(str string) bool {
-	if _, err := url.PathUnescape(str); err != nil {
-		return false
+// Verify that str is correctly percent-encoded.
+func (u *URI) checkHostPctEncoded(str string) bool {
+	unhex := func(char byte) byte {
+		switch {
+		case '0' <= char && char <= '9':
+			return char - '0'
+		case 'a' <= char && char <= 'f':
+			return char - 'a' + 10
+		case 'A' <= char && char <= 'F':
+			return char - 'A' + 10
+		}
+		return 0
 	}
-	return true
+	escaped := make([]byte, 0, len(str))
+	for i := 0; i < len(str); {
+		switch str[i] {
+		case '%':
+			escaped = append(escaped, unhex(str[i+1])<<4|unhex(str[i+2]))
+			i += 3
+		default:
+			escaped = append(escaped, str[i])
+			i++
+		}
+	}
+	return utf8.Valid(escaped)
 }
 
 // host = IP-literal / IPv4address / reg-name.
@@ -1267,7 +1270,7 @@ func (u *URI) host() bool {
 			// RFC 3986:
 			// > URI producing applications must not use percent-encoding in host
 			// > unless it is used to represent a UTF-8 character sequence.
-			if !u.decodeURIComponent(rawHost) {
+			if !u.checkHostPctEncoded(rawHost) {
 				return false
 			}
 		}
