@@ -1120,11 +1120,11 @@ func (u *uri) relativeRef() bool {
 	return true
 }
 
-/* relative-part = "//" authority path-abempty.
- *			     / path-absolute
- *               / path-noscheme
- *               / path-empty.
- */
+// relative-part = "//" authority path-abempty.
+//
+//				 / path-absolute
+//	             / path-noscheme
+//	             / path-empty.
 func (u *uri) relativePart() bool {
 	start := u.index
 	if u.take('/') && //nolint:staticcheck
