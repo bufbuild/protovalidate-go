@@ -34,9 +34,9 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
-const (
+var (
 	// See https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
-	emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+	emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 )
 
 // NewLibrary creates a new CEL library that specifies all of the functions and
@@ -48,9 +48,7 @@ const (
 // Using this function, you can create a CEL environment that is identical to
 // the one used to evaluate protovalidate CEL expressions.
 func NewLibrary() cel.Library {
-	return library{
-		emailRegex: regexp.MustCompile(emailRegex),
-	}
+	return library{}
 }
 
 // library is the collection of functions and settings required by protovalidate
@@ -60,9 +58,7 @@ func NewLibrary() cel.Library {
 //
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
-type library struct {
-	emailRegex *regexp.Regexp
-}
+type library struct{}
 
 func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	return []cel.EnvOption{
@@ -149,7 +145,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateEmail(addr))
+					return types.Bool(isEmail(addr))
 				}),
 			),
 		),
@@ -428,14 +424,14 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
-// validateEmail returns true if addr is a valid email address.
+// isEmail returns true if addr is a valid email address.
 //
 // This regex conforms to the definition for a valid email address from the HTML standard.
 // Note that this standard willfully deviates from RFC 5322, which allows many
 // unexpected forms of email addresses and will easily match a typographical
 // error.
-func (l library) validateEmail(addr string) bool {
-	return l.emailRegex.MatchString(addr)
+func isEmail(addr string) bool {
+	return emailRegex.MatchString(addr)
 }
 
 // isURI validates whether val is a valid URI.
@@ -1503,9 +1499,9 @@ func (u *uri) segmentNz() bool {
 	return false
 }
 
-/*	segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
- *	              ; non-zero-length segment without any colon ":".
- */
+// segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
+//
+//	; non-zero-length segment without any colon ":".
 func (u *uri) segmentNzNc() bool {
 	start := u.index
 	for {
@@ -1586,10 +1582,9 @@ func (u *uri) unreserved() bool {
 		u.take('~')
 }
 
-/*
- * sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
- *   / "*" / "+" / "," / ";" / "=".
- */
+// sub-delims  = "!" / "$" / "&" / "'" / "(" / ")"
+//
+//	/ "*" / "+" / "," / ";" / "=".
 func (u *uri) subDelims() bool {
 	return u.take('!') ||
 		u.take('$') ||
