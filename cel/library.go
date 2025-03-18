@@ -239,7 +239,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateURI(s))
+					return types.Bool(isURI(s))
 				}),
 			),
 		),
@@ -253,7 +253,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(l.validateURIRef(s))
+					return types.Bool(isURIRef(s))
 				}),
 			),
 		),
@@ -438,14 +438,20 @@ func (l library) validateEmail(addr string) bool {
 	return l.emailRegex.MatchString(addr)
 }
 
-// validateURI validates whether val is a valid URI.
-func (l library) validateURI(val string) bool {
-	return newURI(val).uri()
+// isURI validates whether val is a valid URI.
+func isURI(val string) bool {
+	uri := &uri{
+		str: val,
+	}
+	return uri.uri()
 }
 
-// validateURI validates whether val is a valid URI reference.
-func (l library) validateURIRef(val string) bool {
-	return newURI(val).uriReference()
+// isURIRef validates whether val is a valid URI reference.
+func isURIRef(val string) bool {
+	uri := &uri{
+		str: val,
+	}
+	return uri.uriReference()
 }
 
 // RequiredEnvOptions returns the options required to have expressions which
@@ -469,7 +475,6 @@ func RequiredEnvOptions(fieldDesc protoreflect.FieldDescriptor) []cel.EnvOption 
 type ipv4 struct {
 	str       string
 	index     int
-	strLen    int
 	octets    []uint8
 	prefixLen int64
 }
@@ -500,7 +505,7 @@ func (i *ipv4) isPrefixOnly() bool {
 
 // Parse ipv4 Address in dotted decimal notation.
 func (i *ipv4) address() bool {
-	return i.addressPart() && i.index == i.strLen
+	return i.addressPart() && i.index == len(i.str)
 }
 
 // Parse ipv4 Address prefix.
@@ -508,14 +513,14 @@ func (i *ipv4) addressPrefix() bool {
 	return i.addressPart() &&
 		i.take('/') &&
 		i.prefixLength() &&
-		i.index == i.strLen
+		i.index == len(i.str)
 }
 
 // Stores value in `prefixLen`.
 func (i *ipv4) prefixLength() bool {
 	start := i.index
 	for {
-		if i.index >= i.strLen || !i.digit() {
+		if i.index >= len(i.str) || !i.digit() {
 			break
 		}
 		if i.index-start > 2 {
@@ -565,7 +570,7 @@ func (i *ipv4) addressPart() bool {
 func (i *ipv4) decOctet() bool {
 	start := i.index
 	for {
-		if i.index >= i.strLen || !i.digit() {
+		if i.index >= len(i.str) || !i.digit() {
 			break
 		}
 		if i.index-start > 3 {
@@ -607,7 +612,7 @@ func (i *ipv4) digit() bool {
 // If char is not at the current index or the end of str has been reached,
 // return false.
 func (i *ipv4) take(char byte) bool {
-	if i.index >= i.strLen {
+	if i.index >= len(i.str) {
 		return false
 	}
 	if i.str[i.index] == char {
@@ -620,16 +625,13 @@ func (i *ipv4) take(char byte) bool {
 // newipv4 creates a new ipv4 based on str.
 func newIpv4(str string) *ipv4 {
 	return &ipv4{
-		str:    str,
-		strLen: len(str),
-		octets: make([]uint8, 0),
+		str: str,
 	}
 }
 
 type ipv6 struct {
 	str             string
 	index           int
-	strLen          int
 	pieces          []uint16 // 16-bit pieces found
 	doubleColonAt   int      // number of 16-bit pieces found when double colon was found
 	doubleColonSeen bool
@@ -694,7 +696,7 @@ func (i *ipv6) isPrefixOnly() bool {
 
 // Parse IPv6 Address following RFC 4291, with optional zone id following RFC 4007.
 func (i *ipv6) address() bool {
-	return i.addressPart() && i.index == i.strLen
+	return i.addressPart() && i.index == len(i.str)
 }
 
 // Parse IPv6 Address Prefix following RFC 4291. Zone id is not permitted.
@@ -703,14 +705,14 @@ func (i *ipv6) addressPrefix() bool {
 		!i.zoneIDFound &&
 		i.take('/') &&
 		i.prefixLength() &&
-		i.index == i.strLen
+		i.index == len(i.str)
 }
 
 // Determines the prefix length. Stores value in `prefixLen`.
 func (i *ipv6) prefixLength() bool {
 	start := i.index
 	for {
-		if i.index >= i.strLen || !i.digit() {
+		if i.index >= len(i.str) || !i.digit() {
 			break
 		}
 		if i.index-start > 3 {
@@ -741,7 +743,7 @@ func (i *ipv6) prefixLength() bool {
 // Stores dotted notation for right-most 32 bits in `dottedRaw` / `dottedAddr` if found.
 func (i *ipv6) addressPart() bool {
 	for {
-		if i.index >= i.strLen {
+		if i.index >= len(i.str) {
 			break
 		}
 		// dotted notation for right-most 32 bits, e.g. 0:0:0:0:0:ffff:192.1.56.10
@@ -784,9 +786,9 @@ func (i *ipv6) addressPart() bool {
 func (i *ipv6) zoneID() bool {
 	start := i.index
 	if i.take('%') {
-		if i.strLen-i.index > 0 {
+		if len(i.str)-i.index > 0 {
 			// permit any non-null string
-			i.index = i.strLen
+			i.index = len(i.str)
 			i.zoneIDFound = true
 			return true
 		}
@@ -805,7 +807,7 @@ func (i *ipv6) dotted() bool {
 	start := i.index
 	i.dottedRaw = ""
 	for {
-		if i.index < i.strLen && (i.digit() || i.take('.')) {
+		if i.index < len(i.str) && (i.digit() || i.take('.')) {
 			continue
 		}
 		break
@@ -823,7 +825,7 @@ func (i *ipv6) dotted() bool {
 func (i *ipv6) h16() bool {
 	start := i.index
 	for {
-		if i.index >= i.strLen || !i.hexdig() {
+		if i.index >= len(i.str) || !i.hexdig() {
 			break
 		}
 	}
@@ -871,7 +873,7 @@ func (i *ipv6) digit() bool {
 // If char is not at the current index or the end of str has been reached,
 // return false.
 func (i *ipv6) take(char byte) bool {
-	if i.index >= i.strLen {
+	if i.index >= len(i.str) {
 		return false
 	}
 	if i.str[i.index] == char {
@@ -885,10 +887,7 @@ func (i *ipv6) take(char byte) bool {
 func newIpv6(str string) *ipv6 {
 	return &ipv6{
 		str:           str,
-		strLen:        len(str),
-		pieces:        make([]uint16, 0),
 		doubleColonAt: -1,
-		dottedAddr:    nil,
 	}
 }
 
@@ -1062,8 +1061,7 @@ func isPort(str string) bool {
 
 type uri struct {
 	str             string
-	index           int64
-	strLen          int64
+	index           int
 	pctEncodedFound bool
 }
 
@@ -1080,7 +1078,7 @@ func (u *uri) uri() bool {
 	if u.take('#') && !u.fragment() {
 		return false
 	}
-	if u.index != u.strLen {
+	if u.index != len(u.str) {
 		u.index = start
 		return false
 	}
@@ -1123,7 +1121,7 @@ func (u *uri) relativeRef() bool {
 		u.index = start
 		return false
 	}
-	if u.index != u.strLen {
+	if u.index != len(u.str) {
 		u.index = start
 		return false
 	}
@@ -1198,7 +1196,7 @@ func (u *uri) authority() bool {
 // question mark ("?"), or number > sign ("#") character, or by the
 // end of the URI.
 func (u *uri) isAuthorityEnd() bool {
-	return u.index >= u.strLen ||
+	return u.index >= len(u.str) ||
 		u.str[u.index] == '?' ||
 		u.str[u.index] == '#' ||
 		u.str[u.index] == '/'
@@ -1216,7 +1214,7 @@ func (u *uri) userinfo() bool {
 			u.take(':') {
 			continue
 		}
-		if u.index < u.strLen {
+		if u.index < len(u.str) {
 			if u.str[u.index] == '@' {
 				return true
 			}
@@ -1255,7 +1253,7 @@ func (u *uri) checkHostPctEncoded(str string) bool {
 
 // host = IP-literal / IPv4address / reg-name.
 func (u *uri) host() bool {
-	if u.index >= u.strLen {
+	if u.index >= len(u.str) {
 		return false
 	}
 	start := u.index
@@ -1412,7 +1410,7 @@ func (u *uri) regName() bool {
 // The path is terminated by the first question mark ("?") or
 // number sign ("#") character, or by the end of the URI.
 func (u *uri) isPathEnd() bool {
-	return u.index >= u.strLen || u.str[u.index] == '?' || u.str[u.index] == '#'
+	return u.index >= len(u.str) || u.str[u.index] == '?' || u.str[u.index] == '#'
 }
 
 // path-abempty = *( "/" segment )
@@ -1550,7 +1548,7 @@ func (u *uri) query() bool {
 		if u.pchar() || u.take('/') || u.take('?') {
 			continue
 		}
-		if u.index == u.strLen || u.str[u.index] == '#' {
+		if u.index == len(u.str) || u.str[u.index] == '#' {
 			return true
 		}
 		u.index = start
@@ -1566,7 +1564,7 @@ func (u *uri) fragment() bool {
 		if u.pchar() || u.take('/') || u.take('?') {
 			continue
 		}
-		if u.index == u.strLen {
+		if u.index == len(u.str) {
 			return true
 		}
 		u.index = start
@@ -1616,7 +1614,7 @@ func (u *uri) subDelims() bool {
 
 // ALPHA =  %x41-5A / %x61-7A ; A-Z / a-z.
 func (u *uri) alpha() bool {
-	if u.index >= u.strLen {
+	if u.index >= len(u.str) {
 		return false
 	}
 	c := u.str[u.index]
@@ -1629,7 +1627,7 @@ func (u *uri) alpha() bool {
 
 // DIGIT = %x30-39  ; 0-9).
 func (u *uri) digit() bool {
-	if u.index >= u.strLen {
+	if u.index >= len(u.str) {
 		return false
 	}
 	c := u.str[u.index]
@@ -1642,7 +1640,7 @@ func (u *uri) digit() bool {
 
 // HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F".
 func (u *uri) hexdig() bool {
-	if u.index >= u.strLen {
+	if u.index >= len(u.str) {
 		return false
 	}
 	c := u.str[u.index]
@@ -1659,7 +1657,7 @@ func (u *uri) hexdig() bool {
 // If char is not at the current index or the end of str has been reached,
 // return false.
 func (u *uri) take(char byte) bool {
-	if u.index >= u.strLen {
+	if u.index >= len(u.str) {
 		return false
 	}
 	if u.str[u.index] == char {
@@ -1672,7 +1670,6 @@ func (u *uri) take(char byte) bool {
 // newURI creates a new URI based on str.
 func newURI(str string) *uri {
 	return &uri{
-		str:    str,
-		strLen: int64(len(str)),
+		str: str,
 	}
 }
