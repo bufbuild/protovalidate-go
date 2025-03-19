@@ -596,7 +596,7 @@ func (i *ipv4) decOctet() bool {
 
 // digit parses the rule:
 //
-//	DIGIT = %x30-39  ; 0-9.
+//	DIGIT = %x30-39  ; 0-9
 func (i *ipv4) digit() bool {
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
