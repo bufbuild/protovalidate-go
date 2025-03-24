@@ -10,7 +10,7 @@ managed:
     - file_option: go_package_prefix
       value: github.com/bufbuild/protovalidate-go/internal/gen
 plugins:
-  - remote: buf.build/protocolbuffers/go:v1.36.5
+  - remote: buf.build/protocolbuffers/go:v1.36.6
     out: internal/gen
     opt:
      - paths=source_relative
