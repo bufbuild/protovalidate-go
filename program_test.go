@@ -180,7 +180,9 @@ func TestSet(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := test.set.Eval(protoreflect.ValueOfBool(false), test.failFast)
+			err := test.set.Eval(protoreflect.ValueOfBool(false), &validationConfig{
+				failFast: test.failFast,
+			})
 			switch {
 			case test.exViols != nil:
 				var viols *ValidationError

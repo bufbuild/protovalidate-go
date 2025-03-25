@@ -11,6 +11,8 @@ lint:
   ignore_only:
     PROTOVALIDATE:
       - proto/tests/example/v1/validations.proto
+      - proto/tests/example/v1/filter.proto
+      - proto/tests/example/v1/compile.proto
 breaking:
   use:
     - FILE

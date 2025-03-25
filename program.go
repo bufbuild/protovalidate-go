@@ -38,7 +38,7 @@ type programSet []compiledProgram
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
-func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
+func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 	binding := s.bindThis(val.Interface())
 	defer globalVarPool.Put(binding)
 
@@ -50,7 +50,7 @@ func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
 		}
 		if violation != nil {
 			violations = append(violations, violation)
-			if failFast {
+			if cfg.failFast {
 				break
 			}
 		}
