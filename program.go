@@ -44,7 +44,7 @@ func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 
 	var violations []*Violation
 	for _, expr := range s {
-		violation, err := expr.eval(binding)
+		violation, err := expr.eval(binding, cfg)
 		if err != nil {
 			return err
 		}
@@ -97,8 +97,8 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *variable) (*Violation, error) {
-	now := globalNowPool.Get()
+func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Violation, error) {
+	now := globalNowPool.Get(cfg.nowFn)
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 

@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"testing"
+	"time"
 
 	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
@@ -26,6 +27,7 @@ import (
 	"google.golang.org/protobuf/types/known/apipb"
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 	"google.golang.org/protobuf/types/known/sourcecontextpb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestValidator_Validate(t *testing.T) {
@@ -397,6 +399,31 @@ func TestValidator_ValidateCompilationError(t *testing.T) {
 		valErr := &ValidationError{}
 		require.NotErrorAs(t, err, &valErr)
 	})
+}
+
+func TestValidator_WithNowFunc_Issue211(t *testing.T) {
+	t.Parallel()
+
+	nowFn := func() *timestamppb.Timestamp {
+		return timestamppb.New(time.Now().Add(time.Hour))
+	}
+
+	msg := &pb.Issue211{
+		Value: timestamppb.New(time.Now().Add(time.Minute)),
+	}
+	val, err := New()
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	require.NoError(t, err)
+	err = val.Validate(msg, WithNowFunc(nowFn))
+	require.Error(t, err)
+
+	val, err = New(WithNowFunc(nowFn))
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	require.Error(t, err)
+	err = val.Validate(msg, WithNowFunc(timestamppb.Now))
+	require.NoError(t, err)
 }
 
 func TestValidator_Validate_Issue141(t *testing.T) {
