@@ -81,7 +81,7 @@ func TestCompiled(t *testing.T) {
 				Program: test.prog,
 				Source:  test.src,
 			}
-			violation, err := expr.eval(&variable{})
+			violation, err := expr.eval(&variable{}, &validationConfig{nowFn: timestamppb.Now})
 			if test.exErr {
 				require.Error(t, err)
 			} else {

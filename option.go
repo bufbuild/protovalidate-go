@@ -18,6 +18,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
@@ -104,6 +105,12 @@ func WithFailFast() Option {
 	return &failFastOption{}
 }
 
+// WithNowFunc specifies the function used to derive the `now` variable in CEL
+// expressions. By default, [timestamppb.Now] is used.
+func WithNowFunc(fn func() *timestamppb.Timestamp) Option {
+	return nowFuncOption(fn)
+}
+
 type messageDescriptorsOption struct {
 	descriptors []protoreflect.MessageDescriptor
 }
@@ -150,4 +157,14 @@ func (o *failFastOption) applyToValidator(cfg *config) {
 
 func (o *failFastOption) applyToValidation(cfg *validationConfig) {
 	cfg.failFast = true
+}
+
+type nowFuncOption func() *timestamppb.Timestamp
+
+func (o nowFuncOption) applyToValidator(cfg *config) {
+	cfg.nowFn = o
+}
+
+func (o nowFuncOption) applyToValidation(cfg *validationConfig) {
+	cfg.nowFn = o
 }
