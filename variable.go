@@ -61,15 +61,16 @@ func (p *variablePool) Get() *variable {
 // for accessing the variable `now` that's constant within an evaluation.
 type now struct {
 	// TS is the already resolved timestamp. If unset, the field is populated with
-	// timestamppb.Now.
-	TS *timestamppb.Timestamp
+	// the output of nowFn.
+	TS    *timestamppb.Timestamp
+	nowFn func() *timestamppb.Timestamp
 }
 
 func (n *now) ResolveName(name string) (any, bool) {
 	if name != "now" {
 		return nil, false
 	} else if n.TS == nil {
-		n.TS = timestamppb.Now()
+		n.TS = n.nowFn()
 	}
 	return n.TS, true
 }
@@ -82,8 +83,9 @@ func (p *nowPool) Put(v *now) {
 	(*sync.Pool)(p).Put(v)
 }
 
-func (p *nowPool) Get() *now {
+func (p *nowPool) Get(nowFn func() *timestamppb.Timestamp) *now {
 	n := (*sync.Pool)(p).Get().(*now) //nolint:errcheck,forcetypeassert
+	n.nowFn = nowFn
 	n.TS = nil
 	return n
 }

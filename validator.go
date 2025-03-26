@@ -23,6 +23,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
@@ -46,6 +47,7 @@ type Validator interface {
 func New(options ...ValidatorOption) (Validator, error) {
 	cfg := config{
 		extensionTypeResolver: protoregistry.GlobalTypes,
+		nowFn:                 timestamppb.Now,
 	}
 	for _, opt := range options {
 		opt.applyToValidator(&cfg)
@@ -68,12 +70,14 @@ func New(options ...ValidatorOption) (Validator, error) {
 	return &validator{
 		failFast: cfg.failFast,
 		builder:  bldr,
+		nowFn:    cfg.nowFn,
 	}, nil
 }
 
 type validator struct {
 	builder  *builder
 	failFast bool
+	nowFn    func() *timestamppb.Timestamp
 }
 
 func (v *validator) Validate(
@@ -86,6 +90,7 @@ func (v *validator) Validate(
 	cfg := validationConfig{
 		failFast: v.failFast,
 		filter:   nopFilter{},
+		nowFn:    v.nowFn,
 	}
 	for _, opt := range options {
 		opt.applyToValidation(&cfg)
@@ -101,12 +106,12 @@ func (v *validator) Validate(
 // calls its Validate function. For the vast majority of validation cases, using this global
 // function is safe and acceptable. If you need to provide i.e. a custom
 // ExtensionTypeResolver, you'll need to construct a Validator.
-func Validate(msg proto.Message) error {
+func Validate(msg proto.Message, options ...ValidationOption) error {
 	globalValidator, err := getGlobalValidator()
 	if err != nil {
 		return err
 	}
-	return globalValidator.Validate(msg)
+	return globalValidator.Validate(msg, options...)
 }
 
 type config struct {
@@ -115,9 +120,11 @@ type config struct {
 	desc                  []protoreflect.MessageDescriptor
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
+	nowFn                 func() *timestamppb.Timestamp
 }
 
 type validationConfig struct {
 	failFast bool
 	filter   Filter
+	nowFn    func() *timestamppb.Timestamp
 }
