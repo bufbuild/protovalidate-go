@@ -81,7 +81,7 @@ func TestCompiled(t *testing.T) {
 				Program: test.prog,
 				Source:  test.src,
 			}
-			violation, err := expr.eval(&variable{})
+			violation, err := expr.eval(&variable{}, &validationConfig{nowFn: timestamppb.Now})
 			if test.exErr {
 				require.Error(t, err)
 			} else {
@@ -180,7 +180,9 @@ func TestSet(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := test.set.Eval(protoreflect.ValueOfBool(false), test.failFast)
+			err := test.set.Eval(protoreflect.ValueOfBool(false), &validationConfig{
+				failFast: test.failFast,
+			})
 			switch {
 			case test.exViols != nil:
 				var viols *ValidationError

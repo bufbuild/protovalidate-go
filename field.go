@@ -46,13 +46,24 @@ type field struct {
 	IgnoreDefault bool
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
+	// Err stores if there was a compilation error constructing this evaluator. It is stored
+	// here so that it can be returned as part of validating this specific field.
+	Err error
 }
 
-func (f field) Evaluate(val protoreflect.Value, failFast bool) error {
-	return f.EvaluateMessage(val.Message(), failFast)
+func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return f.EvaluateMessage(val.Message(), cfg)
 }
 
-func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err error) {
+func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
+		return nil
+	}
+
+	if f.Err != nil {
+		return f.Err
+	}
+
 	if f.Required && !msg.Has(f.Value.Descriptor) {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
@@ -76,11 +87,11 @@ func (f field) EvaluateMessage(msg protoreflect.Message, failFast bool) (err err
 	if f.IgnoreDefault && val.Equal(f.Zero) {
 		return nil
 	}
-	return f.Value.Evaluate(val, failFast)
+	return f.Value.EvaluateField(msg, val, cfg, true)
 }
 
 func (f field) Tautology() bool {
-	return !f.Required && f.Value.Tautology()
+	return !f.Required && f.Value.Tautology() && f.Err == nil
 }
 
 var _ messageEvaluator = field{}

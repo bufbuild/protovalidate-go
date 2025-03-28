@@ -23,6 +23,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 var getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
@@ -37,7 +38,7 @@ type Validator interface {
 	// (ValidationError), the evaluation logic for the message cannot be built
 	// (CompilationError), or there is a type error when attempting to evaluate
 	// a CEL expression associated with the message (RuntimeError).
-	Validate(msg proto.Message) error
+	Validate(msg proto.Message, options ...ValidationOption) error
 }
 
 // New creates a Validator with the given options. An error may occur in setting
@@ -46,9 +47,10 @@ type Validator interface {
 func New(options ...ValidatorOption) (Validator, error) {
 	cfg := config{
 		extensionTypeResolver: protoregistry.GlobalTypes,
+		nowFn:                 timestamppb.Now,
 	}
 	for _, opt := range options {
-		opt(&cfg)
+		opt.applyToValidator(&cfg)
 	}
 
 	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
@@ -68,21 +70,34 @@ func New(options ...ValidatorOption) (Validator, error) {
 	return &validator{
 		failFast: cfg.failFast,
 		builder:  bldr,
+		nowFn:    cfg.nowFn,
 	}, nil
 }
 
 type validator struct {
 	builder  *builder
 	failFast bool
+	nowFn    func() *timestamppb.Timestamp
 }
 
-func (v *validator) Validate(msg proto.Message) error {
+func (v *validator) Validate(
+	msg proto.Message,
+	options ...ValidationOption,
+) error {
 	if msg == nil {
 		return nil
 	}
+	cfg := validationConfig{
+		failFast: v.failFast,
+		filter:   nopFilter{},
+		nowFn:    v.nowFn,
+	}
+	for _, opt := range options {
+		opt.applyToValidation(&cfg)
+	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	err := eval.EvaluateMessage(refl, v.failFast)
+	err := eval.EvaluateMessage(refl, &cfg)
 	finalizeViolationPaths(err)
 	return err
 }
@@ -91,12 +106,12 @@ func (v *validator) Validate(msg proto.Message) error {
 // calls its Validate function. For the vast majority of validation cases, using this global
 // function is safe and acceptable. If you need to provide i.e. a custom
 // ExtensionTypeResolver, you'll need to construct a Validator.
-func Validate(msg proto.Message) error {
+func Validate(msg proto.Message, options ...ValidationOption) error {
 	globalValidator, err := getGlobalValidator()
 	if err != nil {
 		return err
 	}
-	return globalValidator.Validate(msg)
+	return globalValidator.Validate(msg, options...)
 }
 
 type config struct {
@@ -105,77 +120,11 @@ type config struct {
 	desc                  []protoreflect.MessageDescriptor
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
+	nowFn                 func() *timestamppb.Timestamp
 }
 
-// A ValidatorOption modifies the default configuration of a Validator. See the
-// individual options for their defaults and affects on the fallibility of
-// configuring a Validator.
-type ValidatorOption func(*config)
-
-// WithFailFast specifies whether validation should fail on the first constraint
-// violation encountered or if all violations should be accumulated. By default,
-// all violations are accumulated.
-func WithFailFast() ValidatorOption {
-	return func(cfg *config) {
-		cfg.failFast = true
-	}
-}
-
-// WithMessages allows warming up the Validator with messages that are
-// expected to be validated. Messages included transitively (i.e., fields with
-// message values) are automatically handled.
-func WithMessages(messages ...proto.Message) ValidatorOption {
-	desc := make([]protoreflect.MessageDescriptor, len(messages))
-	for i, msg := range messages {
-		desc[i] = msg.ProtoReflect().Descriptor()
-	}
-	return WithMessageDescriptors(desc...)
-}
-
-// WithMessageDescriptors allows warming up the Validator with message
-// descriptors that are expected to be validated. Messages included transitively
-// (i.e., fields with message values) are automatically handled.
-func WithMessageDescriptors(descriptors ...protoreflect.MessageDescriptor) ValidatorOption {
-	return func(cfg *config) {
-		cfg.desc = append(cfg.desc, descriptors...)
-	}
-}
-
-// WithDisableLazy prevents the Validator from lazily building validation logic
-// for a message it has not encountered before. Disabling lazy logic
-// additionally eliminates any internal locking as the validator becomes
-// read-only.
-//
-// Note: All expected messages must be provided by WithMessages or
-// WithMessageDescriptors during initialization.
-func WithDisableLazy() ValidatorOption {
-	return func(cfg *config) {
-		cfg.disableLazy = true
-	}
-}
-
-// WithExtensionTypeResolver specifies a resolver to use when reparsing unknown
-// extension types. When dealing with dynamic file descriptor sets, passing this
-// option will allow extensions to be resolved using a custom resolver.
-//
-// To ignore unknown extension fields, use the [WithAllowUnknownFields] option.
-// Note that this may result in messages being treated as valid even though not
-// all constraints are being applied.
-func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionTypeResolver) ValidatorOption {
-	return func(c *config) {
-		c.extensionTypeResolver = extensionTypeResolver
-	}
-}
-
-// WithAllowUnknownFields specifies if the presence of unknown field constraints
-// should cause compilation to fail with an error. When set to false, an unknown
-// field will simply be ignored, which will cause constraints to silently not be
-// applied. This condition may occur if a predefined constraint definition isn't
-// present in the extension type resolver, or when passing dynamic messages with
-// standard constraints defined in a newer version of protovalidate. The default
-// value is false, to prevent silently-incorrect validation from occurring.
-func WithAllowUnknownFields() ValidatorOption {
-	return func(c *config) {
-		c.allowUnknownFields = true
-	}
+type validationConfig struct {
+	failFast bool
+	filter   Filter
+	nowFn    func() *timestamppb.Timestamp
 }

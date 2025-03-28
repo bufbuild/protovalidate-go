@@ -38,19 +38,19 @@ type programSet []compiledProgram
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
-func (s programSet) Eval(val protoreflect.Value, failFast bool) error {
+func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 	binding := s.bindThis(val.Interface())
 	defer globalVarPool.Put(binding)
 
 	var violations []*Violation
 	for _, expr := range s {
-		violation, err := expr.eval(binding)
+		violation, err := expr.eval(binding, cfg)
 		if err != nil {
 			return err
 		}
 		if violation != nil {
 			violations = append(violations, violation)
-			if failFast {
+			if cfg.failFast {
 				break
 			}
 		}
@@ -97,8 +97,8 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *variable) (*Violation, error) {
-	now := globalNowPool.Get()
+func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Violation, error) {
+	now := globalNowPool.Get(cfg.nowFn)
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 

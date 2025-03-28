@@ -139,9 +139,7 @@ func (bldr *builder) buildMessage(
 	}
 
 	for _, step := range steps {
-		if step(desc, msgConstraints, msgEval, cache); msgEval.Err != nil {
-			break
-		}
+		step(desc, msgConstraints, msgEval, cache)
 	}
 }
 
@@ -184,7 +182,7 @@ func (bldr *builder) processOneofConstraints(
 			Descriptor: oneofDesc,
 			Required:   oneofConstraints.GetRequired(),
 		}
-		msgEval.Append(oneofEval)
+		msgEval.AppendNested(oneofEval)
 	}
 }
 
@@ -200,10 +198,9 @@ func (bldr *builder) processFields(
 		fieldConstraints := resolve.FieldConstraints(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldConstraints, cache)
 		if err != nil {
-			msgEval.Err = err
-			return
+			fldEval.Err = err
 		}
-		msgEval.Append(fldEval)
+		msgEval.AppendNested(fldEval)
 	}
 }
 
@@ -235,6 +232,10 @@ func (bldr *builder) buildValue(
 	valEval *value,
 	cache messageCache,
 ) (err error) {
+	if bldr.shouldSkip(constraints) {
+		return nil
+	}
+
 	steps := []func(
 		fdesc protoreflect.FieldDescriptor,
 		fieldConstraints *validate.FieldConstraints,
@@ -301,7 +302,7 @@ func (bldr *builder) processFieldExpressions(
 				FieldType:   celRuleField.GetFieldType().Enum(),
 				FieldName:   proto.String(celRuleField.GetFieldName()),
 				Subscript: &validate.FieldPathElement_Index{
-					Index: uint64(i),
+					Index: uint64(i), //nolint:gosec // indices are guaranteed to be non-negative
 				},
 			},
 		}
@@ -320,12 +321,11 @@ func (bldr *builder) processFieldExpressions(
 
 func (bldr *builder) processEmbeddedMessage(
 	fdesc protoreflect.FieldDescriptor,
-	rules *validate.FieldConstraints,
+	_ *validate.FieldConstraints,
 	valEval *value,
 	cache messageCache,
 ) error {
 	if !isMessageField(fdesc) ||
-		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
@@ -337,7 +337,7 @@ func (bldr *builder) processEmbeddedMessage(
 			"failed to compile embedded type %s for %s: %w",
 			fdesc.Message().FullName(), fdesc.FullName(), err)}
 	}
-	valEval.Append(&embeddedMessage{
+	valEval.AppendNested(&embeddedMessage{
 		base:    newBase(valEval),
 		message: embedEval,
 	})
@@ -352,7 +352,6 @@ func (bldr *builder) processWrapperConstraints(
 	cache messageCache,
 ) error {
 	if !isMessageField(fdesc) ||
-		bldr.shouldSkip(rules) ||
 		fdesc.IsMap() ||
 		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
