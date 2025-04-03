@@ -50,7 +50,7 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 ## Installation
 
 > [!TIP]
-> The easiest way to get started with Protovalidate for RPC APIs are the how-to's in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
+> The easiest way to get started with Protovalidate for RPC APIs are the quickstarts in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
 
 To install the package, use `go get` from within your Go module:
 
@@ -65,7 +65,7 @@ Comprehensive documentation for Protovalidate is available in [Buf's documentati
 Highlights for Go developers include:
 
 * The [developer quickstart][quickstart]
-* Comprehensive RPC how-to's for [Connect][connect-go] and [gRPC][grpc-go]
+* Comprehensive RPC quickstarts for [Connect][connect-go] and [gRPC][grpc-go]
 * A [migration guide for protoc-gen-validate][migration-guide] users
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
@@ -115,12 +115,12 @@ Offered under the [Apache 2 license][license].
 
 [protoc-gen-validate]: https://github.com/bufbuild/protoc-gen-validate
 
-[protovalidate]: https://buf.build/docs/protovalidate/overview/
+[protovalidate]: https://buf.build/docs/protovalidate/
 [quickstart]: https://buf.build/docs/protovalidate/quickstart/
-[connect-go]: https://buf.build/docs/protovalidate/how-to/connect-go/
-[grpc-go]: https://buf.build/docs/protovalidate/how-to/grpc-go/
-[grpc-java]: https://buf.build/docs/protovalidate/how-to/grpc-java/
-[grpc-python]: https://buf.build/docs/protovalidate/how-to/grpc-python/
+[connect-go]: https://buf.build/docs/protovalidate/quickstart/connect-go/
+[grpc-go]: https://buf.build/docs/protovalidate/quickstart/grpc-go/
+[grpc-java]: https://buf.build/docs/protovalidate/quickstart/grpc-java/
+[grpc-python]: https://buf.build/docs/protovalidate/quickstart/grpc-python/
 [migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
 [conformance-executable]: ./internal/cmd/protovalidate-conformance-go/README.md
 [pkg-go]: https://pkg.go.dev/github.com/bufbuild/protovalidate-go
