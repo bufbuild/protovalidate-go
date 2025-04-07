@@ -5,8 +5,8 @@ deps:
     commit: 0409229c37804d6187ee0806eb4eebce
     digest: b5:795db9d3a6e066dc61d99ac651fa7f136171869abe2211ca272dd84aada7bc4583b9508249fa5b61300a5b1fe8b6dbf6edbc088aa0345d1ccb9fff705e3d48e9
   - name: buf.build/bufbuild/protovalidate-testing
-    commit: cc0100a0746e4be58b4d3b4948d3bf7f
-    digest: b5:52b644847204640fe4c6ed6379dc5ee7d927e6a7b8861a8de7404f2b85274db7213c524829a79d13da83f5d2466daac3248fee0e7548324e12c1976a36014601
+    commit: 5acbe1f3c8f24ced9466b9ccccad4cb0
+    digest: b5:5e9d54d19ce3d9d368f4b1b5ee4f20094d1c33d0f2dca19536339335c2e70d5ffedbd4fa28e290b59ecae0671c9d2dc20b6b8ebba5a9ac76cbf5f9d2af655ef4
   - name: buf.build/envoyproxy/protoc-gen-validate
     commit: daf171c6cdb54629b5f51e345a79e4dd
     digest: b5:c745e1521879f43740230b1df673d0729f55704efefdcfc489d4a0a2d40c92a26cacfeab62813403040a8b180142d53b398c7ca784a065e43823605ee49681de
