@@ -16,7 +16,10 @@ package cel
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 	"math"
+	"os"
 	"regexp"
 	"slices"
 	"strconv"
@@ -736,6 +739,10 @@ func (i *ipv6) prefixLength() bool {
 	return true
 }
 
+func (i *ipv6) log(str string) {
+	fmt.Fprintf(os.Stderr, fmt.Sprintf("index is %d -- %s\n", i.index, str))
+}
+
 // addressPart stores the dotted notation for right-most 32 bits in dottedRaw / dottedAddr if found.
 func (i *ipv6) addressPart() bool {
 	for {
@@ -751,7 +758,12 @@ func (i *ipv6) addressPart() bool {
 			}
 			return false
 		}
-		if i.h16() {
+		ok, err := i.h16()
+		if err != nil {
+			i.log(err.Error())
+			return false
+		}
+		if ok {
 			continue
 		}
 		if i.take(':') { //nolint:nestif
@@ -762,6 +774,11 @@ func (i *ipv6) addressPart() bool {
 				i.doubleColonSeen = true
 				i.doubleColonAt = len(i.pieces)
 				if i.take(':') {
+					return false
+				}
+			} else {
+				if i.index == 1 || i.index == len(i.str) {
+					// invalid - string cannot start or end on single colon
 					return false
 				}
 			}
@@ -822,8 +839,9 @@ func (i *ipv6) dotted() bool {
 //
 //	h16 = 1*4HEXDIG
 //
-// Stores 16-bit value in pieces.
-func (i *ipv6) h16() bool {
+// If a valid hextet is found, it is stored in pieces.
+// If
+func (i *ipv6) h16() (bool, error) {
 	start := i.index
 	for {
 		if i.index >= len(i.str) || !i.hexdig() {
@@ -832,20 +850,26 @@ func (i *ipv6) h16() bool {
 	}
 	str := i.str[start:i.index]
 	if len(str) == 0 {
-		// too short
-		return false
+		// too short, just return false
+		// this is not an error condition, it just means we didn't find any
+		// hex digits at the current position.
+		return false, nil
 	}
 	if len(str) > 4 {
 		// too long
-		return false
+		// this is an error condition, it means we found a hextext with more
+		// than four hex digits, which is invalid in ipv6 addresses.
+		return false, errors.New("invalid hex")
 	}
 
 	value, err := strconv.ParseUint(str, 16, 16)
 	if err != nil {
-		return false
+		// This is also an error condition. It means the parsed hextet we found
+		// cannot be converted into a number
+		return false, err
 	}
 	i.pieces = append(i.pieces, uint16(value))
-	return true
+	return true, nil
 }
 
 // hexdig parses the rule:
