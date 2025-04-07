@@ -199,7 +199,11 @@ func TestCELLib(t *testing.T) {
 			// },
 			{
 				"'::1q'.isIp()",
-				true,
+				false,
+			},
+			{
+				"'1234567890abcdef'.isIp()",
+				false,
 			},
 		}
 
