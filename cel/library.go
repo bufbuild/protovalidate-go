@@ -17,9 +17,7 @@ package cel
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"math"
-	"os"
 	"regexp"
 	"slices"
 	"strconv"
@@ -739,10 +737,6 @@ func (i *ipv6) prefixLength() bool {
 	return true
 }
 
-func (i *ipv6) log(str string) {
-	fmt.Fprintf(os.Stderr, fmt.Sprintf("index is %d -- %s\n", i.index, str))
-}
-
 // addressPart stores the dotted notation for right-most 32 bits in dottedRaw / dottedAddr if found.
 func (i *ipv6) addressPart() bool {
 	for {
@@ -760,7 +754,6 @@ func (i *ipv6) addressPart() bool {
 		}
 		ok, err := i.h16()
 		if err != nil {
-			i.log(err.Error())
 			return false
 		}
 		if ok {
@@ -776,11 +769,9 @@ func (i *ipv6) addressPart() bool {
 				if i.take(':') {
 					return false
 				}
-			} else {
-				if i.index == 1 || i.index == len(i.str) {
-					// invalid - string cannot start or end on single colon
-					return false
-				}
+			} else if i.index == 1 || i.index == len(i.str) {
+				// invalid - string cannot start or end on single colon
+				return false
 			}
 			continue
 		}
@@ -839,8 +830,10 @@ func (i *ipv6) dotted() bool {
 //
 //	h16 = 1*4HEXDIG
 //
-// If a valid hextet is found, it is stored in pieces.
-// If
+// If 1-4 hex digits are found, the parsed 16-bit unsigned integer is stored
+// in pieces and true is returned.
+// If 0 hex digits are found, returns false.
+// If more than 4 hex digits are found, returns an error.
 func (i *ipv6) h16() (bool, error) {
 	start := i.index
 	for {
@@ -857,8 +850,8 @@ func (i *ipv6) h16() (bool, error) {
 	}
 	if len(str) > 4 {
 		// too long
-		// this is an error condition, it means we found a hextext with more
-		// than four hex digits, which is invalid in ipv6 addresses.
+		// this is an error condition, it means we found a string of more than
+		// four valid hex digits, which is invalid in ipv6 addresses.
 		return false, errors.New("invalid hex")
 	}
 
