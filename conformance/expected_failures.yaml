@@ -30,3 +30,8 @@ standard_constraints/required:
   - proto2/map/empty/ignore_always
   - proto3/message/unset/ignore_always
   - proto/2023/oneof/other_member/ignore_always
+library/is_ip:
+  - version/omitted/invalid/ipv6/j
+  - version/omitted/invalid/ipv6/g
+  - version/omitted/invalid/ipv6/h
+  - version/omitted/invalid/ipv6/i
