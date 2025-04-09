@@ -29,6 +29,14 @@ import (
 var (
 	getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
 
+	// GlobalValidator provides access to the global Validator instance that is
+	// used by the [Validate] function. This is intended to be used by libraries
+	// that use protovalidate. This Validator can be used as a default when the
+	// user does not specify a Validator instance to use.
+	//
+	// Using the global Validator instance (either through [Validator] or via
+	// GlobalValidator) will result in lower memory usage than using multiple
+	// Validator instances, because each Validator instance has its own caches.
 	GlobalValidator Validator = globalValidator{}
 )
 
