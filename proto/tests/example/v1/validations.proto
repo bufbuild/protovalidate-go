@@ -22,6 +22,30 @@ import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
+message FieldExpressionMapKeyEquality {
+    map<int32, int32> val = 1 [(buf.validate.field).cel = {
+        id: "field_expression.map.scalar"
+        message: "test message field_expression.map.scalar"
+        expression: "this.all(k, k == 42)"
+    }];
+}
+message FieldExpressionMapAccessByKey {
+    map<int32, int32> val = 1 [(buf.validate.field).cel = {
+        id: "field_expression.map.scalar"
+        message: "test message field_expression.map.scalar"
+        expression: "this.all(k, this[k] == 1)"
+    }];
+}
+message MessageExpressionMap {
+  option (buf.validate.message).cel = {
+    id: "message_expression.map.scalar"
+    message: "test message message_expression.map.scalar"
+    expression: "this.val.all(k, this.val[k] == 1)"
+  };
+  map<int32, int32> val = 1;
+}
+
+
 message HasMsgExprs {
   option (buf.validate.message).cel = {
     id: "x_lt_y"

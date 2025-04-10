@@ -102,7 +102,18 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 
-	value, _, err := expr.Program.Eval(bindings)
+	fmt.Printf("compiledProgram.eval -- bindings: %+v\n", bindings)
+	fmt.Printf("compiledProgram.eval -- expression: %+v\n", expr.Source.GetExpression())
+
+	value, dts, err := expr.Program.Eval(bindings)
+
+	for _, c := range dts.State().IDs() {
+		f, s := dts.State().Value(c)
+		fmt.Printf("dts ID %+v", c)
+		fmt.Printf("dts f %+v", f)
+		fmt.Printf("dts s %+v", s)
+	}
+
 	if err != nil {
 		return nil, &RuntimeError{cause: fmt.Errorf(
 			"error evaluating %s: %w", expr.Source.GetId(), err)}

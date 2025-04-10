@@ -94,37 +94,6 @@ func TestValidator_ValidateGlobal(t *testing.T) {
 	})
 }
 
-func TestGlobalValidator(t *testing.T) {
-	t.Parallel()
-
-	t.Run("HasMsgExprs", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			msg   *pb.HasMsgExprs
-			exErr bool
-		}{
-			{
-				&pb.HasMsgExprs{X: 2, Y: 43},
-				false,
-			},
-			{
-				&pb.HasMsgExprs{X: 9, Y: 8},
-				true,
-			},
-		}
-
-		for _, test := range tests {
-			err := GlobalValidator.Validate(test.msg)
-			if test.exErr {
-				assert.Error(t, err)
-			} else {
-				require.NoError(t, err)
-			}
-		}
-	})
-}
-
 func TestRecursive(t *testing.T) {
 	t.Parallel()
 	val, err := New()
@@ -192,6 +161,51 @@ func TestValidator_ValidateMapFoo(t *testing.T) {
 	}
 	err = val.Validate(mapMessage)
 	require.Error(t, err)
+}
+
+// This fails
+func TestValidator_Validate_FieldExpressionMap_AccessByKey(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	msg := &pb.FieldExpressionMapAccessByKey{
+		Val: map[int32]int32{
+			42: 1,
+		},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+// This works
+func TestValidator_Validate_FieldExpressionMap_KeyEquality(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	msg := &pb.FieldExpressionMapKeyEquality{
+		Val: map[int32]int32{
+			42: 1,
+		},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+// As does this
+func TestValidator_Validate_MessageExpressionMap_AccessByKey(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	msg := &pb.MessageExpressionMap{
+		Val: map[int32]int32{
+			42: 1,
+		},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
 }
 
 func TestValidator_Validate_TransitiveFieldConstraints(t *testing.T) {
