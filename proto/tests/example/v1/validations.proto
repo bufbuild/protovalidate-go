@@ -22,13 +22,7 @@ import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
-message FieldExpressionMapKeyEquality {
-    map<int32, int32> val = 1 [(buf.validate.field).cel = {
-        id: "field_expression.map.scalar"
-        message: "test message field_expression.map.scalar"
-        expression: "this.all(k, k == 42)"
-    }];
-}
+// This fails
 message FieldExpressionMapAccessByKey {
     map<int32, int32> val = 1 [(buf.validate.field).cel = {
         id: "field_expression.map.scalar"
@@ -36,6 +30,15 @@ message FieldExpressionMapAccessByKey {
         expression: "this.all(k, this[k] == 1)"
     }];
 }
+// This works
+message FieldExpressionMapKeyEquality {
+    map<int32, int32> val = 1 [(buf.validate.field).cel = {
+        id: "field_expression.map.scalar"
+        message: "test message field_expression.map.scalar"
+        expression: "this.all(k, k == 42)"
+    }];
+}
+// As does this
 message MessageExpressionMap {
   option (buf.validate.message).cel = {
     id: "message_expression.map.scalar"
