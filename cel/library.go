@@ -1186,7 +1186,7 @@ func (u *uri) scheme() bool {
 				break
 			}
 		}
-		if u.str[u.index] == ':' {
+		if u.peek(':') {
 			return true
 		}
 	}
@@ -1291,13 +1291,10 @@ func (u *uri) checkHostPctEncoded(str string) bool {
 //
 //	host = IP-literal / IPv4address / reg-name
 func (u *uri) host() bool {
-	if u.index >= len(u.str) {
-		return false
-	}
 	start := u.index
 	u.pctEncodedFound = false
 	// Note: IPv4address is a subset of reg-name
-	if (u.str[u.index] == '[' && u.ipLiteral()) || u.regName() {
+	if (u.peek('[') && u.ipLiteral()) || u.regName() {
 		if u.pctEncodedFound {
 			rawHost := u.str[start:u.index]
 			// RFC 3986:
@@ -1757,4 +1754,8 @@ func (u *uri) take(char byte) bool {
 func (u *uri) takeDoubleSlash() bool {
 	first := u.take('/')
 	return first && u.take('/')
+}
+
+func (u *uri) peek(char byte) bool {
+	return u.index < len(u.str) && u.str[u.index] == char
 }
