@@ -425,17 +425,20 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
-// isEmail returns true if addr is a valid email address.
+// isEmail reports whether val an email address, for example "foo@example.com".
 //
-// This regex conforms to the definition for a valid email address from the HTML standard.
+// Conforms to the definition for a valid email address from the HTML standard.
 // Note that this standard willfully deviates from RFC 5322, which allows many
 // unexpected forms of email addresses and will easily match a typographical
 // error.
-func isEmail(addr string) bool {
-	return emailRegex.MatchString(addr)
+func isEmail(val string) bool {
+	return emailRegex.MatchString(val)
 }
 
-// isURI validates whether val is a valid URI.
+// isURI reports whether val is a URI, for example "https://example.com/foo/bar?baz=quux#frag".
+//
+// URI is defined in the internet standard RFC 3986.
+// Zone Identifiers in IPv6 address literals are supported (RFC 6874).
 func isURI(val string) bool {
 	uri := &uri{
 		str: val,
@@ -443,7 +446,13 @@ func isURI(val string) bool {
 	return uri.uri()
 }
 
-// isURIRef validates whether val is a valid URI reference.
+// isURIRef reports whether val is a URI Reference - a URI such as
+// "https://example.com/foo/bar?baz=quux#frag", or a Relative Reference such as
+// "./foo/bar?query".
+//
+// URI, URI Reference, and Relative Reference are defined in the internet
+// standard RFC 3986. Zone Identifiers in IPv6 address literals are supported
+// (RFC 6874).
 func isURIRef(val string) bool {
 	uri := &uri{
 		str: val,
@@ -1282,7 +1291,7 @@ func (u *uri) checkHostPctEncoded(str string) bool {
 
 // host parses the rule:
 //
-//	host = IP-literal / IPv4address / reg-name.
+//	host = IP-literal / IPv4address / reg-name
 func (u *uri) host() bool {
 	if u.index >= len(u.str) {
 		return false
