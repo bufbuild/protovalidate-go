@@ -112,9 +112,6 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 
-	fmt.Printf("compiledProgram.eval -- bindings: %+v\n", bindings)
-	fmt.Printf("compiledProgram.eval -- expression: %+v\n", expr.Source.GetExpression())
-
 	value, _, err := expr.Program.Eval(bindings)
 	if err != nil {
 		return nil, &RuntimeError{cause: fmt.Errorf(

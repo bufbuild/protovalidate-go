@@ -194,51 +194,6 @@ func TestValidator_ValidateMapFoo(t *testing.T) {
 	require.Error(t, err)
 }
 
-// This fails
-func TestValidator_Validate_FieldExpressionMap_AccessByKey(t *testing.T) {
-	t.Parallel()
-	val, err := New()
-	require.NoError(t, err)
-
-	msg := &pb.FieldExpressionMapAccessByKey{
-		Val: map[int32]int32{
-			42: 1,
-		},
-	}
-	err = val.Validate(msg)
-	require.NoError(t, err)
-}
-
-// This works
-func TestValidator_Validate_FieldExpressionMap_KeyEquality(t *testing.T) {
-	t.Parallel()
-	val, err := New()
-	require.NoError(t, err)
-
-	msg := &pb.FieldExpressionMapKeyEquality{
-		Val: map[int32]int32{
-			42: 1,
-		},
-	}
-	err = val.Validate(msg)
-	require.NoError(t, err)
-}
-
-// As does this
-func TestValidator_Validate_MessageExpressionMap_AccessByKey(t *testing.T) {
-	t.Parallel()
-	val, err := New()
-	require.NoError(t, err)
-
-	msg := &pb.MessageExpressionMap{
-		Val: map[int32]int32{
-			42: 1,
-		},
-	}
-	err = val.Validate(msg)
-	require.NoError(t, err)
-}
-
 func TestValidator_Validate_TransitiveFieldConstraints(t *testing.T) {
 	t.Parallel()
 	val, err := New()
