@@ -41,237 +41,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type SimpleMap struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Val           map[int32]int32        `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SimpleMap) Reset() {
-	*x = SimpleMap{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SimpleMap) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SimpleMap) ProtoMessage() {}
-
-func (x *SimpleMap) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *SimpleMap) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.Val
-	}
-	return nil
-}
-
-func (x *SimpleMap) SetVal(v map[int32]int32) {
-	x.Val = v
-}
-
-type SimpleMap_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 SimpleMap_builder) Build() *SimpleMap {
-	m0 := &SimpleMap{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.Val = b.Val
-	return m0
-}
-
-// This fails
-type FieldExpressionMapAccessByKey struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Val           map[int32]int32        `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *FieldExpressionMapAccessByKey) Reset() {
-	*x = FieldExpressionMapAccessByKey{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *FieldExpressionMapAccessByKey) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*FieldExpressionMapAccessByKey) ProtoMessage() {}
-
-func (x *FieldExpressionMapAccessByKey) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *FieldExpressionMapAccessByKey) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.Val
-	}
-	return nil
-}
-
-func (x *FieldExpressionMapAccessByKey) SetVal(v map[int32]int32) {
-	x.Val = v
-}
-
-type FieldExpressionMapAccessByKey_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 FieldExpressionMapAccessByKey_builder) Build() *FieldExpressionMapAccessByKey {
-	m0 := &FieldExpressionMapAccessByKey{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.Val = b.Val
-	return m0
-}
-
-// This works
-type FieldExpressionMapKeyEquality struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Val           map[int32]int32        `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *FieldExpressionMapKeyEquality) Reset() {
-	*x = FieldExpressionMapKeyEquality{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *FieldExpressionMapKeyEquality) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*FieldExpressionMapKeyEquality) ProtoMessage() {}
-
-func (x *FieldExpressionMapKeyEquality) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *FieldExpressionMapKeyEquality) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.Val
-	}
-	return nil
-}
-
-func (x *FieldExpressionMapKeyEquality) SetVal(v map[int32]int32) {
-	x.Val = v
-}
-
-type FieldExpressionMapKeyEquality_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 FieldExpressionMapKeyEquality_builder) Build() *FieldExpressionMapKeyEquality {
-	m0 := &FieldExpressionMapKeyEquality{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.Val = b.Val
-	return m0
-}
-
-// As does this
-type MessageExpressionMap struct {
-	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Val           map[int32]int32        `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *MessageExpressionMap) Reset() {
-	*x = MessageExpressionMap{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MessageExpressionMap) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MessageExpressionMap) ProtoMessage() {}
-
-func (x *MessageExpressionMap) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *MessageExpressionMap) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.Val
-	}
-	return nil
-}
-
-func (x *MessageExpressionMap) SetVal(v map[int32]int32) {
-	x.Val = v
-}
-
-type MessageExpressionMap_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 MessageExpressionMap_builder) Build() *MessageExpressionMap {
-	m0 := &MessageExpressionMap{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.Val = b.Val
-	return m0
-}
-
 type HasMsgExprs struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	X             int32                  `protobuf:"varint,1,opt,name=x,proto3" json:"x,omitempty"`
@@ -282,7 +51,7 @@ type HasMsgExprs struct {
 
 func (x *HasMsgExprs) Reset() {
 	*x = HasMsgExprs{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[4]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -294,7 +63,7 @@ func (x *HasMsgExprs) String() string {
 func (*HasMsgExprs) ProtoMessage() {}
 
 func (x *HasMsgExprs) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[4]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -353,7 +122,7 @@ type SelfRecursive struct {
 
 func (x *SelfRecursive) Reset() {
 	*x = SelfRecursive{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[5]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -365,7 +134,7 @@ func (x *SelfRecursive) String() string {
 func (*SelfRecursive) ProtoMessage() {}
 
 func (x *SelfRecursive) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[5]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -434,7 +203,7 @@ type LoopRecursiveA struct {
 
 func (x *LoopRecursiveA) Reset() {
 	*x = LoopRecursiveA{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[6]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -446,7 +215,7 @@ func (x *LoopRecursiveA) String() string {
 func (*LoopRecursiveA) ProtoMessage() {}
 
 func (x *LoopRecursiveA) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[6]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -502,7 +271,7 @@ type LoopRecursiveB struct {
 
 func (x *LoopRecursiveB) Reset() {
 	*x = LoopRecursiveB{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -514,7 +283,7 @@ func (x *LoopRecursiveB) String() string {
 func (*LoopRecursiveB) ProtoMessage() {}
 
 func (x *LoopRecursiveB) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -575,7 +344,7 @@ type MsgHasOneof struct {
 
 func (x *MsgHasOneof) Reset() {
 	*x = MsgHasOneof{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -587,7 +356,7 @@ func (x *MsgHasOneof) String() string {
 func (*MsgHasOneof) ProtoMessage() {}
 
 func (x *MsgHasOneof) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -751,7 +520,7 @@ func (b0 MsgHasOneof_builder) Build() *MsgHasOneof {
 type case_MsgHasOneof_O protoreflect.FieldNumber
 
 func (x case_MsgHasOneof_O) String() string {
-	md := file_tests_example_v1_validations_proto_msgTypes[8].Descriptor()
+	md := file_tests_example_v1_validations_proto_msgTypes[4].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -791,7 +560,7 @@ type MsgHasRepeated struct {
 
 func (x *MsgHasRepeated) Reset() {
 	*x = MsgHasRepeated{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[9]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -803,7 +572,7 @@ func (x *MsgHasRepeated) String() string {
 func (*MsgHasRepeated) ProtoMessage() {}
 
 func (x *MsgHasRepeated) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[9]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -876,7 +645,7 @@ type MsgHasMap struct {
 
 func (x *MsgHasMap) Reset() {
 	*x = MsgHasMap{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[10]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -888,7 +657,7 @@ func (x *MsgHasMap) String() string {
 func (*MsgHasMap) ProtoMessage() {}
 
 func (x *MsgHasMap) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[10]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -959,7 +728,7 @@ type TransitiveFieldConstraint struct {
 
 func (x *TransitiveFieldConstraint) Reset() {
 	*x = TransitiveFieldConstraint{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[11]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -971,7 +740,7 @@ func (x *TransitiveFieldConstraint) String() string {
 func (*TransitiveFieldConstraint) ProtoMessage() {}
 
 func (x *TransitiveFieldConstraint) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[11]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1027,7 +796,7 @@ type MultipleStepsTransitiveFieldConstraints struct {
 
 func (x *MultipleStepsTransitiveFieldConstraints) Reset() {
 	*x = MultipleStepsTransitiveFieldConstraints{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[12]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1039,7 +808,7 @@ func (x *MultipleStepsTransitiveFieldConstraints) String() string {
 func (*MultipleStepsTransitiveFieldConstraints) ProtoMessage() {}
 
 func (x *MultipleStepsTransitiveFieldConstraints) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[12]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1095,7 +864,7 @@ type Simple struct {
 
 func (x *Simple) Reset() {
 	*x = Simple{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[13]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1107,7 +876,7 @@ func (x *Simple) String() string {
 func (*Simple) ProtoMessage() {}
 
 func (x *Simple) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[13]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1152,7 +921,7 @@ type FieldOfTypeAny struct {
 
 func (x *FieldOfTypeAny) Reset() {
 	*x = FieldOfTypeAny{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[14]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1164,7 +933,7 @@ func (x *FieldOfTypeAny) String() string {
 func (*FieldOfTypeAny) ProtoMessage() {}
 
 func (x *FieldOfTypeAny) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[14]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1221,7 +990,7 @@ type CelMapOnARepeated struct {
 
 func (x *CelMapOnARepeated) Reset() {
 	*x = CelMapOnARepeated{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[15]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1233,7 +1002,7 @@ func (x *CelMapOnARepeated) String() string {
 func (*CelMapOnARepeated) ProtoMessage() {}
 
 func (x *CelMapOnARepeated) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[15]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1278,7 +1047,7 @@ type RepeatedItemCel struct {
 
 func (x *RepeatedItemCel) Reset() {
 	*x = RepeatedItemCel{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1290,7 +1059,7 @@ func (x *RepeatedItemCel) String() string {
 func (*RepeatedItemCel) ProtoMessage() {}
 
 func (x *RepeatedItemCel) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1336,7 +1105,7 @@ type OneTwo struct {
 
 func (x *OneTwo) Reset() {
 	*x = OneTwo{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[17]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1348,7 +1117,7 @@ func (x *OneTwo) String() string {
 func (*OneTwo) ProtoMessage() {}
 
 func (x *OneTwo) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[17]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1429,7 +1198,7 @@ type TwoOne struct {
 
 func (x *TwoOne) Reset() {
 	*x = TwoOne{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[18]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1441,7 +1210,7 @@ func (x *TwoOne) String() string {
 func (*TwoOne) ProtoMessage() {}
 
 func (x *TwoOne) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[18]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1522,7 +1291,7 @@ type F1 struct {
 
 func (x *F1) Reset() {
 	*x = F1{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[19]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1534,7 +1303,7 @@ func (x *F1) String() string {
 func (*F1) ProtoMessage() {}
 
 func (x *F1) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[19]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1603,7 +1372,7 @@ type F2 struct {
 
 func (x *F2) Reset() {
 	*x = F2{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[20]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1615,7 +1384,7 @@ func (x *F2) String() string {
 func (*F2) ProtoMessage() {}
 
 func (x *F2) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[20]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1672,7 +1441,7 @@ type FieldWithIssue struct {
 
 func (x *FieldWithIssue) Reset() {
 	*x = FieldWithIssue{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[21]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1684,7 +1453,7 @@ func (x *FieldWithIssue) String() string {
 func (*FieldWithIssue) ProtoMessage() {}
 
 func (x *FieldWithIssue) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[21]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1753,7 +1522,7 @@ type Issue211 struct {
 
 func (x *Issue211) Reset() {
 	*x = Issue211{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1765,7 +1534,7 @@ func (x *Issue211) String() string {
 func (*Issue211) ProtoMessage() {}
 
 func (x *Issue211) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1821,7 +1590,7 @@ type CelMapOnARepeated_Value struct {
 
 func (x *CelMapOnARepeated_Value) Reset() {
 	*x = CelMapOnARepeated_Value{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[30]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1833,7 +1602,7 @@ func (x *CelMapOnARepeated_Value) String() string {
 func (*CelMapOnARepeated_Value) ProtoMessage() {}
 
 func (x *CelMapOnARepeated_Value) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[30]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1873,31 +1642,7 @@ var File_tests_example_v1_validations_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_validations_proto_rawDesc = "" +
 	"\n" +
-	"\"tests/example/v1/validations.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\x1a\x19google/protobuf/api.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe6\x01\n" +
-	"\tSimpleMap\x12\xa0\x01\n" +
-	"\x03val\x18\x01 \x03(\v2$.tests.example.v1.SimpleMap.ValEntryBh\xbaHe\xba\x01b\n" +
-	"\x1bfield_expression.map.scalar\x12(test message field_expression.map.scalar\x1a\x19this.all(k, this[k] == 1)R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x8e\x02\n" +
-	"\x1dFieldExpressionMapAccessByKey\x12\xb4\x01\n" +
-	"\x03val\x18\x01 \x03(\v28.tests.example.v1.FieldExpressionMapAccessByKey.ValEntryBh\xbaHe\xba\x01b\n" +
-	"\x1bfield_expression.map.scalar\x12(test message field_expression.map.scalar\x1a\x19this.all(k, this[k] == 1)R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x89\x02\n" +
-	"\x1dFieldExpressionMapKeyEquality\x12\xaf\x01\n" +
-	"\x03val\x18\x01 \x03(\v28.tests.example.v1.FieldExpressionMapKeyEquality.ValEntryBc\xbaH`\xba\x01]\n" +
-	"\x1bfield_expression.map.scalar\x12(test message field_expression.map.scalar\x1a\x14this.all(k, k == 42)R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\x86\x02\n" +
-	"\x14MessageExpressionMap\x12A\n" +
-	"\x03val\x18\x01 \x03(\v2/.tests.example.v1.MessageExpressionMap.ValEntryR\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01:s\xbaHp\x1an\n" +
-	"\x1dmessage_expression.map.scalar\x12*test message message_expression.map.scalar\x1a!this.val.all(k, this.val[k] == 1)\"\x8d\x02\n" +
+	"\"tests/example/v1/validations.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\x1a\x19google/protobuf/any.proto\x1a\x19google/protobuf/api.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x8d\x02\n" +
 	"\vHasMsgExprs\x12\x7f\n" +
 	"\x01x\x18\x01 \x01(\x05Bq\xbaHn\xba\x01'\n" +
 	"\x06x_even\x12\x0ex must be even\x1a\rthis % 2 == 0\xba\x01A\n" +
@@ -1983,75 +1728,63 @@ const file_tests_example_v1_validations_proto_rawDesc = "" +
 	"\x05value\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\b\xbaH\x05\xb2\x01\x02@\x01R\x05valueB\xd8\x01\n" +
 	"\x14com.tests.example.v1B\x10ValidationsProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
-var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
+var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_tests_example_v1_validations_proto_goTypes = []any{
-	(*SimpleMap)(nil),                               // 0: tests.example.v1.SimpleMap
-	(*FieldExpressionMapAccessByKey)(nil),           // 1: tests.example.v1.FieldExpressionMapAccessByKey
-	(*FieldExpressionMapKeyEquality)(nil),           // 2: tests.example.v1.FieldExpressionMapKeyEquality
-	(*MessageExpressionMap)(nil),                    // 3: tests.example.v1.MessageExpressionMap
-	(*HasMsgExprs)(nil),                             // 4: tests.example.v1.HasMsgExprs
-	(*SelfRecursive)(nil),                           // 5: tests.example.v1.SelfRecursive
-	(*LoopRecursiveA)(nil),                          // 6: tests.example.v1.LoopRecursiveA
-	(*LoopRecursiveB)(nil),                          // 7: tests.example.v1.LoopRecursiveB
-	(*MsgHasOneof)(nil),                             // 8: tests.example.v1.MsgHasOneof
-	(*MsgHasRepeated)(nil),                          // 9: tests.example.v1.MsgHasRepeated
-	(*MsgHasMap)(nil),                               // 10: tests.example.v1.MsgHasMap
-	(*TransitiveFieldConstraint)(nil),               // 11: tests.example.v1.TransitiveFieldConstraint
-	(*MultipleStepsTransitiveFieldConstraints)(nil), // 12: tests.example.v1.MultipleStepsTransitiveFieldConstraints
-	(*Simple)(nil),                                  // 13: tests.example.v1.Simple
-	(*FieldOfTypeAny)(nil),                          // 14: tests.example.v1.FieldOfTypeAny
-	(*CelMapOnARepeated)(nil),                       // 15: tests.example.v1.CelMapOnARepeated
-	(*RepeatedItemCel)(nil),                         // 16: tests.example.v1.RepeatedItemCel
-	(*OneTwo)(nil),                                  // 17: tests.example.v1.OneTwo
-	(*TwoOne)(nil),                                  // 18: tests.example.v1.TwoOne
-	(*F1)(nil),                                      // 19: tests.example.v1.F1
-	(*F2)(nil),                                      // 20: tests.example.v1.F2
-	(*FieldWithIssue)(nil),                          // 21: tests.example.v1.FieldWithIssue
-	(*Issue211)(nil),                                // 22: tests.example.v1.Issue211
-	nil,                                             // 23: tests.example.v1.SimpleMap.ValEntry
-	nil,                                             // 24: tests.example.v1.FieldExpressionMapAccessByKey.ValEntry
-	nil,                                             // 25: tests.example.v1.FieldExpressionMapKeyEquality.ValEntry
-	nil,                                             // 26: tests.example.v1.MessageExpressionMap.ValEntry
-	nil,                                             // 27: tests.example.v1.MsgHasMap.Int32mapEntry
-	nil,                                             // 28: tests.example.v1.MsgHasMap.StringMapEntry
-	nil,                                             // 29: tests.example.v1.MsgHasMap.MessageMapEntry
-	(*CelMapOnARepeated_Value)(nil),                 // 30: tests.example.v1.CelMapOnARepeated.Value
-	(*fieldmaskpb.FieldMask)(nil),                   // 31: google.protobuf.FieldMask
-	(*apipb.Api)(nil),                               // 32: google.protobuf.Api
-	(*anypb.Any)(nil),                               // 33: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),                   // 34: google.protobuf.Timestamp
+	(*HasMsgExprs)(nil),                             // 0: tests.example.v1.HasMsgExprs
+	(*SelfRecursive)(nil),                           // 1: tests.example.v1.SelfRecursive
+	(*LoopRecursiveA)(nil),                          // 2: tests.example.v1.LoopRecursiveA
+	(*LoopRecursiveB)(nil),                          // 3: tests.example.v1.LoopRecursiveB
+	(*MsgHasOneof)(nil),                             // 4: tests.example.v1.MsgHasOneof
+	(*MsgHasRepeated)(nil),                          // 5: tests.example.v1.MsgHasRepeated
+	(*MsgHasMap)(nil),                               // 6: tests.example.v1.MsgHasMap
+	(*TransitiveFieldConstraint)(nil),               // 7: tests.example.v1.TransitiveFieldConstraint
+	(*MultipleStepsTransitiveFieldConstraints)(nil), // 8: tests.example.v1.MultipleStepsTransitiveFieldConstraints
+	(*Simple)(nil),                                  // 9: tests.example.v1.Simple
+	(*FieldOfTypeAny)(nil),                          // 10: tests.example.v1.FieldOfTypeAny
+	(*CelMapOnARepeated)(nil),                       // 11: tests.example.v1.CelMapOnARepeated
+	(*RepeatedItemCel)(nil),                         // 12: tests.example.v1.RepeatedItemCel
+	(*OneTwo)(nil),                                  // 13: tests.example.v1.OneTwo
+	(*TwoOne)(nil),                                  // 14: tests.example.v1.TwoOne
+	(*F1)(nil),                                      // 15: tests.example.v1.F1
+	(*F2)(nil),                                      // 16: tests.example.v1.F2
+	(*FieldWithIssue)(nil),                          // 17: tests.example.v1.FieldWithIssue
+	(*Issue211)(nil),                                // 18: tests.example.v1.Issue211
+	nil,                                             // 19: tests.example.v1.MsgHasMap.Int32mapEntry
+	nil,                                             // 20: tests.example.v1.MsgHasMap.StringMapEntry
+	nil,                                             // 21: tests.example.v1.MsgHasMap.MessageMapEntry
+	(*CelMapOnARepeated_Value)(nil),                 // 22: tests.example.v1.CelMapOnARepeated.Value
+	(*fieldmaskpb.FieldMask)(nil),                   // 23: google.protobuf.FieldMask
+	(*apipb.Api)(nil),                               // 24: google.protobuf.Api
+	(*anypb.Any)(nil),                               // 25: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),                   // 26: google.protobuf.Timestamp
 }
 var file_tests_example_v1_validations_proto_depIdxs = []int32{
-	23, // 0: tests.example.v1.SimpleMap.val:type_name -> tests.example.v1.SimpleMap.ValEntry
-	24, // 1: tests.example.v1.FieldExpressionMapAccessByKey.val:type_name -> tests.example.v1.FieldExpressionMapAccessByKey.ValEntry
-	25, // 2: tests.example.v1.FieldExpressionMapKeyEquality.val:type_name -> tests.example.v1.FieldExpressionMapKeyEquality.ValEntry
-	26, // 3: tests.example.v1.MessageExpressionMap.val:type_name -> tests.example.v1.MessageExpressionMap.ValEntry
-	5,  // 4: tests.example.v1.SelfRecursive.turtle:type_name -> tests.example.v1.SelfRecursive
-	7,  // 5: tests.example.v1.LoopRecursiveA.b:type_name -> tests.example.v1.LoopRecursiveB
-	6,  // 6: tests.example.v1.LoopRecursiveB.a:type_name -> tests.example.v1.LoopRecursiveA
-	4,  // 7: tests.example.v1.MsgHasOneof.msg:type_name -> tests.example.v1.HasMsgExprs
-	4,  // 8: tests.example.v1.MsgHasRepeated.z:type_name -> tests.example.v1.HasMsgExprs
-	27, // 9: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
-	28, // 10: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
-	29, // 11: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
-	31, // 12: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
-	32, // 13: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
-	33, // 14: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
-	30, // 15: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
-	19, // 16: tests.example.v1.OneTwo.field1:type_name -> tests.example.v1.F1
-	20, // 17: tests.example.v1.OneTwo.field2:type_name -> tests.example.v1.F2
-	20, // 18: tests.example.v1.TwoOne.field2:type_name -> tests.example.v1.F2
-	19, // 19: tests.example.v1.TwoOne.field1:type_name -> tests.example.v1.F1
-	21, // 20: tests.example.v1.F1.field:type_name -> tests.example.v1.FieldWithIssue
-	21, // 21: tests.example.v1.F2.field:type_name -> tests.example.v1.FieldWithIssue
-	19, // 22: tests.example.v1.FieldWithIssue.f1:type_name -> tests.example.v1.F1
-	34, // 23: tests.example.v1.Issue211.value:type_name -> google.protobuf.Timestamp
-	6,  // 24: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
-	25, // [25:25] is the sub-list for method output_type
-	25, // [25:25] is the sub-list for method input_type
-	25, // [25:25] is the sub-list for extension type_name
-	25, // [25:25] is the sub-list for extension extendee
-	0,  // [0:25] is the sub-list for field type_name
+	1,  // 0: tests.example.v1.SelfRecursive.turtle:type_name -> tests.example.v1.SelfRecursive
+	3,  // 1: tests.example.v1.LoopRecursiveA.b:type_name -> tests.example.v1.LoopRecursiveB
+	2,  // 2: tests.example.v1.LoopRecursiveB.a:type_name -> tests.example.v1.LoopRecursiveA
+	0,  // 3: tests.example.v1.MsgHasOneof.msg:type_name -> tests.example.v1.HasMsgExprs
+	0,  // 4: tests.example.v1.MsgHasRepeated.z:type_name -> tests.example.v1.HasMsgExprs
+	19, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
+	20, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
+	21, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
+	23, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
+	24, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
+	25, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
+	22, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
+	15, // 12: tests.example.v1.OneTwo.field1:type_name -> tests.example.v1.F1
+	16, // 13: tests.example.v1.OneTwo.field2:type_name -> tests.example.v1.F2
+	16, // 14: tests.example.v1.TwoOne.field2:type_name -> tests.example.v1.F2
+	15, // 15: tests.example.v1.TwoOne.field1:type_name -> tests.example.v1.F1
+	17, // 16: tests.example.v1.F1.field:type_name -> tests.example.v1.FieldWithIssue
+	17, // 17: tests.example.v1.F2.field:type_name -> tests.example.v1.FieldWithIssue
+	15, // 18: tests.example.v1.FieldWithIssue.f1:type_name -> tests.example.v1.F1
+	26, // 19: tests.example.v1.Issue211.value:type_name -> google.protobuf.Timestamp
+	2,  // 20: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_validations_proto_init() }
@@ -2059,7 +1792,7 @@ func file_tests_example_v1_validations_proto_init() {
 	if File_tests_example_v1_validations_proto != nil {
 		return
 	}
-	file_tests_example_v1_validations_proto_msgTypes[8].OneofWrappers = []any{
+	file_tests_example_v1_validations_proto_msgTypes[4].OneofWrappers = []any{
 		(*MsgHasOneof_X)(nil),
 		(*MsgHasOneof_Y)(nil),
 		(*MsgHasOneof_Msg)(nil),
@@ -2070,7 +1803,7 @@ func file_tests_example_v1_validations_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_validations_proto_rawDesc), len(file_tests_example_v1_validations_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   31,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
