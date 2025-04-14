@@ -73,22 +73,22 @@ func (s programSet) bindThis(val any) *variable {
 	case protoreflect.Map:
 		// TODO: expensive to create this copy, but getting this into a ref.Val with
 		//  traits.Mapper is not terribly feasible from this type.
-		m := make(map[any]any, value.Len())
+		bindingVal := make(map[any]any, value.Len())
 		value.Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 			// Cel operates on 64-bit integers, so if our map type is 32-bit, we
 			// need to widen to a 64-bit type in the binding due to our usage of
 			// a map[any]any.
 			switch key.Interface().(type) {
 			case int32:
-				m[key.Int()] = value.Interface()
+				bindingVal[key.Int()] = value.Interface()
 			case uint32:
-				m[key.Uint()] = value.Interface()
+				bindingVal[key.Uint()] = value.Interface()
 			default:
-				m[key.Interface()] = value.Interface()
+				bindingVal[key.Interface()] = value.Interface()
 			}
 			return true
 		})
-		binding.Val = m
+		binding.Val = bindingVal
 	default:
 		binding.Val = value
 	}
