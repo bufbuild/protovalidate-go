@@ -1124,8 +1124,7 @@ func (u *uri) uriReference() bool {
 //		        / path-empty.
 func (u *uri) hierPart() bool {
 	start := u.index
-	if u.take('/') && //nolint:staticcheck
-		u.take('/') &&
+	if u.takeDoubleSlash() &&
 		u.authority() &&
 		u.pathAbempty() {
 		return true
@@ -1165,8 +1164,7 @@ func (u *uri) relativeRef() bool {
 //		          / path-empty
 func (u *uri) relativePart() bool {
 	start := u.index
-	if u.take('/') && //nolint:staticcheck
-		u.take('/') &&
+	if u.takeDoubleSlash() &&
 		u.authority() &&
 		u.pathAbempty() {
 		return true
@@ -1754,4 +1752,9 @@ func (u *uri) take(char byte) bool {
 		return true
 	}
 	return false
+}
+
+func (u *uri) takeDoubleSlash() bool {
+	first := u.take('/')
+	return first && u.take('/')
 }
