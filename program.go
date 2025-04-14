@@ -75,7 +75,14 @@ func (s programSet) bindThis(val any) *variable {
 		//  traits.Mapper is not terribly feasible from this type.
 		m := make(map[any]any, value.Len())
 		value.Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
-			m[key.Interface()] = value.Interface()
+			switch key.Interface().(type) {
+			// case int32:
+			// 	m[key.Int()] = value.Interface()
+			// case uint32:
+			// 	m[key.Uint()] = value.Interface()
+			default:
+				m[key.Interface()] = value.Interface()
+			}
 			return true
 		})
 		binding.Val = m
