@@ -1,10 +1,3 @@
-custom_constraints:
-  - field_expression/map/enum/invalid
-  - field_expression/map/scalar/invalid
-  - field_expression/map/message/valid
-  - field_expression/map/message/invalid
-  - field_expression/map/scalar/valid
-  - field_expression/map/enum/valid
 standard_constraints/required:
   - proto/2023/message/explicit_presence/delimited/unset/ignore_always
   - proto2/scalar/optional/unset/ignore_always
