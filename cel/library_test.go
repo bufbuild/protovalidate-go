@@ -222,3 +222,8 @@ func buildTestProgram(t *testing.T, env *cel.Env, expr string) cel.Program {
 	require.NoError(t, err)
 	return prog
 }
+
+func TestIsUri(t *testing.T) {
+	t.Parallel()
+	require.True(t, isURI("A://"))
+}
