@@ -38,12 +38,7 @@ func compile(
 	envOpts ...cel.EnvOption,
 ) (set programSet, err error) {
 	if len(expressions.Constraints) == 0 {
-		fmt.Println("no constraints, returning")
 		return nil, nil
-	}
-	fmt.Printf("compiling with constraints %+v", expressions.Constraints)
-	for _, c := range env.Variables() {
-		fmt.Printf("envvar name %s and type %+v\n", c.Name(), c.Type())
 	}
 
 	if len(envOpts) > 0 {
