@@ -26,11 +26,22 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-var getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
+var (
+	getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
+
+	// GlobalValidator provides access to the global Validator instance that is
+	// used by the [Validate] function. This is intended to be used by libraries
+	// that use protovalidate. This Validator can be used as a default when the
+	// user does not specify a Validator instance to use.
+	//
+	// Using the global Validator instance (either through [Validator] or via
+	// GlobalValidator) will result in lower memory usage than using multiple
+	// Validator instances, because each Validator instance has its own caches.
+	GlobalValidator Validator = globalValidator{}
+)
 
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
-
 type Validator interface {
 	// Validate checks that message satisfies its constraints. Constraints are
 	// defined within the Protobuf file as options from the buf.validate
@@ -127,4 +138,10 @@ type validationConfig struct {
 	failFast bool
 	filter   Filter
 	nowFn    func() *timestamppb.Timestamp
+}
+
+type globalValidator struct{}
+
+func (globalValidator) Validate(msg proto.Message, options ...ValidationOption) error {
+	return Validate(msg, options...)
 }
