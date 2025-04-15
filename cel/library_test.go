@@ -227,3 +227,10 @@ func TestIsUri(t *testing.T) {
 	t.Parallel()
 	require.True(t, isURI("A://"))
 }
+
+func TestIsHostname(t *testing.T) {
+	t.Parallel()
+	require.True(t, isHostname("foo.example.com"))
+	require.True(t, isHostname("A.ISI.EDU"))
+	require.False(t, isHostname("İ"))
+}
