@@ -425,7 +425,7 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
-// isEmail reports whether val an email address, for example "foo@example.com".
+// isEmail reports whether val is an email address, for example "foo@example.com".
 //
 // Conforms to the definition for a valid email address from the HTML standard.
 // Note that this standard willfully deviates from RFC 5322, which allows many
