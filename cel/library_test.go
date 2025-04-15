@@ -223,6 +223,11 @@ func buildTestProgram(t *testing.T, env *cel.Env, expr string) cel.Program {
 	return prog
 }
 
+func TestIsUri(t *testing.T) {
+	t.Parallel()
+	require.True(t, isURI("A://"))
+}
+
 func TestIsHostname(t *testing.T) {
 	t.Parallel()
 	require.True(t, isHostname("foo.example.com"))
