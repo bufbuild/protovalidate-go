@@ -1074,7 +1074,11 @@ func isPort(str string) bool {
 		}
 		return false
 	}
-	val, err := strconv.ParseInt(str, 0, 32)
+	if len(str) > 1 && str[0] == '0' {
+		// bad leading 0
+		return false
+	}
+	val, err := strconv.ParseUint(str, 0, 32)
 	if err != nil {
 		return false
 	}

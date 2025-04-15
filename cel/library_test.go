@@ -234,3 +234,9 @@ func TestIsHostname(t *testing.T) {
 	require.True(t, isHostname("A.ISI.EDU"))
 	require.False(t, isHostname("İ"))
 }
+
+func TestIsHostAndPort(t *testing.T) {
+	t.Parallel()
+	require.False(t, isHostAndPort("example.com:080", false))
+	require.False(t, isHostAndPort("example.com:00", false))
+}
