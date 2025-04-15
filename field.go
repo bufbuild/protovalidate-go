@@ -37,6 +37,9 @@ type field struct {
 	Value value
 	// Required indicates that the field must have a set value.
 	Required bool
+	// IgnoreAlways indicates if a field should always skip validation.
+	// If true, this will take precedence and all checks are skipped.
+	IgnoreAlways bool
 	// IgnoreEmpty indicates if a field should skip validation on its zero value.
 	// This field is generally true for nullable fields or fields with the
 	// ignore_empty constraint explicitly set.
@@ -56,6 +59,9 @@ func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 }
 
 func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+	if f.IgnoreAlways {
+		return nil
+	}
 	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
 		return nil
 	}

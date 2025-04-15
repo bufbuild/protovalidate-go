@@ -213,7 +213,8 @@ func (bldr *builder) buildField(
 		Value: value{
 			Descriptor: fieldDescriptor,
 		},
-		Required: fieldConstraints.GetRequired(),
+		Required:     fieldConstraints.GetRequired(),
+		IgnoreAlways: bldr.shouldIgnoreAlways(fieldConstraints),
 		IgnoreEmpty: fieldDescriptor.HasPresence() ||
 			bldr.shouldIgnoreEmpty(fieldConstraints),
 		IgnoreDefault: fieldDescriptor.HasPresence() &&
@@ -232,7 +233,7 @@ func (bldr *builder) buildValue(
 	valEval *value,
 	cache messageCache,
 ) (err error) {
-	if bldr.shouldSkip(constraints) {
+	if bldr.shouldIgnoreAlways(constraints) {
 		return nil
 	}
 
@@ -503,7 +504,7 @@ func (bldr *builder) processRepeatedConstraints(
 	return nil
 }
 
-func (bldr *builder) shouldSkip(constraints *validate.FieldConstraints) bool {
+func (bldr *builder) shouldIgnoreAlways(constraints *validate.FieldConstraints) bool {
 	return constraints.GetIgnore() == validate.Ignore_IGNORE_ALWAYS
 }
 
