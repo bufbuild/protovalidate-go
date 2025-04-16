@@ -213,14 +213,11 @@ func (bldr *builder) buildField(
 		Value: value{
 			Descriptor: fieldDescriptor,
 		},
-		Required:     fieldConstraints.GetRequired(),
-		IgnoreAlways: bldr.shouldIgnoreAlways(fieldConstraints),
-		IgnoreEmpty: fieldDescriptor.HasPresence() ||
-			bldr.shouldIgnoreEmpty(fieldConstraints),
-		IgnoreDefault: fieldDescriptor.HasPresence() &&
-			bldr.shouldIgnoreDefault(fieldConstraints),
+		HasPresence: fieldDescriptor.HasPresence(),
+		Required:    fieldConstraints.GetRequired(),
+		Ignore:      fieldConstraints.GetIgnore(),
 	}
-	if fld.IgnoreDefault {
+	if fld.shouldIgnoreDefault() {
 		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
 	}
 	err := bldr.buildValue(fieldDescriptor, fieldConstraints, &fld.Value, cache)
@@ -511,10 +508,6 @@ func (bldr *builder) shouldIgnoreAlways(constraints *validate.FieldConstraints) 
 func (bldr *builder) shouldIgnoreEmpty(constraints *validate.FieldConstraints) bool {
 	return constraints.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
 		constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
-}
-
-func (bldr *builder) shouldIgnoreDefault(constraints *validate.FieldConstraints) bool {
-	return constraints.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
 }
 
 func (bldr *builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool) protoreflect.Value {

@@ -37,16 +37,11 @@ type field struct {
 	Value value
 	// Required indicates that the field must have a set value.
 	Required bool
-	// IgnoreAlways indicates if a field should always skip validation.
-	// If true, this will take precedence and all checks are skipped.
-	IgnoreAlways bool
-	// IgnoreEmpty indicates if a field should skip validation on its zero value.
-	// This field is generally true for nullable fields or fields with the
-	// ignore_empty constraint explicitly set.
-	IgnoreEmpty bool
-	// IgnoreDefault indicates if a field should skip validation on its zero value,
-	// including for fields which have field presence and are set to the zero value.
-	IgnoreDefault bool
+	// HasPresence reports whether the field distinguishes between unpopulated
+	// and default values.
+	HasPresence bool
+	// Whether validation should be ignored for certain conditions.
+	Ignore validate.Ignore
 	// Zero is the default or zero-value for this value's type
 	Zero protoreflect.Value
 	// Err stores if there was a compilation error constructing this evaluator. It is stored
@@ -54,12 +49,31 @@ type field struct {
 	Err error
 }
 
+// shouldIgnoreAlways returns whether this field should always skip validation.
+// If true, this will take precedence and all checks are skipped.
+func (f field) shouldIgnoreAlways() bool {
+	return f.Ignore == validate.Ignore_IGNORE_ALWAYS
+}
+
+// shouldIgnoreEmpty returns whether this field should skip validation on its zero value.
+// This field is generally true for nullable fields or fields with the
+// ignore_empty constraint explicitly set.
+func (f field) shouldIgnoreEmpty() bool {
+	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_UNPOPULATED || f.Ignore == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
+}
+
+// shouldIgnoreDefault returns whether this field should skip validation on its zero value,
+// including for fields which have field presence and are set to the zero value.
+func (f field) shouldIgnoreDefault() bool {
+	return f.HasPresence && f.Ignore == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
+}
+
 func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return f.EvaluateMessage(val.Message(), cfg)
 }
 
 func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
-	if f.IgnoreAlways {
+	if f.shouldIgnoreAlways() {
 		return nil
 	}
 	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
@@ -85,12 +99,12 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 		}}}
 	}
 
-	if f.IgnoreEmpty && !msg.Has(f.Value.Descriptor) {
+	if f.shouldIgnoreEmpty() && !msg.Has(f.Value.Descriptor) {
 		return nil
 	}
 
 	val := msg.Get(f.Value.Descriptor)
-	if f.IgnoreDefault && val.Equal(f.Zero) {
+	if f.shouldIgnoreDefault() && val.Equal(f.Zero) {
 		return nil
 	}
 	return f.Value.EvaluateField(msg, val, cfg, true)
