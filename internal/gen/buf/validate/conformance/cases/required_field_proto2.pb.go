@@ -105,6 +105,74 @@ func (b0 RequiredProto2ScalarOptional_builder) Build() *RequiredProto2ScalarOpti
 	return m0
 }
 
+type RequiredProto2ScalarOptionalIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) Reset() {
+	*x = RequiredProto2ScalarOptionalIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2ScalarOptionalIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return ""
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredProto2ScalarOptionalIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredProto2ScalarOptionalIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredProto2ScalarOptionalIgnoreAlways_builder) Build() *RequiredProto2ScalarOptionalIgnoreAlways {
+	m0 := &RequiredProto2ScalarOptionalIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredProto2ScalarOptionalDefault struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val,def=foo" json:"val,omitempty"`
@@ -119,7 +187,7 @@ const (
 
 func (x *RequiredProto2ScalarOptionalDefault) Reset() {
 	*x = RequiredProto2ScalarOptionalDefault{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[1]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -131,7 +199,7 @@ func (x *RequiredProto2ScalarOptionalDefault) String() string {
 func (*RequiredProto2ScalarOptionalDefault) ProtoMessage() {}
 
 func (x *RequiredProto2ScalarOptionalDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[1]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -178,6 +246,79 @@ func (b0 RequiredProto2ScalarOptionalDefault_builder) Build() *RequiredProto2Sca
 	return m0
 }
 
+type RequiredProto2ScalarOptionalDefaultIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val,def=foo" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+// Default values for RequiredProto2ScalarOptionalDefaultIgnoreAlways fields.
+const (
+	Default_RequiredProto2ScalarOptionalDefaultIgnoreAlways_Val = string("foo")
+)
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) Reset() {
+	*x = RequiredProto2ScalarOptionalDefaultIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2ScalarOptionalDefaultIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return Default_RequiredProto2ScalarOptionalDefaultIgnoreAlways_Val
+}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredProto2ScalarOptionalDefaultIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredProto2ScalarOptionalDefaultIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredProto2ScalarOptionalDefaultIgnoreAlways_builder) Build() *RequiredProto2ScalarOptionalDefaultIgnoreAlways {
+	m0 := &RequiredProto2ScalarOptionalDefaultIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredProto2ScalarRequired struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,req,name=val" json:"val,omitempty"`
@@ -187,7 +328,7 @@ type RequiredProto2ScalarRequired struct {
 
 func (x *RequiredProto2ScalarRequired) Reset() {
 	*x = RequiredProto2ScalarRequired{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +340,7 @@ func (x *RequiredProto2ScalarRequired) String() string {
 func (*RequiredProto2ScalarRequired) ProtoMessage() {}
 
 func (x *RequiredProto2ScalarRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -255,7 +396,7 @@ type RequiredProto2Message struct {
 
 func (x *RequiredProto2Message) Reset() {
 	*x = RequiredProto2Message{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -267,7 +408,7 @@ func (x *RequiredProto2Message) String() string {
 func (*RequiredProto2Message) ProtoMessage() {}
 
 func (x *RequiredProto2Message) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -314,6 +455,74 @@ func (b0 RequiredProto2Message_builder) Build() *RequiredProto2Message {
 	return m0
 }
 
+type RequiredProto2MessageIgnoreAlways struct {
+	state         protoimpl.MessageState                 `protogen:"hybrid.v1"`
+	Val           *RequiredProto2MessageIgnoreAlways_Msg `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) Reset() {
+	*x = RequiredProto2MessageIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2MessageIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2MessageIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) GetVal() *RequiredProto2MessageIgnoreAlways_Msg {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) SetVal(v *RequiredProto2MessageIgnoreAlways_Msg) {
+	x.Val = v
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredProto2MessageIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredProto2MessageIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *RequiredProto2MessageIgnoreAlways_Msg
+}
+
+func (b0 RequiredProto2MessageIgnoreAlways_builder) Build() *RequiredProto2MessageIgnoreAlways {
+	m0 := &RequiredProto2MessageIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredProto2Oneof struct {
 	state protoimpl.MessageState `protogen:"hybrid.v1"`
 	// Types that are valid to be assigned to Val:
@@ -327,7 +536,7 @@ type RequiredProto2Oneof struct {
 
 func (x *RequiredProto2Oneof) Reset() {
 	*x = RequiredProto2Oneof{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -339,7 +548,7 @@ func (x *RequiredProto2Oneof) String() string {
 func (*RequiredProto2Oneof) ProtoMessage() {}
 
 func (x *RequiredProto2Oneof) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -465,7 +674,7 @@ func (b0 RequiredProto2Oneof_builder) Build() *RequiredProto2Oneof {
 type case_RequiredProto2Oneof_Val protoreflect.FieldNumber
 
 func (x case_RequiredProto2Oneof_Val) String() string {
-	md := file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4].Descriptor()
+	md := file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -488,6 +697,180 @@ func (*RequiredProto2Oneof_A) isRequiredProto2Oneof_Val() {}
 
 func (*RequiredProto2Oneof_B) isRequiredProto2Oneof_Val() {}
 
+type RequiredProto2OneofIgnoreAlways struct {
+	state protoimpl.MessageState `protogen:"hybrid.v1"`
+	// Types that are valid to be assigned to Val:
+	//
+	//	*RequiredProto2OneofIgnoreAlways_A
+	//	*RequiredProto2OneofIgnoreAlways_B
+	Val           isRequiredProto2OneofIgnoreAlways_Val `protobuf_oneof:"val"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) Reset() {
+	*x = RequiredProto2OneofIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2OneofIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2OneofIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) GetVal() isRequiredProto2OneofIgnoreAlways_Val {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) GetA() string {
+	if x != nil {
+		if x, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_A); ok {
+			return x.A
+		}
+	}
+	return ""
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) GetB() string {
+	if x != nil {
+		if x, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_B); ok {
+			return x.B
+		}
+	}
+	return ""
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) SetA(v string) {
+	x.Val = &RequiredProto2OneofIgnoreAlways_A{v}
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) SetB(v string) {
+	x.Val = &RequiredProto2OneofIgnoreAlways_B{v}
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) HasA() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_A)
+	return ok
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) HasB() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_B)
+	return ok
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) ClearA() {
+	if _, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_A); ok {
+		x.Val = nil
+	}
+}
+
+func (x *RequiredProto2OneofIgnoreAlways) ClearB() {
+	if _, ok := x.Val.(*RequiredProto2OneofIgnoreAlways_B); ok {
+		x.Val = nil
+	}
+}
+
+const RequiredProto2OneofIgnoreAlways_Val_not_set_case case_RequiredProto2OneofIgnoreAlways_Val = 0
+const RequiredProto2OneofIgnoreAlways_A_case case_RequiredProto2OneofIgnoreAlways_Val = 1
+const RequiredProto2OneofIgnoreAlways_B_case case_RequiredProto2OneofIgnoreAlways_Val = 2
+
+func (x *RequiredProto2OneofIgnoreAlways) WhichVal() case_RequiredProto2OneofIgnoreAlways_Val {
+	if x == nil {
+		return RequiredProto2OneofIgnoreAlways_Val_not_set_case
+	}
+	switch x.Val.(type) {
+	case *RequiredProto2OneofIgnoreAlways_A:
+		return RequiredProto2OneofIgnoreAlways_A_case
+	case *RequiredProto2OneofIgnoreAlways_B:
+		return RequiredProto2OneofIgnoreAlways_B_case
+	default:
+		return RequiredProto2OneofIgnoreAlways_Val_not_set_case
+	}
+}
+
+type RequiredProto2OneofIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	// Fields of oneof Val:
+	A *string
+	B *string
+	// -- end of Val
+}
+
+func (b0 RequiredProto2OneofIgnoreAlways_builder) Build() *RequiredProto2OneofIgnoreAlways {
+	m0 := &RequiredProto2OneofIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.A != nil {
+		x.Val = &RequiredProto2OneofIgnoreAlways_A{*b.A}
+	}
+	if b.B != nil {
+		x.Val = &RequiredProto2OneofIgnoreAlways_B{*b.B}
+	}
+	return m0
+}
+
+type case_RequiredProto2OneofIgnoreAlways_Val protoreflect.FieldNumber
+
+func (x case_RequiredProto2OneofIgnoreAlways_Val) String() string {
+	md := file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[8].Descriptor()
+	if x == 0 {
+		return "not set"
+	}
+	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
+}
+
+type isRequiredProto2OneofIgnoreAlways_Val interface {
+	isRequiredProto2OneofIgnoreAlways_Val()
+}
+
+type RequiredProto2OneofIgnoreAlways_A struct {
+	A string `protobuf:"bytes,1,opt,name=a,oneof"`
+}
+
+type RequiredProto2OneofIgnoreAlways_B struct {
+	B string `protobuf:"bytes,2,opt,name=b,oneof"`
+}
+
+func (*RequiredProto2OneofIgnoreAlways_A) isRequiredProto2OneofIgnoreAlways_Val() {}
+
+func (*RequiredProto2OneofIgnoreAlways_B) isRequiredProto2OneofIgnoreAlways_Val() {}
+
 type RequiredProto2Repeated struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
@@ -497,7 +880,7 @@ type RequiredProto2Repeated struct {
 
 func (x *RequiredProto2Repeated) Reset() {
 	*x = RequiredProto2Repeated{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -509,7 +892,7 @@ func (x *RequiredProto2Repeated) String() string {
 func (*RequiredProto2Repeated) ProtoMessage() {}
 
 func (x *RequiredProto2Repeated) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -545,6 +928,63 @@ func (b0 RequiredProto2Repeated_builder) Build() *RequiredProto2Repeated {
 	return m0
 }
 
+type RequiredProto2RepeatedIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2RepeatedIgnoreAlways) Reset() {
+	*x = RequiredProto2RepeatedIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2RepeatedIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2RepeatedIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2RepeatedIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2RepeatedIgnoreAlways) GetVal() []string {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredProto2RepeatedIgnoreAlways) SetVal(v []string) {
+	x.Val = v
+}
+
+type RequiredProto2RepeatedIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []string
+}
+
+func (b0 RequiredProto2RepeatedIgnoreAlways_builder) Build() *RequiredProto2RepeatedIgnoreAlways {
+	m0 := &RequiredProto2RepeatedIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredProto2Map struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           map[string]string      `protobuf:"bytes,1,rep,name=val" json:"val,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -554,7 +994,7 @@ type RequiredProto2Map struct {
 
 func (x *RequiredProto2Map) Reset() {
 	*x = RequiredProto2Map{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -566,7 +1006,7 @@ func (x *RequiredProto2Map) String() string {
 func (*RequiredProto2Map) ProtoMessage() {}
 
 func (x *RequiredProto2Map) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -602,6 +1042,63 @@ func (b0 RequiredProto2Map_builder) Build() *RequiredProto2Map {
 	return m0
 }
 
+type RequiredProto2MapIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           map[string]string      `protobuf:"bytes,1,rep,name=val" json:"val,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2MapIgnoreAlways) Reset() {
+	*x = RequiredProto2MapIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2MapIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2MapIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredProto2MapIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2MapIgnoreAlways) GetVal() map[string]string {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredProto2MapIgnoreAlways) SetVal(v map[string]string) {
+	x.Val = v
+}
+
+type RequiredProto2MapIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val map[string]string
+}
+
+func (b0 RequiredProto2MapIgnoreAlways_builder) Build() *RequiredProto2MapIgnoreAlways {
+	m0 := &RequiredProto2MapIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredProto2Message_Msg struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
@@ -611,7 +1108,7 @@ type RequiredProto2Message_Msg struct {
 
 func (x *RequiredProto2Message_Msg) Reset() {
 	*x = RequiredProto2Message_Msg{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -623,7 +1120,7 @@ func (x *RequiredProto2Message_Msg) String() string {
 func (*RequiredProto2Message_Msg) ProtoMessage() {}
 
 func (x *RequiredProto2Message_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,54 +1167,151 @@ func (b0 RequiredProto2Message_Msg_builder) Build() *RequiredProto2Message_Msg {
 	return m0
 }
 
+type RequiredProto2MessageIgnoreAlways_Msg struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) Reset() {
+	*x = RequiredProto2MessageIgnoreAlways_Msg{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredProto2MessageIgnoreAlways_Msg) ProtoMessage() {}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return ""
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredProto2MessageIgnoreAlways_Msg) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredProto2MessageIgnoreAlways_Msg_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredProto2MessageIgnoreAlways_Msg_builder) Build() *RequiredProto2MessageIgnoreAlways_Msg {
+	m0 := &RequiredProto2MessageIgnoreAlways_Msg{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 var File_buf_validate_conformance_cases_required_field_proto2_proto protoreflect.FileDescriptor
 
 const file_buf_validate_conformance_cases_required_field_proto2_proto_rawDesc = "" +
 	"\n" +
 	":buf/validate/conformance/cases/required_field_proto2.proto\x12\x1ebuf.validate.conformance.cases\x1a\x1bbuf/validate/validate.proto\"8\n" +
 	"\x1cRequiredProto2ScalarOptional\x12\x18\n" +
-	"\x03val\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"D\n" +
+	"\x03val\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"G\n" +
+	"(RequiredProto2ScalarOptionalIgnoreAlways\x12\x1b\n" +
+	"\x03val\x18\x01 \x01(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"D\n" +
 	"#RequiredProto2ScalarOptionalDefault\x12\x1d\n" +
-	"\x03val\x18\x01 \x01(\t:\x03fooB\x06\xbaH\x03\xc8\x01\x01R\x03val\"8\n" +
+	"\x03val\x18\x01 \x01(\t:\x03fooB\x06\xbaH\x03\xc8\x01\x01R\x03val\"S\n" +
+	"/RequiredProto2ScalarOptionalDefaultIgnoreAlways\x12 \n" +
+	"\x03val\x18\x01 \x01(\t:\x03fooB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"8\n" +
 	"\x1cRequiredProto2ScalarRequired\x12\x18\n" +
 	"\x03val\x18\x01 \x02(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"\x85\x01\n" +
 	"\x15RequiredProto2Message\x12S\n" +
 	"\x03val\x18\x01 \x01(\v29.buf.validate.conformance.cases.RequiredProto2Message.MsgB\x06\xbaH\x03\xc8\x01\x01R\x03val\x1a\x17\n" +
 	"\x03Msg\x12\x10\n" +
+	"\x03val\x18\x01 \x01(\tR\x03val\"\xa0\x01\n" +
+	"!RequiredProto2MessageIgnoreAlways\x12b\n" +
+	"\x03val\x18\x01 \x01(\v2E.buf.validate.conformance.cases.RequiredProto2MessageIgnoreAlways.MsgB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\x1a\x17\n" +
+	"\x03Msg\x12\x10\n" +
 	"\x03val\x18\x01 \x01(\tR\x03val\"D\n" +
 	"\x13RequiredProto2Oneof\x12\x16\n" +
 	"\x01a\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01H\x00R\x01a\x12\x0e\n" +
 	"\x01b\x18\x02 \x01(\tH\x00R\x01bB\x05\n" +
+	"\x03val\"S\n" +
+	"\x1fRequiredProto2OneofIgnoreAlways\x12\x19\n" +
+	"\x01a\x18\x01 \x01(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03H\x00R\x01a\x12\x0e\n" +
+	"\x01b\x18\x02 \x01(\tH\x00R\x01bB\x05\n" +
 	"\x03val\"2\n" +
 	"\x16RequiredProto2Repeated\x12\x18\n" +
-	"\x03val\x18\x01 \x03(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"\xa1\x01\n" +
+	"\x03val\x18\x01 \x03(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"A\n" +
+	"\"RequiredProto2RepeatedIgnoreAlways\x12\x1b\n" +
+	"\x03val\x18\x01 \x03(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"\xa1\x01\n" +
 	"\x11RequiredProto2Map\x12T\n" +
 	"\x03val\x18\x01 \x03(\v2:.buf.validate.conformance.cases.RequiredProto2Map.ValEntryB\x06\xbaH\x03\xc8\x01\x01R\x03val\x1a6\n" +
+	"\bValEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xbc\x01\n" +
+	"\x1dRequiredProto2MapIgnoreAlways\x12c\n" +
+	"\x03val\x18\x01 \x03(\v2F.buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways.ValEntryB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xac\x02\n" +
 	"\"com.buf.validate.conformance.casesB\x18RequiredFieldProto2ProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Cases"
 
-var file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_buf_validate_conformance_cases_required_field_proto2_proto_goTypes = []any{
-	(*RequiredProto2ScalarOptional)(nil),        // 0: buf.validate.conformance.cases.RequiredProto2ScalarOptional
-	(*RequiredProto2ScalarOptionalDefault)(nil), // 1: buf.validate.conformance.cases.RequiredProto2ScalarOptionalDefault
-	(*RequiredProto2ScalarRequired)(nil),        // 2: buf.validate.conformance.cases.RequiredProto2ScalarRequired
-	(*RequiredProto2Message)(nil),               // 3: buf.validate.conformance.cases.RequiredProto2Message
-	(*RequiredProto2Oneof)(nil),                 // 4: buf.validate.conformance.cases.RequiredProto2Oneof
-	(*RequiredProto2Repeated)(nil),              // 5: buf.validate.conformance.cases.RequiredProto2Repeated
-	(*RequiredProto2Map)(nil),                   // 6: buf.validate.conformance.cases.RequiredProto2Map
-	(*RequiredProto2Message_Msg)(nil),           // 7: buf.validate.conformance.cases.RequiredProto2Message.Msg
-	nil,                                         // 8: buf.validate.conformance.cases.RequiredProto2Map.ValEntry
+	(*RequiredProto2ScalarOptional)(nil),                    // 0: buf.validate.conformance.cases.RequiredProto2ScalarOptional
+	(*RequiredProto2ScalarOptionalIgnoreAlways)(nil),        // 1: buf.validate.conformance.cases.RequiredProto2ScalarOptionalIgnoreAlways
+	(*RequiredProto2ScalarOptionalDefault)(nil),             // 2: buf.validate.conformance.cases.RequiredProto2ScalarOptionalDefault
+	(*RequiredProto2ScalarOptionalDefaultIgnoreAlways)(nil), // 3: buf.validate.conformance.cases.RequiredProto2ScalarOptionalDefaultIgnoreAlways
+	(*RequiredProto2ScalarRequired)(nil),                    // 4: buf.validate.conformance.cases.RequiredProto2ScalarRequired
+	(*RequiredProto2Message)(nil),                           // 5: buf.validate.conformance.cases.RequiredProto2Message
+	(*RequiredProto2MessageIgnoreAlways)(nil),               // 6: buf.validate.conformance.cases.RequiredProto2MessageIgnoreAlways
+	(*RequiredProto2Oneof)(nil),                             // 7: buf.validate.conformance.cases.RequiredProto2Oneof
+	(*RequiredProto2OneofIgnoreAlways)(nil),                 // 8: buf.validate.conformance.cases.RequiredProto2OneofIgnoreAlways
+	(*RequiredProto2Repeated)(nil),                          // 9: buf.validate.conformance.cases.RequiredProto2Repeated
+	(*RequiredProto2RepeatedIgnoreAlways)(nil),              // 10: buf.validate.conformance.cases.RequiredProto2RepeatedIgnoreAlways
+	(*RequiredProto2Map)(nil),                               // 11: buf.validate.conformance.cases.RequiredProto2Map
+	(*RequiredProto2MapIgnoreAlways)(nil),                   // 12: buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways
+	(*RequiredProto2Message_Msg)(nil),                       // 13: buf.validate.conformance.cases.RequiredProto2Message.Msg
+	(*RequiredProto2MessageIgnoreAlways_Msg)(nil),           // 14: buf.validate.conformance.cases.RequiredProto2MessageIgnoreAlways.Msg
+	nil, // 15: buf.validate.conformance.cases.RequiredProto2Map.ValEntry
+	nil, // 16: buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways.ValEntry
 }
 var file_buf_validate_conformance_cases_required_field_proto2_proto_depIdxs = []int32{
-	7, // 0: buf.validate.conformance.cases.RequiredProto2Message.val:type_name -> buf.validate.conformance.cases.RequiredProto2Message.Msg
-	8, // 1: buf.validate.conformance.cases.RequiredProto2Map.val:type_name -> buf.validate.conformance.cases.RequiredProto2Map.ValEntry
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	13, // 0: buf.validate.conformance.cases.RequiredProto2Message.val:type_name -> buf.validate.conformance.cases.RequiredProto2Message.Msg
+	14, // 1: buf.validate.conformance.cases.RequiredProto2MessageIgnoreAlways.val:type_name -> buf.validate.conformance.cases.RequiredProto2MessageIgnoreAlways.Msg
+	15, // 2: buf.validate.conformance.cases.RequiredProto2Map.val:type_name -> buf.validate.conformance.cases.RequiredProto2Map.ValEntry
+	16, // 3: buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways.val:type_name -> buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways.ValEntry
+	4,  // [4:4] is the sub-list for method output_type
+	4,  // [4:4] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_buf_validate_conformance_cases_required_field_proto2_proto_init() }
@@ -725,9 +1319,13 @@ func file_buf_validate_conformance_cases_required_field_proto2_proto_init() {
 	if File_buf_validate_conformance_cases_required_field_proto2_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[4].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[7].OneofWrappers = []any{
 		(*RequiredProto2Oneof_A)(nil),
 		(*RequiredProto2Oneof_B)(nil),
+	}
+	file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes[8].OneofWrappers = []any{
+		(*RequiredProto2OneofIgnoreAlways_A)(nil),
+		(*RequiredProto2OneofIgnoreAlways_B)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -735,7 +1333,7 @@ func file_buf_validate_conformance_cases_required_field_proto2_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_required_field_proto2_proto_rawDesc), len(file_buf_validate_conformance_cases_required_field_proto2_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

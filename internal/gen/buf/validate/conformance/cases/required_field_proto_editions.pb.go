@@ -105,6 +105,74 @@ func (b0 RequiredEditionsScalarExplicitPresence_builder) Build() *RequiredEditio
 	return m0
 }
 
+type RequiredEditionsScalarExplicitPresenceIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) Reset() {
+	*x = RequiredEditionsScalarExplicitPresenceIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsScalarExplicitPresenceIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return ""
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsScalarExplicitPresenceIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredEditionsScalarExplicitPresenceIgnoreAlways_builder) Build() *RequiredEditionsScalarExplicitPresenceIgnoreAlways {
+	m0 := &RequiredEditionsScalarExplicitPresenceIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsScalarExplicitPresenceDefault struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val,def=foo" json:"val,omitempty"`
@@ -119,7 +187,7 @@ const (
 
 func (x *RequiredEditionsScalarExplicitPresenceDefault) Reset() {
 	*x = RequiredEditionsScalarExplicitPresenceDefault{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[1]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -131,7 +199,7 @@ func (x *RequiredEditionsScalarExplicitPresenceDefault) String() string {
 func (*RequiredEditionsScalarExplicitPresenceDefault) ProtoMessage() {}
 
 func (x *RequiredEditionsScalarExplicitPresenceDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[1]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -178,6 +246,79 @@ func (b0 RequiredEditionsScalarExplicitPresenceDefault_builder) Build() *Require
 	return m0
 }
 
+type RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val,def=foo" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+// Default values for RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways fields.
+const (
+	Default_RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways_Val = string("foo")
+)
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) Reset() {
+	*x = RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return Default_RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways_Val
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways_builder) Build() *RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways {
+	m0 := &RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsScalarImplicitPresence struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           string                 `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
@@ -187,7 +328,7 @@ type RequiredEditionsScalarImplicitPresence struct {
 
 func (x *RequiredEditionsScalarImplicitPresence) Reset() {
 	*x = RequiredEditionsScalarImplicitPresence{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -199,7 +340,7 @@ func (x *RequiredEditionsScalarImplicitPresence) String() string {
 func (*RequiredEditionsScalarImplicitPresence) ProtoMessage() {}
 
 func (x *RequiredEditionsScalarImplicitPresence) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -235,6 +376,63 @@ func (b0 RequiredEditionsScalarImplicitPresence_builder) Build() *RequiredEditio
 	return m0
 }
 
+type RequiredEditionsScalarImplicitPresenceIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           string                 `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsScalarImplicitPresenceIgnoreAlways) Reset() {
+	*x = RequiredEditionsScalarImplicitPresenceIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsScalarImplicitPresenceIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsScalarImplicitPresenceIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsScalarImplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsScalarImplicitPresenceIgnoreAlways) GetVal() string {
+	if x != nil {
+		return x.Val
+	}
+	return ""
+}
+
+func (x *RequiredEditionsScalarImplicitPresenceIgnoreAlways) SetVal(v string) {
+	x.Val = v
+}
+
+type RequiredEditionsScalarImplicitPresenceIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 RequiredEditionsScalarImplicitPresenceIgnoreAlways_builder) Build() *RequiredEditionsScalarImplicitPresenceIgnoreAlways {
+	m0 := &RequiredEditionsScalarImplicitPresenceIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsScalarLegacyRequired struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,req,name=val" json:"val,omitempty"`
@@ -244,7 +442,7 @@ type RequiredEditionsScalarLegacyRequired struct {
 
 func (x *RequiredEditionsScalarLegacyRequired) Reset() {
 	*x = RequiredEditionsScalarLegacyRequired{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -256,7 +454,7 @@ func (x *RequiredEditionsScalarLegacyRequired) String() string {
 func (*RequiredEditionsScalarLegacyRequired) ProtoMessage() {}
 
 func (x *RequiredEditionsScalarLegacyRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -312,7 +510,7 @@ type RequiredEditionsMessageExplicitPresence struct {
 
 func (x *RequiredEditionsMessageExplicitPresence) Reset() {
 	*x = RequiredEditionsMessageExplicitPresence{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -324,7 +522,7 @@ func (x *RequiredEditionsMessageExplicitPresence) String() string {
 func (*RequiredEditionsMessageExplicitPresence) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageExplicitPresence) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,6 +569,74 @@ func (b0 RequiredEditionsMessageExplicitPresence_builder) Build() *RequiredEditi
 	return m0
 }
 
+type RequiredEditionsMessageExplicitPresenceIgnoreAlways struct {
+	state         protoimpl.MessageState                                   `protogen:"hybrid.v1"`
+	Val           *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) Reset() {
+	*x = RequiredEditionsMessageExplicitPresenceIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsMessageExplicitPresenceIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) GetVal() *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) SetVal(v *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) {
+	x.Val = v
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsMessageExplicitPresenceIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg
+}
+
+func (b0 RequiredEditionsMessageExplicitPresenceIgnoreAlways_builder) Build() *RequiredEditionsMessageExplicitPresenceIgnoreAlways {
+	m0 := &RequiredEditionsMessageExplicitPresenceIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMessageExplicitPresenceDelimited struct {
 	state         protoimpl.MessageState                                `protogen:"hybrid.v1"`
 	Val           *RequiredEditionsMessageExplicitPresenceDelimited_Msg `protobuf:"group,1,opt,name=Msg,json=val" json:"val,omitempty"`
@@ -380,7 +646,7 @@ type RequiredEditionsMessageExplicitPresenceDelimited struct {
 
 func (x *RequiredEditionsMessageExplicitPresenceDelimited) Reset() {
 	*x = RequiredEditionsMessageExplicitPresenceDelimited{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -392,7 +658,7 @@ func (x *RequiredEditionsMessageExplicitPresenceDelimited) String() string {
 func (*RequiredEditionsMessageExplicitPresenceDelimited) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageExplicitPresenceDelimited) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -439,6 +705,74 @@ func (b0 RequiredEditionsMessageExplicitPresenceDelimited_builder) Build() *Requ
 	return m0
 }
 
+type RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways struct {
+	state         protoimpl.MessageState                                            `protogen:"hybrid.v1"`
+	Val           *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg `protobuf:"group,1,opt,name=Msg,json=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) Reset() {
+	*x = RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) GetVal() *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) SetVal(v *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) {
+	x.Val = v
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg
+}
+
+func (b0 RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_builder) Build() *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways {
+	m0 := &RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMessageLegacyRequired struct {
 	state         protoimpl.MessageState                     `protogen:"hybrid.v1"`
 	Val           *RequiredEditionsMessageLegacyRequired_Msg `protobuf:"bytes,1,req,name=val" json:"val,omitempty"`
@@ -448,7 +782,7 @@ type RequiredEditionsMessageLegacyRequired struct {
 
 func (x *RequiredEditionsMessageLegacyRequired) Reset() {
 	*x = RequiredEditionsMessageLegacyRequired{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -460,7 +794,7 @@ func (x *RequiredEditionsMessageLegacyRequired) String() string {
 func (*RequiredEditionsMessageLegacyRequired) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageLegacyRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -516,7 +850,7 @@ type RequiredEditionsMessageLegacyRequiredDelimited struct {
 
 func (x *RequiredEditionsMessageLegacyRequiredDelimited) Reset() {
 	*x = RequiredEditionsMessageLegacyRequiredDelimited{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -528,7 +862,7 @@ func (x *RequiredEditionsMessageLegacyRequiredDelimited) String() string {
 func (*RequiredEditionsMessageLegacyRequiredDelimited) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageLegacyRequiredDelimited) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -588,7 +922,7 @@ type RequiredEditionsOneof struct {
 
 func (x *RequiredEditionsOneof) Reset() {
 	*x = RequiredEditionsOneof{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -600,7 +934,7 @@ func (x *RequiredEditionsOneof) String() string {
 func (*RequiredEditionsOneof) ProtoMessage() {}
 
 func (x *RequiredEditionsOneof) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -726,7 +1060,7 @@ func (b0 RequiredEditionsOneof_builder) Build() *RequiredEditionsOneof {
 type case_RequiredEditionsOneof_Val protoreflect.FieldNumber
 
 func (x case_RequiredEditionsOneof_Val) String() string {
-	md := file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8].Descriptor()
+	md := file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -749,6 +1083,180 @@ func (*RequiredEditionsOneof_A) isRequiredEditionsOneof_Val() {}
 
 func (*RequiredEditionsOneof_B) isRequiredEditionsOneof_Val() {}
 
+type RequiredEditionsOneofIgnoreAlways struct {
+	state protoimpl.MessageState `protogen:"hybrid.v1"`
+	// Types that are valid to be assigned to Val:
+	//
+	//	*RequiredEditionsOneofIgnoreAlways_A
+	//	*RequiredEditionsOneofIgnoreAlways_B
+	Val           isRequiredEditionsOneofIgnoreAlways_Val `protobuf_oneof:"val"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) Reset() {
+	*x = RequiredEditionsOneofIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsOneofIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsOneofIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) GetVal() isRequiredEditionsOneofIgnoreAlways_Val {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) GetA() string {
+	if x != nil {
+		if x, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_A); ok {
+			return x.A
+		}
+	}
+	return ""
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) GetB() string {
+	if x != nil {
+		if x, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_B); ok {
+			return x.B
+		}
+	}
+	return ""
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) SetA(v string) {
+	x.Val = &RequiredEditionsOneofIgnoreAlways_A{v}
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) SetB(v string) {
+	x.Val = &RequiredEditionsOneofIgnoreAlways_B{v}
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) HasA() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_A)
+	return ok
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) HasB() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_B)
+	return ok
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) ClearVal() {
+	x.Val = nil
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) ClearA() {
+	if _, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_A); ok {
+		x.Val = nil
+	}
+}
+
+func (x *RequiredEditionsOneofIgnoreAlways) ClearB() {
+	if _, ok := x.Val.(*RequiredEditionsOneofIgnoreAlways_B); ok {
+		x.Val = nil
+	}
+}
+
+const RequiredEditionsOneofIgnoreAlways_Val_not_set_case case_RequiredEditionsOneofIgnoreAlways_Val = 0
+const RequiredEditionsOneofIgnoreAlways_A_case case_RequiredEditionsOneofIgnoreAlways_Val = 1
+const RequiredEditionsOneofIgnoreAlways_B_case case_RequiredEditionsOneofIgnoreAlways_Val = 2
+
+func (x *RequiredEditionsOneofIgnoreAlways) WhichVal() case_RequiredEditionsOneofIgnoreAlways_Val {
+	if x == nil {
+		return RequiredEditionsOneofIgnoreAlways_Val_not_set_case
+	}
+	switch x.Val.(type) {
+	case *RequiredEditionsOneofIgnoreAlways_A:
+		return RequiredEditionsOneofIgnoreAlways_A_case
+	case *RequiredEditionsOneofIgnoreAlways_B:
+		return RequiredEditionsOneofIgnoreAlways_B_case
+	default:
+		return RequiredEditionsOneofIgnoreAlways_Val_not_set_case
+	}
+}
+
+type RequiredEditionsOneofIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	// Fields of oneof Val:
+	A *string
+	B *string
+	// -- end of Val
+}
+
+func (b0 RequiredEditionsOneofIgnoreAlways_builder) Build() *RequiredEditionsOneofIgnoreAlways {
+	m0 := &RequiredEditionsOneofIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.A != nil {
+		x.Val = &RequiredEditionsOneofIgnoreAlways_A{*b.A}
+	}
+	if b.B != nil {
+		x.Val = &RequiredEditionsOneofIgnoreAlways_B{*b.B}
+	}
+	return m0
+}
+
+type case_RequiredEditionsOneofIgnoreAlways_Val protoreflect.FieldNumber
+
+func (x case_RequiredEditionsOneofIgnoreAlways_Val) String() string {
+	md := file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14].Descriptor()
+	if x == 0 {
+		return "not set"
+	}
+	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
+}
+
+type isRequiredEditionsOneofIgnoreAlways_Val interface {
+	isRequiredEditionsOneofIgnoreAlways_Val()
+}
+
+type RequiredEditionsOneofIgnoreAlways_A struct {
+	A string `protobuf:"bytes,1,opt,name=a,oneof"`
+}
+
+type RequiredEditionsOneofIgnoreAlways_B struct {
+	B string `protobuf:"bytes,2,opt,name=b,oneof"`
+}
+
+func (*RequiredEditionsOneofIgnoreAlways_A) isRequiredEditionsOneofIgnoreAlways_Val() {}
+
+func (*RequiredEditionsOneofIgnoreAlways_B) isRequiredEditionsOneofIgnoreAlways_Val() {}
+
 type RequiredEditionsRepeated struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
@@ -758,7 +1266,7 @@ type RequiredEditionsRepeated struct {
 
 func (x *RequiredEditionsRepeated) Reset() {
 	*x = RequiredEditionsRepeated{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -770,7 +1278,7 @@ func (x *RequiredEditionsRepeated) String() string {
 func (*RequiredEditionsRepeated) ProtoMessage() {}
 
 func (x *RequiredEditionsRepeated) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -806,6 +1314,63 @@ func (b0 RequiredEditionsRepeated_builder) Build() *RequiredEditionsRepeated {
 	return m0
 }
 
+type RequiredEditionsRepeatedIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsRepeatedIgnoreAlways) Reset() {
+	*x = RequiredEditionsRepeatedIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsRepeatedIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsRepeatedIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsRepeatedIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsRepeatedIgnoreAlways) GetVal() []string {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsRepeatedIgnoreAlways) SetVal(v []string) {
+	x.Val = v
+}
+
+type RequiredEditionsRepeatedIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []string
+}
+
+func (b0 RequiredEditionsRepeatedIgnoreAlways_builder) Build() *RequiredEditionsRepeatedIgnoreAlways {
+	m0 := &RequiredEditionsRepeatedIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsRepeatedExpanded struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
@@ -815,7 +1380,7 @@ type RequiredEditionsRepeatedExpanded struct {
 
 func (x *RequiredEditionsRepeatedExpanded) Reset() {
 	*x = RequiredEditionsRepeatedExpanded{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -827,7 +1392,7 @@ func (x *RequiredEditionsRepeatedExpanded) String() string {
 func (*RequiredEditionsRepeatedExpanded) ProtoMessage() {}
 
 func (x *RequiredEditionsRepeatedExpanded) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -863,6 +1428,63 @@ func (b0 RequiredEditionsRepeatedExpanded_builder) Build() *RequiredEditionsRepe
 	return m0
 }
 
+type RequiredEditionsRepeatedExpandedIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           []string               `protobuf:"bytes,1,rep,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsRepeatedExpandedIgnoreAlways) Reset() {
+	*x = RequiredEditionsRepeatedExpandedIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsRepeatedExpandedIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsRepeatedExpandedIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsRepeatedExpandedIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsRepeatedExpandedIgnoreAlways) GetVal() []string {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsRepeatedExpandedIgnoreAlways) SetVal(v []string) {
+	x.Val = v
+}
+
+type RequiredEditionsRepeatedExpandedIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []string
+}
+
+func (b0 RequiredEditionsRepeatedExpandedIgnoreAlways_builder) Build() *RequiredEditionsRepeatedExpandedIgnoreAlways {
+	m0 := &RequiredEditionsRepeatedExpandedIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMap struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           map[string]string      `protobuf:"bytes,1,rep,name=val" json:"val,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -872,7 +1494,7 @@ type RequiredEditionsMap struct {
 
 func (x *RequiredEditionsMap) Reset() {
 	*x = RequiredEditionsMap{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -884,7 +1506,7 @@ func (x *RequiredEditionsMap) String() string {
 func (*RequiredEditionsMap) ProtoMessage() {}
 
 func (x *RequiredEditionsMap) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -920,6 +1542,63 @@ func (b0 RequiredEditionsMap_builder) Build() *RequiredEditionsMap {
 	return m0
 }
 
+type RequiredEditionsMapIgnoreAlways struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           map[string]string      `protobuf:"bytes,1,rep,name=val" json:"val,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsMapIgnoreAlways) Reset() {
+	*x = RequiredEditionsMapIgnoreAlways{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsMapIgnoreAlways) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsMapIgnoreAlways) ProtoMessage() {}
+
+func (x *RequiredEditionsMapIgnoreAlways) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsMapIgnoreAlways) GetVal() map[string]string {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *RequiredEditionsMapIgnoreAlways) SetVal(v map[string]string) {
+	x.Val = v
+}
+
+type RequiredEditionsMapIgnoreAlways_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val map[string]string
+}
+
+func (b0 RequiredEditionsMapIgnoreAlways_builder) Build() *RequiredEditionsMapIgnoreAlways {
+	m0 := &RequiredEditionsMapIgnoreAlways{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMessageExplicitPresence_Msg struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
@@ -929,7 +1608,7 @@ type RequiredEditionsMessageExplicitPresence_Msg struct {
 
 func (x *RequiredEditionsMessageExplicitPresence_Msg) Reset() {
 	*x = RequiredEditionsMessageExplicitPresence_Msg{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -941,7 +1620,7 @@ func (x *RequiredEditionsMessageExplicitPresence_Msg) String() string {
 func (*RequiredEditionsMessageExplicitPresence_Msg) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageExplicitPresence_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -988,6 +1667,74 @@ func (b0 RequiredEditionsMessageExplicitPresence_Msg_builder) Build() *RequiredE
 	return m0
 }
 
+type RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) Reset() {
+	*x = RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) ProtoMessage() {}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return ""
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg_builder) Build() *RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg {
+	m0 := &RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMessageExplicitPresenceDelimited_Msg struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
@@ -997,7 +1744,7 @@ type RequiredEditionsMessageExplicitPresenceDelimited_Msg struct {
 
 func (x *RequiredEditionsMessageExplicitPresenceDelimited_Msg) Reset() {
 	*x = RequiredEditionsMessageExplicitPresenceDelimited_Msg{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1009,7 +1756,7 @@ func (x *RequiredEditionsMessageExplicitPresenceDelimited_Msg) String() string {
 func (*RequiredEditionsMessageExplicitPresenceDelimited_Msg) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageExplicitPresenceDelimited_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1056,6 +1803,74 @@ func (b0 RequiredEditionsMessageExplicitPresenceDelimited_Msg_builder) Build() *
 	return m0
 }
 
+type RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) Reset() {
+	*x = RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg{}
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) ProtoMessage() {}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) GetVal() string {
+	if x != nil && x.Val != nil {
+		return *x.Val
+	}
+	return ""
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) SetVal(v string) {
+	x.Val = &v
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) ClearVal() {
+	x.Val = nil
+}
+
+type RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *string
+}
+
+func (b0 RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg_builder) Build() *RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg {
+	m0 := &RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type RequiredEditionsMessageLegacyRequired_Msg struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           *string                `protobuf:"bytes,1,opt,name=val" json:"val,omitempty"`
@@ -1065,7 +1880,7 @@ type RequiredEditionsMessageLegacyRequired_Msg struct {
 
 func (x *RequiredEditionsMessageLegacyRequired_Msg) Reset() {
 	*x = RequiredEditionsMessageLegacyRequired_Msg{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1077,7 +1892,7 @@ func (x *RequiredEditionsMessageLegacyRequired_Msg) String() string {
 func (*RequiredEditionsMessageLegacyRequired_Msg) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageLegacyRequired_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1133,7 +1948,7 @@ type RequiredEditionsMessageLegacyRequiredDelimited_Msg struct {
 
 func (x *RequiredEditionsMessageLegacyRequiredDelimited_Msg) Reset() {
 	*x = RequiredEditionsMessageLegacyRequiredDelimited_Msg{}
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1145,7 +1960,7 @@ func (x *RequiredEditionsMessageLegacyRequiredDelimited_Msg) String() string {
 func (*RequiredEditionsMessageLegacyRequiredDelimited_Msg) ProtoMessage() {}
 
 func (x *RequiredEditionsMessageLegacyRequiredDelimited_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1198,19 +2013,33 @@ const file_buf_validate_conformance_cases_required_field_proto_editions_proto_ra
 	"\n" +
 	"Bbuf/validate/conformance/cases/required_field_proto_editions.proto\x12\x1ebuf.validate.conformance.cases\x1a\x1bbuf/validate/validate.proto\"B\n" +
 	"&RequiredEditionsScalarExplicitPresence\x12\x18\n" +
-	"\x03val\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"N\n" +
+	"\x03val\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"Q\n" +
+	"2RequiredEditionsScalarExplicitPresenceIgnoreAlways\x12\x1b\n" +
+	"\x03val\x18\x01 \x01(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"N\n" +
 	"-RequiredEditionsScalarExplicitPresenceDefault\x12\x1d\n" +
-	"\x03val\x18\x01 \x01(\t:\x03fooB\x06\xbaH\x03\xc8\x01\x01R\x03val\"G\n" +
+	"\x03val\x18\x01 \x01(\t:\x03fooB\x06\xbaH\x03\xc8\x01\x01R\x03val\"]\n" +
+	"9RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways\x12 \n" +
+	"\x03val\x18\x01 \x01(\t:\x03fooB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"G\n" +
 	"&RequiredEditionsScalarImplicitPresence\x12\x1d\n" +
-	"\x03val\x18\x01 \x01(\tB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02\b\x02R\x03val\"E\n" +
+	"\x03val\x18\x01 \x01(\tB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02\b\x02R\x03val\"V\n" +
+	"2RequiredEditionsScalarImplicitPresenceIgnoreAlways\x12 \n" +
+	"\x03val\x18\x01 \x01(\tB\x0e\xbaH\x06\xc8\x01\x01\xd8\x01\x03\xaa\x01\x02\b\x02R\x03val\"E\n" +
 	"$RequiredEditionsScalarLegacyRequired\x12\x1d\n" +
 	"\x03val\x18\x01 \x01(\tB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02\b\x03R\x03val\"\xa9\x01\n" +
 	"'RequiredEditionsMessageExplicitPresence\x12e\n" +
 	"\x03val\x18\x01 \x01(\v2K.buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.MsgB\x06\xbaH\x03\xc8\x01\x01R\x03val\x1a\x17\n" +
 	"\x03Msg\x12\x10\n" +
+	"\x03val\x18\x01 \x01(\tR\x03val\"\xc4\x01\n" +
+	"3RequiredEditionsMessageExplicitPresenceIgnoreAlways\x12t\n" +
+	"\x03val\x18\x01 \x01(\v2W.buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceIgnoreAlways.MsgB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\x1a\x17\n" +
+	"\x03Msg\x12\x10\n" +
 	"\x03val\x18\x01 \x01(\tR\x03val\"\xc0\x01\n" +
 	"0RequiredEditionsMessageExplicitPresenceDelimited\x12s\n" +
 	"\x03val\x18\x01 \x01(\v2T.buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.MsgB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02(\x02R\x03val\x1a\x17\n" +
+	"\x03Msg\x12\x10\n" +
+	"\x03val\x18\x01 \x01(\tR\x03val\"\xdc\x01\n" +
+	"<RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways\x12\x82\x01\n" +
+	"\x03val\x18\x01 \x01(\v2`.buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways.MsgB\x0e\xbaH\x06\xc8\x01\x01\xd8\x01\x03\xaa\x01\x02(\x02R\x03val\x1a\x17\n" +
 	"\x03Msg\x12\x10\n" +
 	"\x03val\x18\x01 \x01(\tR\x03val\"\xaa\x01\n" +
 	"%RequiredEditionsMessageLegacyRequired\x12h\n" +
@@ -1224,49 +2053,77 @@ const file_buf_validate_conformance_cases_required_field_proto_editions_proto_ra
 	"\x15RequiredEditionsOneof\x12\x16\n" +
 	"\x01a\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01H\x00R\x01a\x12\x0e\n" +
 	"\x01b\x18\x02 \x01(\tH\x00R\x01bB\x05\n" +
+	"\x03val\"U\n" +
+	"!RequiredEditionsOneofIgnoreAlways\x12\x19\n" +
+	"\x01a\x18\x01 \x01(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03H\x00R\x01a\x12\x0e\n" +
+	"\x01b\x18\x02 \x01(\tH\x00R\x01bB\x05\n" +
 	"\x03val\"4\n" +
 	"\x18RequiredEditionsRepeated\x12\x18\n" +
-	"\x03val\x18\x01 \x03(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"A\n" +
+	"\x03val\x18\x01 \x03(\tB\x06\xbaH\x03\xc8\x01\x01R\x03val\"C\n" +
+	"$RequiredEditionsRepeatedIgnoreAlways\x12\x1b\n" +
+	"\x03val\x18\x01 \x03(\tB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\"A\n" +
 	" RequiredEditionsRepeatedExpanded\x12\x1d\n" +
-	"\x03val\x18\x01 \x03(\tB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02\x18\x02R\x03val\"\xa5\x01\n" +
+	"\x03val\x18\x01 \x03(\tB\v\xbaH\x03\xc8\x01\x01\xaa\x01\x02\x18\x02R\x03val\"P\n" +
+	",RequiredEditionsRepeatedExpandedIgnoreAlways\x12 \n" +
+	"\x03val\x18\x01 \x03(\tB\x0e\xbaH\x06\xc8\x01\x01\xd8\x01\x03\xaa\x01\x02\x18\x02R\x03val\"\xa5\x01\n" +
 	"\x13RequiredEditionsMap\x12V\n" +
 	"\x03val\x18\x01 \x03(\v2<.buf.validate.conformance.cases.RequiredEditionsMap.ValEntryB\x06\xbaH\x03\xc8\x01\x01R\x03val\x1a6\n" +
+	"\bValEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xc0\x01\n" +
+	"\x1fRequiredEditionsMapIgnoreAlways\x12e\n" +
+	"\x03val\x18\x01 \x03(\v2H.buf.validate.conformance.cases.RequiredEditionsMapIgnoreAlways.ValEntryB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xb3\x02\n" +
 	"\"com.buf.validate.conformance.casesB\x1fRequiredFieldProtoEditionsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\beditionsp\xe8\a"
 
-var file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 29)
 var file_buf_validate_conformance_cases_required_field_proto_editions_proto_goTypes = []any{
-	(*RequiredEditionsScalarExplicitPresence)(nil),               // 0: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresence
-	(*RequiredEditionsScalarExplicitPresenceDefault)(nil),        // 1: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresenceDefault
-	(*RequiredEditionsScalarImplicitPresence)(nil),               // 2: buf.validate.conformance.cases.RequiredEditionsScalarImplicitPresence
-	(*RequiredEditionsScalarLegacyRequired)(nil),                 // 3: buf.validate.conformance.cases.RequiredEditionsScalarLegacyRequired
-	(*RequiredEditionsMessageExplicitPresence)(nil),              // 4: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence
-	(*RequiredEditionsMessageExplicitPresenceDelimited)(nil),     // 5: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited
-	(*RequiredEditionsMessageLegacyRequired)(nil),                // 6: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired
-	(*RequiredEditionsMessageLegacyRequiredDelimited)(nil),       // 7: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited
-	(*RequiredEditionsOneof)(nil),                                // 8: buf.validate.conformance.cases.RequiredEditionsOneof
-	(*RequiredEditionsRepeated)(nil),                             // 9: buf.validate.conformance.cases.RequiredEditionsRepeated
-	(*RequiredEditionsRepeatedExpanded)(nil),                     // 10: buf.validate.conformance.cases.RequiredEditionsRepeatedExpanded
-	(*RequiredEditionsMap)(nil),                                  // 11: buf.validate.conformance.cases.RequiredEditionsMap
-	(*RequiredEditionsMessageExplicitPresence_Msg)(nil),          // 12: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.Msg
-	(*RequiredEditionsMessageExplicitPresenceDelimited_Msg)(nil), // 13: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.Msg
-	(*RequiredEditionsMessageLegacyRequired_Msg)(nil),            // 14: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.Msg
-	(*RequiredEditionsMessageLegacyRequiredDelimited_Msg)(nil),   // 15: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.Msg
-	nil, // 16: buf.validate.conformance.cases.RequiredEditionsMap.ValEntry
+	(*RequiredEditionsScalarExplicitPresence)(nil),                           // 0: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresence
+	(*RequiredEditionsScalarExplicitPresenceIgnoreAlways)(nil),               // 1: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresenceIgnoreAlways
+	(*RequiredEditionsScalarExplicitPresenceDefault)(nil),                    // 2: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresenceDefault
+	(*RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways)(nil),        // 3: buf.validate.conformance.cases.RequiredEditionsScalarExplicitPresenceDefaultIgnoreAlways
+	(*RequiredEditionsScalarImplicitPresence)(nil),                           // 4: buf.validate.conformance.cases.RequiredEditionsScalarImplicitPresence
+	(*RequiredEditionsScalarImplicitPresenceIgnoreAlways)(nil),               // 5: buf.validate.conformance.cases.RequiredEditionsScalarImplicitPresenceIgnoreAlways
+	(*RequiredEditionsScalarLegacyRequired)(nil),                             // 6: buf.validate.conformance.cases.RequiredEditionsScalarLegacyRequired
+	(*RequiredEditionsMessageExplicitPresence)(nil),                          // 7: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence
+	(*RequiredEditionsMessageExplicitPresenceIgnoreAlways)(nil),              // 8: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceIgnoreAlways
+	(*RequiredEditionsMessageExplicitPresenceDelimited)(nil),                 // 9: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited
+	(*RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways)(nil),     // 10: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways
+	(*RequiredEditionsMessageLegacyRequired)(nil),                            // 11: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired
+	(*RequiredEditionsMessageLegacyRequiredDelimited)(nil),                   // 12: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited
+	(*RequiredEditionsOneof)(nil),                                            // 13: buf.validate.conformance.cases.RequiredEditionsOneof
+	(*RequiredEditionsOneofIgnoreAlways)(nil),                                // 14: buf.validate.conformance.cases.RequiredEditionsOneofIgnoreAlways
+	(*RequiredEditionsRepeated)(nil),                                         // 15: buf.validate.conformance.cases.RequiredEditionsRepeated
+	(*RequiredEditionsRepeatedIgnoreAlways)(nil),                             // 16: buf.validate.conformance.cases.RequiredEditionsRepeatedIgnoreAlways
+	(*RequiredEditionsRepeatedExpanded)(nil),                                 // 17: buf.validate.conformance.cases.RequiredEditionsRepeatedExpanded
+	(*RequiredEditionsRepeatedExpandedIgnoreAlways)(nil),                     // 18: buf.validate.conformance.cases.RequiredEditionsRepeatedExpandedIgnoreAlways
+	(*RequiredEditionsMap)(nil),                                              // 19: buf.validate.conformance.cases.RequiredEditionsMap
+	(*RequiredEditionsMapIgnoreAlways)(nil),                                  // 20: buf.validate.conformance.cases.RequiredEditionsMapIgnoreAlways
+	(*RequiredEditionsMessageExplicitPresence_Msg)(nil),                      // 21: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.Msg
+	(*RequiredEditionsMessageExplicitPresenceIgnoreAlways_Msg)(nil),          // 22: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceIgnoreAlways.Msg
+	(*RequiredEditionsMessageExplicitPresenceDelimited_Msg)(nil),             // 23: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.Msg
+	(*RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg)(nil), // 24: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
+	(*RequiredEditionsMessageLegacyRequired_Msg)(nil),                        // 25: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.Msg
+	(*RequiredEditionsMessageLegacyRequiredDelimited_Msg)(nil),               // 26: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.Msg
+	nil, // 27: buf.validate.conformance.cases.RequiredEditionsMap.ValEntry
+	nil, // 28: buf.validate.conformance.cases.RequiredEditionsMapIgnoreAlways.ValEntry
 }
 var file_buf_validate_conformance_cases_required_field_proto_editions_proto_depIdxs = []int32{
-	12, // 0: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.Msg
-	13, // 1: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.Msg
-	14, // 2: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.Msg
-	15, // 3: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.Msg
-	16, // 4: buf.validate.conformance.cases.RequiredEditionsMap.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMap.ValEntry
-	5,  // [5:5] is the sub-list for method output_type
-	5,  // [5:5] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	21, // 0: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresence.Msg
+	22, // 1: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceIgnoreAlways.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceIgnoreAlways.Msg
+	23, // 2: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimited.Msg
+	24, // 3: buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
+	25, // 4: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequired.Msg
+	26, // 5: buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMessageLegacyRequiredDelimited.Msg
+	27, // 6: buf.validate.conformance.cases.RequiredEditionsMap.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMap.ValEntry
+	28, // 7: buf.validate.conformance.cases.RequiredEditionsMapIgnoreAlways.val:type_name -> buf.validate.conformance.cases.RequiredEditionsMapIgnoreAlways.ValEntry
+	8,  // [8:8] is the sub-list for method output_type
+	8,  // [8:8] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_buf_validate_conformance_cases_required_field_proto_editions_proto_init() }
@@ -1274,9 +2131,13 @@ func file_buf_validate_conformance_cases_required_field_proto_editions_proto_ini
 	if File_buf_validate_conformance_cases_required_field_proto_editions_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[8].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[13].OneofWrappers = []any{
 		(*RequiredEditionsOneof_A)(nil),
 		(*RequiredEditionsOneof_B)(nil),
+	}
+	file_buf_validate_conformance_cases_required_field_proto_editions_proto_msgTypes[14].OneofWrappers = []any{
+		(*RequiredEditionsOneofIgnoreAlways_A)(nil),
+		(*RequiredEditionsOneofIgnoreAlways_B)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1284,7 +2145,7 @@ func file_buf_validate_conformance_cases_required_field_proto_editions_proto_ini
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_required_field_proto_editions_proto_rawDesc), len(file_buf_validate_conformance_cases_required_field_proto_editions_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   29,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

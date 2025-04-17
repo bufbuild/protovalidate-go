@@ -48,8 +48,6 @@ type ResultOptions struct {
 	CaseFilter string `protobuf:"bytes,2,opt,name=case_filter,json=caseFilter,proto3" json:"case_filter,omitempty"`
 	// If the test runner should print verbose output.
 	Verbose bool `protobuf:"varint,3,opt,name=verbose,proto3" json:"verbose,omitempty"`
-	// If the violation type must be an exact match.
-	Strict bool `protobuf:"varint,4,opt,name=strict,proto3" json:"strict,omitempty"`
 	// If the violation message must be an exact match.
 	StrictMessage bool `protobuf:"varint,5,opt,name=strict_message,json=strictMessage,proto3" json:"strict_message,omitempty"`
 	// If the distinction between runtime and compile time errors must be exact.
@@ -104,13 +102,6 @@ func (x *ResultOptions) GetVerbose() bool {
 	return false
 }
 
-func (x *ResultOptions) GetStrict() bool {
-	if x != nil {
-		return x.Strict
-	}
-	return false
-}
-
 func (x *ResultOptions) GetStrictMessage() bool {
 	if x != nil {
 		return x.StrictMessage
@@ -137,10 +128,6 @@ func (x *ResultOptions) SetVerbose(v bool) {
 	x.Verbose = v
 }
 
-func (x *ResultOptions) SetStrict(v bool) {
-	x.Strict = v
-}
-
 func (x *ResultOptions) SetStrictMessage(v bool) {
 	x.StrictMessage = v
 }
@@ -158,8 +145,6 @@ type ResultOptions_builder struct {
 	CaseFilter string
 	// If the test runner should print verbose output.
 	Verbose bool
-	// If the violation type must be an exact match.
-	Strict bool
 	// If the violation message must be an exact match.
 	StrictMessage bool
 	// If the distinction between runtime and compile time errors must be exact.
@@ -173,7 +158,6 @@ func (b0 ResultOptions_builder) Build() *ResultOptions {
 	x.SuiteFilter = b.SuiteFilter
 	x.CaseFilter = b.CaseFilter
 	x.Verbose = b.Verbose
-	x.Strict = b.Strict
 	x.StrictMessage = b.StrictMessage
 	x.StrictError = b.StrictError
 	return m0
@@ -642,15 +626,14 @@ var File_buf_validate_conformance_harness_results_proto protoreflect.FileDescrip
 
 const file_buf_validate_conformance_harness_results_proto_rawDesc = "" +
 	"\n" +
-	".buf/validate/conformance/harness/results.proto\x12 buf.validate.conformance.harness\x1a.buf/validate/conformance/harness/harness.proto\x1a\x19google/protobuf/any.proto\x1a google/protobuf/descriptor.proto\"\xcf\x01\n" +
+	".buf/validate/conformance/harness/results.proto\x12 buf.validate.conformance.harness\x1a.buf/validate/conformance/harness/harness.proto\x1a\x19google/protobuf/any.proto\x1a google/protobuf/descriptor.proto\"\xc5\x01\n" +
 	"\rResultOptions\x12!\n" +
 	"\fsuite_filter\x18\x01 \x01(\tR\vsuiteFilter\x12\x1f\n" +
 	"\vcase_filter\x18\x02 \x01(\tR\n" +
 	"caseFilter\x12\x18\n" +
-	"\averbose\x18\x03 \x01(\bR\averbose\x12\x16\n" +
-	"\x06strict\x18\x04 \x01(\bR\x06strict\x12%\n" +
+	"\averbose\x18\x03 \x01(\bR\averbose\x12%\n" +
 	"\x0estrict_message\x18\x05 \x01(\bR\rstrictMessage\x12!\n" +
-	"\fstrict_error\x18\x06 \x01(\bR\vstrictError\"\x85\x02\n" +
+	"\fstrict_error\x18\x06 \x01(\bR\vstrictErrorJ\x04\b\x04\x10\x05R\x06strict\"\x85\x02\n" +
 	"\tResultSet\x12\x1c\n" +
 	"\tsuccesses\x18\x01 \x01(\x05R\tsuccesses\x12\x1a\n" +
 	"\bfailures\x18\x02 \x01(\x05R\bfailures\x12F\n" +
