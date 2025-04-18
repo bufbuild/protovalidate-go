@@ -789,7 +789,10 @@ func (i *ipv6) addressPart() bool {
 		}
 		break
 	}
-	return i.doubleColonSeen || len(i.pieces) == 8
+	if i.doubleColonSeen {
+		return len(i.pieces) < 8
+	}
+	return len(i.pieces) == 8
 }
 
 // zoneID parses the rule from RFC 6874:
