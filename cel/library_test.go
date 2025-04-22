@@ -222,7 +222,7 @@ func TestCELLib(t *testing.T) {
 			},
 			{
 				"getField(test, 'lav')",
-				types.NewErrFromString("no such field: lav"),
+				types.NewErrFromString("no such field"),
 			},
 			{
 				"getField(0, 'val')",

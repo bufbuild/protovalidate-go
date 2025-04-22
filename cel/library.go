@@ -30,7 +30,6 @@ import (
 	"github.com/google/cel-go/common/types/ref"
 	"github.com/google/cel-go/common/types/traits"
 	"github.com/google/cel-go/ext"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
@@ -80,7 +79,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 				[]*cel.Type{cel.AnyType, cel.StringType},
 				cel.AnyType,
 				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
-					message, ok := values[0].Value().(proto.Message)
+					message, ok := values[0].(interface{ Get(index ref.Val) ref.Val })
 					if !ok {
 						return types.UnsupportedRefValConversionErr(values[0])
 					}
@@ -88,12 +87,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.UnsupportedRefValConversionErr(values[1])
 					}
-					descriptor := message.ProtoReflect().Descriptor()
-					fieldDescriptor := descriptor.Fields().ByName(protoreflect.Name(fieldName))
-					if fieldDescriptor == nil {
-						return types.NewErr("no such field: %s", fieldName)
-					}
-					return ProtoFieldToValue(fieldDescriptor, message.ProtoReflect().Get(fieldDescriptor), false)
+					return message.Get(types.String(fieldName))
 				}),
 			),
 		),
