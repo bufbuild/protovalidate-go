@@ -79,7 +79,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 				[]*cel.Type{cel.AnyType, cel.StringType},
 				cel.AnyType,
 				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
-					message, ok := values[0].(interface{ Get(index ref.Val) ref.Val })
+					message, ok := values[0].(traits.Indexer)
 					if !ok {
 						return types.UnsupportedRefValConversionErr(values[0])
 					}
