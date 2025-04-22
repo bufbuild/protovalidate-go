@@ -17,7 +17,10 @@ package cel
 import (
 	"testing"
 
+	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
 	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/ref"
 	"github.com/google/cel-go/interpreter"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,7 +29,23 @@ import (
 func TestCELLib(t *testing.T) {
 	t.Parallel()
 
-	env, err := cel.NewEnv(cel.Lib(library{}))
+	testValue := cases.StringConst_builder{Val: "test_string"}.Build()
+
+	activation, err := interpreter.NewActivation(map[string]any{
+		"test": testValue,
+	})
+	require.NoError(t, err)
+
+	env, err := cel.NewEnv(
+		cel.Lib(library{}),
+		cel.Variable(
+			"test",
+			cel.ObjectType(
+				string(testValue.ProtoReflect().Descriptor().FullName()),
+			),
+		),
+	)
+
 	require.NoError(t, err)
 
 	t.Run("ext", func(t *testing.T) {
@@ -34,7 +53,7 @@ func TestCELLib(t *testing.T) {
 
 		tests := []struct {
 			expr string
-			ex   bool
+			ex   any
 		}{
 			{"0.0.isInf()", false},
 			{"0.0.isNan()", false},
@@ -197,6 +216,18 @@ func TestCELLib(t *testing.T) {
 				"'foo@example.com    '.isEmail()",
 				false,
 			},
+			{
+				"getField(test, 'val')",
+				"test_string",
+			},
+			{
+				"getField(test, 'lav')",
+				types.NewErrFromString("no such field: lav"),
+			},
+			{
+				"getField(0, 'val')",
+				types.NewErrFromString("unsupported conversion"),
+			},
 		}
 
 		for _, tc := range tests {
@@ -204,11 +235,15 @@ func TestCELLib(t *testing.T) {
 			t.Run(test.expr, func(t *testing.T) {
 				t.Parallel()
 				prog := buildTestProgram(t, env, test.expr)
-				val, _, err := prog.Eval(interpreter.EmptyActivation())
-				require.NoError(t, err)
-				isUnique, ok := val.Value().(bool)
-				require.True(t, ok)
-				assert.Equal(t, test.ex, isUnique)
+				val, _, err := prog.Eval(activation)
+				if refEx, ok := test.ex.(ref.Val); ok && types.IsError(refEx) {
+					refErr, ok := refEx.Value().(error)
+					require.True(t, ok)
+					assert.ErrorContains(t, err, refErr.Error())
+				} else {
+					require.NoError(t, err)
+					assert.Equal(t, test.ex, val.Value())
+				}
 			})
 		}
 	})

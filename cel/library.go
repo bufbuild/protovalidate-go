@@ -30,6 +30,7 @@ import (
 	"github.com/google/cel-go/common/types/ref"
 	"github.com/google/cel-go/common/types/traits"
 	"github.com/google/cel-go/ext"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
@@ -72,6 +73,29 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 			l.uniqueMemberOverload(cel.DoubleType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.StringType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.BytesType, l.uniqueBytes),
+		),
+		cel.Function("getField",
+			cel.Overload(
+				"get_field_any_string",
+				[]*cel.Type{cel.AnyType, cel.StringType},
+				cel.AnyType,
+				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
+					message, ok := values[0].Value().(proto.Message)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(values[0])
+					}
+					fieldName, ok := values[1].Value().(string)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(values[1])
+					}
+					descriptor := message.ProtoReflect().Descriptor()
+					fieldDescriptor := descriptor.Fields().ByName(protoreflect.Name(fieldName))
+					if fieldDescriptor == nil {
+						return types.NewErr("no such field: %s", fieldName)
+					}
+					return ProtoFieldToValue(fieldDescriptor, message.ProtoReflect().Get(fieldDescriptor), false)
+				}),
+			),
 		),
 		cel.Function("isNan",
 			cel.MemberOverload(
