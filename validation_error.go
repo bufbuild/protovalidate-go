@@ -21,7 +21,7 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 )
 
-// A ValidationError is returned if one or more constraint violations were
+// A ValidationError is returned if one or more rule violations were
 // detected.
 type ValidationError struct {
 	Violations []*Violation
@@ -38,7 +38,7 @@ func (err *ValidationError) Error() string {
 		}
 		_, _ = fmt.Fprintf(bldr, "%s [%s]",
 			violation.Proto.GetMessage(),
-			violation.Proto.GetConstraintId())
+			violation.Proto.GetRuleId())
 	}
 	return bldr.String()
 }

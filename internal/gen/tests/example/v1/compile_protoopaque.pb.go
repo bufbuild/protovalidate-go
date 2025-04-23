@@ -37,28 +37,28 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type MismatchConstraints struct {
-	state                                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_NoConstraint              bool                   `protobuf:"varint,1,opt,name=no_constraint,json=noConstraint,proto3"`
-	xxx_hidden_StringFieldBoolConstraint string                 `protobuf:"bytes,2,opt,name=string_field_bool_constraint,json=stringFieldBoolConstraint,proto3"`
-	unknownFields                        protoimpl.UnknownFields
-	sizeCache                            protoimpl.SizeCache
+type MismatchRules struct {
+	state                          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_NoRule              bool                   `protobuf:"varint,1,opt,name=no_rule,json=noRule,proto3"`
+	xxx_hidden_StringFieldBoolRule string                 `protobuf:"bytes,2,opt,name=string_field_bool_rule,json=stringFieldBoolRule,proto3"`
+	unknownFields                  protoimpl.UnknownFields
+	sizeCache                      protoimpl.SizeCache
 }
 
-func (x *MismatchConstraints) Reset() {
-	*x = MismatchConstraints{}
+func (x *MismatchRules) Reset() {
+	*x = MismatchRules{}
 	mi := &file_tests_example_v1_compile_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MismatchConstraints) String() string {
+func (x *MismatchRules) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MismatchConstraints) ProtoMessage() {}
+func (*MismatchRules) ProtoMessage() {}
 
-func (x *MismatchConstraints) ProtoReflect() protoreflect.Message {
+func (x *MismatchRules) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_compile_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -70,66 +70,66 @@ func (x *MismatchConstraints) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *MismatchConstraints) GetNoConstraint() bool {
+func (x *MismatchRules) GetNoRule() bool {
 	if x != nil {
-		return x.xxx_hidden_NoConstraint
+		return x.xxx_hidden_NoRule
 	}
 	return false
 }
 
-func (x *MismatchConstraints) GetStringFieldBoolConstraint() string {
+func (x *MismatchRules) GetStringFieldBoolRule() string {
 	if x != nil {
-		return x.xxx_hidden_StringFieldBoolConstraint
+		return x.xxx_hidden_StringFieldBoolRule
 	}
 	return ""
 }
 
-func (x *MismatchConstraints) SetNoConstraint(v bool) {
-	x.xxx_hidden_NoConstraint = v
+func (x *MismatchRules) SetNoRule(v bool) {
+	x.xxx_hidden_NoRule = v
 }
 
-func (x *MismatchConstraints) SetStringFieldBoolConstraint(v string) {
-	x.xxx_hidden_StringFieldBoolConstraint = v
+func (x *MismatchRules) SetStringFieldBoolRule(v string) {
+	x.xxx_hidden_StringFieldBoolRule = v
 }
 
-type MismatchConstraints_builder struct {
+type MismatchRules_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	NoConstraint              bool
-	StringFieldBoolConstraint string
+	NoRule              bool
+	StringFieldBoolRule string
 }
 
-func (b0 MismatchConstraints_builder) Build() *MismatchConstraints {
-	m0 := &MismatchConstraints{}
+func (b0 MismatchRules_builder) Build() *MismatchRules {
+	m0 := &MismatchRules{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.xxx_hidden_NoConstraint = b.NoConstraint
-	x.xxx_hidden_StringFieldBoolConstraint = b.StringFieldBoolConstraint
+	x.xxx_hidden_NoRule = b.NoRule
+	x.xxx_hidden_StringFieldBoolRule = b.StringFieldBoolRule
 	return m0
 }
 
-type MixedValidInvalidConstraints struct {
-	state                                protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_StringFieldBoolConstraint string                 `protobuf:"bytes,1,opt,name=string_field_bool_constraint,json=stringFieldBoolConstraint,proto3"`
-	xxx_hidden_ValidStringConstraint     string                 `protobuf:"bytes,2,opt,name=valid_string_constraint,json=validStringConstraint,proto3"`
-	unknownFields                        protoimpl.UnknownFields
-	sizeCache                            protoimpl.SizeCache
+type MixedValidInvalidRules struct {
+	state                          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_StringFieldBoolRule string                 `protobuf:"bytes,1,opt,name=string_field_bool_rule,json=stringFieldBoolRule,proto3"`
+	xxx_hidden_ValidStringRule     string                 `protobuf:"bytes,2,opt,name=valid_string_rule,json=validStringRule,proto3"`
+	unknownFields                  protoimpl.UnknownFields
+	sizeCache                      protoimpl.SizeCache
 }
 
-func (x *MixedValidInvalidConstraints) Reset() {
-	*x = MixedValidInvalidConstraints{}
+func (x *MixedValidInvalidRules) Reset() {
+	*x = MixedValidInvalidRules{}
 	mi := &file_tests_example_v1_compile_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MixedValidInvalidConstraints) String() string {
+func (x *MixedValidInvalidRules) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MixedValidInvalidConstraints) ProtoMessage() {}
+func (*MixedValidInvalidRules) ProtoMessage() {}
 
-func (x *MixedValidInvalidConstraints) ProtoReflect() protoreflect.Message {
+func (x *MixedValidInvalidRules) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_compile_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -141,41 +141,41 @@ func (x *MixedValidInvalidConstraints) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *MixedValidInvalidConstraints) GetStringFieldBoolConstraint() string {
+func (x *MixedValidInvalidRules) GetStringFieldBoolRule() string {
 	if x != nil {
-		return x.xxx_hidden_StringFieldBoolConstraint
+		return x.xxx_hidden_StringFieldBoolRule
 	}
 	return ""
 }
 
-func (x *MixedValidInvalidConstraints) GetValidStringConstraint() string {
+func (x *MixedValidInvalidRules) GetValidStringRule() string {
 	if x != nil {
-		return x.xxx_hidden_ValidStringConstraint
+		return x.xxx_hidden_ValidStringRule
 	}
 	return ""
 }
 
-func (x *MixedValidInvalidConstraints) SetStringFieldBoolConstraint(v string) {
-	x.xxx_hidden_StringFieldBoolConstraint = v
+func (x *MixedValidInvalidRules) SetStringFieldBoolRule(v string) {
+	x.xxx_hidden_StringFieldBoolRule = v
 }
 
-func (x *MixedValidInvalidConstraints) SetValidStringConstraint(v string) {
-	x.xxx_hidden_ValidStringConstraint = v
+func (x *MixedValidInvalidRules) SetValidStringRule(v string) {
+	x.xxx_hidden_ValidStringRule = v
 }
 
-type MixedValidInvalidConstraints_builder struct {
+type MixedValidInvalidRules_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	StringFieldBoolConstraint string
-	ValidStringConstraint     string
+	StringFieldBoolRule string
+	ValidStringRule     string
 }
 
-func (b0 MixedValidInvalidConstraints_builder) Build() *MixedValidInvalidConstraints {
-	m0 := &MixedValidInvalidConstraints{}
+func (b0 MixedValidInvalidRules_builder) Build() *MixedValidInvalidRules {
+	m0 := &MixedValidInvalidRules{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.xxx_hidden_StringFieldBoolConstraint = b.StringFieldBoolConstraint
-	x.xxx_hidden_ValidStringConstraint = b.ValidStringConstraint
+	x.xxx_hidden_StringFieldBoolRule = b.StringFieldBoolRule
+	x.xxx_hidden_ValidStringRule = b.ValidStringRule
 	return m0
 }
 
@@ -183,21 +183,21 @@ var File_tests_example_v1_compile_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_compile_proto_rawDesc = "" +
 	"\n" +
-	"\x1etests/example/v1/compile.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\"\x84\x01\n" +
-	"\x13MismatchConstraints\x12#\n" +
-	"\rno_constraint\x18\x01 \x01(\bR\fnoConstraint\x12H\n" +
-	"\x1cstring_field_bool_constraint\x18\x02 \x01(\tB\a\xbaH\x04j\x02\b\x01R\x19stringFieldBoolConstraint\"\xac\x01\n" +
-	"\x1cMixedValidInvalidConstraints\x12H\n" +
-	"\x1cstring_field_bool_constraint\x18\x01 \x01(\tB\a\xbaH\x04j\x02\b\x01R\x19stringFieldBoolConstraint\x12B\n" +
-	"\x17valid_string_constraint\x18\x02 \x01(\tB\n" +
+	"\x1etests/example/v1/compile.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\"f\n" +
+	"\rMismatchRules\x12\x17\n" +
+	"\ano_rule\x18\x01 \x01(\bR\x06noRule\x12<\n" +
+	"\x16string_field_bool_rule\x18\x02 \x01(\tB\a\xbaH\x04j\x02\b\x01R\x13stringFieldBoolRule\"\x8e\x01\n" +
+	"\x16MixedValidInvalidRules\x12<\n" +
+	"\x16string_field_bool_rule\x18\x01 \x01(\tB\a\xbaH\x04j\x02\b\x01R\x13stringFieldBoolRule\x126\n" +
+	"\x11valid_string_rule\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\n" +
-	"\x03fooR\x15validStringConstraintB\xd4\x01\n" +
+	"\x03fooR\x0fvalidStringRuleB\xd4\x01\n" +
 	"\x14com.tests.example.v1B\fCompileProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_compile_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tests_example_v1_compile_proto_goTypes = []any{
-	(*MismatchConstraints)(nil),          // 0: tests.example.v1.MismatchConstraints
-	(*MixedValidInvalidConstraints)(nil), // 1: tests.example.v1.MixedValidInvalidConstraints
+	(*MismatchRules)(nil),          // 0: tests.example.v1.MismatchRules
+	(*MixedValidInvalidRules)(nil), // 1: tests.example.v1.MixedValidInvalidRules
 }
 var file_tests_example_v1_compile_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

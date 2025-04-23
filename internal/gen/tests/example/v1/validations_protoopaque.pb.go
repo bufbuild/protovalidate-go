@@ -709,27 +709,27 @@ func (b0 MsgHasMap_builder) Build() *MsgHasMap {
 	return m0
 }
 
-type TransitiveFieldConstraint struct {
+type TransitiveFieldRule struct {
 	state           protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Mask *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=mask,proto3"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *TransitiveFieldConstraint) Reset() {
-	*x = TransitiveFieldConstraint{}
+func (x *TransitiveFieldRule) Reset() {
+	*x = TransitiveFieldRule{}
 	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TransitiveFieldConstraint) String() string {
+func (x *TransitiveFieldRule) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TransitiveFieldConstraint) ProtoMessage() {}
+func (*TransitiveFieldRule) ProtoMessage() {}
 
-func (x *TransitiveFieldConstraint) ProtoReflect() protoreflect.Message {
+func (x *TransitiveFieldRule) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_validations_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -741,63 +741,63 @@ func (x *TransitiveFieldConstraint) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *TransitiveFieldConstraint) GetMask() *fieldmaskpb.FieldMask {
+func (x *TransitiveFieldRule) GetMask() *fieldmaskpb.FieldMask {
 	if x != nil {
 		return x.xxx_hidden_Mask
 	}
 	return nil
 }
 
-func (x *TransitiveFieldConstraint) SetMask(v *fieldmaskpb.FieldMask) {
+func (x *TransitiveFieldRule) SetMask(v *fieldmaskpb.FieldMask) {
 	x.xxx_hidden_Mask = v
 }
 
-func (x *TransitiveFieldConstraint) HasMask() bool {
+func (x *TransitiveFieldRule) HasMask() bool {
 	if x == nil {
 		return false
 	}
 	return x.xxx_hidden_Mask != nil
 }
 
-func (x *TransitiveFieldConstraint) ClearMask() {
+func (x *TransitiveFieldRule) ClearMask() {
 	x.xxx_hidden_Mask = nil
 }
 
-type TransitiveFieldConstraint_builder struct {
+type TransitiveFieldRule_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Mask *fieldmaskpb.FieldMask
 }
 
-func (b0 TransitiveFieldConstraint_builder) Build() *TransitiveFieldConstraint {
-	m0 := &TransitiveFieldConstraint{}
+func (b0 TransitiveFieldRule_builder) Build() *TransitiveFieldRule {
+	m0 := &TransitiveFieldRule{}
 	b, x := &b0, m0
 	_, _ = b, x
 	x.xxx_hidden_Mask = b.Mask
 	return m0
 }
 
-type MultipleStepsTransitiveFieldConstraints struct {
+type MultipleStepsTransitiveFieldRules struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Api *apipb.Api             `protobuf:"bytes,1,opt,name=api,proto3"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) Reset() {
-	*x = MultipleStepsTransitiveFieldConstraints{}
+func (x *MultipleStepsTransitiveFieldRules) Reset() {
+	*x = MultipleStepsTransitiveFieldRules{}
 	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) String() string {
+func (x *MultipleStepsTransitiveFieldRules) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MultipleStepsTransitiveFieldConstraints) ProtoMessage() {}
+func (*MultipleStepsTransitiveFieldRules) ProtoMessage() {}
 
-func (x *MultipleStepsTransitiveFieldConstraints) ProtoReflect() protoreflect.Message {
+func (x *MultipleStepsTransitiveFieldRules) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_validations_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -809,36 +809,36 @@ func (x *MultipleStepsTransitiveFieldConstraints) ProtoReflect() protoreflect.Me
 	return mi.MessageOf(x)
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) GetApi() *apipb.Api {
+func (x *MultipleStepsTransitiveFieldRules) GetApi() *apipb.Api {
 	if x != nil {
 		return x.xxx_hidden_Api
 	}
 	return nil
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) SetApi(v *apipb.Api) {
+func (x *MultipleStepsTransitiveFieldRules) SetApi(v *apipb.Api) {
 	x.xxx_hidden_Api = v
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) HasApi() bool {
+func (x *MultipleStepsTransitiveFieldRules) HasApi() bool {
 	if x == nil {
 		return false
 	}
 	return x.xxx_hidden_Api != nil
 }
 
-func (x *MultipleStepsTransitiveFieldConstraints) ClearApi() {
+func (x *MultipleStepsTransitiveFieldRules) ClearApi() {
 	x.xxx_hidden_Api = nil
 }
 
-type MultipleStepsTransitiveFieldConstraints_builder struct {
+type MultipleStepsTransitiveFieldRules_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Api *apipb.Api
 }
 
-func (b0 MultipleStepsTransitiveFieldConstraints_builder) Build() *MultipleStepsTransitiveFieldConstraints {
-	m0 := &MultipleStepsTransitiveFieldConstraints{}
+func (b0 MultipleStepsTransitiveFieldRules_builder) Build() *MultipleStepsTransitiveFieldRules {
+	m0 := &MultipleStepsTransitiveFieldRules{}
 	b, x := &b0, m0
 	_, _ = b, x
 	x.xxx_hidden_Api = b.Api
@@ -1681,12 +1681,12 @@ const file_tests_example_v1_validations_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a_\n" +
 	"\x0fMessageMapEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x03R\x03key\x126\n" +
-	"\x05value\x18\x02 \x01(\v2 .tests.example.v1.LoopRecursiveAR\x05value:\x028\x01\"\x8e\x01\n" +
-	"\x19TransitiveFieldConstraint\x12q\n" +
+	"\x05value\x18\x02 \x01(\v2 .tests.example.v1.LoopRecursiveAR\x05value:\x028\x01\"\x88\x01\n" +
+	"\x13TransitiveFieldRule\x12q\n" +
 	"\x04mask\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskBA\xbaH>\xba\x01;\n" +
 	"\n" +
-	"mask.paths\x12\x1cmask.paths must not be empty\x1a\x0fhas(this.paths)R\x04mask\"\xce\x01\n" +
-	"'MultipleStepsTransitiveFieldConstraints\x12\xa2\x01\n" +
+	"mask.paths\x12\x1cmask.paths must not be empty\x1a\x0fhas(this.paths)R\x04mask\"\xc8\x01\n" +
+	"!MultipleStepsTransitiveFieldRules\x12\xa2\x01\n" +
 	"\x03api\x18\x01 \x01(\v2\x14.google.protobuf.ApiBz\xbaHw\xba\x01t\n" +
 	"\x1capi.source_context.file_name\x120api's source context file name must not be empty\x1a\"has(this.source_context.file_name)R\x03api\"\x16\n" +
 	"\x06Simple\x12\f\n" +
@@ -1722,33 +1722,33 @@ const file_tests_example_v1_validations_proto_rawDesc = "" +
 
 var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_tests_example_v1_validations_proto_goTypes = []any{
-	(*HasMsgExprs)(nil),                             // 0: tests.example.v1.HasMsgExprs
-	(*SelfRecursive)(nil),                           // 1: tests.example.v1.SelfRecursive
-	(*LoopRecursiveA)(nil),                          // 2: tests.example.v1.LoopRecursiveA
-	(*LoopRecursiveB)(nil),                          // 3: tests.example.v1.LoopRecursiveB
-	(*MsgHasOneof)(nil),                             // 4: tests.example.v1.MsgHasOneof
-	(*MsgHasRepeated)(nil),                          // 5: tests.example.v1.MsgHasRepeated
-	(*MsgHasMap)(nil),                               // 6: tests.example.v1.MsgHasMap
-	(*TransitiveFieldConstraint)(nil),               // 7: tests.example.v1.TransitiveFieldConstraint
-	(*MultipleStepsTransitiveFieldConstraints)(nil), // 8: tests.example.v1.MultipleStepsTransitiveFieldConstraints
-	(*Simple)(nil),                                  // 9: tests.example.v1.Simple
-	(*FieldOfTypeAny)(nil),                          // 10: tests.example.v1.FieldOfTypeAny
-	(*CelMapOnARepeated)(nil),                       // 11: tests.example.v1.CelMapOnARepeated
-	(*RepeatedItemCel)(nil),                         // 12: tests.example.v1.RepeatedItemCel
-	(*OneTwo)(nil),                                  // 13: tests.example.v1.OneTwo
-	(*TwoOne)(nil),                                  // 14: tests.example.v1.TwoOne
-	(*F1)(nil),                                      // 15: tests.example.v1.F1
-	(*F2)(nil),                                      // 16: tests.example.v1.F2
-	(*FieldWithIssue)(nil),                          // 17: tests.example.v1.FieldWithIssue
-	(*Issue211)(nil),                                // 18: tests.example.v1.Issue211
-	nil,                                             // 19: tests.example.v1.MsgHasMap.Int32mapEntry
-	nil,                                             // 20: tests.example.v1.MsgHasMap.StringMapEntry
-	nil,                                             // 21: tests.example.v1.MsgHasMap.MessageMapEntry
-	(*CelMapOnARepeated_Value)(nil),                 // 22: tests.example.v1.CelMapOnARepeated.Value
-	(*fieldmaskpb.FieldMask)(nil),                   // 23: google.protobuf.FieldMask
-	(*apipb.Api)(nil),                               // 24: google.protobuf.Api
-	(*anypb.Any)(nil),                               // 25: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),                   // 26: google.protobuf.Timestamp
+	(*HasMsgExprs)(nil),                       // 0: tests.example.v1.HasMsgExprs
+	(*SelfRecursive)(nil),                     // 1: tests.example.v1.SelfRecursive
+	(*LoopRecursiveA)(nil),                    // 2: tests.example.v1.LoopRecursiveA
+	(*LoopRecursiveB)(nil),                    // 3: tests.example.v1.LoopRecursiveB
+	(*MsgHasOneof)(nil),                       // 4: tests.example.v1.MsgHasOneof
+	(*MsgHasRepeated)(nil),                    // 5: tests.example.v1.MsgHasRepeated
+	(*MsgHasMap)(nil),                         // 6: tests.example.v1.MsgHasMap
+	(*TransitiveFieldRule)(nil),               // 7: tests.example.v1.TransitiveFieldRule
+	(*MultipleStepsTransitiveFieldRules)(nil), // 8: tests.example.v1.MultipleStepsTransitiveFieldRules
+	(*Simple)(nil),                            // 9: tests.example.v1.Simple
+	(*FieldOfTypeAny)(nil),                    // 10: tests.example.v1.FieldOfTypeAny
+	(*CelMapOnARepeated)(nil),                 // 11: tests.example.v1.CelMapOnARepeated
+	(*RepeatedItemCel)(nil),                   // 12: tests.example.v1.RepeatedItemCel
+	(*OneTwo)(nil),                            // 13: tests.example.v1.OneTwo
+	(*TwoOne)(nil),                            // 14: tests.example.v1.TwoOne
+	(*F1)(nil),                                // 15: tests.example.v1.F1
+	(*F2)(nil),                                // 16: tests.example.v1.F2
+	(*FieldWithIssue)(nil),                    // 17: tests.example.v1.FieldWithIssue
+	(*Issue211)(nil),                          // 18: tests.example.v1.Issue211
+	nil,                                       // 19: tests.example.v1.MsgHasMap.Int32mapEntry
+	nil,                                       // 20: tests.example.v1.MsgHasMap.StringMapEntry
+	nil,                                       // 21: tests.example.v1.MsgHasMap.MessageMapEntry
+	(*CelMapOnARepeated_Value)(nil),           // 22: tests.example.v1.CelMapOnARepeated.Value
+	(*fieldmaskpb.FieldMask)(nil),             // 23: google.protobuf.FieldMask
+	(*apipb.Api)(nil),                         // 24: google.protobuf.Api
+	(*anypb.Any)(nil),                         // 25: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),             // 26: google.protobuf.Timestamp
 }
 var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	1,  // 0: tests.example.v1.SelfRecursive.turtle:type_name -> tests.example.v1.SelfRecursive
@@ -1759,8 +1759,8 @@ var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	19, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
 	20, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
 	21, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
-	23, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
-	24, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
+	23, // 8: tests.example.v1.TransitiveFieldRule.mask:type_name -> google.protobuf.FieldMask
+	24, // 9: tests.example.v1.MultipleStepsTransitiveFieldRules.api:type_name -> google.protobuf.Api
 	25, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
 	22, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
 	15, // 12: tests.example.v1.OneTwo.field1:type_name -> tests.example.v1.F1

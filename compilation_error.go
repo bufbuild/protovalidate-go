@@ -17,7 +17,7 @@ package protovalidate
 import "strings"
 
 // A CompilationError is returned if a CEL expression cannot be compiled &
-// type-checked or if invalid standard constraints are applied.
+// type-checked or if invalid standard rules are applied.
 type CompilationError struct {
 	cause error
 }

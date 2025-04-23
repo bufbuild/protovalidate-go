@@ -28,12 +28,12 @@ import (
 func TestResolve(t *testing.T) {
 	t.Parallel()
 
-	expectedConstraints := &validate.FieldConstraints{
-		Cel: []*validate.Constraint{
+	expectedRules := &validate.FieldRules{
+		Cel: []*validate.Rule{
 			{Message: proto.String("test")},
 		},
 	}
-	expectedConstraintsBytes, err := proto.Marshal(expectedConstraints)
+	expectedRulesBytes, err := proto.Marshal(expectedRules)
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -44,7 +44,7 @@ func TestResolve(t *testing.T) {
 			name: "Normal",
 			builder: func() proto.Message {
 				options := &descriptorpb.FieldOptions{}
-				proto.SetExtension(options, validate.E_Field, expectedConstraints)
+				proto.SetExtension(options, validate.E_Field, expectedRules)
 				return options
 			},
 		},
@@ -59,7 +59,7 @@ func TestResolve(t *testing.T) {
 				)
 				unknownBytes = protowire.AppendBytes(
 					unknownBytes,
-					expectedConstraintsBytes,
+					expectedRulesBytes,
 				)
 				options := &descriptorpb.FieldOptions{}
 				options.ProtoReflect().SetUnknown(protoreflect.RawFields(unknownBytes))
@@ -77,7 +77,7 @@ func TestResolve(t *testing.T) {
 				)
 				unknownBytes = protowire.AppendBytes(
 					unknownBytes,
-					expectedConstraintsBytes,
+					expectedRulesBytes,
 				)
 				options := &descriptorpb.FieldOptions{}
 				options.ProtoReflect().SetUnknown(protoreflect.RawFields(unknownBytes))
@@ -95,7 +95,7 @@ func TestResolve(t *testing.T) {
 				)
 				unknownBytes = protowire.AppendBytes(
 					unknownBytes,
-					expectedConstraintsBytes,
+					expectedRulesBytes,
 				)
 				options := &descriptorpb.FieldOptions{}
 				options.ProtoReflect().SetUnknown(protoreflect.RawFields(unknownBytes))
@@ -110,7 +110,7 @@ func TestResolve(t *testing.T) {
 			t.Parallel()
 
 			pb := test.builder()
-			extension := resolve[*validate.FieldConstraints](pb, validate.E_Field)
+			extension := resolve[*validate.FieldRules](pb, validate.E_Field)
 			require.NotNil(t, extension)
 			require.Equal(t, "test", extension.GetCel()[0].GetMessage())
 		})
@@ -120,7 +120,7 @@ func TestResolve(t *testing.T) {
 func TestResolveNone(t *testing.T) {
 	t.Parallel()
 
-	require.Nil(t, resolve[*validate.FieldConstraints](
+	require.Nil(t, resolve[*validate.FieldRules](
 		&descriptorpb.FieldOptions{},
 		validate.E_Field,
 	))

@@ -54,7 +54,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 
 	asts, err := compileASTs(
 		expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Expression: proto.String("foo")},
 			},
 		},
@@ -82,7 +82,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 
 	asts, err := compileASTs(
 		expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Expression: proto.String("foo")},
 			},
 		},

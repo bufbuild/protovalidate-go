@@ -127,7 +127,7 @@ message MsgHasMap {
   map<int64, LoopRecursiveA> message_map = 3 [(buf.validate.field).map = {min_pairs: 2}];
 }
 
-message TransitiveFieldConstraint {
+message TransitiveFieldRule {
   google.protobuf.FieldMask mask = 1 [(buf.validate.field).cel = {
     id: "mask.paths"
     message: "mask.paths must not be empty"
@@ -135,7 +135,7 @@ message TransitiveFieldConstraint {
   }];
 }
 
-message MultipleStepsTransitiveFieldConstraints {
+message MultipleStepsTransitiveFieldRules {
   google.protobuf.Api api = 1 [(buf.validate.field).cel = {
     id: "api.source_context.file_name"
     message: "api's source context file name must not be empty"

@@ -22,7 +22,7 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	requiredRuleDescriptor = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("required")
+	requiredRuleDescriptor = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("required")
 	requiredRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(requiredRuleDescriptor),
@@ -57,7 +57,7 @@ func (f field) shouldIgnoreAlways() bool {
 
 // shouldIgnoreEmpty returns whether this field should skip validation on its zero value.
 // This field is generally true for nullable fields or fields with the
-// ignore_empty constraint explicitly set.
+// ignore_empty rule explicitly set.
 func (f field) shouldIgnoreEmpty() bool {
 	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_UNPOPULATED || f.Ignore == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
 }
@@ -87,10 +87,10 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 	if f.Required && !msg.Has(f.Value.Descriptor) {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
-				Field:        fieldPath(f.Value.Descriptor),
-				Rule:         prefixRulePath(f.Value.NestedRule, requiredRulePath),
-				ConstraintId: proto.String("required"),
-				Message:      proto.String("value is required"),
+				Field:   fieldPath(f.Value.Descriptor),
+				Rule:    prefixRulePath(f.Value.NestedRule, requiredRulePath),
+				RuleId:  proto.String("required"),
+				Message: proto.String("value is required"),
 			},
 			FieldValue:      protoreflect.Value{},
 			FieldDescriptor: f.Value.Descriptor,
