@@ -78,6 +78,24 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 			l.uniqueMemberOverload(cel.StringType, l.uniqueScalar),
 			l.uniqueMemberOverload(cel.BytesType, l.uniqueBytes),
 		),
+		cel.Function("getField",
+			cel.Overload(
+				"get_field_any_string",
+				[]*cel.Type{cel.AnyType, cel.StringType},
+				cel.AnyType,
+				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
+					message, ok := values[0].(traits.Indexer)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(values[0])
+					}
+					fieldName, ok := values[1].Value().(string)
+					if !ok {
+						return types.UnsupportedRefValConversionErr(values[1])
+					}
+					return message.Get(types.String(fieldName))
+				}),
+			),
+		),
 		cel.Function("isNan",
 			cel.MemberOverload(
 				"double_is_nan_bool",
