@@ -46,3 +46,14 @@ extend buf.validate.BoolRules {
     expression: "this == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])"
   }];
 }
+
+extend buf.validate.StringRules {
+    optional int32 required_medium = 80048952 [(buf.validate.predefined).cel = {
+        id: "string.required.medium"
+        expression: "this.size() > 0 && this.size() <= rule ? '' : 'this is required and must be %s or fewer characters'.format([string(rule)])"
+    }];
+    optional int32 optional_medium = 80048953 [(buf.validate.predefined).cel = {
+        id: "string.optional.medium"
+        expression: "this.size() <= rule ? '' : 'this must be %s or fewer characters'.format([string(rule)])"
+    }];
+}

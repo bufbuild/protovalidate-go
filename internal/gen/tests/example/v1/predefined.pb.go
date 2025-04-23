@@ -217,6 +217,22 @@ var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 		Tag:           "varint,1800,opt,name=this_equals_rule",
 		Filename:      "tests/example/v1/predefined.proto",
 	},
+	{
+		ExtendedType:  (*validate.StringRules)(nil),
+		ExtensionType: (*int32)(nil),
+		Field:         80048952,
+		Name:          "tests.example.v1.required_medium",
+		Tag:           "varint,80048952,opt,name=required_medium",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.StringRules)(nil),
+		ExtensionType: (*int32)(nil),
+		Field:         80048953,
+		Name:          "tests.example.v1.optional_medium",
+		Tag:           "varint,80048953,opt,name=optional_medium",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
 }
 
 // Extension fields to validate.Int32Rules.
@@ -229,6 +245,14 @@ var (
 var (
 	// optional bool this_equals_rule = 1800;
 	E_ThisEqualsRule = &file_tests_example_v1_predefined_proto_extTypes[1]
+)
+
+// Extension fields to validate.StringRules.
+var (
+	// optional int32 required_medium = 80048952;
+	E_RequiredMedium = &file_tests_example_v1_predefined_proto_extTypes[2]
+	// optional int32 optional_medium = 80048953;
+	E_OptionalMedium = &file_tests_example_v1_predefined_proto_extTypes[3]
 )
 
 var File_tests_example_v1_predefined_proto protoreflect.FileDescriptor
@@ -249,23 +273,32 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xb1\x01\n" +
 	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBm\xc2Hj\n" +
 	"h\n" +
-	"\x15bool.this_equals_rule\x1aOthis == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])R\x0ethisEqualsRuleB\xd7\x01\n" +
+	"\x15bool.this_equals_rule\x1aOthis == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])R\x0ethisEqualsRule:\xe3\x01\n" +
+	"\x0frequired_medium\x12\x19.buf.validate.StringRules\x18\xb8\xe6\x95& \x01(\x05B\x9b\x01\xc2H\x97\x01\n" +
+	"\x94\x01\n" +
+	"\x16string.required.medium\x1azthis.size() > 0 && this.size() <= rule ? '' : 'this is required and must be %s or fewer characters'.format([string(rule)])R\x0erequiredMedium:\xbd\x01\n" +
+	"\x0foptional_medium\x12\x19.buf.validate.StringRules\x18\xb9\xe6\x95& \x01(\x05Bv\xc2Hs\n" +
+	"q\n" +
+	"\x16string.optional.medium\x1aWthis.size() <= rule ? '' : 'this must be %s or fewer characters'.format([string(rule)])R\x0eoptionalMediumB\xd7\x01\n" +
 	"\x14com.tests.example.v1B\x0fPredefinedProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1"
 
 var file_tests_example_v1_predefined_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tests_example_v1_predefined_proto_goTypes = []any{
-	(*Issue148)(nil),            // 0: tests.example.v1.Issue148
-	(*Issue187)(nil),            // 1: tests.example.v1.Issue187
-	(*validate.Int32Rules)(nil), // 2: buf.validate.Int32Rules
-	(*validate.BoolRules)(nil),  // 3: buf.validate.BoolRules
+	(*Issue148)(nil),             // 0: tests.example.v1.Issue148
+	(*Issue187)(nil),             // 1: tests.example.v1.Issue187
+	(*validate.Int32Rules)(nil),  // 2: buf.validate.Int32Rules
+	(*validate.BoolRules)(nil),   // 3: buf.validate.BoolRules
+	(*validate.StringRules)(nil), // 4: buf.validate.StringRules
 }
 var file_tests_example_v1_predefined_proto_depIdxs = []int32{
 	2, // 0: tests.example.v1.abs_not_in:extendee -> buf.validate.Int32Rules
 	3, // 1: tests.example.v1.this_equals_rule:extendee -> buf.validate.BoolRules
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	0, // [0:2] is the sub-list for extension extendee
+	4, // 2: tests.example.v1.required_medium:extendee -> buf.validate.StringRules
+	4, // 3: tests.example.v1.optional_medium:extendee -> buf.validate.StringRules
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	0, // [0:4] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
@@ -281,7 +314,7 @@ func file_tests_example_v1_predefined_proto_init() {
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_predefined_proto_rawDesc), len(file_tests_example_v1_predefined_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
-			NumExtensions: 2,
+			NumExtensions: 4,
 			NumServices:   0,
 		},
 		GoTypes:           file_tests_example_v1_predefined_proto_goTypes,

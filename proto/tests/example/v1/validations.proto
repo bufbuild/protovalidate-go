@@ -17,6 +17,7 @@ syntax = "proto3";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
+import "tests/example/v1/predefined.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
@@ -203,3 +204,13 @@ message FieldWithIssue {
 message Issue211 {
   google.protobuf.Timestamp value = 1 [(buf.validate.field).timestamp.gt_now = true];
 }
+
+message MaxString {
+    string title = 4 [
+        (buf.validate.field).string.(required_medium) = 15
+    ];
+    string salutation = 5 [
+        (buf.validate.field).string.(optional_medium) = 10
+    ];
+}
+

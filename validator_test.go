@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -517,5 +518,175 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 		TrueField:  proto.Bool(true),
 	}.Build()
 	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_Predef_TitleRequired(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MaxString{Salutation: "tenletters"}
+	err = val.Validate(msg)
+	require.Error(t, err)
+	valErr := &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "title", fieldInfo[0].GetFieldName())
+	}
+}
+
+func TestValidator_Validate_Predef_TitleTooLong(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MaxString{Title: "thisislongerthanfifteenchars", Salutation: "tenletters"}
+	err = val.Validate(msg)
+	require.Error(t, err)
+	valErr := &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "title", fieldInfo[0].GetFieldName())
+	}
+}
+
+func TestValidator_Validate_Predef_SalutationTooLong(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MaxString{Title: "twelveletter", Salutation: "twelveletter"}
+	err = val.Validate(msg)
+	require.Error(t, err)
+	valErr := &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.optional.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this must be 10 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "salutation", fieldInfo[0].GetFieldName())
+	}
+}
+
+func TestValidator_Validate_Predef_BothInvalid(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MaxString{Title: "thisislongerthanfifteenchars", Salutation: "thisislongerthantenchars"}
+	err = val.Validate(msg)
+	require.Error(t, err)
+	valErr := &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 2)
+		// Title
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		titleInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(titleInfo), 1)
+		assert.Equal(t, "title", titleInfo[0].GetFieldName())
+		// Salutation
+		assert.Equal(t, "string.optional.medium", violations[1].Proto.GetConstraintId())
+		assert.Equal(t, "this must be 10 or fewer characters", violations[1].Proto.GetMessage())
+		salutationInfo := violations[1].Proto.GetField().GetElements()
+		assert.Equal(t, len(salutationInfo), 1)
+		assert.Equal(t, "salutation", salutationInfo[0].GetFieldName())
+	}
+}
+
+func TestValidator_Validate_Predef_BothValid(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.MaxString{Title: "hello", Salutation: "hello"}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_Predef_AllTogetherNow(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	// Title missing
+	titleMissingMsg := &pb.MaxString{Salutation: "tenletters"}
+	err = val.Validate(titleMissingMsg)
+	require.Error(t, err)
+	valErr := &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "title", fieldInfo[0].GetFieldName())
+	}
+
+	// Title too long
+	titleTooLongMsg := &pb.MaxString{Title: "thisislongerthanfifteenchars", Salutation: "tenletters"}
+	err = val.Validate(titleTooLongMsg)
+	require.Error(t, err)
+	valErr = &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "title", fieldInfo[0].GetFieldName())
+	}
+
+	// Salutation too long
+	salutationTooLongMsg := &pb.MaxString{Title: "twelveletter", Salutation: "twelveletter"}
+	err = val.Validate(salutationTooLongMsg)
+	require.Error(t, err)
+	valErr = &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 1)
+		assert.Equal(t, "string.optional.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this must be 10 or fewer characters", violations[0].Proto.GetMessage())
+		fieldInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(fieldInfo), 1)
+		assert.Equal(t, "salutation", fieldInfo[0].GetFieldName())
+	}
+
+	// Both invalid
+	bothInvalidMsg := &pb.MaxString{Title: "thisislongerthanfifteenchars", Salutation: "thisislongerthantenchars"}
+	err = val.Validate(bothInvalidMsg)
+	require.Error(t, err)
+	valErr = &ValidationError{}
+	if ok := errors.As(err, &valErr); ok {
+		violations := valErr.Violations
+		assert.Equal(t, len(violations), 2)
+		// Title
+		assert.Equal(t, "string.required.medium", violations[0].Proto.GetConstraintId())
+		assert.Equal(t, "this is required and must be 15 or fewer characters", violations[0].Proto.GetMessage())
+		titleInfo := violations[0].Proto.GetField().GetElements()
+		assert.Equal(t, len(titleInfo), 1)
+		assert.Equal(t, "title", titleInfo[0].GetFieldName())
+		// Salutation
+		assert.Equal(t, "string.optional.medium", violations[1].Proto.GetConstraintId())
+		assert.Equal(t, "this must be 10 or fewer characters", violations[1].Proto.GetMessage())
+		salutationInfo := violations[1].Proto.GetField().GetElements()
+		assert.Equal(t, len(salutationInfo), 1)
+		assert.Equal(t, "salutation", salutationInfo[0].GetFieldName())
+	}
+
+	// Both valid
+	validMsg := &pb.MaxString{Title: "hello", Salutation: "hello"}
+	err = val.Validate(validMsg)
 	require.NoError(t, err)
 }
