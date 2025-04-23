@@ -28,8 +28,6 @@ jobs:
           token: ${{ secrets.BUF_TOKEN }}
           format: true
           lint: true
-          # Temp disable breaking checks due to upgrade to v0.11.0
-          breaking: false
           push: false
           archive: false
       - name: Check Generate
