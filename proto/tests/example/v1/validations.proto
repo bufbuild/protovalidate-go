@@ -200,6 +200,10 @@ message FieldWithIssue {
   string name = 2 [(buf.validate.field).string.min_len = 1];
 }
 
+message RailroadGin {
+  int32 name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
 message Issue211 {
   google.protobuf.Timestamp value = 1 [(buf.validate.field).timestamp.gt_now = true];
 }

@@ -519,3 +519,27 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
+
+func TestValidator_Validate_RailroadGin(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.RailroadGin{
+		Name: 69,
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestValidator_Validate_WrongType_Timestamp(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := &pb.RulesWrongTypeExample{
+		F: &pb.WrongType{
+			Name: "test",
+		},
+	}
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
