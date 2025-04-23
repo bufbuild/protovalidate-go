@@ -203,3 +203,14 @@ message FieldWithIssue {
 message Issue211 {
   google.protobuf.Timestamp value = 1 [(buf.validate.field).timestamp.gt_now = true];
 }
+
+message WrongType {
+    string name = 1;
+}
+
+message RulesWrongTypeExample {
+    WrongType f = 1 [(buf.validate.field).timestamp.lt = {
+        seconds: 1,
+        nanos: 1
+    }];
+}

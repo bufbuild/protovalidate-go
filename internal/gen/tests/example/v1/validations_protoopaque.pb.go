@@ -1573,6 +1573,131 @@ func (b0 Issue211_builder) Build() *Issue211 {
 	return m0
 }
 
+type WrongType struct {
+	state           protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Name string                 `protobuf:"bytes,1,opt,name=name,proto3"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *WrongType) Reset() {
+	*x = WrongType{}
+	mi := &file_tests_example_v1_validations_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WrongType) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WrongType) ProtoMessage() {}
+
+func (x *WrongType) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *WrongType) GetName() string {
+	if x != nil {
+		return x.xxx_hidden_Name
+	}
+	return ""
+}
+
+func (x *WrongType) SetName(v string) {
+	x.xxx_hidden_Name = v
+}
+
+type WrongType_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Name string
+}
+
+func (b0 WrongType_builder) Build() *WrongType {
+	m0 := &WrongType{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Name = b.Name
+	return m0
+}
+
+type RulesWrongTypeExample struct {
+	state         protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_F  *WrongType             `protobuf:"bytes,1,opt,name=f,proto3"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RulesWrongTypeExample) Reset() {
+	*x = RulesWrongTypeExample{}
+	mi := &file_tests_example_v1_validations_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RulesWrongTypeExample) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RulesWrongTypeExample) ProtoMessage() {}
+
+func (x *RulesWrongTypeExample) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_validations_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RulesWrongTypeExample) GetF() *WrongType {
+	if x != nil {
+		return x.xxx_hidden_F
+	}
+	return nil
+}
+
+func (x *RulesWrongTypeExample) SetF(v *WrongType) {
+	x.xxx_hidden_F = v
+}
+
+func (x *RulesWrongTypeExample) HasF() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_F != nil
+}
+
+func (x *RulesWrongTypeExample) ClearF() {
+	x.xxx_hidden_F = nil
+}
+
+type RulesWrongTypeExample_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	F *WrongType
+}
+
+func (b0 RulesWrongTypeExample_builder) Build() *RulesWrongTypeExample {
+	m0 := &RulesWrongTypeExample{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_F = b.F
+	return m0
+}
+
 type CelMapOnARepeated_Value struct {
 	state           protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Name string                 `protobuf:"bytes,1,opt,name=name,proto3"`
@@ -1582,7 +1707,7 @@ type CelMapOnARepeated_Value struct {
 
 func (x *CelMapOnARepeated_Value) Reset() {
 	*x = CelMapOnARepeated_Value{}
-	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1594,7 +1719,7 @@ func (x *CelMapOnARepeated_Value) String() string {
 func (*CelMapOnARepeated_Value) ProtoMessage() {}
 
 func (x *CelMapOnARepeated_Value) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_validations_proto_msgTypes[22]
+	mi := &file_tests_example_v1_validations_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1717,10 +1842,14 @@ const file_tests_example_v1_validations_proto_rawDesc = "" +
 	"\x02f1\x18\x01 \x01(\v2\x14.tests.example.v1.F1R\x02f1\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\"F\n" +
 	"\bIssue211\x12:\n" +
-	"\x05value\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\b\xbaH\x05\xb2\x01\x02@\x01R\x05valueB\xd8\x01\n" +
+	"\x05value\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\b\xbaH\x05\xb2\x01\x02@\x01R\x05value\"\x1f\n" +
+	"\tWrongType\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"P\n" +
+	"\x15RulesWrongTypeExample\x127\n" +
+	"\x01f\x18\x01 \x01(\v2\x1b.tests.example.v1.WrongTypeB\f\xbaH\t\xb2\x01\x06\x1a\x04\b\x01\x10\x01R\x01fB\xd8\x01\n" +
 	"\x14com.tests.example.v1B\x10ValidationsProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
-var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_tests_example_v1_validations_proto_goTypes = []any{
 	(*HasMsgExprs)(nil),                             // 0: tests.example.v1.HasMsgExprs
 	(*SelfRecursive)(nil),                           // 1: tests.example.v1.SelfRecursive
@@ -1741,14 +1870,16 @@ var file_tests_example_v1_validations_proto_goTypes = []any{
 	(*F2)(nil),                                      // 16: tests.example.v1.F2
 	(*FieldWithIssue)(nil),                          // 17: tests.example.v1.FieldWithIssue
 	(*Issue211)(nil),                                // 18: tests.example.v1.Issue211
-	nil,                                             // 19: tests.example.v1.MsgHasMap.Int32mapEntry
-	nil,                                             // 20: tests.example.v1.MsgHasMap.StringMapEntry
-	nil,                                             // 21: tests.example.v1.MsgHasMap.MessageMapEntry
-	(*CelMapOnARepeated_Value)(nil),                 // 22: tests.example.v1.CelMapOnARepeated.Value
-	(*fieldmaskpb.FieldMask)(nil),                   // 23: google.protobuf.FieldMask
-	(*apipb.Api)(nil),                               // 24: google.protobuf.Api
-	(*anypb.Any)(nil),                               // 25: google.protobuf.Any
-	(*timestamppb.Timestamp)(nil),                   // 26: google.protobuf.Timestamp
+	(*WrongType)(nil),                               // 19: tests.example.v1.WrongType
+	(*RulesWrongTypeExample)(nil),                   // 20: tests.example.v1.RulesWrongTypeExample
+	nil,                                             // 21: tests.example.v1.MsgHasMap.Int32mapEntry
+	nil,                                             // 22: tests.example.v1.MsgHasMap.StringMapEntry
+	nil,                                             // 23: tests.example.v1.MsgHasMap.MessageMapEntry
+	(*CelMapOnARepeated_Value)(nil),                 // 24: tests.example.v1.CelMapOnARepeated.Value
+	(*fieldmaskpb.FieldMask)(nil),                   // 25: google.protobuf.FieldMask
+	(*apipb.Api)(nil),                               // 26: google.protobuf.Api
+	(*anypb.Any)(nil),                               // 27: google.protobuf.Any
+	(*timestamppb.Timestamp)(nil),                   // 28: google.protobuf.Timestamp
 }
 var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	1,  // 0: tests.example.v1.SelfRecursive.turtle:type_name -> tests.example.v1.SelfRecursive
@@ -1756,13 +1887,13 @@ var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	2,  // 2: tests.example.v1.LoopRecursiveB.a:type_name -> tests.example.v1.LoopRecursiveA
 	0,  // 3: tests.example.v1.MsgHasOneof.msg:type_name -> tests.example.v1.HasMsgExprs
 	0,  // 4: tests.example.v1.MsgHasRepeated.z:type_name -> tests.example.v1.HasMsgExprs
-	19, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
-	20, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
-	21, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
-	23, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
-	24, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
-	25, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
-	22, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
+	21, // 5: tests.example.v1.MsgHasMap.int32map:type_name -> tests.example.v1.MsgHasMap.Int32mapEntry
+	22, // 6: tests.example.v1.MsgHasMap.string_map:type_name -> tests.example.v1.MsgHasMap.StringMapEntry
+	23, // 7: tests.example.v1.MsgHasMap.message_map:type_name -> tests.example.v1.MsgHasMap.MessageMapEntry
+	25, // 8: tests.example.v1.TransitiveFieldConstraint.mask:type_name -> google.protobuf.FieldMask
+	26, // 9: tests.example.v1.MultipleStepsTransitiveFieldConstraints.api:type_name -> google.protobuf.Api
+	27, // 10: tests.example.v1.FieldOfTypeAny.any:type_name -> google.protobuf.Any
+	24, // 11: tests.example.v1.CelMapOnARepeated.values:type_name -> tests.example.v1.CelMapOnARepeated.Value
 	15, // 12: tests.example.v1.OneTwo.field1:type_name -> tests.example.v1.F1
 	16, // 13: tests.example.v1.OneTwo.field2:type_name -> tests.example.v1.F2
 	16, // 14: tests.example.v1.TwoOne.field2:type_name -> tests.example.v1.F2
@@ -1770,13 +1901,14 @@ var file_tests_example_v1_validations_proto_depIdxs = []int32{
 	17, // 16: tests.example.v1.F1.field:type_name -> tests.example.v1.FieldWithIssue
 	17, // 17: tests.example.v1.F2.field:type_name -> tests.example.v1.FieldWithIssue
 	15, // 18: tests.example.v1.FieldWithIssue.f1:type_name -> tests.example.v1.F1
-	26, // 19: tests.example.v1.Issue211.value:type_name -> google.protobuf.Timestamp
-	2,  // 20: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
-	21, // [21:21] is the sub-list for method output_type
-	21, // [21:21] is the sub-list for method input_type
-	21, // [21:21] is the sub-list for extension type_name
-	21, // [21:21] is the sub-list for extension extendee
-	0,  // [0:21] is the sub-list for field type_name
+	28, // 19: tests.example.v1.Issue211.value:type_name -> google.protobuf.Timestamp
+	19, // 20: tests.example.v1.RulesWrongTypeExample.f:type_name -> tests.example.v1.WrongType
+	2,  // 21: tests.example.v1.MsgHasMap.MessageMapEntry.value:type_name -> tests.example.v1.LoopRecursiveA
+	22, // [22:22] is the sub-list for method output_type
+	22, // [22:22] is the sub-list for method input_type
+	22, // [22:22] is the sub-list for extension type_name
+	22, // [22:22] is the sub-list for extension extendee
+	0,  // [0:22] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_validations_proto_init() }
@@ -1795,7 +1927,7 @@ func file_tests_example_v1_validations_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_validations_proto_rawDesc), len(file_tests_example_v1_validations_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
