@@ -63,17 +63,17 @@ func WithDisableLazy() ValidatorOption {
 //
 // To ignore unknown extension fields, use the [WithAllowUnknownFields] option.
 // Note that this may result in messages being treated as valid even though not
-// all constraints are being applied.
+// all rules are being applied.
 func WithExtensionTypeResolver(extensionTypeResolver protoregistry.ExtensionTypeResolver) ValidatorOption {
 	return &extensionTypeResolverOption{extensionTypeResolver}
 }
 
-// WithAllowUnknownFields specifies if the presence of unknown field constraints
+// WithAllowUnknownFields specifies if the presence of unknown field rules
 // should cause compilation to fail with an error. When set to false, an unknown
-// field will simply be ignored, which will cause constraints to silently not be
-// applied. This condition may occur if a predefined constraint definition isn't
+// field will simply be ignored, which will cause rules to silently not be
+// applied. This condition may occur if a predefined rule definition isn't
 // present in the extension type resolver, or when passing dynamic messages with
-// standard constraints defined in a newer version of protovalidate. The default
+// standard rules defined in a newer version of protovalidate. The default
 // value is false, to prevent silently-incorrect validation from occurring.
 func WithAllowUnknownFields() ValidatorOption {
 	return &allowUnknownFieldsOption{}
@@ -98,7 +98,7 @@ type Option interface {
 	ValidationOption
 }
 
-// WithFailFast specifies whether validation should fail on the first constraint
+// WithFailFast specifies whether validation should fail on the first rule
 // violation encountered or if all violations should be accumulated. By default,
 // all violations are accumulated.
 func WithFailFast() Option {

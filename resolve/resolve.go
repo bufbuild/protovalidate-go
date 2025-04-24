@@ -32,30 +32,30 @@ const (
 //nolint:gochecknoglobals // static data, only want single instance
 var resolver = newExtensionResolver()
 
-// MessageConstraints returns the MessageConstraints option set for the
+// MessageRules returns the MessageRules option set for the
 // MessageDescriptor.
-func MessageConstraints(desc protoreflect.MessageDescriptor) *validate.MessageConstraints {
-	return resolve[*validate.MessageConstraints](desc.Options(), validate.E_Message)
+func MessageRules(desc protoreflect.MessageDescriptor) *validate.MessageRules {
+	return resolve[*validate.MessageRules](desc.Options(), validate.E_Message)
 }
 
-// OneofConstraints returns the OneofConstraints option set for the
+// OneofRules returns the OneofRules option set for the
 // OneofDescriptor.
-func OneofConstraints(desc protoreflect.OneofDescriptor) *validate.OneofConstraints {
-	return resolve[*validate.OneofConstraints](desc.Options(), validate.E_Oneof)
+func OneofRules(desc protoreflect.OneofDescriptor) *validate.OneofRules {
+	return resolve[*validate.OneofRules](desc.Options(), validate.E_Oneof)
 }
 
-// FieldConstraints returns the FieldConstraints option set for the
+// FieldRules returns the FieldRules option set for the
 // FieldDescriptor.
-func FieldConstraints(desc protoreflect.FieldDescriptor) *validate.FieldConstraints {
-	return resolve[*validate.FieldConstraints](desc.Options(), validate.E_Field)
+func FieldRules(desc protoreflect.FieldDescriptor) *validate.FieldRules {
+	return resolve[*validate.FieldRules](desc.Options(), validate.E_Field)
 }
 
-// PredefinedConstraints returns the PredefinedConstraints option set for
+// PredefinedRules returns the PredefinedRules option set for
 // the FieldDescriptor. Note that this value is only meaningful if it is set on
 // a field or extension of a field rule message. This method is provided for
 // convenience.
-func PredefinedConstraints(desc protoreflect.FieldDescriptor) *validate.PredefinedConstraints {
-	return resolve[*validate.PredefinedConstraints](desc.Options(), validate.E_Predefined)
+func PredefinedRules(desc protoreflect.FieldDescriptor) *validate.PredefinedRules {
+	return resolve[*validate.PredefinedRules](desc.Options(), validate.E_Predefined)
 }
 
 // resolve resolves extensions without using [proto.GetExtension], in case the

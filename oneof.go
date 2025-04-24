@@ -44,8 +44,8 @@ func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 					FieldName: proto.String(string(o.Descriptor.Name())),
 				}},
 			},
-			ConstraintId: proto.String("required"),
-			Message:      proto.String("exactly one field is required in oneof"),
+			RuleId:  proto.String("required"),
+			Message: proto.String("exactly one field is required in oneof"),
 		},
 	}}}
 }

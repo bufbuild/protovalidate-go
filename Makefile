@@ -14,9 +14,9 @@ GO ?= go
 ARGS ?= --strict_message --strict_error
 GOLANGCI_LINT_VERSION ?= v1.64.8
 # Set to use a different version of protovalidate-conformance.
-# Should be kept in sync with the version referenced in proto/buf.lock and
+# Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v0.10.4
+CONFORMANCE_VERSION ?= v0.11.0
 
 .PHONY: help
 help: ## Describe useful make targets

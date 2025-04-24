@@ -22,7 +22,7 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	anyRuleDescriptor   = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("any")
+	anyRuleDescriptor   = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("any")
 	anyInRuleDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("in")
 	anyInRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
@@ -66,10 +66,10 @@ func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, &Violation{
 				Proto: &validate.Violation{
-					Field:        a.base.fieldPath(),
-					Rule:         a.base.rulePath(anyInRulePath),
-					ConstraintId: proto.String("any.in"),
-					Message:      proto.String("type URL must be in the allow list"),
+					Field:   a.base.fieldPath(),
+					Rule:    a.base.rulePath(anyInRulePath),
+					RuleId:  proto.String("any.in"),
+					Message: proto.String("type URL must be in the allow list"),
 				},
 				FieldValue:      val,
 				FieldDescriptor: a.base.Descriptor,
@@ -86,10 +86,10 @@ func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, &Violation{
 				Proto: &validate.Violation{
-					Field:        a.base.fieldPath(),
-					Rule:         a.base.rulePath(anyNotInRulePath),
-					ConstraintId: proto.String("any.not_in"),
-					Message:      proto.String("type URL must not be in the block list"),
+					Field:   a.base.fieldPath(),
+					Rule:    a.base.rulePath(anyNotInRulePath),
+					RuleId:  proto.String("any.not_in"),
+					Message: proto.String("type URL must not be in the block list"),
 				},
 				FieldValue:      val,
 				FieldDescriptor: a.base.Descriptor,

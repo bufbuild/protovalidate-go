@@ -42,20 +42,20 @@ func TestCompile(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Id: proto.String("foo"), Expression: proto.String("this == 123")},
 				{Id: proto.String("bar"), Expression: proto.String("'a string'")},
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
-		assert.Len(t, set, len(exprs.Constraints))
+		assert.Len(t, set, len(exprs.Rules))
 		require.NoError(t, err)
 	})
 
 	t.Run("env extension err", func(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
 			},
 		}
@@ -68,7 +68,7 @@ func TestCompile(t *testing.T) {
 	t.Run("bad syntax", func(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
 			},
 		}
@@ -81,7 +81,7 @@ func TestCompile(t *testing.T) {
 	t.Run("invalid output type", func(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
-			Constraints: []*validate.Constraint{
+			Rules: []*validate.Rule{
 				{Id: proto.String("foo"), Expression: proto.String("1.23")},
 			},
 		}

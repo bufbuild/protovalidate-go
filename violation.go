@@ -21,7 +21,7 @@ import (
 
 // Violation represents a single instance where a validation rule was not met.
 // It provides information about the field that caused the violation, the
-// specific unfulfilled constraint, and a human-readable error message.
+// specific unfulfilled rule, and a human-readable error message.
 type Violation struct {
 	// Proto contains the violation's proto.Message form.
 	Proto *validate.Violation
@@ -35,9 +35,9 @@ type Violation struct {
 	FieldDescriptor protoreflect.FieldDescriptor
 
 	// RuleValue contains the value of the rule that specified the failed
-	// constraint. Not all constraints have a value; only standard and
-	// predefined constraints have rule values. In violations caused by other
-	// kinds of constraints, like custom contraints, this will contain an
+	// rule. Not all rules have a value; only standard and
+	// predefined rules have rule values. In violations caused by other
+	// kinds of rules, like custom contraints, this will contain an
 	// invalid value.
 	RuleValue protoreflect.Value
 

@@ -134,7 +134,7 @@ func (set astSet) WithRuleValue(
 type compiledAST struct {
 	AST        *cel.Ast
 	Env        *cel.Env
-	Source     *validate.Constraint
+	Source     *validate.Rule
 	Path       []*validate.FieldPathElement
 	Value      protoreflect.Value
 	Descriptor protoreflect.FieldDescriptor
