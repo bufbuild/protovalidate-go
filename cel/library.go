@@ -81,8 +81,8 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 		cel.Function("getField",
 			cel.Overload(
 				"get_field_any_string",
-				[]*cel.Type{cel.AnyType, cel.StringType},
-				cel.AnyType,
+				[]*cel.Type{cel.DynType, cel.StringType},
+				cel.DynType,
 				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
 					message, ok := values[0].(traits.Indexer)
 					if !ok {
