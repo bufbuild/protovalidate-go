@@ -16,4 +16,3 @@ lint:
 breaking:
   use:
     - FILE
-
