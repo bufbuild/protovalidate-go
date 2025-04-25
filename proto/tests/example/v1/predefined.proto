@@ -49,7 +49,7 @@ extend buf.validate.BoolRules {
 
 
 message Employee {
-  optional string title = 1 [(buf.validate.field).string.(required_with_max) = 3];
+  optional string name = 1 [(buf.validate.field).string.(required_with_max) = 3];
 }
 
 extend buf.validate.StringRules {

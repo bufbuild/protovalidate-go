@@ -221,7 +221,7 @@ func (b0 Issue187_builder) Build() *Issue187 {
 
 type Employee struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Title       *string                `protobuf:"bytes,1,opt,name=title"`
+	xxx_hidden_Name        *string                `protobuf:"bytes,1,opt,name=name"`
 	XXX_raceDetectHookData protoimpl.RaceDetectHookData
 	XXX_presence           [1]uint32
 	unknownFields          protoimpl.UnknownFields
@@ -253,46 +253,46 @@ func (x *Employee) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Employee) GetTitle() string {
+func (x *Employee) GetName() string {
 	if x != nil {
-		if x.xxx_hidden_Title != nil {
-			return *x.xxx_hidden_Title
+		if x.xxx_hidden_Name != nil {
+			return *x.xxx_hidden_Name
 		}
 		return ""
 	}
 	return ""
 }
 
-func (x *Employee) SetTitle(v string) {
-	x.xxx_hidden_Title = &v
+func (x *Employee) SetName(v string) {
+	x.xxx_hidden_Name = &v
 	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
 }
 
-func (x *Employee) HasTitle() bool {
+func (x *Employee) HasName() bool {
 	if x == nil {
 		return false
 	}
 	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
 }
 
-func (x *Employee) ClearTitle() {
+func (x *Employee) ClearName() {
 	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Title = nil
+	x.xxx_hidden_Name = nil
 }
 
 type Employee_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Title *string
+	Name *string
 }
 
 func (b0 Employee_builder) Build() *Employee {
 	m0 := &Employee{}
 	b, x := &b0, m0
 	_, _ = b, x
-	if b.Title != nil {
+	if b.Name != nil {
 		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Title = b.Title
+		x.xxx_hidden_Name = b.Name
 	}
 	return m0
 }
@@ -353,9 +353,9 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\vfalse_field\x18\x01 \x01(\bB\b\xbaH\x05j\x03\xc0p\x00R\n" +
 	"falseField\x12'\n" +
 	"\n" +
-	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"-\n" +
-	"\bEmployee\x12!\n" +
-	"\x05title\x18\x01 \x01(\tB\v\xbaH\br\x06г\xae\xb1\x02\x03R\x05title:\xa6\x01\n" +
+	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"+\n" +
+	"\bEmployee\x12\x1f\n" +
+	"\x04name\x18\x01 \x01(\tB\v\xbaH\br\x06г\xae\xb1\x02\x03R\x04name:\xa6\x01\n" +
 	"\n" +
 	"abs_not_in\x12\x18.buf.validate.Int32Rules\x18\x88\x0e \x03(\x05Bm\xc2Hj\n" +
 	"h\n" +

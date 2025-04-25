@@ -525,7 +525,7 @@ func TestValidator_Validate_RulesWithExtensions(t *testing.T) {
 	val, err := New()
 	require.NoError(t, err)
 	msg := pb.Employee_builder{
-		Title: proto.String("janitor"),
+		Name: proto.String("homer"),
 	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)

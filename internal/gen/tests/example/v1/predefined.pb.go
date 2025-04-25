@@ -202,7 +202,7 @@ func (b0 Issue187_builder) Build() *Issue187 {
 
 type Employee struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
-	Title         *string                `protobuf:"bytes,1,opt,name=title" json:"title,omitempty"`
+	Name          *string                `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -232,39 +232,39 @@ func (x *Employee) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *Employee) GetTitle() string {
-	if x != nil && x.Title != nil {
-		return *x.Title
+func (x *Employee) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
-func (x *Employee) SetTitle(v string) {
-	x.Title = &v
+func (x *Employee) SetName(v string) {
+	x.Name = &v
 }
 
-func (x *Employee) HasTitle() bool {
+func (x *Employee) HasName() bool {
 	if x == nil {
 		return false
 	}
-	return x.Title != nil
+	return x.Name != nil
 }
 
-func (x *Employee) ClearTitle() {
-	x.Title = nil
+func (x *Employee) ClearName() {
+	x.Name = nil
 }
 
 type Employee_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Title *string
+	Name *string
 }
 
 func (b0 Employee_builder) Build() *Employee {
 	m0 := &Employee{}
 	b, x := &b0, m0
 	_, _ = b, x
-	x.Title = b.Title
+	x.Name = b.Name
 	return m0
 }
 
@@ -324,9 +324,9 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\vfalse_field\x18\x01 \x01(\bB\b\xbaH\x05j\x03\xc0p\x00R\n" +
 	"falseField\x12'\n" +
 	"\n" +
-	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"-\n" +
-	"\bEmployee\x12!\n" +
-	"\x05title\x18\x01 \x01(\tB\v\xbaH\br\x06г\xae\xb1\x02\x03R\x05title:\xa6\x01\n" +
+	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"+\n" +
+	"\bEmployee\x12\x1f\n" +
+	"\x04name\x18\x01 \x01(\tB\v\xbaH\br\x06г\xae\xb1\x02\x03R\x04name:\xa6\x01\n" +
 	"\n" +
 	"abs_not_in\x12\x18.buf.validate.Int32Rules\x18\x88\x0e \x03(\x05Bm\xc2Hj\n" +
 	"h\n" +
