@@ -43,7 +43,7 @@ extend buf.validate.Int32Rules {
 extend buf.validate.BoolRules {
   optional bool this_equals_rule = 1800 [(buf.validate.predefined).cel = {
     id: "bool.this_equals_rule"
-    expression: "this == rule ? '' : 'value must equal %s, but got %s'.format([rules.this_equals_rule, this])"
+    expression: "this == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])"
   }];
 }
 

@@ -359,10 +359,10 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\n" +
 	"abs_not_in\x12\x18.buf.validate.Int32Rules\x18\x88\x0e \x03(\x05Bm\xc2Hj\n" +
 	"h\n" +
-	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xbe\x01\n" +
-	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBz\xc2Hw\n" +
-	"u\n" +
-	"\x15bool.this_equals_rule\x1a\\this == rule ? '' : 'value must equal %s, but got %s'.format([rules.this_equals_rule, this])R\x0ethisEqualsRule:\xf0\x01\n" +
+	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xb1\x01\n" +
+	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBm\xc2Hj\n" +
+	"h\n" +
+	"\x15bool.this_equals_rule\x1aOthis == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])R\x0ethisEqualsRule:\xf0\x01\n" +
 	"\x11required_with_max\x12\x19.buf.validate.StringRules\x18\xba\xe6\x95& \x01(\x05B\xa5\x01\xc2H\xa1\x01\n" +
 	"\x9e\x01\n" +
 	"\x13string.required.max\x1a\x86\x01(this.size() > 0 && this.size() <= rule)? '': 'this is required and must be %s or fewer characters.'.format([rules.required_with_max])R\x0frequiredWithMaxB\xd7\x01\n" +
