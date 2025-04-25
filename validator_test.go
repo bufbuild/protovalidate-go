@@ -377,27 +377,26 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		require.NotErrorAs(t, err, &valErr)
 	})
 
-	// TODO (steve) - Failing on v0.11.0
-	// t.Run("FilterExcludeCompilationError", func(t *testing.T) {
-	// 	t.Parallel()
-	// 	val, err := New()
-	// 	require.NoError(t, err)
-	// 	msg := &pb.MixedValidInvalidRules{
-	// 		ValidStringRule:     "bar",
-	// 		StringFieldBoolRule: "foo",
-	// 	}
-	// 	err = val.Validate(msg, WithFilter(FilterFunc(
-	// 		func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
-	// 			return d == msg.ProtoReflect().Descriptor().Fields().Get(1)
-	// 		},
-	// 	)))
-	// 	require.Error(t, err)
-	// 	compErr := &CompilationError{}
-	// 	require.NotErrorAs(t, err, &compErr)
-	// 	valErr := &ValidationError{}
-	// 	require.ErrorAs(t, err, &valErr)
-	// 	require.Len(t, valErr.Violations, 1)
-	// })
+	t.Run("FilterExcludeCompilationError", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.MixedValidInvalidRules{
+			ValidStringRule:     "bar",
+			StringFieldBoolRule: "foo",
+		}
+		err = val.Validate(msg, WithFilter(FilterFunc(
+			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
+				return d == msg.ProtoReflect().Descriptor().Fields().Get(1)
+			},
+		)))
+		require.Error(t, err)
+		compErr := &CompilationError{}
+		require.NotErrorAs(t, err, &compErr)
+		valErr := &ValidationError{}
+		require.ErrorAs(t, err, &valErr)
+		require.Len(t, valErr.Violations, 1)
+	})
 }
 
 func TestValidator_ValidateCompilationError(t *testing.T) {
