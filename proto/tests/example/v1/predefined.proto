@@ -43,6 +43,21 @@ extend buf.validate.Int32Rules {
 extend buf.validate.BoolRules {
   optional bool this_equals_rule = 1800 [(buf.validate.predefined).cel = {
     id: "bool.this_equals_rule"
-    expression: "this == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])"
+    expression: "this == rule ? '' : 'value must equal %s, but got %s'.format([rules.this_equals_rule, this])"
   }];
+}
+
+
+message Employee {
+  optional string title = 1 [(buf.validate.field).string.(required_with_max) = 3];
+}
+
+extend buf.validate.StringRules {
+    optional int32 required_with_max = 80048954 [(buf.validate.predefined).cel = {
+        id: "string.required.max"
+        expression:
+        "(this.size() > 0 && this.size() <= rule)"
+        "? ''"
+        ": 'this is required and must be %s or fewer characters.'.format([rules.required_with_max])"
+    }];
 }

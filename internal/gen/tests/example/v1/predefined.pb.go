@@ -200,6 +200,74 @@ func (b0 Issue187_builder) Build() *Issue187 {
 	return m0
 }
 
+type Employee struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Title         *string                `protobuf:"bytes,1,opt,name=title" json:"title,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Employee) Reset() {
+	*x = Employee{}
+	mi := &file_tests_example_v1_predefined_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Employee) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Employee) ProtoMessage() {}
+
+func (x *Employee) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_predefined_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *Employee) GetTitle() string {
+	if x != nil && x.Title != nil {
+		return *x.Title
+	}
+	return ""
+}
+
+func (x *Employee) SetTitle(v string) {
+	x.Title = &v
+}
+
+func (x *Employee) HasTitle() bool {
+	if x == nil {
+		return false
+	}
+	return x.Title != nil
+}
+
+func (x *Employee) ClearTitle() {
+	x.Title = nil
+}
+
+type Employee_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Title *string
+}
+
+func (b0 Employee_builder) Build() *Employee {
+	m0 := &Employee{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Title = b.Title
+	return m0
+}
+
 var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*validate.Int32Rules)(nil),
@@ -217,6 +285,14 @@ var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 		Tag:           "varint,1800,opt,name=this_equals_rule",
 		Filename:      "tests/example/v1/predefined.proto",
 	},
+	{
+		ExtendedType:  (*validate.StringRules)(nil),
+		ExtensionType: (*int32)(nil),
+		Field:         80048954,
+		Name:          "tests.example.v1.required_with_max",
+		Tag:           "varint,80048954,opt,name=required_with_max",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
 }
 
 // Extension fields to validate.Int32Rules.
@@ -231,6 +307,12 @@ var (
 	E_ThisEqualsRule = &file_tests_example_v1_predefined_proto_extTypes[1]
 )
 
+// Extension fields to validate.StringRules.
+var (
+	// optional int32 required_with_max = 80048954;
+	E_RequiredWithMax = &file_tests_example_v1_predefined_proto_extTypes[2]
+)
+
 var File_tests_example_v1_predefined_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_predefined_proto_rawDesc = "" +
@@ -242,30 +324,38 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\vfalse_field\x18\x01 \x01(\bB\b\xbaH\x05j\x03\xc0p\x00R\n" +
 	"falseField\x12'\n" +
 	"\n" +
-	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField:\xa6\x01\n" +
+	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"-\n" +
+	"\bEmployee\x12!\n" +
+	"\x05title\x18\x01 \x01(\tB\v\xbaH\br\x06г\xae\xb1\x02\x03R\x05title:\xa6\x01\n" +
 	"\n" +
 	"abs_not_in\x12\x18.buf.validate.Int32Rules\x18\x88\x0e \x03(\x05Bm\xc2Hj\n" +
 	"h\n" +
-	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xb1\x01\n" +
-	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBm\xc2Hj\n" +
-	"h\n" +
-	"\x15bool.this_equals_rule\x1aOthis == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])R\x0ethisEqualsRuleB\xd7\x01\n" +
+	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xbe\x01\n" +
+	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBz\xc2Hw\n" +
+	"u\n" +
+	"\x15bool.this_equals_rule\x1a\\this == rule ? '' : 'value must equal %s, but got %s'.format([rules.this_equals_rule, this])R\x0ethisEqualsRule:\xf0\x01\n" +
+	"\x11required_with_max\x12\x19.buf.validate.StringRules\x18\xba\xe6\x95& \x01(\x05B\xa5\x01\xc2H\xa1\x01\n" +
+	"\x9e\x01\n" +
+	"\x13string.required.max\x1a\x86\x01(this.size() > 0 && this.size() <= rule)? '': 'this is required and must be %s or fewer characters.'.format([rules.required_with_max])R\x0frequiredWithMaxB\xd7\x01\n" +
 	"\x14com.tests.example.v1B\x0fPredefinedProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1"
 
-var file_tests_example_v1_predefined_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_tests_example_v1_predefined_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_tests_example_v1_predefined_proto_goTypes = []any{
-	(*Issue148)(nil),            // 0: tests.example.v1.Issue148
-	(*Issue187)(nil),            // 1: tests.example.v1.Issue187
-	(*validate.Int32Rules)(nil), // 2: buf.validate.Int32Rules
-	(*validate.BoolRules)(nil),  // 3: buf.validate.BoolRules
+	(*Issue148)(nil),             // 0: tests.example.v1.Issue148
+	(*Issue187)(nil),             // 1: tests.example.v1.Issue187
+	(*Employee)(nil),             // 2: tests.example.v1.Employee
+	(*validate.Int32Rules)(nil),  // 3: buf.validate.Int32Rules
+	(*validate.BoolRules)(nil),   // 4: buf.validate.BoolRules
+	(*validate.StringRules)(nil), // 5: buf.validate.StringRules
 }
 var file_tests_example_v1_predefined_proto_depIdxs = []int32{
-	2, // 0: tests.example.v1.abs_not_in:extendee -> buf.validate.Int32Rules
-	3, // 1: tests.example.v1.this_equals_rule:extendee -> buf.validate.BoolRules
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	0, // [0:2] is the sub-list for extension extendee
+	3, // 0: tests.example.v1.abs_not_in:extendee -> buf.validate.Int32Rules
+	4, // 1: tests.example.v1.this_equals_rule:extendee -> buf.validate.BoolRules
+	5, // 2: tests.example.v1.required_with_max:extendee -> buf.validate.StringRules
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	0, // [0:3] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
 }
 
@@ -280,8 +370,8 @@ func file_tests_example_v1_predefined_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_predefined_proto_rawDesc), len(file_tests_example_v1_predefined_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
-			NumExtensions: 2,
+			NumMessages:   3,
+			NumExtensions: 3,
 			NumServices:   0,
 		},
 		GoTypes:           file_tests_example_v1_predefined_proto_goTypes,
