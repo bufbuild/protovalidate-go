@@ -66,17 +66,16 @@ func TestCache_BuildStandardRules(t *testing.T) {
 			}}},
 			exCt: 1,
 		},
-		// TODO (steve) - Failing on v0.11.0
-		// {
-		// 	name: "list item rules",
-		// 	desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-		// 	cons: &validate.FieldRules{Type: &validate.FieldRules_Int64{Int64: &validate.Int64Rules{
-		// 		NotIn: []int64{123},
-		// 		Const: proto.Int64(456),
-		// 	}}},
-		// 	forItems: true,
-		// 	exCt:     2,
-		// },
+		{
+			name: "list item rules",
+			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
+			cons: &validate.FieldRules{Type: &validate.FieldRules_Int64{Int64: &validate.Int64Rules{
+				NotIn: []int64{123},
+				Const: proto.Int64(456),
+			}}},
+			forItems: true,
+			exCt:     2,
+		},
 		{
 			name: "map rules",
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
