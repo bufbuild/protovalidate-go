@@ -1033,7 +1033,7 @@ func isHostname(val string) bool {
 			return false
 		}
 		// for each character in part
-		for i := 0; i < len(part); i++ {
+		for i := range len(part) {
 			c := part[i]
 			// if the character is not a-z, A-Z, 0-9, or '-', it is invalid
 			if (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c < '0' || c > '9') && c != '-' {
@@ -1088,7 +1088,7 @@ func isPort(str string) bool {
 	if len(str) == 0 {
 		return false
 	}
-	for i := 0; i < len(str); i++ {
+	for i := range len(str) {
 		c := str[i]
 		if '0' <= c && c <= '9' {
 			continue

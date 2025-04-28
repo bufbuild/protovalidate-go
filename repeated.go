@@ -51,7 +51,7 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 	list := val.List()
 	var ok bool
 	var err error
-	for i := 0; i < list.Len(); i++ {
+	for i := range list.Len() {
 		itemErr := r.ItemRules.EvaluateField(msg, list.Get(i), cfg, true)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, &validate.FieldPathElement{
