@@ -104,10 +104,7 @@ func updateViolationPaths(err error, fieldSuffix *validate.FieldPathElement, rul
 				violation.Proto.Field.Elements = append(violation.Proto.Field.Elements, fieldSuffix)
 			}
 			if len(rulePrefix) != 0 {
-				violation.Proto.Rule.Elements = append(
-					append([]*validate.FieldPathElement{}, rulePrefix...),
-					violation.Proto.GetRule().GetElements()...,
-				)
+				violation.Proto.Rule.Elements = slices.Concat(rulePrefix, violation.Proto.GetRule().GetElements())
 			}
 		}
 	}

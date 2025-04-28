@@ -27,6 +27,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
+	"maps"
 )
 
 //nolint:gochecknoglobals
@@ -175,7 +176,7 @@ func (bldr *builder) processOneofRules(
 	_ messageCache,
 ) {
 	oneofs := desc.Oneofs()
-	for i := 0; i < oneofs.Len(); i++ {
+	for i := range oneofs.Len() {
 		oneofDesc := oneofs.Get(i)
 		oneofRules := resolve.OneofRules(oneofDesc)
 		oneofEval := oneof{
@@ -193,7 +194,7 @@ func (bldr *builder) processFields(
 	cache messageCache,
 ) {
 	fields := desc.Fields()
-	for i := 0; i < fields.Len(); i++ {
+	for i := range fields.Len() {
 		fdesc := fields.Get(i)
 		fieldRules := resolve.FieldRules(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldRules, cache)
@@ -532,9 +533,7 @@ func (c messageCache) Clone() messageCache {
 	return newCache
 }
 func (c messageCache) SyncTo(other messageCache) {
-	for k, v := range c {
-		other[k] = v
-	}
+	maps.Copy(other, c)
 }
 
 // isMessageField returns true if the field descriptor fdesc describes a field

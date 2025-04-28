@@ -60,7 +60,7 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 	}
 	registry := &protoregistry.Types{}
 	files.RangeFiles(func(file protoreflect.FileDescriptor) bool {
-		for i := 0; i < file.Extensions().Len(); i++ {
+		for i := range file.Extensions().Len() {
 			if err = registry.RegisterExtension(
 				dynamicpb.NewExtensionType(file.Extensions().Get(i)),
 			); err != nil {

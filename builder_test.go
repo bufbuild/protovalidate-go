@@ -37,7 +37,7 @@ func TestBuildCache(t *testing.T) {
 		env, false, protoregistry.GlobalTypes, false,
 	)
 	wg := sync.WaitGroup{}
-	for i := 0; i < 100; i++ {
+	for i := range 100 {
 		wg.Add(1)
 		dynamicMsg := dynamicProto{&pb.Person{
 			Id:    1234,
