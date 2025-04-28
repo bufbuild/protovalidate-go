@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
+	"maps"
 	"sync"
 	"sync/atomic"
 
@@ -27,7 +28,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/dynamicpb"
-	"maps"
 )
 
 //nolint:gochecknoglobals

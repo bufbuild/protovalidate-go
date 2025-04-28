@@ -15,9 +15,10 @@
 package protovalidate
 
 import (
+	"slices"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"slices"
 )
 
 // base is a common struct used by all field evaluators. It holds
