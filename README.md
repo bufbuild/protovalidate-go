@@ -55,7 +55,7 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 To install the package, use `go get` from within your Go module:
 
 ```shell
-go get github.com/bufbuild/protovalidate-go
+go get buf.build/go/protovalidate
 ```
 
 ## Documentation
