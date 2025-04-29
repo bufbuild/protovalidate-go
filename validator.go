@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"sync"
 
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"

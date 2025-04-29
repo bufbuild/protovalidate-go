@@ -8,7 +8,7 @@ managed:
       module: buf.build/bufbuild/protovalidate
   override:
     - file_option: go_package_prefix
-      value: github.com/bufbuild/protovalidate-go/internal/gen
+      value: buf.build/go/protovalidate/internal/gen
 plugins:
   - remote: buf.build/protocolbuffers/go:v1.36.6
     out: internal/gen

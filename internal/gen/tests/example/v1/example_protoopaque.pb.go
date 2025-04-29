@@ -230,8 +230,8 @@ const file_tests_example_v1_example_proto_rawDesc = "" +
 	"\x04home\x18\x04 \x01(\v2\x1d.tests.example.v1.CoordinatesR\x04home\"c\n" +
 	"\vCoordinates\x12)\n" +
 	"\x03lat\x18\x01 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x80V@)\x00\x00\x00\x00\x00\x80V\xc0R\x03lat\x12)\n" +
-	"\x03lng\x18\x02 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x80f@)\x00\x00\x00\x00\x00\x80f\xc0R\x03lngB\xd4\x01\n" +
-	"\x14com.tests.example.v1B\fExampleProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x03lng\x18\x02 \x01(\x01B\x17\xbaH\x14\x12\x12\x19\x00\x00\x00\x00\x00\x80f@)\x00\x00\x00\x00\x00\x80f\xc0R\x03lngB\xca\x01\n" +
+	"\x14com.tests.example.v1B\fExampleProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_example_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tests_example_v1_example_proto_goTypes = []any{

@@ -191,8 +191,8 @@ const file_tests_example_v1_compile_proto_rawDesc = "" +
 	"\x16string_field_bool_rule\x18\x01 \x01(\tB\a\xbaH\x04j\x02\b\x01R\x13stringFieldBoolRule\x126\n" +
 	"\x11valid_string_rule\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\n" +
-	"\x03fooR\x0fvalidStringRuleB\xd4\x01\n" +
-	"\x14com.tests.example.v1B\fCompileProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x03fooR\x0fvalidStringRuleB\xca\x01\n" +
+	"\x14com.tests.example.v1B\fCompileProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_compile_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_tests_example_v1_compile_proto_goTypes = []any{

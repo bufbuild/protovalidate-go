@@ -1351,9 +1351,9 @@ const file_buf_validate_conformance_cases_bytes_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x01(\fB\n" +
 	"\xbaH\a\xd8\x01\x01z\x02`\x01R\x03val\"*\n" +
 	"\fBytesExample\x12\x1a\n" +
-	"\x03val\x18\x01 \x01(\fB\b\xbaH\x05z\x03r\x01\x99R\x03valB\x9e\x02\n" +
+	"\x03val\x18\x01 \x01(\fB\b\xbaH\x05z\x03r\x01\x99R\x03valB\x94\x02\n" +
 	"\"com.buf.validate.conformance.casesB\n" +
-	"BytesProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"BytesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_bytes_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
 var file_buf_validate_conformance_cases_bytes_proto_goTypes = []any{

@@ -1717,8 +1717,8 @@ const file_tests_example_v1_validations_proto_rawDesc = "" +
 	"\x02f1\x18\x01 \x01(\v2\x14.tests.example.v1.F1R\x02f1\x12\x1b\n" +
 	"\x04name\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\x04name\"F\n" +
 	"\bIssue211\x12:\n" +
-	"\x05value\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\b\xbaH\x05\xb2\x01\x02@\x01R\x05valueB\xd8\x01\n" +
-	"\x14com.tests.example.v1B\x10ValidationsProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x05value\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\b\xbaH\x05\xb2\x01\x02@\x01R\x05valueB\xce\x01\n" +
+	"\x14com.tests.example.v1B\x10ValidationsProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_validations_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_tests_example_v1_validations_proto_goTypes = []any{

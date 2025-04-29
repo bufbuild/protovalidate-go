@@ -1310,8 +1310,8 @@ const file_tests_example_v1_legacy_proto_rawDesc = "" +
 	"\x11LegacyMixedFields\x12\x1c\n" +
 	"\x01x\x18\x01 \x01(\x05B\x0e\xfaB\x04\x1a\x02 \x00\xbaH\x04\x1a\x02\x10dR\x01x\",\n" +
 	"\x11LegacyIgnoreEmpty\x12\x17\n" +
-	"\x01x\x18\x01 \x01(\x05B\t\xfaB\x06\x1a\x04 {@\x01R\x01xB\xd3\x01\n" +
-	"\x14com.tests.example.v1B\vLegacyProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x01x\x18\x01 \x01(\x05B\t\xfaB\x06\x1a\x04 {@\x01R\x01xB\xc9\x01\n" +
+	"\x14com.tests.example.v1B\vLegacyProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_legacy_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_tests_example_v1_legacy_proto_goTypes = []any{

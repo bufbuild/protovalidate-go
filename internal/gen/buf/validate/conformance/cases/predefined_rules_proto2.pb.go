@@ -3150,8 +3150,8 @@ const file_buf_validate_conformance_cases_predefined_rules_proto2_proto_rawDesc 
 	"\x18duration.too_long.proto2\x12(duration can't be longer than 10 seconds\x1a\x17this <= duration('10s')R\x15durationTooLongProto2:\xc8\x01\n" +
 	"\x19timestamp_in_range_proto2\x12\x1c.buf.validate.TimestampRules\x18\x89\t \x01(\bBn\xc2Hk\n" +
 	"i\n" +
-	"\x1btimestamp.time_range.proto2\x12\x16timestamp out of range\x1a2int(this) >= 1049587200 && int(this) <= 1080432000R\x16timestampInRangeProto2B\xae\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x1aPredefinedRulesProto2ProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Cases"
+	"\x1btimestamp.time_range.proto2\x12\x16timestamp out of range\x1a2int(this) >= 1049587200 && int(this) <= 1080432000R\x16timestampInRangeProto2B\xa4\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x1aPredefinedRulesProto2ProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Cases"
 
 var file_buf_validate_conformance_cases_predefined_rules_proto2_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_predefined_rules_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 40)

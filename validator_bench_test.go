@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"testing"
 
-	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

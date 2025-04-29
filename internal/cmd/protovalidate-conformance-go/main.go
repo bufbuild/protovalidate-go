@@ -21,8 +21,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bufbuild/protovalidate-go"
-	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/harness"
+	"buf.build/go/protovalidate"
+	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/harness"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"

@@ -41,8 +41,8 @@ var File_buf_validate_conformance_cases_filename_with_dash_proto protoreflect.Fi
 
 const file_buf_validate_conformance_cases_filename_with_dash_proto_rawDesc = "" +
 	"\n" +
-	"7buf/validate/conformance/cases/filename-with-dash.proto\x12\x1ebuf.validate.conformance.cases\x1a\x1bbuf/validate/validate.protoB\xa9\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x15FilenameWithDashProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"7buf/validate/conformance/cases/filename-with-dash.proto\x12\x1ebuf.validate.conformance.cases\x1a\x1bbuf/validate/validate.protoB\x9f\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x15FilenameWithDashProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_filename_with_dash_proto_goTypes = []any{}
 var file_buf_validate_conformance_cases_filename_with_dash_proto_depIdxs = []int32{
