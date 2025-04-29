@@ -1,7 +1,3 @@
-# Notice
-
-**The import path for protovalidate-go has changed!** Please change your import path(s) from `github.com/bufbuild/protovalidate-go` to `buf.build/go/protovalidate`.
-
 [![The Buf logo](.github/buf-logo.svg)][buf] 
 
 # protovalidate-go
