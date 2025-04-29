@@ -407,7 +407,7 @@ func (l library) uniqueScalar(list traits.Lister) ref.Val {
 		return types.Bool(true)
 	}
 	exist := make(map[ref.Val]struct{}, size)
-	for i := int64(0); i < size; i++ {
+	for i := range size {
 		val := list.Get(types.Int(i))
 		if _, ok := exist[val]; ok {
 			return types.Bool(false)
@@ -430,7 +430,7 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 		return types.Bool(true)
 	}
 	exist := make(map[any]struct{}, size)
-	for i := int64(0); i < size; i++ {
+	for i := range size {
 		val := list.Get(types.Int(i)).Value()
 		if b, ok := val.([]uint8); ok {
 			val = string(b)
