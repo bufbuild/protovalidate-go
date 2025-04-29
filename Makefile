@@ -46,8 +46,8 @@ lint-go: $(BIN)/golangci-lint
 lint-proto: $(BIN)/buf
 	$(BIN)/buf lint
 
-.PHONY: lintfix
-lintfix:
+.PHONY: lint-fix
+lint-fix:
 	$(BIN)/golangci-lint run --fix --modules-download-mode=readonly --timeout=3m0s ./...
 	$(BIN)/golangci-lint fmt
 
