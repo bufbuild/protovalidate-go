@@ -945,8 +945,8 @@ const file_buf_validate_conformance_cases_oneofs_proto_rawDesc = "" +
 	"\x01a\x18\x01 \x01(\tB\x06\xbaH\x03\xc8\x01\x01H\x00R\x01a\x12\x0e\n" +
 	"\x01b\x18\x02 \x01(\tH\x00R\x01bB\n" +
 	"\n" +
-	"\x01o\x12\x05\xbaH\x02\b\x01B\x9f\x02\n" +
-	"\"com.buf.validate.conformance.casesB\vOneofsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x01o\x12\x05\xbaH\x02\b\x01B\x95\x02\n" +
+	"\"com.buf.validate.conformance.casesB\vOneofsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_oneofs_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_buf_validate_conformance_cases_oneofs_proto_goTypes = []any{

@@ -146,8 +146,8 @@ const file_buf_validate_conformance_cases_yet_another_package_embed2_proto_rawDe
 	"\n" +
 	"Enumerated\x12\x1a\n" +
 	"\x16ENUMERATED_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10ENUMERATED_VALUE\x10\x01B\x91\x03\n" +
-	"6com.buf.validate.conformance.cases.yet_another_packageB\vEmbed2ProtoP\x01Zdgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/yet_another_package\xa2\x02\x05BVCCY\xaa\x020Buf.Validate.Conformance.Cases.YetAnotherPackage\xca\x020Buf\\Validate\\Conformance\\Cases\\YetAnotherPackage\xe2\x02<Buf\\Validate\\Conformance\\Cases\\YetAnotherPackage\\GPBMetadata\xea\x024Buf::Validate::Conformance::Cases::YetAnotherPackageb\x06proto3"
+	"\x10ENUMERATED_VALUE\x10\x01B\x87\x03\n" +
+	"6com.buf.validate.conformance.cases.yet_another_packageB\vEmbed2ProtoP\x01ZZbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/yet_another_package\xa2\x02\x05BVCCY\xaa\x020Buf.Validate.Conformance.Cases.YetAnotherPackage\xca\x020Buf\\Validate\\Conformance\\Cases\\YetAnotherPackage\xe2\x02<Buf\\Validate\\Conformance\\Cases\\YetAnotherPackage\\GPBMetadata\xea\x024Buf::Validate::Conformance::Cases::YetAnotherPackageb\x06proto3"
 
 var file_buf_validate_conformance_cases_yet_another_package_embed2_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_yet_another_package_embed2_proto_msgTypes = make([]protoimpl.MessageInfo, 1)

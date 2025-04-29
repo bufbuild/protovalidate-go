@@ -21,7 +21,7 @@ import (
 	"os"
 	"text/template"
 
-	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 

@@ -1,15 +1,11 @@
-# Notice
-
-**The import path for protovalidate-go has changed!** Please change your import path(s) from `github.com/bufbuild/protovalidate-go` to `buf.build/go/protovalidate`.
-
 [![The Buf logo](.github/buf-logo.svg)][buf] 
 
 # protovalidate-go
 
 [![CI](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml)
 [![Conformance](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml)
-[![Report Card](https://goreportcard.com/badge/github.com/bufbuild/protovalidate-go)](https://goreportcard.com/report/github.com/bufbuild/protovalidate-go)
-[![GoDoc](https://pkg.go.dev/badge/github.com/bufbuild/protovalidate-go.svg)](https://pkg.go.dev/github.com/bufbuild/protovalidate-go)
+[![Report Card](https://goreportcard.com/badge/buf.build/go/protovalidate)](https://goreportcard.com/report/buf.build/go/protovalidate)
+[![GoDoc](https://pkg.go.dev/badge/buf.build/go/protovalidate.svg)](https://pkg.go.dev/buf.build/go/protovalidate)
 [![BSR](https://img.shields.io/badge/BSR-Module-0C65EC)][buf-mod]
 
 [Protovalidate][protovalidate] provides standard annotations to validate common rules on messages and fields, as well as the ability to use [CEL][cel] to write custom rules. It's the next generation of [protoc-gen-validate][protoc-gen-validate], the only widely used validation library for Protobuf.
@@ -127,7 +123,7 @@ Offered under the [Apache 2 license][license].
 [grpc-python]: https://buf.build/docs/protovalidate/quickstart/grpc-python/
 [migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
 [conformance-executable]: ./internal/cmd/protovalidate-conformance-go/README.md
-[pkg-go]: https://pkg.go.dev/github.com/bufbuild/protovalidate-go
+[pkg-go]: https://pkg.go.dev/buf.build/go/protovalidate
 
 [validate-proto]: https://buf.build/bufbuild/protovalidate/docs/main:buf.validate
 [conformance]: https://github.com/bufbuild/protovalidate/blob/main/docs/conformance.md

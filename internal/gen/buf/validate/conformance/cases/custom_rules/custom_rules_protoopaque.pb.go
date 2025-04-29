@@ -2509,8 +2509,8 @@ const file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDes
 	"\x01a\x18\x01 \x01(\x05R\x01a**\n" +
 	"\x04Enum\x12\x14\n" +
 	"\x10ENUM_UNSPECIFIED\x10\x00\x12\f\n" +
-	"\bENUM_ONE\x10\x01B\xf0\x02\n" +
-	"/com.buf.validate.conformance.cases.custom_rulesB\x10CustomRulesProtoP\x01Z]github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/custom_rules\xa2\x02\x05BVCCC\xaa\x02*Buf.Validate.Conformance.Cases.CustomRules\xca\x02*Buf\\Validate\\Conformance\\Cases\\CustomRules\xe2\x026Buf\\Validate\\Conformance\\Cases\\CustomRules\\GPBMetadata\xea\x02.Buf::Validate::Conformance::Cases::CustomRulesb\x06proto3"
+	"\bENUM_ONE\x10\x01B\xe6\x02\n" +
+	"/com.buf.validate.conformance.cases.custom_rulesB\x10CustomRulesProtoP\x01ZSbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/custom_rules\xa2\x02\x05BVCCC\xaa\x02*Buf.Validate.Conformance.Cases.CustomRules\xca\x02*Buf\\Validate\\Conformance\\Cases\\CustomRules\xe2\x026Buf\\Validate\\Conformance\\Cases\\CustomRules\\GPBMetadata\xea\x02.Buf::Validate::Conformance::Cases::CustomRulesb\x06proto3"
 
 var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes = make([]protoimpl.MessageInfo, 49)

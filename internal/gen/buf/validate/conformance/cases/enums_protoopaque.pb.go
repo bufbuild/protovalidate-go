@@ -24,8 +24,8 @@ package cases
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	other_package "github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/other_package"
-	yet_another_package "github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/yet_another_package"
+	other_package "buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/other_package"
+	yet_another_package "buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/yet_another_package"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -1380,9 +1380,9 @@ const file_buf_validate_conformance_cases_enums_proto_rawDesc = "" +
 	"\x11TEST_ENUM_ALIAS_C\x10\x03\x12\x19\n" +
 	"\x15TEST_ENUM_ALIAS_ALPHA\x10\x01\x12\x18\n" +
 	"\x14TEST_ENUM_ALIAS_BETA\x10\x02\x12\x19\n" +
-	"\x15TEST_ENUM_ALIAS_GAMMA\x10\x03\x1a\x02\x10\x01B\x9e\x02\n" +
+	"\x15TEST_ENUM_ALIAS_GAMMA\x10\x03\x1a\x02\x10\x01B\x94\x02\n" +
 	"\"com.buf.validate.conformance.casesB\n" +
-	"EnumsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"EnumsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_enums_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_buf_validate_conformance_cases_enums_proto_msgTypes = make([]protoimpl.MessageInfo, 20)

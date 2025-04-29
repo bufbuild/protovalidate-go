@@ -1377,8 +1377,8 @@ const file_buf_validate_conformance_cases_wkt_timestamp_proto_rawDesc = "" +
 	"\xb2\x01\aJ\x03\b\x90\x1c@\x01R\x03val\"L\n" +
 	"\x10TimestampExample\x128\n" +
 	"\x03val\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampB\n" +
-	"\xbaH\a\xb2\x01\x04R\x02\b\x03R\x03valB\xa5\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x11WktTimestampProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\xbaH\a\xb2\x01\x04R\x02\b\x03R\x03valB\x9b\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x11WktTimestampProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_wkt_timestamp_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_buf_validate_conformance_cases_wkt_timestamp_proto_goTypes = []any{

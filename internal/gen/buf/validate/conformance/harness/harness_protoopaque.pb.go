@@ -505,8 +505,8 @@ const file_buf_validate_conformance_harness_harness_proto_rawDesc = "" +
 	"\x11compilation_error\x18\x03 \x01(\tH\x00R\x10compilationError\x12%\n" +
 	"\rruntime_error\x18\x04 \x01(\tH\x00R\fruntimeError\x12+\n" +
 	"\x10unexpected_error\x18\x05 \x01(\tH\x00R\x0funexpectedErrorB\b\n" +
-	"\x06resultB\xac\x02\n" +
-	"$com.buf.validate.conformance.harnessB\fHarnessProtoP\x01ZRgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/harness\xa2\x02\x04BVCH\xaa\x02 Buf.Validate.Conformance.Harness\xca\x02 Buf\\Validate\\Conformance\\Harness\xe2\x02,Buf\\Validate\\Conformance\\Harness\\GPBMetadata\xea\x02#Buf::Validate::Conformance::Harnessb\x06proto3"
+	"\x06resultB\xa2\x02\n" +
+	"$com.buf.validate.conformance.harnessB\fHarnessProtoP\x01ZHbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/harness\xa2\x02\x04BVCH\xaa\x02 Buf.Validate.Conformance.Harness\xca\x02 Buf\\Validate\\Conformance\\Harness\xe2\x02,Buf\\Validate\\Conformance\\Harness\\GPBMetadata\xea\x02#Buf::Validate::Conformance::Harnessb\x06proto3"
 
 var file_buf_validate_conformance_harness_harness_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_buf_validate_conformance_harness_harness_proto_goTypes = []any{

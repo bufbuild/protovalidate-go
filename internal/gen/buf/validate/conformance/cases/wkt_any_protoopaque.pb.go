@@ -322,8 +322,8 @@ const file_buf_validate_conformance_cases_wkt_any_proto_rawDesc = "" +
 	"\x05AnyIn\x12\\\n" +
 	"\x03val\x18\x01 \x01(\v2\x14.google.protobuf.AnyB4\xbaH1\xa2\x01.\x12,type.googleapis.com/google.protobuf.DurationR\x03val\"i\n" +
 	"\bAnyNotIn\x12]\n" +
-	"\x03val\x18\x01 \x01(\v2\x14.google.protobuf.AnyB5\xbaH2\xa2\x01/\x1a-type.googleapis.com/google.protobuf.TimestampR\x03valB\x9f\x02\n" +
-	"\"com.buf.validate.conformance.casesB\vWktAnyProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x03val\x18\x01 \x01(\v2\x14.google.protobuf.AnyB5\xbaH2\xa2\x01/\x1a-type.googleapis.com/google.protobuf.TimestampR\x03valB\x95\x02\n" +
+	"\"com.buf.validate.conformance.casesB\vWktAnyProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_wkt_any_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_buf_validate_conformance_cases_wkt_any_proto_goTypes = []any{

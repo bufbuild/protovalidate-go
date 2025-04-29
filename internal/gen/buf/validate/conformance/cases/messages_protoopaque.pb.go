@@ -24,7 +24,7 @@ package cases
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	other_package "github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/other_package"
+	other_package "buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/other_package"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -827,8 +827,8 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"\x14MessageRequiredOneof\x12C\n" +
 	"\x03val\x18\x01 \x01(\v2'.buf.validate.conformance.cases.TestMsgB\x06\xbaH\x03\xc8\x01\x01H\x00R\x03valB\f\n" +
 	"\x03one\x12\x05\xbaH\x02\b\x01\"\x15\n" +
-	"\x13MessageWith3dInsideB\xa1\x02\n" +
-	"\"com.buf.validate.conformance.casesB\rMessagesProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x13MessageWith3dInsideB\x97\x02\n" +
+	"\"com.buf.validate.conformance.casesB\rMessagesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{

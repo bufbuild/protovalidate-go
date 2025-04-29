@@ -885,8 +885,8 @@ const file_buf_validate_conformance_cases_maps_proto_rawDesc = "" +
 	"\n" +
 	"ThirdEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01B\x9d\x02\n" +
-	"\"com.buf.validate.conformance.casesB\tMapsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01B\x93\x02\n" +
+	"\"com.buf.validate.conformance.casesB\tMapsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_maps_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_buf_validate_conformance_cases_maps_proto_goTypes = []any{

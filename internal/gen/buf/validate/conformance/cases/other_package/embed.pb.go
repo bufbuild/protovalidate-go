@@ -234,9 +234,9 @@ const file_buf_validate_conformance_cases_other_package_embed_proto_rawDesc = ""
 	"\n" +
 	"Enumerated\x12\x1a\n" +
 	"\x16ENUMERATED_UNSPECIFIED\x10\x00\x12\x14\n" +
-	"\x10ENUMERATED_VALUE\x10\x01B\xf0\x02\n" +
+	"\x10ENUMERATED_VALUE\x10\x01B\xe6\x02\n" +
 	"0com.buf.validate.conformance.cases.other_packageB\n" +
-	"EmbedProtoP\x01Z^github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/other_package\xa2\x02\x05BVCCO\xaa\x02+Buf.Validate.Conformance.Cases.OtherPackage\xca\x02+Buf\\Validate\\Conformance\\Cases\\OtherPackage\xe2\x027Buf\\Validate\\Conformance\\Cases\\OtherPackage\\GPBMetadata\xea\x02/Buf::Validate::Conformance::Cases::OtherPackageb\x06proto3"
+	"EmbedProtoP\x01ZTbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/other_package\xa2\x02\x05BVCCO\xaa\x02+Buf.Validate.Conformance.Cases.OtherPackage\xca\x02+Buf\\Validate\\Conformance\\Cases\\OtherPackage\xe2\x027Buf\\Validate\\Conformance\\Cases\\OtherPackage\\GPBMetadata\xea\x02/Buf::Validate::Conformance::Cases::OtherPackageb\x06proto3"
 
 var file_buf_validate_conformance_cases_other_package_embed_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_buf_validate_conformance_cases_other_package_embed_proto_msgTypes = make([]protoimpl.MessageInfo, 2)

@@ -3729,8 +3729,8 @@ const file_buf_validate_conformance_cases_strings_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x01(\tBt\xbaHq\xba\x01n\n" +
 	"\"string.host_and_port.optional_port\x12-value must be a host and (optional) port pair\x1a\x19this.isHostAndPort(false)R\x03val\".\n" +
 	"\rStringExample\x12\x1d\n" +
-	"\x03val\x18\x01 \x01(\tB\v\xbaH\br\x06\x92\x02\x03fooR\x03valB\xa0\x02\n" +
-	"\"com.buf.validate.conformance.casesB\fStringsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x03val\x18\x01 \x01(\tB\v\xbaH\br\x06\x92\x02\x03fooR\x03valB\x96\x02\n" +
+	"\"com.buf.validate.conformance.casesB\fStringsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_strings_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
 var file_buf_validate_conformance_cases_strings_proto_goTypes = []any{

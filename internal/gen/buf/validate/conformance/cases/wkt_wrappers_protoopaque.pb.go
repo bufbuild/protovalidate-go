@@ -1031,8 +1031,8 @@ const file_buf_validate_conformance_cases_wkt_wrappers_proto_rawDesc = "" +
 	"\x14WrapperRequiredFloat\x12<\n" +
 	"\x03val\x18\x01 \x01(\v2\x1b.google.protobuf.FloatValueB\r\xbaH\n" +
 	"\xc8\x01\x01\n" +
-	"\x05%\x00\x00\x00\x00R\x03valB\xa4\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x10WktWrappersProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x05%\x00\x00\x00\x00R\x03valB\x9a\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x10WktWrappersProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_wkt_wrappers_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_buf_validate_conformance_cases_wkt_wrappers_proto_goTypes = []any{

@@ -19,7 +19,7 @@ import (
 	"slices"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"

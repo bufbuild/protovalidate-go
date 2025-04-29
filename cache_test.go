@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
+	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
