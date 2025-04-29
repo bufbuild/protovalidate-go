@@ -3387,8 +3387,8 @@ const file_buf_validate_conformance_cases_predefined_rules_proto_editions_proto_
 	"\x1eduration.too_long.edition_2023\x12(duration can't be longer than 10 seconds\x1a\x17this <= duration('10s')R\x1adurationTooLongEdition2023:\xd9\x01\n" +
 	"\x1ftimestamp_in_range_edition_2023\x12\x1c.buf.validate.TimestampRules\x18\x8a\t \x01(\bBt\xc2Hq\n" +
 	"o\n" +
-	"!timestamp.time_range.edition_2023\x12\x16timestamp out of range\x1a2int(this) >= 1049587200 && int(this) <= 1080432000R\x1btimestampInRangeEdition2023B\xb5\x02\n" +
-	"\"com.buf.validate.conformance.casesB!PredefinedRulesProtoEditionsProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\beditionsp\xe8\a"
+	"!timestamp.time_range.edition_2023\x12\x16timestamp out of range\x1a2int(this) >= 1049587200 && int(this) <= 1080432000R\x1btimestampInRangeEdition2023B\xab\x02\n" +
+	"\"com.buf.validate.conformance.casesB!PredefinedRulesProtoEditionsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\beditionsp\xe8\a"
 
 var file_buf_validate_conformance_cases_predefined_rules_proto_editions_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_predefined_rules_proto_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 42)

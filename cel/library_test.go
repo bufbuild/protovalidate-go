@@ -17,7 +17,7 @@ package cel
 import (
 	"testing"
 
-	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
+	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
 	"github.com/google/cel-go/common/types/ref"

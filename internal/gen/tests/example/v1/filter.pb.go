@@ -471,8 +471,8 @@ const file_tests_example_v1_filter_proto_rawDesc = "" +
 	"\rMapFieldEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x124\n" +
 	"\x05value\x18\x02 \x01(\v2\x1e.tests.example.v1.AllRuleTypesR\x05value:\x028\x01B\x17\n" +
-	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01B\xd3\x01\n" +
-	"\x14com.tests.example.v1B\vFilterProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01B\xc9\x01\n" +
+	"\x14com.tests.example.v1B\vFilterProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_filter_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tests_example_v1_filter_proto_goTypes = []any{

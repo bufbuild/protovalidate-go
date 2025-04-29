@@ -24,7 +24,7 @@ package cases
 
 import (
 	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	other_package "github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/other_package"
+	other_package "buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/other_package"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -1762,8 +1762,8 @@ const file_buf_validate_conformance_cases_repeated_proto_rawDesc = "" +
 	"\x06AnEnum\x12\x17\n" +
 	"\x13AN_ENUM_UNSPECIFIED\x10\x00\x12\r\n" +
 	"\tAN_ENUM_X\x10\x01\x12\r\n" +
-	"\tAN_ENUM_Y\x10\x02B\xa1\x02\n" +
-	"\"com.buf.validate.conformance.casesB\rRepeatedProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\tAN_ENUM_Y\x10\x02B\x97\x02\n" +
+	"\"com.buf.validate.conformance.casesB\rRepeatedProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_repeated_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_buf_validate_conformance_cases_repeated_proto_msgTypes = make([]protoimpl.MessageInfo, 26)

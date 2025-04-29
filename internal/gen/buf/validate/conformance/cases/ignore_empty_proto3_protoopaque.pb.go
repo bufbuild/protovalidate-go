@@ -680,8 +680,8 @@ const file_buf_validate_conformance_cases_ignore_empty_proto3_proto_rawDesc = ""
 	"\x03val\x18\x01 \x03(\v2<.buf.validate.conformance.cases.IgnoreEmptyMapPairs.ValEntryB\x18\xbaH\x15\x9a\x01\x12\"\a\xd8\x01\x01r\x02\x10\x03*\a\xd8\x01\x01\x1a\x02 \x00R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01B\xaa\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x16IgnoreEmptyProto3ProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01B\xa0\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x16IgnoreEmptyProto3ProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_ignore_empty_proto3_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_buf_validate_conformance_cases_ignore_empty_proto3_proto_goTypes = []any{

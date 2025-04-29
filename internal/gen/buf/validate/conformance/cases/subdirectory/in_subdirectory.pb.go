@@ -41,8 +41,8 @@ var File_buf_validate_conformance_cases_subdirectory_in_subdirectory_proto proto
 
 const file_buf_validate_conformance_cases_subdirectory_in_subdirectory_proto_rawDesc = "" +
 	"\n" +
-	"Abuf/validate/conformance/cases/subdirectory/in_subdirectory.proto\x12+buf.validate.conformance.cases.subdirectory\x1a\x1bbuf/validate/validate.protoB\xf7\x02\n" +
-	"/com.buf.validate.conformance.cases.subdirectoryB\x13InSubdirectoryProtoP\x01Z]github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases/subdirectory\xa2\x02\x05BVCCS\xaa\x02+Buf.Validate.Conformance.Cases.Subdirectory\xca\x02+Buf\\Validate\\Conformance\\Cases\\Subdirectory\xe2\x027Buf\\Validate\\Conformance\\Cases\\Subdirectory\\GPBMetadata\xea\x02/Buf::Validate::Conformance::Cases::Subdirectoryb\x06proto3"
+	"Abuf/validate/conformance/cases/subdirectory/in_subdirectory.proto\x12+buf.validate.conformance.cases.subdirectory\x1a\x1bbuf/validate/validate.protoB\xed\x02\n" +
+	"/com.buf.validate.conformance.cases.subdirectoryB\x13InSubdirectoryProtoP\x01ZSbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/subdirectory\xa2\x02\x05BVCCS\xaa\x02+Buf.Validate.Conformance.Cases.Subdirectory\xca\x02+Buf\\Validate\\Conformance\\Cases\\Subdirectory\xe2\x027Buf\\Validate\\Conformance\\Cases\\Subdirectory\\GPBMetadata\xea\x02/Buf::Validate::Conformance::Cases::Subdirectoryb\x06proto3"
 
 var file_buf_validate_conformance_cases_subdirectory_in_subdirectory_proto_goTypes = []any{}
 var file_buf_validate_conformance_cases_subdirectory_in_subdirectory_proto_depIdxs = []int32{

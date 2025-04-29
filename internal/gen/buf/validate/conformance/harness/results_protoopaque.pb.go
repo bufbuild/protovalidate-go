@@ -636,8 +636,8 @@ const file_buf_validate_conformance_harness_results_proto_rawDesc = "" +
 	"\x06wanted\x18\x03 \x01(\v2,.buf.validate.conformance.harness.TestResultR\x06wanted\x12>\n" +
 	"\x03got\x18\x04 \x01(\v2,.buf.validate.conformance.harness.TestResultR\x03got\x12*\n" +
 	"\x05input\x18\x05 \x01(\v2\x14.google.protobuf.AnyR\x05input\x12)\n" +
-	"\x10expected_failure\x18\x06 \x01(\bR\x0fexpectedFailureB\xac\x02\n" +
-	"$com.buf.validate.conformance.harnessB\fResultsProtoP\x01ZRgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/harness\xa2\x02\x04BVCH\xaa\x02 Buf.Validate.Conformance.Harness\xca\x02 Buf\\Validate\\Conformance\\Harness\xe2\x02,Buf\\Validate\\Conformance\\Harness\\GPBMetadata\xea\x02#Buf::Validate::Conformance::Harnessb\x06proto3"
+	"\x10expected_failure\x18\x06 \x01(\bR\x0fexpectedFailureB\xa2\x02\n" +
+	"$com.buf.validate.conformance.harnessB\fResultsProtoP\x01ZHbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/harness\xa2\x02\x04BVCH\xaa\x02 Buf.Validate.Conformance.Harness\xca\x02 Buf\\Validate\\Conformance\\Harness\xe2\x02,Buf\\Validate\\Conformance\\Harness\\GPBMetadata\xea\x02#Buf::Validate::Conformance::Harnessb\x06proto3"
 
 var file_buf_validate_conformance_harness_results_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_buf_validate_conformance_harness_results_proto_goTypes = []any{

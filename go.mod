@@ -1,4 +1,4 @@
-module github.com/bufbuild/protovalidate-go
+module buf.build/go/protovalidate
 
 go 1.23.0
 
