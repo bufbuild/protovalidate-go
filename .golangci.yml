@@ -93,9 +93,6 @@ linters:
       - linters:
           - staticcheck
         text: "QF1001:" # could apply De Morgan's law
-      - linters:
-          - staticcheck
-        text: "QF1008:" # could remove embedded field "<field>" from selector
       ### END Temporary exclusions
     paths:
       - third_party$
