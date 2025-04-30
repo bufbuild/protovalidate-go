@@ -169,10 +169,11 @@ func (c *cache) loadOrCompileStandardRule(
 	if cachedRule, ok := c.cache[ruleFieldDesc]; ok {
 		return cachedRule, nil
 	}
+	predefinedRules, _ := resolve.PredefinedRules(
+		ruleFieldDesc,
+	)
 	exprs := expressions{
-		Rules: resolve.PredefinedRules(
-			ruleFieldDesc,
-		).GetCel(),
+		Rules: predefinedRules.GetCel(),
 		RulePath: []*validate.FieldPathElement{
 			fieldPathElement(setOneOf),
 			fieldPathElement(ruleFieldDesc),

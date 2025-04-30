@@ -34,19 +34,19 @@ var resolver = newExtensionResolver()
 
 // MessageRules returns the MessageRules option set for the
 // MessageDescriptor.
-func MessageRules(desc protoreflect.MessageDescriptor) *validate.MessageRules {
+func MessageRules(desc protoreflect.MessageDescriptor) (*validate.MessageRules, error) {
 	return resolve[*validate.MessageRules](desc.Options(), validate.E_Message)
 }
 
 // OneofRules returns the OneofRules option set for the
 // OneofDescriptor.
-func OneofRules(desc protoreflect.OneofDescriptor) *validate.OneofRules {
+func OneofRules(desc protoreflect.OneofDescriptor) (*validate.OneofRules, error) {
 	return resolve[*validate.OneofRules](desc.Options(), validate.E_Oneof)
 }
 
 // FieldRules returns the FieldRules option set for the
 // FieldDescriptor.
-func FieldRules(desc protoreflect.FieldDescriptor) *validate.FieldRules {
+func FieldRules(desc protoreflect.FieldDescriptor) (*validate.FieldRules, error) {
 	return resolve[*validate.FieldRules](desc.Options(), validate.E_Field)
 }
 
@@ -54,7 +54,7 @@ func FieldRules(desc protoreflect.FieldDescriptor) *validate.FieldRules {
 // the FieldDescriptor. Note that this value is only meaningful if it is set on
 // a field or extension of a field rule message. This method is provided for
 // convenience.
-func PredefinedRules(desc protoreflect.FieldDescriptor) *validate.PredefinedRules {
+func PredefinedRules(desc protoreflect.FieldDescriptor) (*validate.PredefinedRules, error) {
 	return resolve[*validate.PredefinedRules](desc.Options(), validate.E_Predefined)
 }
 
@@ -68,17 +68,27 @@ func PredefinedRules(desc protoreflect.FieldDescriptor) *validate.PredefinedRule
 func resolve[C proto.Message](
 	options proto.Message,
 	extensionType protoreflect.ExtensionType,
-) (typedMessage C) {
-	message := resolver.resolve(options, extensionType)
+) (typedMessage C, err error) {
+	var nilMessage C
+	message, err := resolver.resolve(options, extensionType)
+	if err != nil {
+		return nilMessage, err
+	}
 	if message == nil {
-		return typedMessage
+		return nilMessage, nil
 	} else if typedMessage, ok := message.(C); ok {
-		return typedMessage
+		return typedMessage, nil
 	}
 	typedMessage, _ = typedMessage.ProtoReflect().New().Interface().(C)
-	b, _ := proto.Marshal(message)
-	_ = proto.Unmarshal(b, typedMessage)
-	return typedMessage
+	b, err := proto.Marshal(message)
+	if err != nil {
+		return nilMessage, err
+	}
+	err = proto.Unmarshal(b, typedMessage)
+	if err != nil {
+		return nilMessage, err
+	}
+	return typedMessage, nil
 }
 
 // extensionResolver implements most of the logic of resolving protovalidate
@@ -157,19 +167,22 @@ func (resolver extensionResolver) registerLegacy(extension protoreflect.Extensio
 func (resolver extensionResolver) resolve(
 	options proto.Message,
 	extensionType protoreflect.ExtensionType,
-) proto.Message {
-	msg := resolver.getExtensionOrLegacy(options, extensionType)
+) (msg proto.Message, err error) {
+	msg = resolver.getExtensionOrLegacy(options, extensionType)
 	if msg == nil {
 		if unknown := options.ProtoReflect().GetUnknown(); len(unknown) > 0 {
 			reparsedOptions := options.ProtoReflect().Type().New().Interface()
-			if err := (proto.UnmarshalOptions{
+			if err = (proto.UnmarshalOptions{
 				Resolver: resolver.types,
 			}).Unmarshal(unknown, reparsedOptions); err == nil {
 				msg = resolver.getExtensionOrLegacy(reparsedOptions, extensionType)
 			}
 		}
 	}
-	return msg
+	if err != nil {
+		return nil, err
+	}
+	return msg, nil
 }
 
 // getExtensionOrLegacy gets the extension extensionType on message, or if it is

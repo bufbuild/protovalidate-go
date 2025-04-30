@@ -123,7 +123,7 @@ func (bldr *builder) buildMessage(
 	desc protoreflect.MessageDescriptor, msgEval *message,
 	cache messageCache,
 ) {
-	msgRules := resolve.MessageRules(desc)
+	msgRules, _ := resolve.MessageRules(desc)
 	if msgRules.GetDisabled() {
 		return
 	}
@@ -178,7 +178,7 @@ func (bldr *builder) processOneofRules(
 	oneofs := desc.Oneofs()
 	for i := range oneofs.Len() {
 		oneofDesc := oneofs.Get(i)
-		oneofRules := resolve.OneofRules(oneofDesc)
+		oneofRules, _ := resolve.OneofRules(oneofDesc)
 		oneofEval := oneof{
 			Descriptor: oneofDesc,
 			Required:   oneofRules.GetRequired(),
@@ -196,7 +196,7 @@ func (bldr *builder) processFields(
 	fields := desc.Fields()
 	for i := range fields.Len() {
 		fdesc := fields.Get(i)
-		fieldRules := resolve.FieldRules(fdesc)
+		fieldRules, _ := resolve.FieldRules(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldRules, cache)
 		if err != nil {
 			fldEval.Err = err
