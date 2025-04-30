@@ -4,7 +4,6 @@ modules:
 deps:
   - buf.build/bufbuild/protovalidate:v0.11.1
   - buf.build/bufbuild/protovalidate-testing:v0.11.1
-  - buf.build/envoyproxy/protoc-gen-validate
 lint:
   use:
     - STANDARD
