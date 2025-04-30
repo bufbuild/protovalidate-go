@@ -110,7 +110,8 @@ func TestResolve(t *testing.T) {
 			t.Parallel()
 
 			pb := test.builder()
-			extension := resolve[*validate.FieldRules](pb, validate.E_Field)
+			extension, err := resolve[*validate.FieldRules](pb, validate.E_Field)
+			require.NoError(t, err)
 			require.NotNil(t, extension)
 			require.Equal(t, "test", extension.GetCel()[0].GetMessage())
 		})
@@ -119,9 +120,10 @@ func TestResolve(t *testing.T) {
 
 func TestResolveNone(t *testing.T) {
 	t.Parallel()
-
-	require.Nil(t, resolve[*validate.FieldRules](
+	extension, err := resolve[*validate.FieldRules](
 		&descriptorpb.FieldOptions{},
 		validate.E_Field,
-	))
+	)
+	require.NoError(t, err)
+	require.Nil(t, extension)
 }
