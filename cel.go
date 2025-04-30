@@ -27,15 +27,15 @@ type celPrograms struct {
 }
 
 func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	err := c.programSet.Eval(val, cfg)
+	err := c.Eval(val, cfg)
 	if err != nil {
 		var valErr *ValidationError
 		if errors.As(err, &valErr) {
 			for _, violation := range valErr.Violations {
-				violation.Proto.Field = c.base.fieldPath()
-				violation.Proto.Rule = c.base.rulePath(violation.Proto.GetRule())
+				violation.Proto.Field = c.fieldPath()
+				violation.Proto.Rule = c.rulePath(violation.Proto.GetRule())
 				violation.FieldValue = val
-				violation.FieldDescriptor = c.base.Descriptor
+				violation.FieldDescriptor = c.Descriptor
 			}
 		}
 	}
@@ -43,7 +43,7 @@ func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cf
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
-	return c.programSet.Eval(protoreflect.ValueOfMessage(msg), cfg)
+	return c.Eval(protoreflect.ValueOfMessage(msg), cfg)
 }
 
 func (c celPrograms) Tautology() bool {

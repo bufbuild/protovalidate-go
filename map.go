@@ -67,9 +67,9 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 		evalErr := m.evalPairs(msg, key, value, cfg)
 		if evalErr != nil {
 			element := &validate.FieldPathElement{
-				FieldNumber: proto.Int32(m.base.FieldPathElement.GetFieldNumber()),
+				FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
 				FieldType:   m.base.FieldPathElement.GetFieldType().Enum(),
-				FieldName:   proto.String(m.base.FieldPathElement.GetFieldName()),
+				FieldName:   proto.String(m.FieldPathElement.GetFieldName()),
 			}
 			element.KeyType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapKey().Kind()).Enum()
 			element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapValue().Kind()).Enum()
@@ -94,7 +94,7 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 					m.base.Descriptor.MapKey().Kind())}
 				return false
 			}
-			updateViolationPaths(evalErr, element, m.base.RulePrefix.GetElements())
+			updateViolationPaths(evalErr, element, m.RulePrefix.GetElements())
 		}
 		ok, err = mergeViolations(err, evalErr, cfg)
 		return ok
