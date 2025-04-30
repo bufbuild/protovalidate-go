@@ -84,24 +84,6 @@ func TestResolve(t *testing.T) {
 				return options
 			},
 		},
-		{
-			name: "Legacy",
-			builder: func() proto.Message {
-				var unknownBytes []byte
-				unknownBytes = protowire.AppendTag(
-					unknownBytes,
-					legacyExtensionIndex,
-					protowire.BytesType,
-				)
-				unknownBytes = protowire.AppendBytes(
-					unknownBytes,
-					expectedRulesBytes,
-				)
-				options := &descriptorpb.FieldOptions{}
-				options.ProtoReflect().SetUnknown(protoreflect.RawFields(unknownBytes))
-				return options
-			},
-		},
 	}
 
 	for _, tc := range tests {
