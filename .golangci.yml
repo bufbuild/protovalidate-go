@@ -82,14 +82,17 @@ linters:
       - linters:
           - gochecknoglobals
         path: validator.go
+      # Library code uses for loops to implement parsing that often don't have bodies.
+      # Unfortunately, revive doesn't detect comments within these empty for loops.
+      - linters:
+          - revive
+        text: "empty-block"
+        path: cel/library.go
       ### BEGIN Temporary exclusions from golangci-lint upgrade.
       # Will remove in a future PR.
       - linters:
           - staticcheck
         text: "QF1001:" # could apply De Morgan's law
-      - linters:
-          - staticcheck
-        text: "QF1006:" # could lift into loop condition
       - linters:
           - staticcheck
         text: "QF1008:" # could remove embedded field "<field>" from selector
@@ -98,6 +101,8 @@ linters:
       - third_party$
       - builtin$
       - examples$
+issues:
+  max-same-issues: 0
 formatters:
   enable:
     - gci
