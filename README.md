@@ -77,7 +77,7 @@ Protovalidate isn't just for Go! You might be interested in sibling repositories
 - [`protovalidate-java`][pv-java] (Java)
 - [`protovalidate-python`][pv-python] (Python)
 - [`protovalidate-cc`][pv-cc] (C++)
-- `protovalidate-es` (TypeScript and JavaScript, coming soon!)
+- [`protovalidate-es`][pv-es] (TypeScript and JavaScript)
 
 Additionally, [protovalidate's core repository](https://github.com/bufbuild/protovalidate) provides:
 
@@ -108,6 +108,7 @@ Offered under the [Apache 2 license][license].
 [pv-java]: https://github.com/bufbuild/protovalidate-java
 [pv-python]: https://github.com/bufbuild/protovalidate-python
 [pv-cc]: https://github.com/bufbuild/protovalidate-cc
+[pv-es]: https://github.com/bufbuild/protovalidate-es
 
 [buf-mod]: https://buf.build/bufbuild/protovalidate
 [license]: LICENSE
