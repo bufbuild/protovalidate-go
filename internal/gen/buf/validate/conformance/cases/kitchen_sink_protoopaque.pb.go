@@ -643,8 +643,8 @@ const file_buf_validate_conformance_cases_kitchen_sink_proto_rawDesc = "" +
 	"\x0fComplexTestEnum\x12!\n" +
 	"\x1dCOMPLEX_TEST_ENUM_UNSPECIFIED\x10\x00\x12\x19\n" +
 	"\x15COMPLEX_TEST_ENUM_ONE\x10\x01\x12\x19\n" +
-	"\x15COMPLEX_TEST_ENUM_TWO\x10\x02B\xa4\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x10KitchenSinkProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x15COMPLEX_TEST_ENUM_TWO\x10\x02B\x9a\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x10KitchenSinkProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_kitchen_sink_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_kitchen_sink_proto_msgTypes = make([]protoimpl.MessageInfo, 3)

@@ -16,13 +16,13 @@ package protovalidate
 
 import "google.golang.org/protobuf/reflect/protoreflect"
 
-// The Filter interface determines which constraints should be validated.
+// The Filter interface determines which rules should be validated.
 type Filter interface {
-	// ShouldValidate returns whether constraints for a given message, field, or
+	// ShouldValidate returns whether rules for a given message, field, or
 	// oneof should be evaluated. For a message or oneof, this only determines
-	// whether message-level or oneof-level constraints should be evaluated, and
+	// whether message-level or oneof-level rules should be evaluated, and
 	// ShouldValidate will still be called for each field in the message. If
-	// ShouldValidate returns false for a specific field, all constraints nested
+	// ShouldValidate returns false for a specific field, all rules nested
 	// in submessages of that field will be skipped as well.
 	// For a message, the message argument provides the message itself. For a
 	// field or oneof, the message argument provides the containing message.

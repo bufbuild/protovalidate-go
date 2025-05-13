@@ -22,7 +22,7 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	enumRuleDescriptor            = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("enum")
+	enumRuleDescriptor            = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("enum")
 	enumDefinedOnlyRuleDescriptor = (&validate.EnumRules{}).ProtoReflect().Descriptor().Fields().ByName("defined_only")
 	enumDefinedOnlyRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
@@ -46,13 +46,13 @@ func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ 
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: &validate.Violation{
-				Field:        d.base.fieldPath(),
-				Rule:         d.base.rulePath(enumDefinedOnlyRulePath),
-				ConstraintId: proto.String("enum.defined_only"),
-				Message:      proto.String("value must be one of the defined enum values"),
+				Field:   d.fieldPath(),
+				Rule:    d.rulePath(enumDefinedOnlyRulePath),
+				RuleId:  proto.String("enum.defined_only"),
+				Message: proto.String("value must be one of the defined enum values"),
 			},
 			FieldValue:      val,
-			FieldDescriptor: d.base.Descriptor,
+			FieldDescriptor: d.Descriptor,
 			RuleValue:       protoreflect.ValueOfBool(true),
 			RuleDescriptor:  enumDefinedOnlyRuleDescriptor,
 		}}}

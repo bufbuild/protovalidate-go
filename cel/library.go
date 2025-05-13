@@ -81,8 +81,8 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 		cel.Function("getField",
 			cel.Overload(
 				"get_field_any_string",
-				[]*cel.Type{cel.AnyType, cel.StringType},
-				cel.AnyType,
+				[]*cel.Type{cel.DynType, cel.StringType},
+				cel.DynType,
 				cel.FunctionBinding(func(values ...ref.Val) ref.Val {
 					message, ok := values[0].(traits.Indexer)
 					if !ok {
@@ -407,7 +407,7 @@ func (l library) uniqueScalar(list traits.Lister) ref.Val {
 		return types.Bool(true)
 	}
 	exist := make(map[ref.Val]struct{}, size)
-	for i := int64(0); i < size; i++ {
+	for i := range size {
 		val := list.Get(types.Int(i))
 		if _, ok := exist[val]; ok {
 			return types.Bool(false)
@@ -430,7 +430,7 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 		return types.Bool(true)
 	}
 	exist := make(map[any]struct{}, size)
-	for i := int64(0); i < size; i++ {
+	for i := range size {
 		val := list.Get(types.Int(i)).Value()
 		if b, ok := val.([]uint8); ok {
 			val = string(b)
@@ -543,10 +543,7 @@ func (i *ipv4) addressPrefix() bool {
 // prefixLength parses the length of the prefix and stores the value in prefixLen.
 func (i *ipv4) prefixLength() bool {
 	start := i.index
-	for {
-		if i.index >= len(i.str) || !i.digit() {
-			break
-		}
+	for i.digit() {
 		if i.index-start > 2 {
 			// max prefix-length is 32 bits, so anything more than 2 digits is invalid
 			return false
@@ -593,10 +590,7 @@ func (i *ipv4) addressPart() bool {
 // decOctet parses str from the current index to determine a decimal octet.
 func (i *ipv4) decOctet() bool {
 	start := i.index
-	for {
-		if i.index >= len(i.str) || !i.digit() {
-			break
-		}
+	for i.digit() {
 		if i.index-start > 3 {
 			// decimal octet can be three characters at most
 			return false
@@ -626,6 +620,9 @@ func (i *ipv4) decOctet() bool {
 //
 //	DIGIT = %x30-39  ; 0-9
 func (i *ipv4) digit() bool {
+	if i.index >= len(i.str) {
+		return false
+	}
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
 		i.index++
@@ -678,10 +675,7 @@ func (i *ipv6) getBits() [2]uint64 {
 	}
 	// handle double colon, fill pieces with 0
 	if i.doubleColonSeen {
-		for {
-			if len(p16) >= 8 {
-				break
-			}
+		for len(p16) < 8 {
 			// delete 0 entries at pos, insert a 0
 			p16 = slices.Insert(p16, i.doubleColonAt, 0x00000000)
 		}
@@ -735,10 +729,7 @@ func (i *ipv6) addressPrefix() bool {
 // prefixLength parses the length of the prefix and stores the value in prefixLen.
 func (i *ipv6) prefixLength() bool {
 	start := i.index
-	for {
-		if i.index >= len(i.str) || !i.digit() {
-			break
-		}
+	for i.digit() {
 		if i.index-start > 3 {
 			return false
 		}
@@ -766,10 +757,7 @@ func (i *ipv6) prefixLength() bool {
 
 // addressPart stores the dotted notation for right-most 32 bits in dottedRaw / dottedAddr if found.
 func (i *ipv6) addressPart() bool {
-	for {
-		if i.index >= len(i.str) {
-			break
-		}
+	for i.index < len(i.str) {
 		// dotted notation for right-most 32 bits, e.g. 0:0:0:0:0:ffff:192.1.56.10
 		if (i.doubleColonSeen || len(i.pieces) == 6) && i.dotted() {
 			dotted := newIpv4(i.dottedRaw)
@@ -842,11 +830,8 @@ func (i *ipv6) zoneID() bool {
 func (i *ipv6) dotted() bool {
 	start := i.index
 	i.dottedRaw = ""
-	for {
-		if i.index < len(i.str) && (i.digit() || i.take('.')) {
-			continue
-		}
-		break
+	for i.digit() || i.take('.') {
+		// Consume '*( DIGIT "." )'
 	}
 	if i.index-start >= 7 {
 		i.dottedRaw = i.str[start:i.index]
@@ -866,9 +851,12 @@ func (i *ipv6) dotted() bool {
 // If more than 4 hex digits are found, returns an error.
 func (i *ipv6) h16() (bool, error) {
 	start := i.index
-	for {
-		if i.index >= len(i.str) || !i.hexdig() {
-			break
+	for i.hexdig() {
+		if i.index-start > 4 {
+			// too long
+			// this is an error condition, it means we found a string of more than
+			// four valid hex digits, which is invalid in ipv6 addresses.
+			return false, errors.New("invalid hex")
 		}
 	}
 	str := i.str[start:i.index]
@@ -877,12 +865,6 @@ func (i *ipv6) h16() (bool, error) {
 		// this is not an error condition, it just means we didn't find any
 		// hex digits at the current position.
 		return false, nil
-	}
-	if len(str) > 4 {
-		// too long
-		// this is an error condition, it means we found a string of more than
-		// four valid hex digits, which is invalid in ipv6 addresses.
-		return false, errors.New("invalid hex")
 	}
 
 	value, err := strconv.ParseUint(str, 16, 16)
@@ -899,6 +881,9 @@ func (i *ipv6) h16() (bool, error) {
 //
 //	HEXDIG =  DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
 func (i *ipv6) hexdig() bool {
+	if i.index >= len(i.str) {
+		return false
+	}
 	c := i.str[i.index]
 	if ('0' <= c && c <= '9') ||
 		('a' <= c && c <= 'f') ||
@@ -913,6 +898,9 @@ func (i *ipv6) hexdig() bool {
 //
 //	DIGIT = %x30-39  ; 0-9
 func (i *ipv6) digit() bool {
+	if i.index >= len(i.str) {
+		return false
+	}
 	c := i.str[i.index]
 	if '0' <= c && c <= '9' {
 		i.index++
@@ -1033,7 +1021,7 @@ func isHostname(val string) bool {
 			return false
 		}
 		// for each character in part
-		for i := 0; i < len(part); i++ {
+		for i := range len(part) {
 			c := part[i]
 			// if the character is not a-z, A-Z, 0-9, or '-', it is invalid
 			if (c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && (c < '0' || c > '9') && c != '-' {
@@ -1088,7 +1076,7 @@ func isPort(str string) bool {
 	if len(str) == 0 {
 		return false
 	}
-	for i := 0; i < len(str); i++ {
+	for i := range len(str) {
 		c := str[i]
 		if '0' <= c && c <= '9' {
 			continue
@@ -1206,10 +1194,8 @@ func (u *uri) relativePart() bool {
 func (u *uri) scheme() bool {
 	start := u.index
 	if u.alpha() {
-		for {
-			if !u.alpha() && !u.digit() && !u.take('+') && !u.take('-') && !u.take('.') {
-				break
-			}
+		for u.alpha() || u.digit() || u.take('+') || u.take('-') || u.take('.') {
+			// Consume '*( ALPHA / DIGIT / "+" / "-" / "." )'
 		}
 		if u.peek(':') {
 			return true
@@ -1341,16 +1327,14 @@ func (u *uri) host() bool {
 // Terminated by end of authority.
 func (u *uri) port() bool {
 	start := u.index
-	for {
-		if u.digit() {
-			continue
-		}
-		if u.isAuthorityEnd() {
-			return true
-		}
-		u.index = start
-		return false
+	for u.digit() {
+		// Consume '*DIGIT'
 	}
+	if u.isAuthorityEnd() {
+		return true
+	}
+	u.index = start
+	return false
 }
 
 // ipLiteral parses the rule from RFC 6874:
@@ -1381,10 +1365,8 @@ func (u *uri) ipLiteral() bool {
 // Relies on the implementation of isIP.
 func (u *uri) ipv6Address() bool {
 	start := u.index
-	for {
-		if !u.hexdig() && !u.take(':') {
-			break
-		}
+	for u.hexdig() || u.take(':') {
+		// Consume '*( HEXDIG / ":" )'
 	}
 	if isIP(u.str[start:u.index], 6) {
 		return true
@@ -1414,10 +1396,8 @@ func (u *uri) ipv6addrz() bool {
 //	ZoneID = 1*( unreserved / pct-encoded )
 func (u *uri) zoneID() bool {
 	start := u.index
-	for {
-		if !u.unreserved() && !u.pctEncoded() {
-			break
-		}
+	for u.unreserved() || u.pctEncoded() {
+		// Consume '*( unreserved / pct-encoded )'
 	}
 	if u.index-start > 0 {
 		return true
@@ -1431,18 +1411,13 @@ func (u *uri) zoneID() bool {
 //	IPvFuture  = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
 func (u *uri) ipvFuture() bool {
 	start := u.index
-	if u.take('v') && u.hexdig() { //nolint:nestif
-		for {
-			if !u.hexdig() {
-				break
-			}
+	if u.take('v') && u.hexdig() {
+		for u.hexdig() {
+			// Consume '*HEXDIG'
 		}
 		if u.take('.') {
 			counter := 0
-			for {
-				if !u.unreserved() && !u.subDelims() && !u.take(':') {
-					break
-				}
+			for u.unreserved() || u.subDelims() || u.take(':') {
 				counter++
 			}
 			if counter >= 1 {
@@ -1492,10 +1467,8 @@ func (u *uri) isPathEnd() bool {
 // Terminated by end of path: "?", "#", or end of URI.
 func (u *uri) pathAbempty() bool {
 	start := u.index
-	for {
-		if !u.take('/') || !u.segment() {
-			break
-		}
+	for u.take('/') && u.segment() {
+		// Consume '*( "/" segment )'
 	}
 	if u.isPathEnd() {
 		return true
@@ -1513,10 +1486,8 @@ func (u *uri) pathAbsolute() bool {
 	start := u.index
 	if u.take('/') {
 		if u.segmentNz() {
-			for {
-				if !u.take('/') || !u.segment() {
-					break
-				}
+			for u.take('/') && u.segment() {
+				// Consume '*( "/" segment )'
 			}
 		}
 		if u.isPathEnd() {
@@ -1535,10 +1506,8 @@ func (u *uri) pathAbsolute() bool {
 func (u *uri) pathNoscheme() bool {
 	start := u.index
 	if u.segmentNzNc() {
-		for {
-			if !u.take('/') || !u.segment() {
-				break
-			}
+		for u.take('/') && u.segment() {
+			// Consume *( "/" segment )
 		}
 		if u.isPathEnd() {
 			return true
@@ -1556,10 +1525,8 @@ func (u *uri) pathNoscheme() bool {
 func (u *uri) pathRootless() bool {
 	start := u.index
 	if u.segmentNz() {
-		for {
-			if !u.take('/') || !u.segment() {
-				break
-			}
+		for u.take('/') && u.segment() {
+			// Consume *( '/' segment )
 		}
 		if u.isPathEnd() {
 			return true
@@ -1582,10 +1549,8 @@ func (u *uri) pathEmpty() bool {
 //
 //	segment = *pchar
 func (u *uri) segment() bool {
-	for {
-		if !u.pchar() {
-			break
-		}
+	for u.pchar() {
+		// Consume '*pchar'
 	}
 	return true
 }
@@ -1608,13 +1573,8 @@ func (u *uri) segmentNz() bool {
 //	             ; non-zero-length segment without any colon ":"
 func (u *uri) segmentNzNc() bool {
 	start := u.index
-	for {
-		if !u.unreserved() &&
-			!u.pctEncoded() &&
-			!u.subDelims() &&
-			!u.take('@') {
-			break
-		}
+	for u.unreserved() || u.pctEncoded() || u.subDelims() || u.take('@') {
+		// Consume '*( unreserved / pct-encoded / sub-delims / "@" )'
 	}
 	if u.index-start > 0 {
 		return true

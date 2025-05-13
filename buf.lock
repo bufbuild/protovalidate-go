@@ -2,11 +2,11 @@
 version: v2
 deps:
   - name: buf.build/bufbuild/protovalidate
-    commit: 0409229c37804d6187ee0806eb4eebce
-    digest: b5:795db9d3a6e066dc61d99ac651fa7f136171869abe2211ca272dd84aada7bc4583b9508249fa5b61300a5b1fe8b6dbf6edbc088aa0345d1ccb9fff705e3d48e9
+    commit: 8976f5be98c146529b1cc15cd2012b60
+    digest: b5:5d513af91a439d9e78cacac0c9455c7cb885a8737d30405d0b91974fe05276d19c07a876a51a107213a3d01b83ecc912996cdad4cddf7231f91379079cf7488d
   - name: buf.build/bufbuild/protovalidate-testing
-    commit: 5acbe1f3c8f24ced9466b9ccccad4cb0
-    digest: b5:5e9d54d19ce3d9d368f4b1b5ee4f20094d1c33d0f2dca19536339335c2e70d5ffedbd4fa28e290b59ecae0671c9d2dc20b6b8ebba5a9ac76cbf5f9d2af655ef4
+    commit: d2080a16593140fab100cb64735f873a
+    digest: b5:2a9179fe4391637210e19ba69bc38f3796450f7c231c69153f93dea3523e5e0cbb3f38eda2da90f58585cbfb52e6cf148d399e93e23a8855d5cbed7fcdd23b29
   - name: buf.build/envoyproxy/protoc-gen-validate
     commit: daf171c6cdb54629b5f51e345a79e4dd
     digest: b5:c745e1521879f43740230b1df673d0729f55704efefdcfc489d4a0a2d40c92a26cacfeab62813403040a8b180142d53b398c7ca784a065e43823605ee49681de

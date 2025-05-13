@@ -18,63 +18,63 @@ import (
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/resolve"
+	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/resolve"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
-// cache is a build-through cache to computed standard constraints.
+// cache is a build-through cache to computed standard rules.
 type cache struct {
 	cache map[protoreflect.FieldDescriptor]astSet
 }
 
-// newCache constructs a new build-through cache for the standard constraints.
+// newCache constructs a new build-through cache for the standard rules.
 func newCache() cache {
 	return cache{
 		cache: map[protoreflect.FieldDescriptor]astSet{},
 	}
 }
 
-// Build creates the standard constraints for the given field. If forItems is
-// true, the constraints for repeated list items is built instead of the
-// constraints on the list itself.
+// Build creates the standard rules for the given field. If forItems is
+// true, the rules for repeated list items are built instead of the
+// rules on the list itself.
 func (c *cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
-	fieldConstraints *validate.FieldConstraints,
+	fieldRules *validate.FieldRules,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	forItems bool,
 ) (set programSet, err error) {
-	constraints, setOneof, done, err := c.resolveConstraints(
+	rules, setOneof, done, err := c.resolveRules(
 		fieldDesc,
-		fieldConstraints,
+		fieldRules,
 		forItems,
 	)
 	if done {
 		return nil, err
 	}
 
-	if err = reparseUnrecognized(extensionTypeResolver, constraints); err != nil {
+	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
 		return nil, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
 	}
-	if !allowUnknownFields && len(constraints.GetUnknown()) > 0 {
-		return nil, &CompilationError{cause: fmt.Errorf("unknown constraints in %s; see protovalidate.WithExtensionTypeResolver", constraints.Descriptor().FullName())}
+	if !allowUnknownFields && len(rules.GetUnknown()) > 0 {
+		return nil, &CompilationError{cause: fmt.Errorf("unknown rules in %s; see protovalidate.WithExtensionTypeResolver", rules.Descriptor().FullName())}
 	}
 
-	env, err = c.prepareEnvironment(env, fieldDesc, constraints, forItems)
+	env, err = c.prepareEnvironment(env, fieldDesc, rules, forItems)
 	if err != nil {
 		return nil, err
 	}
 
 	var asts astSet
-	constraints.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+	rules.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
 		// Try compiling without the rule variable first. Extending a cel
 		// environment is expensive.
-		precomputedASTs, compileErr := c.loadOrCompileStandardConstraint(env, setOneof, desc)
+		precomputedASTs, compileErr := c.loadOrCompileStandardRule(env, setOneof, desc)
 		if compileErr != nil {
 			fieldEnv, compileErr := env.Extend(
 				cel.Variable("rule", pvcel.ProtoFieldToType(desc, true, false)),
@@ -83,7 +83,7 @@ func (c *cache) Build(
 				err = compileErr
 				return false
 			}
-			precomputedASTs, compileErr = c.loadOrCompileStandardConstraint(fieldEnv, setOneof, desc)
+			precomputedASTs, compileErr = c.loadOrCompileStandardRule(fieldEnv, setOneof, desc)
 			if compileErr != nil {
 				err = compileErr
 				return false
@@ -101,42 +101,55 @@ func (c *cache) Build(
 		return nil, err
 	}
 
-	rulesGlobal := cel.Globals(&variable{Name: "rules", Val: constraints.Interface()})
+	rulesGlobal := cel.Globals(&variable{Name: "rules", Val: rules.Interface()})
 	set, err = asts.ReduceResiduals(rulesGlobal)
 	return set, err
 }
 
-// resolveConstraints extracts the standard constraints for the specified field. An
-// error is returned if the wrong constraints are applied to a field (typically
+// resolveRules extracts the standard rules for the specified field. An
+// error is returned if the wrong rules are applied to a field (typically
 // if there is a type-mismatch). The done result is true if an error is returned
-// or if there are now standard constraints to apply to this field.
-func (c *cache) resolveConstraints(
+// or if there are now standard rules to apply to this field.
+func (c *cache) resolveRules(
 	fieldDesc protoreflect.FieldDescriptor,
-	fieldConstraints *validate.FieldConstraints,
+	fieldRules *validate.FieldRules,
 	forItems bool,
 ) (rules protoreflect.Message, fieldRule protoreflect.FieldDescriptor, done bool, err error) {
-	constraints := fieldConstraints.ProtoReflect()
-	setOneof := constraints.WhichOneof(fieldConstraintsOneofDesc)
+	refRules := fieldRules.ProtoReflect()
+	setOneof := refRules.WhichOneof(fieldRulesOneofDesc)
 	if setOneof == nil {
 		return nil, nil, true, nil
 	}
-	expected, ok := c.getExpectedConstraintDescriptor(fieldDesc, forItems)
+	expected, ok := c.getExpectedRuleDescriptor(fieldDesc, forItems)
 	if ok && setOneof.FullName() != expected.FullName() {
 		return nil, nil, true, &CompilationError{cause: fmt.Errorf(
-			"expected constraint %q, got %q on field %q",
+			"expected rule %q, got %q on field %q",
 			expected.FullName(),
 			setOneof.FullName(),
 			fieldDesc.FullName(),
 		)}
 	}
-	if !ok || !constraints.Has(setOneof) {
-		return nil, nil, true, nil
+
+	if !ok {
+		// The only expected rule descriptor for message fields is for well known types.
+		// If we didn't find a descriptor and this is a message, there must be a mismatch.
+		if fieldDesc.Kind() == protoreflect.MessageKind {
+			return nil, nil, true, &CompilationError{cause: fmt.Errorf(
+				"mismatched message rules, %q is not a valid rule for field %q",
+				setOneof.FullName(),
+				fieldDesc.FullName(),
+			)}
+		}
+		if !refRules.Has(setOneof) {
+			return nil, nil, true, nil
+		}
 	}
-	rules = constraints.Get(setOneof).Message()
+
+	rules = refRules.Get(setOneof).Message()
 	return rules, setOneof, false, nil
 }
 
-// prepareEnvironment prepares the environment for compiling standard constraint
+// prepareEnvironment prepares the environment for compiling standard rule
 // expressions.
 func (c *cache) prepareEnvironment(
 	env *cel.Env,
@@ -157,56 +170,57 @@ func (c *cache) prepareEnvironment(
 	return env, nil
 }
 
-// loadOrCompileStandardConstraint loads the precompiled ASTs for the
-// specified constraint field from the Cache if present or precomputes them
-// otherwise. The result may be empty if the constraint does not have associated
+// loadOrCompileStandardRule loads the precompiled ASTs for the
+// specified rule field from the Cache if present or precomputes them
+// otherwise. The result may be empty if the rule does not have associated
 // CEL expressions.
-func (c *cache) loadOrCompileStandardConstraint(
+func (c *cache) loadOrCompileStandardRule(
 	env *cel.Env,
 	setOneOf protoreflect.FieldDescriptor,
-	constraintFieldDesc protoreflect.FieldDescriptor,
+	ruleFieldDesc protoreflect.FieldDescriptor,
 ) (set astSet, err error) {
-	if cachedConstraint, ok := c.cache[constraintFieldDesc]; ok {
-		return cachedConstraint, nil
+	if cachedRule, ok := c.cache[ruleFieldDesc]; ok {
+		return cachedRule, nil
 	}
+	predefinedRules, _ := resolve.PredefinedRules(
+		ruleFieldDesc,
+	)
 	exprs := expressions{
-		Constraints: resolve.PredefinedConstraints(
-			constraintFieldDesc,
-		).GetCel(),
+		Rules: predefinedRules.GetCel(),
 		RulePath: []*validate.FieldPathElement{
 			fieldPathElement(setOneOf),
-			fieldPathElement(constraintFieldDesc),
+			fieldPathElement(ruleFieldDesc),
 		},
 	}
 	set, err = compileASTs(exprs, env)
 	if err != nil {
 		return set, &CompilationError{cause: fmt.Errorf(
-			"failed to compile standard constraint %q: %w",
-			constraintFieldDesc.FullName(), err)}
+			"failed to compile standard rule %q: %w",
+			ruleFieldDesc.FullName(), err)}
 	}
-	c.cache[constraintFieldDesc] = set
+	c.cache[ruleFieldDesc] = set
 	return set, nil
 }
 
-// getExpectedConstraintDescriptor produces the field descriptor from the
-// validate.FieldConstraints 'type' oneof that matches the provided target
+// getExpectedRuleDescriptor produces the field descriptor from the
+// validate.FieldRules 'type' oneof that matches the provided target
 // field descriptor. If ok is false, the field does not expect any standard
-// constraints.
-func (c *cache) getExpectedConstraintDescriptor(
+// rules.
+func (c *cache) getExpectedRuleDescriptor(
 	targetFieldDesc protoreflect.FieldDescriptor,
 	forItems bool,
 ) (expected protoreflect.FieldDescriptor, ok bool) {
 	switch {
 	case targetFieldDesc.IsMap():
-		return mapFieldConstraintsDesc, true
+		return mapFieldRulesDesc, true
 	case targetFieldDesc.IsList() && !forItems:
-		return repeatedFieldConstraintsDesc, true
+		return repeatedFieldRulesDesc, true
 	case targetFieldDesc.Kind() == protoreflect.MessageKind,
 		targetFieldDesc.Kind() == protoreflect.GroupKind:
-		expected, ok = expectedWKTConstraints[targetFieldDesc.Message().FullName()]
+		expected, ok = expectedWKTRules[targetFieldDesc.Message().FullName()]
 		return expected, ok
 	default:
-		expected, ok = expectedStandardConstraints[targetFieldDesc.Kind()]
+		expected, ok = expectedStandardRules[targetFieldDesc.Kind()]
 		return expected, ok
 	}
 }

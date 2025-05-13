@@ -109,7 +109,7 @@ type embeddedMessage struct {
 
 func (m *embeddedMessage) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	err := m.message.EvaluateMessage(val.Message(), cfg)
-	updateViolationPaths(err, m.base.FieldPathElement, nil)
+	updateViolationPaths(err, m.FieldPathElement, nil)
 	return err
 }
 

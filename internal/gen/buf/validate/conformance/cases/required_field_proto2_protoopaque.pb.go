@@ -1329,8 +1329,8 @@ const file_buf_validate_conformance_cases_required_field_proto2_proto_rawDesc = 
 	"\x03val\x18\x01 \x03(\v2F.buf.validate.conformance.cases.RequiredProto2MapIgnoreAlways.ValEntryB\t\xbaH\x06\xc8\x01\x01\xd8\x01\x03R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xac\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x18RequiredFieldProto2ProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Cases"
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01B\xa2\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x18RequiredFieldProto2ProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Cases"
 
 var file_buf_validate_conformance_cases_required_field_proto2_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_buf_validate_conformance_cases_required_field_proto2_proto_goTypes = []any{

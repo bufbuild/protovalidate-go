@@ -18,12 +18,12 @@ package tests.example.v1;
 
 import "buf/validate/validate.proto";
 
-message MismatchConstraints {
-  bool no_constraint = 1;
-  string string_field_bool_constraint = 2 [(buf.validate.field).bool.const = true];
+message MismatchRules {
+  bool no_rule = 1;
+  string string_field_bool_rule = 2 [(buf.validate.field).bool.const = true];
 }
 
-message MixedValidInvalidConstraints {
-  string string_field_bool_constraint = 1 [(buf.validate.field).bool.const = true];
-  string valid_string_constraint = 2 [(buf.validate.field).string.const = "foo"];
+message MixedValidInvalidRules {
+  string string_field_bool_rule = 1 [(buf.validate.field).bool.const = true];
+  string valid_string_rule = 2 [(buf.validate.field).string.const = "foo"];
 }

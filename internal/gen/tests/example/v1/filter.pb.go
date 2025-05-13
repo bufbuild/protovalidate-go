@@ -37,27 +37,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type InvalidConstraints struct {
+type InvalidRules struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Field         int32                  `protobuf:"varint,1,opt,name=field,proto3" json:"field,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *InvalidConstraints) Reset() {
-	*x = InvalidConstraints{}
+func (x *InvalidRules) Reset() {
+	*x = InvalidRules{}
 	mi := &file_tests_example_v1_filter_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *InvalidConstraints) String() string {
+func (x *InvalidRules) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*InvalidConstraints) ProtoMessage() {}
+func (*InvalidRules) ProtoMessage() {}
 
-func (x *InvalidConstraints) ProtoReflect() protoreflect.Message {
+func (x *InvalidRules) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_filter_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -69,56 +69,56 @@ func (x *InvalidConstraints) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *InvalidConstraints) GetField() int32 {
+func (x *InvalidRules) GetField() int32 {
 	if x != nil {
 		return x.Field
 	}
 	return 0
 }
 
-func (x *InvalidConstraints) SetField(v int32) {
+func (x *InvalidRules) SetField(v int32) {
 	x.Field = v
 }
 
-type InvalidConstraints_builder struct {
+type InvalidRules_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Field int32
 }
 
-func (b0 InvalidConstraints_builder) Build() *InvalidConstraints {
-	m0 := &InvalidConstraints{}
+func (b0 InvalidRules_builder) Build() *InvalidRules {
+	m0 := &InvalidRules{}
 	b, x := &b0, m0
 	_, _ = b, x
 	x.Field = b.Field
 	return m0
 }
 
-type AllConstraintTypes struct {
+type AllRuleTypes struct {
 	state protoimpl.MessageState `protogen:"hybrid.v1"`
 	Field int32                  `protobuf:"varint,1,opt,name=field,proto3" json:"field,omitempty"`
 	// Types that are valid to be assigned to RequiredOneof:
 	//
-	//	*AllConstraintTypes_OneofField
-	RequiredOneof isAllConstraintTypes_RequiredOneof `protobuf_oneof:"required_oneof"`
+	//	*AllRuleTypes_OneofField
+	RequiredOneof isAllRuleTypes_RequiredOneof `protobuf_oneof:"required_oneof"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AllConstraintTypes) Reset() {
-	*x = AllConstraintTypes{}
+func (x *AllRuleTypes) Reset() {
+	*x = AllRuleTypes{}
 	mi := &file_tests_example_v1_filter_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AllConstraintTypes) String() string {
+func (x *AllRuleTypes) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AllConstraintTypes) ProtoMessage() {}
+func (*AllRuleTypes) ProtoMessage() {}
 
-func (x *AllConstraintTypes) ProtoReflect() protoreflect.Message {
+func (x *AllRuleTypes) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_filter_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -130,78 +130,78 @@ func (x *AllConstraintTypes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *AllConstraintTypes) GetField() int32 {
+func (x *AllRuleTypes) GetField() int32 {
 	if x != nil {
 		return x.Field
 	}
 	return 0
 }
 
-func (x *AllConstraintTypes) GetRequiredOneof() isAllConstraintTypes_RequiredOneof {
+func (x *AllRuleTypes) GetRequiredOneof() isAllRuleTypes_RequiredOneof {
 	if x != nil {
 		return x.RequiredOneof
 	}
 	return nil
 }
 
-func (x *AllConstraintTypes) GetOneofField() string {
+func (x *AllRuleTypes) GetOneofField() string {
 	if x != nil {
-		if x, ok := x.RequiredOneof.(*AllConstraintTypes_OneofField); ok {
+		if x, ok := x.RequiredOneof.(*AllRuleTypes_OneofField); ok {
 			return x.OneofField
 		}
 	}
 	return ""
 }
 
-func (x *AllConstraintTypes) SetField(v int32) {
+func (x *AllRuleTypes) SetField(v int32) {
 	x.Field = v
 }
 
-func (x *AllConstraintTypes) SetOneofField(v string) {
-	x.RequiredOneof = &AllConstraintTypes_OneofField{v}
+func (x *AllRuleTypes) SetOneofField(v string) {
+	x.RequiredOneof = &AllRuleTypes_OneofField{v}
 }
 
-func (x *AllConstraintTypes) HasRequiredOneof() bool {
+func (x *AllRuleTypes) HasRequiredOneof() bool {
 	if x == nil {
 		return false
 	}
 	return x.RequiredOneof != nil
 }
 
-func (x *AllConstraintTypes) HasOneofField() bool {
+func (x *AllRuleTypes) HasOneofField() bool {
 	if x == nil {
 		return false
 	}
-	_, ok := x.RequiredOneof.(*AllConstraintTypes_OneofField)
+	_, ok := x.RequiredOneof.(*AllRuleTypes_OneofField)
 	return ok
 }
 
-func (x *AllConstraintTypes) ClearRequiredOneof() {
+func (x *AllRuleTypes) ClearRequiredOneof() {
 	x.RequiredOneof = nil
 }
 
-func (x *AllConstraintTypes) ClearOneofField() {
-	if _, ok := x.RequiredOneof.(*AllConstraintTypes_OneofField); ok {
+func (x *AllRuleTypes) ClearOneofField() {
+	if _, ok := x.RequiredOneof.(*AllRuleTypes_OneofField); ok {
 		x.RequiredOneof = nil
 	}
 }
 
-const AllConstraintTypes_RequiredOneof_not_set_case case_AllConstraintTypes_RequiredOneof = 0
-const AllConstraintTypes_OneofField_case case_AllConstraintTypes_RequiredOneof = 2
+const AllRuleTypes_RequiredOneof_not_set_case case_AllRuleTypes_RequiredOneof = 0
+const AllRuleTypes_OneofField_case case_AllRuleTypes_RequiredOneof = 2
 
-func (x *AllConstraintTypes) WhichRequiredOneof() case_AllConstraintTypes_RequiredOneof {
+func (x *AllRuleTypes) WhichRequiredOneof() case_AllRuleTypes_RequiredOneof {
 	if x == nil {
-		return AllConstraintTypes_RequiredOneof_not_set_case
+		return AllRuleTypes_RequiredOneof_not_set_case
 	}
 	switch x.RequiredOneof.(type) {
-	case *AllConstraintTypes_OneofField:
-		return AllConstraintTypes_OneofField_case
+	case *AllRuleTypes_OneofField:
+		return AllRuleTypes_OneofField_case
 	default:
-		return AllConstraintTypes_RequiredOneof_not_set_case
+		return AllRuleTypes_RequiredOneof_not_set_case
 	}
 }
 
-type AllConstraintTypes_builder struct {
+type AllRuleTypes_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Field int32
@@ -210,20 +210,20 @@ type AllConstraintTypes_builder struct {
 	// -- end of RequiredOneof
 }
 
-func (b0 AllConstraintTypes_builder) Build() *AllConstraintTypes {
-	m0 := &AllConstraintTypes{}
+func (b0 AllRuleTypes_builder) Build() *AllRuleTypes {
+	m0 := &AllRuleTypes{}
 	b, x := &b0, m0
 	_, _ = b, x
 	x.Field = b.Field
 	if b.OneofField != nil {
-		x.RequiredOneof = &AllConstraintTypes_OneofField{*b.OneofField}
+		x.RequiredOneof = &AllRuleTypes_OneofField{*b.OneofField}
 	}
 	return m0
 }
 
-type case_AllConstraintTypes_RequiredOneof protoreflect.FieldNumber
+type case_AllRuleTypes_RequiredOneof protoreflect.FieldNumber
 
-func (x case_AllConstraintTypes_RequiredOneof) String() string {
+func (x case_AllRuleTypes_RequiredOneof) String() string {
 	md := file_tests_example_v1_filter_proto_msgTypes[1].Descriptor()
 	if x == 0 {
 		return "not set"
@@ -231,44 +231,44 @@ func (x case_AllConstraintTypes_RequiredOneof) String() string {
 	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
 }
 
-type isAllConstraintTypes_RequiredOneof interface {
-	isAllConstraintTypes_RequiredOneof()
+type isAllRuleTypes_RequiredOneof interface {
+	isAllRuleTypes_RequiredOneof()
 }
 
-type AllConstraintTypes_OneofField struct {
+type AllRuleTypes_OneofField struct {
 	OneofField string `protobuf:"bytes,2,opt,name=oneof_field,json=oneofField,proto3,oneof"`
 }
 
-func (*AllConstraintTypes_OneofField) isAllConstraintTypes_RequiredOneof() {}
+func (*AllRuleTypes_OneofField) isAllRuleTypes_RequiredOneof() {}
 
-type NestedConstraints struct {
-	state         protoimpl.MessageState         `protogen:"hybrid.v1"`
-	Field         *AllConstraintTypes            `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
-	Field2        string                         `protobuf:"bytes,2,opt,name=field2,proto3" json:"field2,omitempty"`
-	RepeatedField []*AllConstraintTypes          `protobuf:"bytes,3,rep,name=repeated_field,json=repeatedField,proto3" json:"repeated_field,omitempty"`
-	MapField      map[string]*AllConstraintTypes `protobuf:"bytes,4,rep,name=map_field,json=mapField,proto3" json:"map_field,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+type NestedRules struct {
+	state         protoimpl.MessageState   `protogen:"hybrid.v1"`
+	Field         *AllRuleTypes            `protobuf:"bytes,1,opt,name=field,proto3" json:"field,omitempty"`
+	Field2        string                   `protobuf:"bytes,2,opt,name=field2,proto3" json:"field2,omitempty"`
+	RepeatedField []*AllRuleTypes          `protobuf:"bytes,3,rep,name=repeated_field,json=repeatedField,proto3" json:"repeated_field,omitempty"`
+	MapField      map[string]*AllRuleTypes `protobuf:"bytes,4,rep,name=map_field,json=mapField,proto3" json:"map_field,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	// Types that are valid to be assigned to RequiredOneof:
 	//
-	//	*NestedConstraints_OneofField
-	RequiredOneof isNestedConstraints_RequiredOneof `protobuf_oneof:"required_oneof"`
+	//	*NestedRules_OneofField
+	RequiredOneof isNestedRules_RequiredOneof `protobuf_oneof:"required_oneof"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *NestedConstraints) Reset() {
-	*x = NestedConstraints{}
+func (x *NestedRules) Reset() {
+	*x = NestedRules{}
 	mi := &file_tests_example_v1_filter_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NestedConstraints) String() string {
+func (x *NestedRules) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NestedConstraints) ProtoMessage() {}
+func (*NestedRules) ProtoMessage() {}
 
-func (x *NestedConstraints) ProtoReflect() protoreflect.Message {
+func (x *NestedRules) ProtoReflect() protoreflect.Message {
 	mi := &file_tests_example_v1_filter_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -280,135 +280,135 @@ func (x *NestedConstraints) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (x *NestedConstraints) GetField() *AllConstraintTypes {
+func (x *NestedRules) GetField() *AllRuleTypes {
 	if x != nil {
 		return x.Field
 	}
 	return nil
 }
 
-func (x *NestedConstraints) GetField2() string {
+func (x *NestedRules) GetField2() string {
 	if x != nil {
 		return x.Field2
 	}
 	return ""
 }
 
-func (x *NestedConstraints) GetRepeatedField() []*AllConstraintTypes {
+func (x *NestedRules) GetRepeatedField() []*AllRuleTypes {
 	if x != nil {
 		return x.RepeatedField
 	}
 	return nil
 }
 
-func (x *NestedConstraints) GetMapField() map[string]*AllConstraintTypes {
+func (x *NestedRules) GetMapField() map[string]*AllRuleTypes {
 	if x != nil {
 		return x.MapField
 	}
 	return nil
 }
 
-func (x *NestedConstraints) GetRequiredOneof() isNestedConstraints_RequiredOneof {
+func (x *NestedRules) GetRequiredOneof() isNestedRules_RequiredOneof {
 	if x != nil {
 		return x.RequiredOneof
 	}
 	return nil
 }
 
-func (x *NestedConstraints) GetOneofField() string {
+func (x *NestedRules) GetOneofField() string {
 	if x != nil {
-		if x, ok := x.RequiredOneof.(*NestedConstraints_OneofField); ok {
+		if x, ok := x.RequiredOneof.(*NestedRules_OneofField); ok {
 			return x.OneofField
 		}
 	}
 	return ""
 }
 
-func (x *NestedConstraints) SetField(v *AllConstraintTypes) {
+func (x *NestedRules) SetField(v *AllRuleTypes) {
 	x.Field = v
 }
 
-func (x *NestedConstraints) SetField2(v string) {
+func (x *NestedRules) SetField2(v string) {
 	x.Field2 = v
 }
 
-func (x *NestedConstraints) SetRepeatedField(v []*AllConstraintTypes) {
+func (x *NestedRules) SetRepeatedField(v []*AllRuleTypes) {
 	x.RepeatedField = v
 }
 
-func (x *NestedConstraints) SetMapField(v map[string]*AllConstraintTypes) {
+func (x *NestedRules) SetMapField(v map[string]*AllRuleTypes) {
 	x.MapField = v
 }
 
-func (x *NestedConstraints) SetOneofField(v string) {
-	x.RequiredOneof = &NestedConstraints_OneofField{v}
+func (x *NestedRules) SetOneofField(v string) {
+	x.RequiredOneof = &NestedRules_OneofField{v}
 }
 
-func (x *NestedConstraints) HasField() bool {
+func (x *NestedRules) HasField() bool {
 	if x == nil {
 		return false
 	}
 	return x.Field != nil
 }
 
-func (x *NestedConstraints) HasRequiredOneof() bool {
+func (x *NestedRules) HasRequiredOneof() bool {
 	if x == nil {
 		return false
 	}
 	return x.RequiredOneof != nil
 }
 
-func (x *NestedConstraints) HasOneofField() bool {
+func (x *NestedRules) HasOneofField() bool {
 	if x == nil {
 		return false
 	}
-	_, ok := x.RequiredOneof.(*NestedConstraints_OneofField)
+	_, ok := x.RequiredOneof.(*NestedRules_OneofField)
 	return ok
 }
 
-func (x *NestedConstraints) ClearField() {
+func (x *NestedRules) ClearField() {
 	x.Field = nil
 }
 
-func (x *NestedConstraints) ClearRequiredOneof() {
+func (x *NestedRules) ClearRequiredOneof() {
 	x.RequiredOneof = nil
 }
 
-func (x *NestedConstraints) ClearOneofField() {
-	if _, ok := x.RequiredOneof.(*NestedConstraints_OneofField); ok {
+func (x *NestedRules) ClearOneofField() {
+	if _, ok := x.RequiredOneof.(*NestedRules_OneofField); ok {
 		x.RequiredOneof = nil
 	}
 }
 
-const NestedConstraints_RequiredOneof_not_set_case case_NestedConstraints_RequiredOneof = 0
-const NestedConstraints_OneofField_case case_NestedConstraints_RequiredOneof = 5
+const NestedRules_RequiredOneof_not_set_case case_NestedRules_RequiredOneof = 0
+const NestedRules_OneofField_case case_NestedRules_RequiredOneof = 5
 
-func (x *NestedConstraints) WhichRequiredOneof() case_NestedConstraints_RequiredOneof {
+func (x *NestedRules) WhichRequiredOneof() case_NestedRules_RequiredOneof {
 	if x == nil {
-		return NestedConstraints_RequiredOneof_not_set_case
+		return NestedRules_RequiredOneof_not_set_case
 	}
 	switch x.RequiredOneof.(type) {
-	case *NestedConstraints_OneofField:
-		return NestedConstraints_OneofField_case
+	case *NestedRules_OneofField:
+		return NestedRules_OneofField_case
 	default:
-		return NestedConstraints_RequiredOneof_not_set_case
+		return NestedRules_RequiredOneof_not_set_case
 	}
 }
 
-type NestedConstraints_builder struct {
+type NestedRules_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Field         *AllConstraintTypes
+	Field         *AllRuleTypes
 	Field2        string
-	RepeatedField []*AllConstraintTypes
-	MapField      map[string]*AllConstraintTypes
+	RepeatedField []*AllRuleTypes
+	MapField      map[string]*AllRuleTypes
 	// Fields of oneof RequiredOneof:
 	OneofField *string
 	// -- end of RequiredOneof
 }
 
-func (b0 NestedConstraints_builder) Build() *NestedConstraints {
-	m0 := &NestedConstraints{}
+func (b0 NestedRules_builder) Build() *NestedRules {
+	m0 := &NestedRules{}
 	b, x := &b0, m0
 	_, _ = b, x
 	x.Field = b.Field
@@ -416,14 +416,14 @@ func (b0 NestedConstraints_builder) Build() *NestedConstraints {
 	x.RepeatedField = b.RepeatedField
 	x.MapField = b.MapField
 	if b.OneofField != nil {
-		x.RequiredOneof = &NestedConstraints_OneofField{*b.OneofField}
+		x.RequiredOneof = &NestedRules_OneofField{*b.OneofField}
 	}
 	return m0
 }
 
-type case_NestedConstraints_RequiredOneof protoreflect.FieldNumber
+type case_NestedRules_RequiredOneof protoreflect.FieldNumber
 
-func (x case_NestedConstraints_RequiredOneof) String() string {
+func (x case_NestedRules_RequiredOneof) String() string {
 	md := file_tests_example_v1_filter_proto_msgTypes[2].Descriptor()
 	if x == 0 {
 		return "not set"
@@ -431,59 +431,61 @@ func (x case_NestedConstraints_RequiredOneof) String() string {
 	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
 }
 
-type isNestedConstraints_RequiredOneof interface {
-	isNestedConstraints_RequiredOneof()
+type isNestedRules_RequiredOneof interface {
+	isNestedRules_RequiredOneof()
 }
 
-type NestedConstraints_OneofField struct {
+type NestedRules_OneofField struct {
 	OneofField string `protobuf:"bytes,5,opt,name=oneof_field,json=oneofField,proto3,oneof"`
 }
 
-func (*NestedConstraints_OneofField) isNestedConstraints_RequiredOneof() {}
+func (*NestedRules_OneofField) isNestedRules_RequiredOneof() {}
 
 var File_tests_example_v1_filter_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_filter_proto_rawDesc = "" +
 	"\n" +
-	"\x1dtests/example/v1/filter.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\"\xc1\x01\n" +
-	"\x12InvalidConstraints\x12^\n" +
-	"\x05field\x18\x01 \x01(\x05BH\xbaHE\xba\x01B\n" +
-	"\x10field_constraint\x12 this field constraint is invalid\x1a\fthis.invalidR\x05field:K\xbaHH\x1aF\n" +
-	"\x12message_constraint\x12\"this message constraint is invalid\x1a\fthis.invalid\"\xf3\x01\n" +
-	"\x12AllConstraintTypes\x12Y\n" +
-	"\x05field\x18\x01 \x01(\x05BC\xbaH@\xba\x01=\n" +
-	"\x10field_constraint\x12\"this field constraint always fails\x1a\x05falseR\x05field\x12!\n" +
+	"\x1dtests/example/v1/filter.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\"\xa3\x01\n" +
+	"\fInvalidRules\x12R\n" +
+	"\x05field\x18\x01 \x01(\x05B<\xbaH9\xba\x016\n" +
+	"\n" +
+	"field_rule\x12\x1athis field rule is invalid\x1a\fthis.invalidR\x05field:?\xbaH<\x1a:\n" +
+	"\fmessage_rule\x12\x1cthis message rule is invalid\x1a\fthis.invalid\"\xd5\x01\n" +
+	"\fAllRuleTypes\x12M\n" +
+	"\x05field\x18\x01 \x01(\x05B7\xbaH4\xba\x011\n" +
+	"\n" +
+	"field_rule\x12\x1cthis field rule always fails\x1a\x05falseR\x05field\x12!\n" +
 	"\voneof_field\x18\x02 \x01(\tH\x00R\n" +
-	"oneofField:F\xbaHC\x1aA\n" +
-	"\x12message_constraint\x12$this message constraint always fails\x1a\x05falseB\x17\n" +
-	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01\"\xbe\x04\n" +
-	"\x11NestedConstraints\x12\x86\x01\n" +
-	"\x05field\x18\x01 \x01(\v2$.tests.example.v1.AllConstraintTypesBJ\xbaHG\xba\x01D\n" +
-	"\x17parent_field_constraint\x12\"this field constraint always fails\x1a\x05falseR\x05field\x12d\n" +
-	"\x06field2\x18\x02 \x01(\tBL\xbaHI\xba\x01F\n" +
-	"\x19parent_field_2_constraint\x12\"this field constraint always fails\x1a\x05falseR\x06field2\x12K\n" +
-	"\x0erepeated_field\x18\x03 \x03(\v2$.tests.example.v1.AllConstraintTypesR\rrepeatedField\x12N\n" +
-	"\tmap_field\x18\x04 \x03(\v21.tests.example.v1.NestedConstraints.MapFieldEntryR\bmapField\x12!\n" +
+	"oneofField::\xbaH7\x1a5\n" +
+	"\fmessage_rule\x12\x1ethis message rule always fails\x1a\x05falseB\x17\n" +
+	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01\"\x87\x04\n" +
+	"\vNestedRules\x12t\n" +
+	"\x05field\x18\x01 \x01(\v2\x1e.tests.example.v1.AllRuleTypesB>\xbaH;\xba\x018\n" +
+	"\x11parent_field_rule\x12\x1cthis field rule always fails\x1a\x05falseR\x05field\x12X\n" +
+	"\x06field2\x18\x02 \x01(\tB@\xbaH=\xba\x01:\n" +
+	"\x13parent_field_2_rule\x12\x1cthis field rule always fails\x1a\x05falseR\x06field2\x12E\n" +
+	"\x0erepeated_field\x18\x03 \x03(\v2\x1e.tests.example.v1.AllRuleTypesR\rrepeatedField\x12H\n" +
+	"\tmap_field\x18\x04 \x03(\v2+.tests.example.v1.NestedRules.MapFieldEntryR\bmapField\x12!\n" +
 	"\voneof_field\x18\x05 \x01(\tH\x00R\n" +
-	"oneofField\x1aa\n" +
+	"oneofField\x1a[\n" +
 	"\rMapFieldEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12:\n" +
-	"\x05value\x18\x02 \x01(\v2$.tests.example.v1.AllConstraintTypesR\x05value:\x028\x01B\x17\n" +
-	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01B\xd3\x01\n" +
-	"\x14com.tests.example.v1B\vFilterProtoP\x01ZLgithub.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
+	"\x03key\x18\x01 \x01(\tR\x03key\x124\n" +
+	"\x05value\x18\x02 \x01(\v2\x1e.tests.example.v1.AllRuleTypesR\x05value:\x028\x01B\x17\n" +
+	"\x0erequired_oneof\x12\x05\xbaH\x02\b\x01B\xc9\x01\n" +
+	"\x14com.tests.example.v1B\vFilterProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_filter_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tests_example_v1_filter_proto_goTypes = []any{
-	(*InvalidConstraints)(nil), // 0: tests.example.v1.InvalidConstraints
-	(*AllConstraintTypes)(nil), // 1: tests.example.v1.AllConstraintTypes
-	(*NestedConstraints)(nil),  // 2: tests.example.v1.NestedConstraints
-	nil,                        // 3: tests.example.v1.NestedConstraints.MapFieldEntry
+	(*InvalidRules)(nil), // 0: tests.example.v1.InvalidRules
+	(*AllRuleTypes)(nil), // 1: tests.example.v1.AllRuleTypes
+	(*NestedRules)(nil),  // 2: tests.example.v1.NestedRules
+	nil,                  // 3: tests.example.v1.NestedRules.MapFieldEntry
 }
 var file_tests_example_v1_filter_proto_depIdxs = []int32{
-	1, // 0: tests.example.v1.NestedConstraints.field:type_name -> tests.example.v1.AllConstraintTypes
-	1, // 1: tests.example.v1.NestedConstraints.repeated_field:type_name -> tests.example.v1.AllConstraintTypes
-	3, // 2: tests.example.v1.NestedConstraints.map_field:type_name -> tests.example.v1.NestedConstraints.MapFieldEntry
-	1, // 3: tests.example.v1.NestedConstraints.MapFieldEntry.value:type_name -> tests.example.v1.AllConstraintTypes
+	1, // 0: tests.example.v1.NestedRules.field:type_name -> tests.example.v1.AllRuleTypes
+	1, // 1: tests.example.v1.NestedRules.repeated_field:type_name -> tests.example.v1.AllRuleTypes
+	3, // 2: tests.example.v1.NestedRules.map_field:type_name -> tests.example.v1.NestedRules.MapFieldEntry
+	1, // 3: tests.example.v1.NestedRules.MapFieldEntry.value:type_name -> tests.example.v1.AllRuleTypes
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -497,10 +499,10 @@ func file_tests_example_v1_filter_proto_init() {
 		return
 	}
 	file_tests_example_v1_filter_proto_msgTypes[1].OneofWrappers = []any{
-		(*AllConstraintTypes_OneofField)(nil),
+		(*AllRuleTypes_OneofField)(nil),
 	}
 	file_tests_example_v1_filter_proto_msgTypes[2].OneofWrappers = []any{
-		(*NestedConstraints_OneofField)(nil),
+		(*NestedRules_OneofField)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

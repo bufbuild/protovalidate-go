@@ -21,8 +21,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bufbuild/protovalidate-go"
-	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/harness"
+	"buf.build/go/protovalidate"
+	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/harness"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -60,7 +60,7 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 	}
 	registry := &protoregistry.Types{}
 	files.RangeFiles(func(file protoreflect.FileDescriptor) bool {
-		for i := 0; i < file.Extensions().Len(); i++ {
+		for i := range file.Extensions().Len() {
 			if err = registry.RegisterExtension(
 				dynamicpb.NewExtensionType(file.Extensions().Get(i)),
 			); err != nil {

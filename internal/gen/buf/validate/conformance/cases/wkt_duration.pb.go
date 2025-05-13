@@ -1116,8 +1116,8 @@ const file_buf_validate_conformance_cases_wkt_duration_proto_rawDesc = "" +
 	"\aint_val\x18\x02 \x01(\x05B\a\xbaH\x04\x1a\x02 \x10R\x06intVal\"J\n" +
 	"\x0fDurationExample\x127\n" +
 	"\x03val\x18\x01 \x01(\v2\x19.google.protobuf.DurationB\n" +
-	"\xbaH\a\xaa\x01\x04J\x02\b\x03R\x03valB\xa4\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x10WktDurationProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\xbaH\a\xaa\x01\x04J\x02\b\x03R\x03valB\x9a\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x10WktDurationProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_wkt_duration_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_buf_validate_conformance_cases_wkt_duration_proto_goTypes = []any{

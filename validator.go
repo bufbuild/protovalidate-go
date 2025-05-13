@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"sync"
 
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
+	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -43,9 +43,9 @@ var (
 // Validator performs validation on any proto.Message values. The Validator is
 // safe for concurrent use.
 type Validator interface {
-	// Validate checks that message satisfies its constraints. Constraints are
+	// Validate checks that message satisfies its rules. Rules are
 	// defined within the Protobuf file as options from the buf.validate
-	// package. An error is returned if the constraints are violated
+	// package. An error is returned if the rules are violated
 	// (ValidationError), the evaluation logic for the message cannot be built
 	// (CompilationError), or there is a type error when attempting to evaluate
 	// a CEL expression associated with the message (RuntimeError).

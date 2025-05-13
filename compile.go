@@ -23,10 +23,10 @@ import (
 
 // An expressions instance is a container for the information needed to compile
 // and evaluate a list of CEL-based expressions, originating from a
-// validate.Constraint.
+// validate.Rule.
 type expressions struct {
-	Constraints []*validate.Constraint
-	RulePath    []*validate.FieldPathElement
+	Rules    []*validate.Rule
+	RulePath []*validate.FieldPathElement
 }
 
 // compile produces a ProgramSet from the provided expressions in the given
@@ -37,7 +37,7 @@ func compile(
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
 ) (set programSet, err error) {
-	if len(expressions.Constraints) == 0 {
+	if len(expressions.Rules) == 0 {
 		return nil, nil
 	}
 
@@ -49,12 +49,12 @@ func compile(
 		}
 	}
 
-	set = make(programSet, len(expressions.Constraints))
-	for i, constraint := range expressions.Constraints {
-		set[i].Source = constraint
+	set = make(programSet, len(expressions.Rules))
+	for i, rule := range expressions.Rules {
+		set[i].Source = rule
 		set[i].Path = expressions.RulePath
 
-		ast, err := compileAST(env, constraint, expressions.RulePath)
+		ast, err := compileAST(env, rule, expressions.RulePath)
 		if err != nil {
 			return nil, err
 		}
@@ -77,12 +77,12 @@ func compileASTs(
 	env *cel.Env,
 	envOpts ...cel.EnvOption,
 ) (set astSet, err error) {
-	if len(expressions.Constraints) == 0 {
+	if len(expressions.Rules) == 0 {
 		return set, nil
 	}
 
-	set = make([]compiledAST, len(expressions.Constraints))
-	for i, constraint := range expressions.Constraints {
+	set = make([]compiledAST, len(expressions.Rules))
+	for i, rule := range expressions.Rules {
 		set[i].Env = env
 		if len(envOpts) > 0 {
 			set[i].Env, err = env.Extend(envOpts...)
@@ -91,7 +91,7 @@ func compileASTs(
 					"failed to extend environment: %w", err)}
 			}
 		}
-		set[i], err = compileAST(set[i].Env, constraint, expressions.RulePath)
+		set[i], err = compileAST(set[i].Env, rule, expressions.RulePath)
 		if err != nil {
 			return set, err
 		}
@@ -100,24 +100,24 @@ func compileASTs(
 	return set, nil
 }
 
-func compileAST(env *cel.Env, constraint *validate.Constraint, rulePath []*validate.FieldPathElement) (out compiledAST, err error) {
-	ast, issues := env.Compile(constraint.GetExpression())
+func compileAST(env *cel.Env, rule *validate.Rule, rulePath []*validate.FieldPathElement) (out compiledAST, err error) {
+	ast, issues := env.Compile(rule.GetExpression())
 	if err := issues.Err(); err != nil {
 		return out, &CompilationError{cause: fmt.Errorf(
-			"failed to compile expression %s: %w", constraint.GetId(), err)}
+			"failed to compile expression %s: %w", rule.GetId(), err)}
 	}
 
 	outType := ast.OutputType()
 	if !(outType.IsAssignableType(cel.BoolType) || outType.IsAssignableType(cel.StringType)) {
 		return out, &CompilationError{cause: fmt.Errorf(
 			"expression %s outputs %s, wanted either bool or string",
-			constraint.GetId(), outType.String())}
+			rule.GetId(), outType.String())}
 	}
 
 	return compiledAST{
 		AST:    ast,
 		Env:    env,
-		Source: constraint,
+		Source: rule,
 		Path:   rulePath,
 	}, nil
 }

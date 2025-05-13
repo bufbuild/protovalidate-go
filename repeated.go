@@ -22,7 +22,7 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	repeatedRuleDescriptor      = (&validate.FieldConstraints{}).ProtoReflect().Descriptor().Fields().ByName("repeated")
+	repeatedRuleDescriptor      = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("repeated")
 	repeatedItemsRuleDescriptor = (&validate.RepeatedRules{}).ProtoReflect().Descriptor().Fields().ByName("items")
 	repeatedItemsRulePath       = &validate.FieldPath{
 		Elements: []*validate.FieldPathElement{
@@ -36,14 +36,14 @@ var (
 type listItems struct {
 	base
 
-	// ItemConstraints are checked on every item of the list
-	ItemConstraints value
+	// ItemRules are checked on every item of the list
+	ItemRules value
 }
 
 func newListItems(valEval *value) listItems {
 	return listItems{
-		base:            newBase(valEval),
-		ItemConstraints: value{NestedRule: repeatedItemsRulePath},
+		base:      newBase(valEval),
+		ItemRules: value{NestedRule: repeatedItemsRulePath},
 	}
 }
 
@@ -51,15 +51,15 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 	list := val.List()
 	var ok bool
 	var err error
-	for i := 0; i < list.Len(); i++ {
-		itemErr := r.ItemConstraints.EvaluateField(msg, list.Get(i), cfg, true)
+	for i := range list.Len() {
+		itemErr := r.ItemRules.EvaluateField(msg, list.Get(i), cfg, true)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, &validate.FieldPathElement{
-				FieldNumber: proto.Int32(r.base.FieldPathElement.GetFieldNumber()),
+				FieldNumber: proto.Int32(r.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
-				FieldName:   proto.String(r.base.FieldPathElement.GetFieldName()),
+				FieldName:   proto.String(r.FieldPathElement.GetFieldName()),
 				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)}, //nolint:gosec // indices are guaranteed to be non-negative
-			}, r.base.RulePrefix.GetElements())
+			}, r.RulePrefix.GetElements())
 		}
 		if ok, err = mergeViolations(err, itemErr, cfg); !ok {
 			return err
@@ -69,7 +69,7 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 }
 
 func (r listItems) Tautology() bool {
-	return r.ItemConstraints.Tautology()
+	return r.ItemRules.Tautology()
 }
 
 var _ evaluator = listItems{}

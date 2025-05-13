@@ -240,8 +240,8 @@ const file_buf_validate_conformance_cases_wkt_nested_proto_rawDesc = "" +
 	"\vWktLevelTwo\x12c\n" +
 	"\x05three\x18\x01 \x01(\v2E.buf.validate.conformance.cases.WktLevelOne.WktLevelTwo.WktLevelThreeB\x06\xbaH\x03\xc8\x01\x01R\x05three\x1a-\n" +
 	"\rWktLevelThree\x12\x1c\n" +
-	"\x04uuid\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x04uuidB\xa2\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x0eWktNestedProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\x04uuid\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x01\x01R\x04uuidB\x98\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x0eWktNestedProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_wkt_nested_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_buf_validate_conformance_cases_wkt_nested_proto_goTypes = []any{

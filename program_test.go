@@ -37,7 +37,7 @@ func TestCompiled(t *testing.T) {
 	tests := []struct {
 		name   string
 		prog   cel.Program
-		src    *validate.Constraint
+		src    *validate.Rule
 		exViol *validate.Violation
 		exErr  bool
 	}{
@@ -52,14 +52,14 @@ func TestCompiled(t *testing.T) {
 		{
 			name:   "invalid bool",
 			prog:   mockProgram{Val: types.False},
-			src:    &validate.Constraint{Id: proto.String("foo"), Message: proto.String("bar")},
-			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
+			src:    &validate.Rule{Id: proto.String("foo"), Message: proto.String("bar")},
+			exViol: &validate.Violation{RuleId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:   "invalid string",
 			prog:   mockProgram{Val: types.String("bar")},
-			src:    &validate.Constraint{Id: proto.String("foo")},
-			exViol: &validate.Violation{ConstraintId: proto.String("foo"), Message: proto.String("bar")},
+			src:    &validate.Rule{Id: proto.String("foo")},
+			exViol: &validate.Violation{RuleId: proto.String("foo"), Message: proto.String("bar")},
 		},
 		{
 			name:  "eval error",
@@ -113,11 +113,11 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.True},
-					Source:  &validate.Constraint{},
+					Source:  &validate.Rule{},
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("")},
-					Source:  &validate.Constraint{},
+					Source:  &validate.Rule{},
 				},
 			},
 		},
@@ -126,11 +126,11 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Constraint{},
+					Source:  &validate.Rule{},
 				},
 				compiledProgram{
 					Program: mockProgram{Err: errors.New("some error")},
-					Source:  &validate.Constraint{},
+					Source:  &validate.Rule{},
 				},
 			},
 			exErr: true,
@@ -140,17 +140,17 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
+					Source:  &validate.Rule{Id: proto.String("foo"), Message: proto.String("fizz")},
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Constraint{Id: proto.String("bar")},
+					Source:  &validate.Rule{Id: proto.String("bar")},
 				},
 			},
 			exViols: &validate.Violations{
 				Violations: []*validate.Violation{
-					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
-					{ConstraintId: proto.String("bar"), Message: proto.String("buzz")},
+					{RuleId: proto.String("foo"), Message: proto.String("fizz")},
+					{RuleId: proto.String("bar"), Message: proto.String("buzz")},
 				},
 			},
 		},
@@ -160,16 +160,16 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Constraint{Id: proto.String("foo"), Message: proto.String("fizz")},
+					Source:  &validate.Rule{Id: proto.String("foo"), Message: proto.String("fizz")},
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Constraint{Id: proto.String("bar")},
+					Source:  &validate.Rule{Id: proto.String("bar")},
 				},
 			},
 			exViols: &validate.Violations{
 				Violations: []*validate.Violation{
-					{ConstraintId: proto.String("foo"), Message: proto.String("fizz")},
+					{RuleId: proto.String("foo"), Message: proto.String("fizz")},
 				},
 			},
 		},

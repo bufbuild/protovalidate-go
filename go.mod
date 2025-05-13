@@ -1,17 +1,16 @@
-module github.com/bufbuild/protovalidate-go
+module buf.build/go/protovalidate
 
 go 1.23.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250307204501-0409229c3780.1
-	github.com/envoyproxy/protoc-gen-validate v1.2.1
-	github.com/google/cel-go v0.24.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250425153114-8976f5be98c1.1
+	github.com/google/cel-go v0.25.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/protobuf v1.36.6
 )
 
 require (
-	cel.dev/expr v0.19.1 // indirect
+	cel.dev/expr v0.23.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/kr/pretty v0.1.0 // indirect

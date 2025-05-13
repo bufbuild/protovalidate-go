@@ -18,8 +18,8 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pvcel "github.com/bufbuild/protovalidate-go/cel"
-	"github.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases"
+	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,41 +35,41 @@ func getFieldDesc(t *testing.T, msg proto.Message, fld protoreflect.Name) protor
 	return desc
 }
 
-func TestCache_BuildStandardConstraints(t *testing.T) {
+func TestCache_BuildStandardRules(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
 		name     string
 		desc     protoreflect.FieldDescriptor
-		cons     *validate.FieldConstraints
+		cons     *validate.FieldRules
 		forItems bool
 		exCt     int
 		exErr    bool
 	}{
 		{
-			name: "no constraints",
+			name: "no rules",
 			desc: getFieldDesc(t, &cases.FloatNone{}, "val"),
-			cons: &validate.FieldConstraints{},
+			cons: &validate.FieldRules{},
 			exCt: 0,
 		},
 		{
-			name: "nil constraints",
+			name: "nil rules",
 			desc: getFieldDesc(t, &cases.FloatNone{}, "val"),
 			cons: nil,
 			exCt: 0,
 		},
 		{
-			name: "list constraints",
+			name: "list rules",
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			cons: &validate.FieldConstraints{Type: &validate.FieldConstraints_Repeated{Repeated: &validate.RepeatedRules{
+			cons: &validate.FieldRules{Type: &validate.FieldRules_Repeated{Repeated: &validate.RepeatedRules{
 				MinItems: proto.Uint64(3),
 			}}},
 			exCt: 1,
 		},
 		{
-			name: "list item constraints",
+			name: "list item rules",
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			cons: &validate.FieldConstraints{Type: &validate.FieldConstraints_Int64{Int64: &validate.Int64Rules{
+			cons: &validate.FieldRules{Type: &validate.FieldRules_Int64{Int64: &validate.Int64Rules{
 				NotIn: []int64{123},
 				Const: proto.Int64(456),
 			}}},
@@ -77,17 +77,17 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 			exCt:     2,
 		},
 		{
-			name: "map constraints",
+			name: "map rules",
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
-			cons: &validate.FieldConstraints{Type: &validate.FieldConstraints_Map{Map: &validate.MapRules{
+			cons: &validate.FieldRules{Type: &validate.FieldRules_Map{Map: &validate.MapRules{
 				MinPairs: proto.Uint64(2),
 			}}},
 			exCt: 1,
 		},
 		{
-			name: "mismatch constraints",
+			name: "mismatch rules",
 			desc: getFieldDesc(t, &cases.AnyNone{}, "val"),
-			cons: &validate.FieldConstraints{Type: &validate.FieldConstraints_Float{Float: &validate.FloatRules{
+			cons: &validate.FieldRules{Type: &validate.FieldRules_Float{Float: &validate.FloatRules{
 				Const: proto.Float32(1.23),
 			}}},
 			exErr: true,
@@ -113,14 +113,14 @@ func TestCache_BuildStandardConstraints(t *testing.T) {
 	}
 }
 
-func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
+func TestCache_LoadOrCompileStandardRule(t *testing.T) {
 	t.Parallel()
 
 	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err)
 
-	constraints := &validate.FieldConstraints{}
-	oneOfDesc := constraints.ProtoReflect().Descriptor().Oneofs().ByName("type").Fields().ByName("float")
+	rules := &validate.FieldRules{}
+	oneOfDesc := rules.ProtoReflect().Descriptor().Oneofs().ByName("type").Fields().ByName("float")
 	msg := &cases.FloatIn{}
 	desc := getFieldDesc(t, msg, "val")
 	require.NotNil(t, desc)
@@ -129,7 +129,7 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	_, ok := cache.cache[desc]
 	assert.False(t, ok)
 
-	asts, err := cache.loadOrCompileStandardConstraint(env, oneOfDesc, desc)
+	asts, err := cache.loadOrCompileStandardRule(env, oneOfDesc, desc)
 	require.NoError(t, err)
 	assert.Nil(t, asts)
 
@@ -137,12 +137,12 @@ func TestCache_LoadOrCompileStandardConstraint(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, cached, asts)
 
-	asts, err = cache.loadOrCompileStandardConstraint(env, oneOfDesc, desc)
+	asts, err = cache.loadOrCompileStandardRule(env, oneOfDesc, desc)
 	require.NoError(t, err)
 	assert.Equal(t, cached, asts)
 }
 
-func TestCache_GetExpectedConstraintDescriptor(t *testing.T) {
+func TestCache_GetExpectedRuleDescriptor(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -152,32 +152,32 @@ func TestCache_GetExpectedConstraintDescriptor(t *testing.T) {
 	}{
 		{
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
-			ex:   mapFieldConstraintsDesc,
+			ex:   mapFieldRulesDesc,
 		},
 		{
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			ex:   repeatedFieldConstraintsDesc,
+			ex:   repeatedFieldRulesDesc,
 		},
 		{
 			desc:     getFieldDesc(t, &cases.RepeatedNone{}, "val"),
 			forItems: true,
-			ex:       expectedStandardConstraints[protoreflect.Int64Kind],
+			ex:       expectedStandardRules[protoreflect.Int64Kind],
 		},
 		{
 			desc: getFieldDesc(t, &cases.AnyNone{}, "val"),
-			ex:   expectedWKTConstraints["google.protobuf.Any"],
+			ex:   expectedWKTRules["google.protobuf.Any"],
 		},
 		{
 			desc: getFieldDesc(t, &cases.TimestampNone{}, "val"),
-			ex:   expectedWKTConstraints["google.protobuf.Timestamp"],
+			ex:   expectedWKTRules["google.protobuf.Timestamp"],
 		},
 		{
 			desc: getFieldDesc(t, &cases.DurationNone{}, "val"),
-			ex:   expectedWKTConstraints["google.protobuf.Duration"],
+			ex:   expectedWKTRules["google.protobuf.Duration"],
 		},
 		{
 			desc: getFieldDesc(t, &cases.StringNone{}, "val"),
-			ex:   expectedStandardConstraints[protoreflect.StringKind],
+			ex:   expectedStandardRules[protoreflect.StringKind],
 		},
 		{
 			desc: getFieldDesc(t, &cases.MessageNone{}, "val"),
@@ -190,7 +190,7 @@ func TestCache_GetExpectedConstraintDescriptor(t *testing.T) {
 		test := tc
 		t.Run(string(test.desc.FullName()), func(t *testing.T) {
 			t.Parallel()
-			out, ok := c.getExpectedConstraintDescriptor(test.desc, test.forItems)
+			out, ok := c.getExpectedRuleDescriptor(test.desc, test.forItems)
 			if test.ex != nil {
 				assert.True(t, ok)
 				assert.Equal(t, test.ex.FullName(), out.FullName())

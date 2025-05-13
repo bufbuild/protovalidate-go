@@ -2,9 +2,8 @@ version: v2
 modules:
   - path: proto
 deps:
-  - buf.build/bufbuild/protovalidate
-  - buf.build/bufbuild/protovalidate-testing
-  - buf.build/envoyproxy/protoc-gen-validate
+  - buf.build/bufbuild/protovalidate:v0.11.1
+  - buf.build/bufbuild/protovalidate-testing:v0.11.1
 lint:
   use:
     - STANDARD

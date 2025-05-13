@@ -18,30 +18,30 @@ package tests.example.v1;
 
 import "buf/validate/validate.proto";
 
-message InvalidConstraints {
+message InvalidRules {
   option (buf.validate.message).cel = {
-    id: "message_constraint"
-    message: "this message constraint is invalid"
+    id: "message_rule"
+    message: "this message rule is invalid"
     expression: "this.invalid"
   };
 
   int32 field = 1 [(buf.validate.field).cel = {
-    id: "field_constraint"
-    message: "this field constraint is invalid"
+    id: "field_rule"
+    message: "this field rule is invalid"
     expression: "this.invalid"
   }];
 }
 
-message AllConstraintTypes {
+message AllRuleTypes {
   option (buf.validate.message).cel = {
-    id: "message_constraint"
-    message: "this message constraint always fails"
+    id: "message_rule"
+    message: "this message rule always fails"
     expression: "false"
   };
 
   int32 field = 1 [(buf.validate.field).cel = {
-    id: "field_constraint"
-    message: "this field constraint always fails"
+    id: "field_rule"
+    message: "this field rule always fails"
     expression: "false"
   }];
 
@@ -51,22 +51,22 @@ message AllConstraintTypes {
   }
 }
 
-message NestedConstraints {
-  AllConstraintTypes field = 1 [(buf.validate.field).cel = {
-    id: "parent_field_constraint"
-    message: "this field constraint always fails"
+message NestedRules {
+  AllRuleTypes field = 1 [(buf.validate.field).cel = {
+    id: "parent_field_rule"
+    message: "this field rule always fails"
     expression: "false"
   }];
 
   string field2 = 2 [(buf.validate.field).cel = {
-    id: "parent_field_2_constraint"
-    message: "this field constraint always fails"
+    id: "parent_field_2_rule"
+    message: "this field rule always fails"
     expression: "false"
   }];
 
-  repeated AllConstraintTypes repeated_field = 3;
+  repeated AllRuleTypes repeated_field = 3;
 
-  map<string, AllConstraintTypes> map_field = 4;
+  map<string, AllRuleTypes> map_field = 4;
 
   oneof required_oneof {
     option (buf.validate.oneof).required = true;

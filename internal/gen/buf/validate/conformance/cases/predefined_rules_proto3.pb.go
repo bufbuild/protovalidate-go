@@ -2776,8 +2776,8 @@ const file_buf_validate_conformance_cases_predefined_rules_proto3_proto_rawDesc 
 	"1standard_predefined_and_custom_rule_scalar_proto3\x1a,this > 24 ? '' : 'a must be greater than 24':\x05\xc8H\x01\x108R\x01a\"\xf5\x01\n" +
 	".PredefinedRulesProto3UnusedImportBugWorkaround\x12^\n" +
 	"\adummy_1\x18\x01 \x01(\v2E.buf.validate.conformance.cases.StandardPredefinedAndCustomRuleProto2R\x06dummy1\x12c\n" +
-	"\adummy_2\x18\x02 \x01(\v2J.buf.validate.conformance.cases.StandardPredefinedAndCustomRuleEdition2023R\x06dummy2B\xae\x02\n" +
-	"\"com.buf.validate.conformance.casesB\x1aPredefinedRulesProto3ProtoP\x01ZPgithub.com/bufbuild/protovalidate-go/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
+	"\adummy_2\x18\x02 \x01(\v2J.buf.validate.conformance.cases.StandardPredefinedAndCustomRuleEdition2023R\x06dummy2B\xa4\x02\n" +
+	"\"com.buf.validate.conformance.casesB\x1aPredefinedRulesProto3ProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
 var file_buf_validate_conformance_cases_predefined_rules_proto3_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_buf_validate_conformance_cases_predefined_rules_proto3_proto_msgTypes = make([]protoimpl.MessageInfo, 43)

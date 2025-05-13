@@ -100,7 +100,7 @@ func (s programSet) bindThis(val any) *variable {
 // source Expression.
 type compiledProgram struct {
 	Program    cel.Program
-	Source     *validate.Constraint
+	Source     *validate.Rule
 	Path       []*validate.FieldPathElement
 	Value      protoreflect.Value
 	Descriptor protoreflect.FieldDescriptor
@@ -124,9 +124,9 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 		}
 		return &Violation{
 			Proto: &validate.Violation{
-				Rule:         expr.rulePath(),
-				ConstraintId: proto.String(expr.Source.GetId()),
-				Message:      proto.String(val),
+				Rule:    expr.rulePath(),
+				RuleId:  proto.String(expr.Source.GetId()),
+				Message: proto.String(val),
 			},
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,
@@ -137,9 +137,9 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 		}
 		return &Violation{
 			Proto: &validate.Violation{
-				Rule:         expr.rulePath(),
-				ConstraintId: proto.String(expr.Source.GetId()),
-				Message:      proto.String(expr.Source.GetMessage()),
+				Rule:    expr.rulePath(),
+				RuleId:  proto.String(expr.Source.GetId()),
+				Message: proto.String(expr.Source.GetMessage()),
 			},
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,

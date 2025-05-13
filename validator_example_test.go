@@ -21,7 +21,7 @@ import (
 	"os"
 	"text/template"
 
-	pb "github.com/bufbuild/protovalidate-go/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
@@ -159,7 +159,7 @@ func ExampleValidationError() {
 	var valErr *ValidationError
 	if ok := errors.As(err, &valErr); ok {
 		violation := valErr.Violations[0]
-		fmt.Println(violation.Proto.GetField().GetElements()[0].GetFieldName(), violation.Proto.GetConstraintId())
+		fmt.Println(violation.Proto.GetField().GetElements()[0].GetFieldName(), violation.Proto.GetRuleId())
 		fmt.Println(violation.RuleValue, violation.FieldValue)
 	}
 
@@ -191,7 +191,7 @@ func ExampleValidationError_localized() {
 	if ok := errors.As(err, &valErr); ok {
 		for _, violation := range valErr.Violations {
 			_ = template.
-				Must(template.New("").Parse(ruleMessages[violation.Proto.GetConstraintId()])).
+				Must(template.New("").Parse(ruleMessages[violation.Proto.GetRuleId()])).
 				Execute(os.Stdout, ErrorInfo{
 					FieldName:  violation.Proto.GetField().GetElements()[0].GetFieldName(),
 					RuleValue:  violation.RuleValue.Interface(),

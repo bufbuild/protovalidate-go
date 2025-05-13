@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"slices"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -61,13 +63,7 @@ func (b *base) rulePath(suffix *validate.FieldPath) *validate.FieldPath {
 func prefixRulePath(prefix *validate.FieldPath, suffix *validate.FieldPath) *validate.FieldPath {
 	if len(prefix.GetElements()) > 0 {
 		return &validate.FieldPath{
-			Elements: append(
-				append(
-					[]*validate.FieldPathElement{},
-					prefix.GetElements()...,
-				),
-				suffix.GetElements()...,
-			),
+			Elements: slices.Concat(prefix.GetElements(), suffix.GetElements()),
 		}
 	}
 	return suffix
