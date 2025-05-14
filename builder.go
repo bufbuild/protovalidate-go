@@ -355,8 +355,22 @@ func (bldr *builder) processWrapperRules(
 		(fdesc.IsList() && valEval.NestedRule == nil) {
 		return nil
 	}
+	refRules := rules.ProtoReflect()
+	setOneof := refRules.WhichOneof(fieldRulesOneofDesc)
+	if setOneof == nil {
+		return nil
+	}
 
 	expectedWrapperDescriptor, ok := expectedWrapperRules(fdesc.Message().FullName())
+	if ok && setOneof.FullName() != expectedWrapperDescriptor.FullName() {
+		return &CompilationError{cause: fmt.Errorf(
+			"expected rule %q, got %q on field %q",
+			expectedWrapperDescriptor.FullName(),
+			setOneof.FullName(),
+			fdesc.FullName(),
+		)}
+	}
+
 	if !ok || !rules.ProtoReflect().Has(expectedWrapperDescriptor) {
 		return nil
 	}
@@ -378,6 +392,14 @@ func (bldr *builder) processStandardRules(
 	valEval *value,
 	_ messageCache,
 ) error {
+	// If this is a wrapper field, just return. Wrapper fields are handled by
+	// processWrapperRules and their wrapped values are passed through the process gauntlet.
+	if isMessageField(fdesc) {
+		if _, ok := expectedWrapperRules(fdesc.Message().FullName()); ok {
+			return nil
+		}
+	}
+
 	stdRules, err := bldr.rules.Build(
 		bldr.env,
 		fdesc,

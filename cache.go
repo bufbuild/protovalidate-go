@@ -129,9 +129,22 @@ func (c *cache) resolveRules(
 			fieldDesc.FullName(),
 		)}
 	}
-	if !ok || !refRules.Has(setOneof) {
-		return nil, nil, true, nil
+
+	if !ok {
+		// The only expected rule descriptor for message fields is for well known types.
+		// If we didn't find a descriptor and this is a message, there must be a mismatch.
+		if fieldDesc.Kind() == protoreflect.MessageKind {
+			return nil, nil, true, &CompilationError{cause: fmt.Errorf(
+				"mismatched message rules, %q is not a valid rule for field %q",
+				setOneof.FullName(),
+				fieldDesc.FullName(),
+			)}
+		}
+		if !refRules.Has(setOneof) {
+			return nil, nil, true, nil
+		}
 	}
+
 	rules = refRules.Get(setOneof).Message()
 	return rules, setOneof, false, nil
 }
