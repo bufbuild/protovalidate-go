@@ -65,37 +65,40 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 	var ok bool
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 		evalErr := m.evalPairs(msg, key, value, cfg)
-		if evalErr != nil {
-			element := &validate.FieldPathElement{
-				FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
-				FieldType:   m.base.FieldPathElement.GetFieldType().Enum(),
-				FieldName:   proto.String(m.FieldPathElement.GetFieldName()),
-			}
-			element.KeyType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapKey().Kind()).Enum()
-			element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapValue().Kind()).Enum()
-			switch m.base.Descriptor.MapKey().Kind() {
-			case protoreflect.BoolKind:
-				element.Subscript = &validate.FieldPathElement_BoolKey{BoolKey: key.Bool()}
-			case protoreflect.Int32Kind, protoreflect.Int64Kind,
-				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
-				protoreflect.Sint32Kind, protoreflect.Sint64Kind:
-				element.Subscript = &validate.FieldPathElement_IntKey{IntKey: key.Int()}
-			case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
-				protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
-				element.Subscript = &validate.FieldPathElement_UintKey{UintKey: key.Uint()}
-			case protoreflect.StringKind:
-				element.Subscript = &validate.FieldPathElement_StringKey{StringKey: key.String()}
-			case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
-				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
-				fallthrough
-			default:
-				err = &CompilationError{cause: fmt.Errorf(
-					"unexpected map key type %s",
-					m.base.Descriptor.MapKey().Kind())}
-				return false
-			}
-			updateViolationPaths(evalErr, element, m.RulePrefix.GetElements())
+		if evalErr == nil {
+			// don't update violation paths if there are no violations to avoid unnecessary memory allocations
+			return true
 		}
+		element := &validate.FieldPathElement{
+			FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
+			FieldType:   m.base.FieldPathElement.GetFieldType().Enum(),
+			FieldName:   proto.String(m.FieldPathElement.GetFieldName()),
+		}
+		element.KeyType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapKey().Kind()).Enum()
+		element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapValue().Kind()).Enum()
+		switch m.base.Descriptor.MapKey().Kind() {
+		case protoreflect.BoolKind:
+			element.Subscript = &validate.FieldPathElement_BoolKey{BoolKey: key.Bool()}
+		case protoreflect.Int32Kind, protoreflect.Int64Kind,
+			protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
+			protoreflect.Sint32Kind, protoreflect.Sint64Kind:
+			element.Subscript = &validate.FieldPathElement_IntKey{IntKey: key.Int()}
+		case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
+			protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
+			element.Subscript = &validate.FieldPathElement_UintKey{UintKey: key.Uint()}
+		case protoreflect.StringKind:
+			element.Subscript = &validate.FieldPathElement_StringKey{StringKey: key.String()}
+		case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
+			protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
+			fallthrough
+		default:
+			err = &CompilationError{cause: fmt.Errorf(
+				"unexpected map key type %s",
+				m.base.Descriptor.MapKey().Kind())}
+			return false
+		}
+		updateViolationPaths(evalErr, element, m.RulePrefix.GetElements())
+
 		ok, err = mergeViolations(err, evalErr, cfg)
 		return ok
 	})

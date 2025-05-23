@@ -57,6 +57,8 @@ func (v *value) EvaluateField(
 		if v.IgnoreEmpty && val.Equal(v.Zero) {
 			return nil
 		}
+		// 218MB-35MB=183MB for 500 goroutines
+		// memory usage is from here
 		if ok, err = mergeViolations(err, v.Rules.Evaluate(msg, val, cfg), cfg); !ok {
 			return err
 		}

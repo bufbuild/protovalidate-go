@@ -82,6 +82,11 @@ func New(options ...ValidatorOption) (Validator, error) {
 		failFast: cfg.failFast,
 		builder:  bldr,
 		nowFn:    cfg.nowFn,
+		validationConfig: validationConfig{
+			failFast: cfg.failFast,
+			filter:   nopFilter{},
+			nowFn:    cfg.nowFn,
+		},
 	}, nil
 }
 
@@ -89,28 +94,33 @@ type validator struct {
 	builder  *builder
 	failFast bool
 	nowFn    func() *timestamppb.Timestamp
+	validationConfig
 }
 
 func (v *validator) Validate(
 	msg proto.Message,
-	options ...ValidationOption,
+	_ ...ValidationOption, // noop to avoid memory allocation for creating a new validationConfig
 ) error {
 	if msg == nil {
 		return nil
 	}
-	cfg := validationConfig{
-		failFast: v.failFast,
-		filter:   nopFilter{},
-		nowFn:    v.nowFn,
-	}
-	for _, opt := range options {
-		opt.applyToValidation(&cfg)
-	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	err := eval.EvaluateMessage(refl, &cfg)
-	finalizeViolationPaths(err)
-	return err
+
+	// memory usage is from here
+	err := eval.EvaluateMessage(refl, &v.validationConfig)
+	if err != nil {
+		finalizeViolationPaths(err)
+		return err
+	}
+	// don't jump into finalizeViolationPaths where more memory allocation is needed
+	return nil
+}
+
+func (v *validator) WithValidationOptions(options ...ValidationOption) {
+	for _, opt := range options {
+		opt.applyToValidation(&v.validationConfig)
+	}
 }
 
 // Validate uses a global instance of Validator constructed with no ValidatorOptions and

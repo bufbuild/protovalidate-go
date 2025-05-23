@@ -69,6 +69,7 @@ func (f field) shouldIgnoreDefault() bool {
 }
 
 func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	// memory usage is not from here
 	return f.EvaluateMessage(val.Message(), cfg)
 }
 
@@ -103,10 +104,15 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 		return nil
 	}
 
-	val := msg.Get(f.Value.Descriptor)
+	// how can we improve this? 35MB-4MB=31MB for 500 goroutines
+	// something inside google.golang.org/protobuf let's hold off on this for now
+	val := msg.Get(f.Value.Descriptor) 
 	if f.shouldIgnoreDefault() && val.Equal(f.Zero) {
 		return nil
 	}
+
+	// 218MB-35MB=183MB for 500 goroutines
+	// memory usage is from here
 	return f.Value.EvaluateField(msg, val, cfg, true)
 }
 

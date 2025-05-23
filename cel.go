@@ -43,6 +43,7 @@ func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cf
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	// memory usage is not from here
 	return c.Eval(protoreflect.ValueOfMessage(msg), cfg)
 }
 

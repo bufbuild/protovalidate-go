@@ -33,6 +33,7 @@ func (o oneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 }
 
 func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	// memory usage is not from here
 	if !cfg.filter.ShouldValidate(msg, o.Descriptor) ||
 		!o.Required || msg.WhichOneof(o.Descriptor) != nil {
 		return nil

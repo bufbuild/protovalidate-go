@@ -56,6 +56,7 @@ type evaluators []evaluator
 func (e evaluators) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range e {
+		// 218MB-35MB=183MB for 500 goroutines
 		evalErr := eval.Evaluate(msg, val, cfg)
 		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err
@@ -84,6 +85,7 @@ func (m messageEvaluators) Evaluate(val protoreflect.Value, cfg *validationConfi
 func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range m {
+		// memory usage is from here
 		evalErr := eval.EvaluateMessage(msg, cfg)
 		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err

@@ -42,6 +42,7 @@ func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 	binding := s.bindThis(val.Interface())
 	defer globalVarPool.Put(binding)
 
+	// memory usage is from here 218MB-50MB for 500 goroutines
 	var violations []*Violation
 	for _, expr := range s {
 		violation, err := expr.eval(binding, cfg)
@@ -112,6 +113,8 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 	defer globalNowPool.Put(now)
 	bindings.Next = now
 
+	// memory usage is from here 218MB-50MB for 500 goroutines
+	// something from github.com/google/cel-go
 	value, _, err := expr.Program.Eval(bindings)
 	if err != nil {
 		return nil, &RuntimeError{cause: fmt.Errorf(

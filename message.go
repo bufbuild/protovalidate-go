@@ -51,6 +51,7 @@ func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfi
 			return err
 		}
 	}
+	// memory usage is not from here
 	_, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessage(msg, cfg), cfg)
 	return err
 }
@@ -109,6 +110,10 @@ type embeddedMessage struct {
 
 func (m *embeddedMessage) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	err := m.message.EvaluateMessage(val.Message(), cfg)
+	if err == nil {
+		// don't update violation paths if there are no violations to avoid unnecessary memory allocations
+		return nil
+	}
 	updateViolationPaths(err, m.FieldPathElement, nil)
 	return err
 }
