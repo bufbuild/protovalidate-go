@@ -22,7 +22,6 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
-	"buf.build/go/protovalidate/resolve"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -123,7 +122,7 @@ func (bldr *builder) buildMessage(
 	desc protoreflect.MessageDescriptor, msgEval *message,
 	cache messageCache,
 ) {
-	msgRules, _ := resolve.MessageRules(desc)
+	msgRules, _ := ResolveMessageRules(desc)
 	if msgRules.GetDisabled() {
 		return
 	}
@@ -178,7 +177,7 @@ func (bldr *builder) processOneofRules(
 	oneofs := desc.Oneofs()
 	for i := range oneofs.Len() {
 		oneofDesc := oneofs.Get(i)
-		oneofRules, _ := resolve.OneofRules(oneofDesc)
+		oneofRules, _ := ResolveOneofRules(oneofDesc)
 		oneofEval := oneof{
 			Descriptor: oneofDesc,
 			Required:   oneofRules.GetRequired(),
@@ -196,7 +195,7 @@ func (bldr *builder) processFields(
 	fields := desc.Fields()
 	for i := range fields.Len() {
 		fdesc := fields.Get(i)
-		fieldRules, _ := resolve.FieldRules(fdesc)
+		fieldRules, _ := ResolveFieldRules(fdesc)
 		fldEval, err := bldr.buildField(fdesc, fieldRules, cache)
 		if err != nil {
 			fldEval.Err = err

@@ -19,7 +19,6 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
-	"buf.build/go/protovalidate/resolve"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -182,7 +181,7 @@ func (c *cache) loadOrCompileStandardRule(
 	if cachedRule, ok := c.cache[ruleFieldDesc]; ok {
 		return cachedRule, nil
 	}
-	predefinedRules, _ := resolve.PredefinedRules(
+	predefinedRules, _ := ResolvePredefinedRules(
 		ruleFieldDesc,
 	)
 	exprs := expressions{
