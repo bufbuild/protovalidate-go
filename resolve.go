@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package resolve
+package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -24,26 +24,26 @@ import (
 //nolint:gochecknoglobals // static data, only want single instance
 var resolver = newExtensionResolver()
 
-// MessageRules returns the MessageRules option set for the MessageDescriptor.
-func MessageRules(desc protoreflect.MessageDescriptor) (*validate.MessageRules, error) {
+// ResolveMessageRules returns the ResolveMessageRules option set for the MessageDescriptor.
+func ResolveMessageRules(desc protoreflect.MessageDescriptor) (*validate.MessageRules, error) {
 	return resolve[*validate.MessageRules](desc.Options(), validate.E_Message)
 }
 
-// OneofRules returns the OneofRules option set for the OneofDescriptor.
-func OneofRules(desc protoreflect.OneofDescriptor) (*validate.OneofRules, error) {
+// ResolveOneofRules returns the ResolveOneofRules option set for the OneofDescriptor.
+func ResolveOneofRules(desc protoreflect.OneofDescriptor) (*validate.OneofRules, error) {
 	return resolve[*validate.OneofRules](desc.Options(), validate.E_Oneof)
 }
 
-// FieldRules returns the FieldRules option set for the FieldDescriptor.
-func FieldRules(desc protoreflect.FieldDescriptor) (*validate.FieldRules, error) {
+// ResolveFieldRules returns the ResolveFieldRules option set for the FieldDescriptor.
+func ResolveFieldRules(desc protoreflect.FieldDescriptor) (*validate.FieldRules, error) {
 	return resolve[*validate.FieldRules](desc.Options(), validate.E_Field)
 }
 
-// PredefinedRules returns the PredefinedRules option set for the
+// ResolvePredefinedRules returns the ResolvePredefinedRules option set for the
 // FieldDescriptor. Note that this value is only meaningful if it is set on a
 // field or extension of a field rule message. This method is provided for
 // convenience.
-func PredefinedRules(desc protoreflect.FieldDescriptor) (*validate.PredefinedRules, error) {
+func ResolvePredefinedRules(desc protoreflect.FieldDescriptor) (*validate.PredefinedRules, error) {
 	return resolve[*validate.PredefinedRules](desc.Options(), validate.E_Predefined)
 }
 
