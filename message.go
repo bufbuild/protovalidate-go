@@ -16,10 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
-	"os"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -35,84 +32,27 @@ type message struct {
 	// nestedEvaluators are the evaluators that are applied to nested fields and
 	// oneofs.
 	nestedEvaluators messageEvaluators
-
-	Oneof *OneofRule
-}
-
-type OneofRule struct {
-	Fields   []string
-	Required bool
 }
 
 func (m *message) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return m.EvaluateMessage(val.Message(), cfg)
 }
 
-func (m *message) Log(msg protoreflect.Message, str string) {
-	if msg.Descriptor().FullName() == "buf.validate.conformance.cases.MessageOneofMultipleFields" {
-		fmt.Fprintf(os.Stderr, str)
-	}
-}
-
 func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
-	err := &ValidationError{}
+	var (
+		err error
+		ok  bool
+	)
 	if cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		if m.Err != nil {
 			return m.Err
 		}
-		if m.Oneof != nil && len(m.Oneof.Fields) > 0 {
-			count := 0
-			for _, v := range m.Oneof.Fields {
-				fd := msg.Descriptor().Fields().ByName(protoreflect.Name(v))
-				if fd != nil && msg.Has(fd) {
-					count++
-				}
-			}
-
-			if m.Oneof.Required && count != 1 {
-				err.Violations = append(err.Violations, &Violation{
-					Proto: &validate.Violation{
-						// Field:   a.base.fieldPath(),
-						// Rule:    a.base.rulePath(anyInRulePath),
-						RuleId:  proto.String("message.oneof"),
-						Message: proto.String("its required"),
-					},
-					// FieldValue:      val,
-					// FieldDescriptor: a.base.Descriptor,
-					// RuleValue:      "a.InValue",
-					// RuleDescriptor: "anyInRuleDescriptor",
-				})
-				return err
-				// if cfg.failFast {
-				// 	return err
-				// }
-			}
-			if count > 1 {
-				err.Violations = append(err.Violations, &Violation{
-					Proto: &validate.Violation{
-						// Field:   a.base.fieldPath(),
-						// Rule:    a.base.rulePath(anyInRulePath),
-						RuleId:  proto.String("message.oneof"),
-						Message: proto.String("only one can be set"),
-					},
-					// FieldValue:      val,
-					// FieldDescriptor: a.base.Descriptor,
-					// RuleValue:      "a.InValue",
-					// RuleDescriptor: "anyInRuleDescriptor",
-				})
-				return err
-				// if cfg.failFast {
-				// 	return err
-				// }
-			}
-		}
-
-		if ok, err := mergeViolations(err, m.evaluators.EvaluateMessage(msg, cfg), cfg); !ok {
+		if ok, err = mergeViolations(err, m.evaluators.EvaluateMessage(msg, cfg), cfg); !ok {
 			return err
 		}
 	}
-	// _, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessage(msg, cfg), cfg)
-	return nil
+	_, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessage(msg, cfg), cfg)
+	return err
 }
 
 func (m *message) Tautology() bool {

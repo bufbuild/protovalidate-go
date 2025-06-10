@@ -129,10 +129,11 @@ func (bldr *builder) buildMessage(
 
 	oneofRules := msgRules.GetOneof()
 	if len(oneofRules) != 0 {
-		msgEval.Oneof = &OneofRule{
+		oneofEval := &oneofEvaluator{
 			Fields:   oneofRules[0].Fields,
-			Required: false,
+			Required: oneofRules[0].GetRequired(),
 		}
+		msgEval.AppendNested(oneofEval)
 	}
 
 	steps := []func(
