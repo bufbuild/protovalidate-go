@@ -18,6 +18,7 @@ import (
 	"testing"
 	"time"
 
+	// confpb "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate/conformance/cases"
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -518,4 +519,13 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
+}
+
+func TestValidator_Validate_Oneof(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	// msg := &confpb.MessageOneofSingleField{BoolField: true}
+	// err = val.Validate(msg)
+	require.Error(t, err)
 }

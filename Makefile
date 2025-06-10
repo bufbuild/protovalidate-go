@@ -52,7 +52,7 @@ lint-fix:
 	$(BIN)/golangci-lint fmt
 
 .PHONY: conformance
-conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
+conformance: protovalidate-conformance-go ## Run conformance tests
 	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
 
 .PHONY: generate

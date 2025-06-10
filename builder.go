@@ -127,6 +127,14 @@ func (bldr *builder) buildMessage(
 		return
 	}
 
+	oneofRules := msgRules.GetOneof()
+	if len(oneofRules) != 0 {
+		msgEval.Oneof = &OneofRule{
+			Fields:   oneofRules[0].Fields,
+			Required: false,
+		}
+	}
+
 	steps := []func(
 		desc protoreflect.MessageDescriptor,
 		msgRules *validate.MessageRules,
