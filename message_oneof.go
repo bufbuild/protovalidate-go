@@ -35,7 +35,6 @@ func (o oneofEvaluator) formatFields() string {
 		quoted[idx] = fmt.Sprintf("'%s'", val)
 	}
 	return fmt.Sprintf("[%s]", strings.Join(quoted, ", "))
-
 }
 
 func (o oneofEvaluator) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {

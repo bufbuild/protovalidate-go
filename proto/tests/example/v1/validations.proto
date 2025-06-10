@@ -22,24 +22,6 @@ import "google/protobuf/api.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 
-/* message MessageOneofSingleField { */
-/*    option (buf.validate.message).oneof = { fields: ["str_field"] }; */
-/*    string str_field = 1; */
-/*    bool bool_field = 2; */
-/* } */
-
-/* message MessageOneofMultipleFields { */
-/*    option (buf.validate.message).oneof = { fields: ["str_field", "bool_field"] }; */
-/*    string str_field = 1; */
-/*    bool bool_field = 2; */
-/* } */
-
-/* message MessageOneofMulipleFieldsRequired { */
-/*    option (buf.validate.message).oneof = { fields: ["str_field", "bool_field"], required: true }; */
-/*    string str_field = 1; */
-/*    bool bool_field = 2; */
-/* } */
-
 message HasMsgExprs {
   option (buf.validate.message).cel = {
     id: "x_lt_y"

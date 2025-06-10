@@ -128,10 +128,10 @@ func (bldr *builder) buildMessage(
 	}
 
 	oneofRules := msgRules.GetOneof()
-	if len(oneofRules) != 0 {
+	for _, rule := range oneofRules {
 		oneofEval := &oneofEvaluator{
-			Fields:   oneofRules[0].Fields,
-			Required: oneofRules[0].GetRequired(),
+			Fields:   rule.GetFields(),
+			Required: rule.GetRequired(),
 		}
 		msgEval.AppendNested(oneofEval)
 	}
