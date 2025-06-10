@@ -58,7 +58,6 @@ func resolve[C proto.Message](
 	options proto.Message,
 	extensionType protoreflect.ExtensionType,
 ) (typedMessage C, err error) {
-	// fmt.Fprintf(os.Stderr, "Opts: %+v\n\n", options)
 	var nilMessage C
 	message, err := resolver.resolve(options, extensionType)
 	if err != nil {
