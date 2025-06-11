@@ -23,7 +23,9 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// oneof performs validation on a oneof union.
+// oneofEvaluator is a message evaluator that  performs validation on the specified
+// fields, ensuring that only one is set. If `required` is true, it enforces that one of
+// the fields _must_ be set.
 type oneofEvaluator struct {
 	Fields   []string
 	Required bool
