@@ -32,11 +32,11 @@ type oneofEvaluator struct {
 }
 
 func (o oneofEvaluator) formatFields() string {
-	quoted := make([]string, len(o.Fields))
+	names := make([]string, len(o.Fields))
 	for idx, fdesc := range o.Fields {
-		quoted[idx] = fmt.Sprintf("'%s'", fdesc.Name())
+		names[idx] = string(fdesc.Name())
 	}
-	return fmt.Sprintf("[%s]", strings.Join(quoted, ", "))
+	return strings.Join(names, ", ")
 }
 
 func (o oneofEvaluator) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
