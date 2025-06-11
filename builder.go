@@ -127,25 +127,6 @@ func (bldr *builder) buildMessage(
 		return
 	}
 
-	oneofRules := msgRules.GetOneof()
-	for _, rule := range oneofRules {
-		fdescs := make([]protoreflect.FieldDescriptor, 0, len(rule.GetFields()))
-		for _, name := range rule.GetFields() {
-			fdesc := desc.Fields().ByName(protoreflect.Name(name))
-			if fdesc == nil {
-				msgEval.Err = &CompilationError{cause: fmt.Errorf(
-					"field %q not found in message %s", name, desc.FullName())}
-			} else {
-				fdescs = append(fdescs, fdesc)
-			}
-		}
-		oneofEval := &oneofEvaluator{
-			Fields:   fdescs,
-			Required: rule.GetRequired(),
-		}
-		msgEval.AppendNested(oneofEval)
-	}
-
 	steps := []func(
 		desc protoreflect.MessageDescriptor,
 		msgRules *validate.MessageRules,
@@ -153,6 +134,7 @@ func (bldr *builder) buildMessage(
 		cache messageCache,
 	){
 		bldr.processMessageExpressions,
+		bldr.processMessageOneofRules,
 		bldr.processOneofRules,
 		bldr.processFields,
 	}
@@ -185,6 +167,32 @@ func (bldr *builder) processMessageExpressions(
 	msgEval.Append(celPrograms{
 		programSet: compiledExprs,
 	})
+}
+
+func (bldr *builder) processMessageOneofRules(
+	desc protoreflect.MessageDescriptor,
+	msgRules *validate.MessageRules,
+	msgEval *message,
+	_ messageCache,
+) {
+	oneofRules := msgRules.GetOneof()
+	for _, rule := range oneofRules {
+		fdescs := make([]protoreflect.FieldDescriptor, 0, len(rule.GetFields()))
+		for _, name := range rule.GetFields() {
+			fdesc := desc.Fields().ByName(protoreflect.Name(name))
+			if fdesc == nil {
+				msgEval.Err = &CompilationError{cause: fmt.Errorf(
+					"field %q not found in message %s", name, desc.FullName())}
+			} else {
+				fdescs = append(fdescs, fdesc)
+			}
+		}
+		oneofEval := &oneofEvaluator{
+			Fields:   fdescs,
+			Required: rule.GetRequired(),
+		}
+		msgEval.AppendNested(oneofEval)
+	}
 }
 
 func (bldr *builder) processOneofRules(
