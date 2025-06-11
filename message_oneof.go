@@ -27,14 +27,14 @@ import (
 // fields, ensuring that only one is set. If `required` is true, it enforces that one of
 // the fields _must_ be set.
 type oneofEvaluator struct {
-	Fields   []string
+	Fields   []protoreflect.FieldDescriptor
 	Required bool
 }
 
 func (o oneofEvaluator) formatFields() string {
 	quoted := make([]string, len(o.Fields))
-	for idx, val := range o.Fields {
-		quoted[idx] = fmt.Sprintf("'%s'", val)
+	for idx, fdesc := range o.Fields {
+		quoted[idx] = fmt.Sprintf("'%s'", fdesc.Name())
 	}
 	return fmt.Sprintf("[%s]", strings.Join(quoted, ", "))
 }
@@ -50,9 +50,8 @@ func (o oneofEvaluator) EvaluateMessage(msg protoreflect.Message, cfg *validatio
 	err := &ValidationError{}
 	if len(o.Fields) > 0 {
 		count := 0
-		for _, v := range o.Fields {
-			fd := msg.Descriptor().Fields().ByName(protoreflect.Name(v))
-			if fd != nil && msg.Has(fd) {
+		for _, fdesc := range o.Fields {
+			if msg.Has(fdesc) {
 				count++
 			}
 		}
