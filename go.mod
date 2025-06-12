@@ -3,7 +3,7 @@ module buf.build/go/protovalidate
 go 1.23.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250612022732-297b8109523d.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.6-20250612204948-4001e52a3c94.1
 	github.com/google/cel-go v0.25.0
 	github.com/stretchr/testify v1.10.0
 	google.golang.org/protobuf v1.36.6

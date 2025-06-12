@@ -127,25 +127,6 @@ func (bldr *builder) buildMessage(
 		return
 	}
 
-	oneofRules := msgRules.GetOneof()
-	for _, rule := range oneofRules {
-		fdescs := make([]protoreflect.FieldDescriptor, 0, len(rule.GetFields()))
-		for _, name := range rule.GetFields() {
-			fdesc := desc.Fields().ByName(protoreflect.Name(name))
-			if fdesc == nil {
-				msgEval.Err = &CompilationError{cause: fmt.Errorf(
-					"field %q not found in message %s", name, desc.FullName())}
-			} else {
-				fdescs = append(fdescs, fdesc)
-			}
-		}
-		oneofEval := &oneofEvaluator{
-			Fields:   fdescs,
-			Required: rule.GetRequired(),
-		}
-		msgEval.AppendNested(oneofEval)
-	}
-
 	steps := []func(
 		desc protoreflect.MessageDescriptor,
 		msgRules *validate.MessageRules,
@@ -153,6 +134,7 @@ func (bldr *builder) buildMessage(
 		cache messageCache,
 	){
 		bldr.processMessageExpressions,
+		bldr.processMessageOneofRules,
 		bldr.processOneofRules,
 		bldr.processFields,
 	}
@@ -185,6 +167,48 @@ func (bldr *builder) processMessageExpressions(
 	msgEval.Append(celPrograms{
 		programSet: compiledExprs,
 	})
+}
+
+func (bldr *builder) processMessageOneofRules(
+	desc protoreflect.MessageDescriptor,
+	msgRules *validate.MessageRules,
+	msgEval *message,
+	_ messageCache,
+) {
+	oneofRules := msgRules.GetOneof()
+	for _, rule := range oneofRules {
+		fields := rule.GetFields()
+		if len(fields) == 0 {
+			msgEval.Err = &CompilationError{
+				cause: fmt.Errorf("at least one field must be specified in oneof rule for the message %s", desc.FullName()),
+			}
+			return
+		}
+		seen := make(map[string]struct{}, len(fields))
+		fdescs := make([]protoreflect.FieldDescriptor, 0, len(fields))
+		for _, name := range fields {
+			if _, ok := seen[name]; ok {
+				msgEval.Err = &CompilationError{
+					cause: fmt.Errorf("duplicate %s in oneof rule for the message %s", name, desc.FullName()),
+				}
+				return
+			}
+			seen[name] = struct{}{}
+			fdesc := desc.Fields().ByName(protoreflect.Name(name))
+			if fdesc == nil {
+				msgEval.Err = &CompilationError{
+					cause: fmt.Errorf("field %s not found in message %s", name, desc.FullName()),
+				}
+				return
+			}
+			fdescs = append(fdescs, fdesc)
+		}
+		oneofEval := &messageOneof{
+			Fields:   fdescs,
+			Required: rule.GetRequired(),
+		}
+		msgEval.AppendNested(oneofEval)
+	}
 }
 
 func (bldr *builder) processOneofRules(
