@@ -836,6 +836,77 @@ func (b0 MessageOneofSingleField_builder) Build() *MessageOneofSingleField {
 	return m0
 }
 
+type MessageOneofSingleFieldRequired struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
+	BoolField     bool                   `protobuf:"varint,2,opt,name=bool_field,json=boolField,proto3" json:"bool_field,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageOneofSingleFieldRequired) Reset() {
+	*x = MessageOneofSingleFieldRequired{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofSingleFieldRequired) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofSingleFieldRequired) ProtoMessage() {}
+
+func (x *MessageOneofSingleFieldRequired) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofSingleFieldRequired) GetStrField() string {
+	if x != nil {
+		return x.StrField
+	}
+	return ""
+}
+
+func (x *MessageOneofSingleFieldRequired) GetBoolField() bool {
+	if x != nil {
+		return x.BoolField
+	}
+	return false
+}
+
+func (x *MessageOneofSingleFieldRequired) SetStrField(v string) {
+	x.StrField = v
+}
+
+func (x *MessageOneofSingleFieldRequired) SetBoolField(v bool) {
+	x.BoolField = v
+}
+
+type MessageOneofSingleFieldRequired_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	StrField  string
+	BoolField bool
+}
+
+func (b0 MessageOneofSingleFieldRequired_builder) Build() *MessageOneofSingleFieldRequired {
+	m0 := &MessageOneofSingleFieldRequired{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.StrField = b.StrField
+	x.BoolField = b.BoolField
+	return m0
+}
+
 type MessageOneofMultipleFields struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
@@ -846,7 +917,7 @@ type MessageOneofMultipleFields struct {
 
 func (x *MessageOneofMultipleFields) Reset() {
 	*x = MessageOneofMultipleFields{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -858,7 +929,7 @@ func (x *MessageOneofMultipleFields) String() string {
 func (*MessageOneofMultipleFields) ProtoMessage() {}
 
 func (x *MessageOneofMultipleFields) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -917,7 +988,7 @@ type MessageOneofMultipleFieldsRequired struct {
 
 func (x *MessageOneofMultipleFieldsRequired) Reset() {
 	*x = MessageOneofMultipleFieldsRequired{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -929,7 +1000,7 @@ func (x *MessageOneofMultipleFieldsRequired) String() string {
 func (*MessageOneofMultipleFieldsRequired) ProtoMessage() {}
 
 func (x *MessageOneofMultipleFieldsRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -978,6 +1049,91 @@ func (b0 MessageOneofMultipleFieldsRequired_builder) Build() *MessageOneofMultip
 	return m0
 }
 
+type MessageOneofMultipleSharedFields struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
+	BoolField     bool                   `protobuf:"varint,2,opt,name=bool_field,json=boolField,proto3" json:"bool_field,omitempty"`
+	IntField      int32                  `protobuf:"varint,3,opt,name=int_field,json=intField,proto3" json:"int_field,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageOneofMultipleSharedFields) Reset() {
+	*x = MessageOneofMultipleSharedFields{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofMultipleSharedFields) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofMultipleSharedFields) ProtoMessage() {}
+
+func (x *MessageOneofMultipleSharedFields) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofMultipleSharedFields) GetStrField() string {
+	if x != nil {
+		return x.StrField
+	}
+	return ""
+}
+
+func (x *MessageOneofMultipleSharedFields) GetBoolField() bool {
+	if x != nil {
+		return x.BoolField
+	}
+	return false
+}
+
+func (x *MessageOneofMultipleSharedFields) GetIntField() int32 {
+	if x != nil {
+		return x.IntField
+	}
+	return 0
+}
+
+func (x *MessageOneofMultipleSharedFields) SetStrField(v string) {
+	x.StrField = v
+}
+
+func (x *MessageOneofMultipleSharedFields) SetBoolField(v bool) {
+	x.BoolField = v
+}
+
+func (x *MessageOneofMultipleSharedFields) SetIntField(v int32) {
+	x.IntField = v
+}
+
+type MessageOneofMultipleSharedFields_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	StrField  string
+	BoolField bool
+	IntField  int32
+}
+
+func (b0 MessageOneofMultipleSharedFields_builder) Build() *MessageOneofMultipleSharedFields {
+	m0 := &MessageOneofMultipleSharedFields{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.StrField = b.StrField
+	x.BoolField = b.BoolField
+	x.IntField = b.IntField
+	return m0
+}
+
 type MessageOneofUnknownFieldName struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
@@ -987,7 +1143,7 @@ type MessageOneofUnknownFieldName struct {
 
 func (x *MessageOneofUnknownFieldName) Reset() {
 	*x = MessageOneofUnknownFieldName{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -999,7 +1155,7 @@ func (x *MessageOneofUnknownFieldName) String() string {
 func (*MessageOneofUnknownFieldName) ProtoMessage() {}
 
 func (x *MessageOneofUnknownFieldName) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1035,6 +1191,233 @@ func (b0 MessageOneofUnknownFieldName_builder) Build() *MessageOneofUnknownField
 	return m0
 }
 
+type MessageOneofDuplicateField struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
+	BoolField     bool                   `protobuf:"varint,2,opt,name=bool_field,json=boolField,proto3" json:"bool_field,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageOneofDuplicateField) Reset() {
+	*x = MessageOneofDuplicateField{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofDuplicateField) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofDuplicateField) ProtoMessage() {}
+
+func (x *MessageOneofDuplicateField) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofDuplicateField) GetStrField() string {
+	if x != nil {
+		return x.StrField
+	}
+	return ""
+}
+
+func (x *MessageOneofDuplicateField) GetBoolField() bool {
+	if x != nil {
+		return x.BoolField
+	}
+	return false
+}
+
+func (x *MessageOneofDuplicateField) SetStrField(v string) {
+	x.StrField = v
+}
+
+func (x *MessageOneofDuplicateField) SetBoolField(v bool) {
+	x.BoolField = v
+}
+
+type MessageOneofDuplicateField_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	StrField  string
+	BoolField bool
+}
+
+func (b0 MessageOneofDuplicateField_builder) Build() *MessageOneofDuplicateField {
+	m0 := &MessageOneofDuplicateField{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.StrField = b.StrField
+	x.BoolField = b.BoolField
+	return m0
+}
+
+type MessageOneofZeroFields struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	StrField      string                 `protobuf:"bytes,1,opt,name=str_field,json=strField,proto3" json:"str_field,omitempty"`
+	BoolField     bool                   `protobuf:"varint,2,opt,name=bool_field,json=boolField,proto3" json:"bool_field,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageOneofZeroFields) Reset() {
+	*x = MessageOneofZeroFields{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofZeroFields) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofZeroFields) ProtoMessage() {}
+
+func (x *MessageOneofZeroFields) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofZeroFields) GetStrField() string {
+	if x != nil {
+		return x.StrField
+	}
+	return ""
+}
+
+func (x *MessageOneofZeroFields) GetBoolField() bool {
+	if x != nil {
+		return x.BoolField
+	}
+	return false
+}
+
+func (x *MessageOneofZeroFields) SetStrField(v string) {
+	x.StrField = v
+}
+
+func (x *MessageOneofZeroFields) SetBoolField(v bool) {
+	x.BoolField = v
+}
+
+type MessageOneofZeroFields_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	StrField  string
+	BoolField bool
+}
+
+func (b0 MessageOneofZeroFields_builder) Build() *MessageOneofZeroFields {
+	m0 := &MessageOneofZeroFields{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.StrField = b.StrField
+	x.BoolField = b.BoolField
+	return m0
+}
+
+type MessageOneofUnsatisfiable struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	A             bool                   `protobuf:"varint,1,opt,name=a,proto3" json:"a,omitempty"`
+	B             bool                   `protobuf:"varint,2,opt,name=b,proto3" json:"b,omitempty"`
+	C             bool                   `protobuf:"varint,3,opt,name=c,proto3" json:"c,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageOneofUnsatisfiable) Reset() {
+	*x = MessageOneofUnsatisfiable{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofUnsatisfiable) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofUnsatisfiable) ProtoMessage() {}
+
+func (x *MessageOneofUnsatisfiable) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofUnsatisfiable) GetA() bool {
+	if x != nil {
+		return x.A
+	}
+	return false
+}
+
+func (x *MessageOneofUnsatisfiable) GetB() bool {
+	if x != nil {
+		return x.B
+	}
+	return false
+}
+
+func (x *MessageOneofUnsatisfiable) GetC() bool {
+	if x != nil {
+		return x.C
+	}
+	return false
+}
+
+func (x *MessageOneofUnsatisfiable) SetA(v bool) {
+	x.A = v
+}
+
+func (x *MessageOneofUnsatisfiable) SetB(v bool) {
+	x.B = v
+}
+
+func (x *MessageOneofUnsatisfiable) SetC(v bool) {
+	x.C = v
+}
+
+type MessageOneofUnsatisfiable_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	A bool
+	B bool
+	C bool
+}
+
+func (b0 MessageOneofUnsatisfiable_builder) Build() *MessageOneofUnsatisfiable {
+	m0 := &MessageOneofUnsatisfiable{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.A = b.A
+	x.B = b.B
+	x.C = b.C
+	return m0
+}
+
 type MessageNone_NoneMsg struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -1043,7 +1426,7 @@ type MessageNone_NoneMsg struct {
 
 func (x *MessageNone_NoneMsg) Reset() {
 	*x = MessageNone_NoneMsg{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1055,7 +1438,7 @@ func (x *MessageNone_NoneMsg) String() string {
 func (*MessageNone_NoneMsg) ProtoMessage() {}
 
 func (x *MessageNone_NoneMsg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1112,7 +1495,12 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
 	"\n" +
 	"bool_field\x18\x02 \x01(\bR\tboolField:\x10\xbaH\r\"\v\n" +
-	"\tstr_field\"v\n" +
+	"\tstr_field\"q\n" +
+	"\x1fMessageOneofSingleFieldRequired\x12\x1b\n" +
+	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
+	"\n" +
+	"bool_field\x18\x02 \x01(\bR\tboolField:\x12\xbaH\x0f\"\r\n" +
+	"\tstr_field\x10\x01\"v\n" +
 	"\x1aMessageOneofMultipleFields\x12\x1b\n" +
 	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
 	"\n" +
@@ -1126,14 +1514,46 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"bool_field\x18\x02 \x01(\bR\tboolField:\x1e\xbaH\x1b\"\x19\n" +
 	"\tstr_field\n" +
 	"\n" +
-	"bool_field\x10\x01\"G\n" +
+	"bool_field\x10\x01\"\xb5\x01\n" +
+	" MessageOneofMultipleSharedFields\x12\x1b\n" +
+	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
+	"\n" +
+	"bool_field\x18\x02 \x01(\bR\tboolField\x12\x1b\n" +
+	"\tint_field\x18\x03 \x01(\x05R\bintField:8\xbaH5\"\x19\n" +
+	"\tstr_field\n" +
+	"\n" +
+	"bool_field\x10\x01\"\x18\n" +
+	"\tstr_field\n" +
+	"\tint_field\x10\x01\"G\n" +
 	"\x1cMessageOneofUnknownFieldName\x12\x1b\n" +
 	"\tstr_field\x18\x01 \x01(\tR\bstrField:\n" +
 	"\xbaH\a\"\x05\n" +
-	"\x03xxxB\x97\x02\n" +
+	"\x03xxx\"\x81\x01\n" +
+	"\x1aMessageOneofDuplicateField\x12\x1b\n" +
+	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
+	"\n" +
+	"bool_field\x18\x02 \x01(\bR\tboolField:'\xbaH$\"\"\n" +
+	"\tstr_field\n" +
+	"\n" +
+	"bool_field\n" +
+	"\tstr_field\"[\n" +
+	"\x16MessageOneofZeroFields\x12\x1b\n" +
+	"\tstr_field\x18\x01 \x01(\tR\bstrField\x12\x1d\n" +
+	"\n" +
+	"bool_field\x18\x02 \x01(\bR\tboolField:\x05\xbaH\x02\"\x00\"h\n" +
+	"\x19MessageOneofUnsatisfiable\x12\f\n" +
+	"\x01a\x18\x01 \x01(\bR\x01a\x12\f\n" +
+	"\x01b\x18\x02 \x01(\bR\x01b\x12\f\n" +
+	"\x01c\x18\x03 \x01(\bR\x01c:!\xbaH\x1e\"\b\n" +
+	"\x01a\n" +
+	"\x01b\x10\x01\"\b\n" +
+	"\x01b\n" +
+	"\x01c\x10\x01\"\b\n" +
+	"\x01a\n" +
+	"\x01c\x10\x01B\x97\x02\n" +
 	"\"com.buf.validate.conformance.casesB\rMessagesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{
 	(*TestMsg)(nil),                            // 0: buf.validate.conformance.cases.TestMsg
 	(*MessageNone)(nil),                        // 1: buf.validate.conformance.cases.MessageNone
@@ -1146,17 +1566,22 @@ var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{
 	(*MessageRequiredOneof)(nil),               // 8: buf.validate.conformance.cases.MessageRequiredOneof
 	(*MessageWith3DInside)(nil),                // 9: buf.validate.conformance.cases.MessageWith3dInside
 	(*MessageOneofSingleField)(nil),            // 10: buf.validate.conformance.cases.MessageOneofSingleField
-	(*MessageOneofMultipleFields)(nil),         // 11: buf.validate.conformance.cases.MessageOneofMultipleFields
-	(*MessageOneofMultipleFieldsRequired)(nil), // 12: buf.validate.conformance.cases.MessageOneofMultipleFieldsRequired
-	(*MessageOneofUnknownFieldName)(nil),       // 13: buf.validate.conformance.cases.MessageOneofUnknownFieldName
-	(*MessageNone_NoneMsg)(nil),                // 14: buf.validate.conformance.cases.MessageNone.NoneMsg
-	(*other_package.Embed)(nil),                // 15: buf.validate.conformance.cases.other_package.Embed
+	(*MessageOneofSingleFieldRequired)(nil),    // 11: buf.validate.conformance.cases.MessageOneofSingleFieldRequired
+	(*MessageOneofMultipleFields)(nil),         // 12: buf.validate.conformance.cases.MessageOneofMultipleFields
+	(*MessageOneofMultipleFieldsRequired)(nil), // 13: buf.validate.conformance.cases.MessageOneofMultipleFieldsRequired
+	(*MessageOneofMultipleSharedFields)(nil),   // 14: buf.validate.conformance.cases.MessageOneofMultipleSharedFields
+	(*MessageOneofUnknownFieldName)(nil),       // 15: buf.validate.conformance.cases.MessageOneofUnknownFieldName
+	(*MessageOneofDuplicateField)(nil),         // 16: buf.validate.conformance.cases.MessageOneofDuplicateField
+	(*MessageOneofZeroFields)(nil),             // 17: buf.validate.conformance.cases.MessageOneofZeroFields
+	(*MessageOneofUnsatisfiable)(nil),          // 18: buf.validate.conformance.cases.MessageOneofUnsatisfiable
+	(*MessageNone_NoneMsg)(nil),                // 19: buf.validate.conformance.cases.MessageNone.NoneMsg
+	(*other_package.Embed)(nil),                // 20: buf.validate.conformance.cases.other_package.Embed
 }
 var file_buf_validate_conformance_cases_messages_proto_depIdxs = []int32{
 	0,  // 0: buf.validate.conformance.cases.TestMsg.nested:type_name -> buf.validate.conformance.cases.TestMsg
-	14, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
+	19, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
 	0,  // 2: buf.validate.conformance.cases.Message.val:type_name -> buf.validate.conformance.cases.TestMsg
-	15, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
+	20, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
 	0,  // 4: buf.validate.conformance.cases.MessageSkip.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 5: buf.validate.conformance.cases.MessageRequired.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 6: buf.validate.conformance.cases.MessageRequiredButOptional.val:type_name -> buf.validate.conformance.cases.TestMsg
@@ -1183,7 +1608,7 @@ func file_buf_validate_conformance_cases_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_messages_proto_rawDesc), len(file_buf_validate_conformance_cases_messages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
