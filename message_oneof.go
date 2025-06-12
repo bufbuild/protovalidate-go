@@ -23,15 +23,15 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// oneofEvaluator is a message evaluator that  performs validation on the specified
+// messageOneof is a message evaluator that  performs validation on the specified
 // fields, ensuring that only one is set. If `required` is true, it enforces that one of
 // the fields _must_ be set.
-type oneofEvaluator struct {
+type messageOneof struct {
 	Fields   []protoreflect.FieldDescriptor
 	Required bool
 }
 
-func (o oneofEvaluator) formatFields() string {
+func (o messageOneof) formatFields() string {
 	names := make([]string, len(o.Fields))
 	for idx, fdesc := range o.Fields {
 		names[idx] = string(fdesc.Name())
@@ -39,11 +39,11 @@ func (o oneofEvaluator) formatFields() string {
 	return strings.Join(names, ", ")
 }
 
-func (o oneofEvaluator) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (o messageOneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return o.EvaluateMessage(val.Message(), cfg)
 }
 
-func (o oneofEvaluator) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
 	if !cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		return nil
 	}
@@ -78,8 +78,8 @@ func (o oneofEvaluator) EvaluateMessage(msg protoreflect.Message, cfg *validatio
 	return nil
 }
 
-func (o oneofEvaluator) Tautology() bool {
+func (o messageOneof) Tautology() bool {
 	return false
 }
 
-var _ messageEvaluator = oneofEvaluator{}
+var _ messageEvaluator = messageOneof{}
