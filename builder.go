@@ -17,6 +17,7 @@ package protovalidate
 import (
 	"fmt"
 	"maps"
+	"slices"
 	"sync"
 	"sync/atomic"
 
@@ -231,7 +232,7 @@ func (bldr *builder) processOneofRules(
 
 func (bldr *builder) processFields(
 	desc protoreflect.MessageDescriptor,
-	_ *validate.MessageRules,
+	msgRules *validate.MessageRules,
 	msgEval *message,
 	cache messageCache,
 ) {
@@ -239,7 +240,7 @@ func (bldr *builder) processFields(
 	for i := range fields.Len() {
 		fdesc := fields.Get(i)
 		fieldRules, _ := ResolveFieldRules(fdesc)
-		fldEval, err := bldr.buildField(fdesc, fieldRules, cache)
+		fldEval, err := bldr.buildField(fdesc, fieldRules, msgRules, cache)
 		if err != nil {
 			fldEval.Err = err
 		}
@@ -250,8 +251,16 @@ func (bldr *builder) processFields(
 func (bldr *builder) buildField(
 	fieldDescriptor protoreflect.FieldDescriptor,
 	fieldRules *validate.FieldRules,
+	msgRules *validate.MessageRules,
 	cache messageCache,
 ) (field, error) {
+	if !fieldRules.HasIgnore() && isPartOfMessageOneof(msgRules, fieldDescriptor) {
+		fieldRules = proto.CloneOf(fieldRules)
+		if fieldRules == nil {
+			fieldRules = &validate.FieldRules{}
+		}
+		fieldRules.SetIgnore(validate.Ignore_IGNORE_IF_UNPOPULATED)
+	}
 	fld := field{
 		Value: value{
 			Descriptor: fieldDescriptor,
@@ -609,4 +618,10 @@ func (c messageCache) SyncTo(other messageCache) {
 func isMessageField(fdesc protoreflect.FieldDescriptor) bool {
 	return fdesc.Kind() == protoreflect.MessageKind ||
 		fdesc.Kind() == protoreflect.GroupKind
+}
+
+func isPartOfMessageOneof(msgRules *validate.MessageRules, field protoreflect.FieldDescriptor) bool {
+	return slices.ContainsFunc(msgRules.GetOneof(), func(oneof *validate.MessageOneofRule) bool {
+		return slices.Contains(oneof.GetFields(), string(field.Name()))
+	})
 }
