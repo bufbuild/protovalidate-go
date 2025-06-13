@@ -16,7 +16,7 @@ GOLANGCI_LINT_VERSION ?= v2.1.2
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v0.13.1
+CONFORMANCE_VERSION ?= v0.13.2
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -106,7 +106,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@e06e12f833a6172bf40587580be0c73384e7c487
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)
