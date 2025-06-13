@@ -254,9 +254,12 @@ func (bldr *builder) buildField(
 	msgRules *validate.MessageRules,
 	cache messageCache,
 ) (field, error) {
-	ignore := fieldRules.GetIgnore()
 	if !fieldRules.HasIgnore() && isPartOfMessageOneof(msgRules, fieldDescriptor) {
-		ignore = validate.Ignore_IGNORE_IF_UNPOPULATED
+		fieldRules = proto.CloneOf(fieldRules)
+		if fieldRules == nil {
+			fieldRules = &validate.FieldRules{}
+		}
+		fieldRules.SetIgnore(validate.Ignore_IGNORE_IF_UNPOPULATED)
 	}
 	fld := field{
 		Value: value{
@@ -264,7 +267,7 @@ func (bldr *builder) buildField(
 		},
 		HasPresence: fieldDescriptor.HasPresence(),
 		Required:    fieldRules.GetRequired(),
-		Ignore:      ignore,
+		Ignore:      fieldRules.GetIgnore(),
 	}
 	if fld.shouldIgnoreDefault() {
 		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
