@@ -1550,6 +1550,88 @@ func (b0 MessageOneofIgnoreUnpopulatedRequired_builder) Build() *MessageOneofIgn
 	return m0
 }
 
+type MessageOneofIgnoreOverride struct {
+	state                protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_MsgField  *TestMsg               `protobuf:"bytes,1,opt,name=msg_field,json=msgField,proto3"`
+	xxx_hidden_BoolField bool                   `protobuf:"varint,2,opt,name=bool_field,json=boolField,proto3"`
+	unknownFields        protoimpl.UnknownFields
+	sizeCache            protoimpl.SizeCache
+}
+
+func (x *MessageOneofIgnoreOverride) Reset() {
+	*x = MessageOneofIgnoreOverride{}
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageOneofIgnoreOverride) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageOneofIgnoreOverride) ProtoMessage() {}
+
+func (x *MessageOneofIgnoreOverride) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageOneofIgnoreOverride) GetMsgField() *TestMsg {
+	if x != nil {
+		return x.xxx_hidden_MsgField
+	}
+	return nil
+}
+
+func (x *MessageOneofIgnoreOverride) GetBoolField() bool {
+	if x != nil {
+		return x.xxx_hidden_BoolField
+	}
+	return false
+}
+
+func (x *MessageOneofIgnoreOverride) SetMsgField(v *TestMsg) {
+	x.xxx_hidden_MsgField = v
+}
+
+func (x *MessageOneofIgnoreOverride) SetBoolField(v bool) {
+	x.xxx_hidden_BoolField = v
+}
+
+func (x *MessageOneofIgnoreOverride) HasMsgField() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_MsgField != nil
+}
+
+func (x *MessageOneofIgnoreOverride) ClearMsgField() {
+	x.xxx_hidden_MsgField = nil
+}
+
+type MessageOneofIgnoreOverride_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	MsgField  *TestMsg
+	BoolField bool
+}
+
+func (b0 MessageOneofIgnoreOverride_builder) Build() *MessageOneofIgnoreOverride {
+	m0 := &MessageOneofIgnoreOverride{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_MsgField = b.MsgField
+	x.xxx_hidden_BoolField = b.BoolField
+	return m0
+}
+
 type MessageNone_NoneMsg struct {
 	state         protoimpl.MessageState `protogen:"opaque.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -1558,7 +1640,7 @@ type MessageNone_NoneMsg struct {
 
 func (x *MessageNone_NoneMsg) Reset() {
 	*x = MessageNone_NoneMsg{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1570,7 +1652,7 @@ func (x *MessageNone_NoneMsg) String() string {
 func (*MessageNone_NoneMsg) ProtoMessage() {}
 
 func (x *MessageNone_NoneMsg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1696,10 +1778,17 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"bool_field\x18\x02 \x01(\bB\a\xbaH\x04j\x02\b\x01R\tboolField:\x1e\xbaH\x1b\"\x19\n" +
 	"\tstr_field\n" +
 	"\n" +
-	"bool_field\x10\x01B\x97\x02\n" +
+	"bool_field\x10\x01\"\xa7\x01\n" +
+	"\x1aMessageOneofIgnoreOverride\x12L\n" +
+	"\tmsg_field\x18\x01 \x01(\v2'.buf.validate.conformance.cases.TestMsgB\x06\xbaH\x03\xd8\x01\x03R\bmsgField\x12\x1d\n" +
+	"\n" +
+	"bool_field\x18\x02 \x01(\bR\tboolField:\x1c\xbaH\x19\"\x17\n" +
+	"\tmsg_field\n" +
+	"\n" +
+	"bool_fieldB\x97\x02\n" +
 	"\"com.buf.validate.conformance.casesB\rMessagesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
 var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{
 	(*TestMsg)(nil),                               // 0: buf.validate.conformance.cases.TestMsg
 	(*MessageNone)(nil),                           // 1: buf.validate.conformance.cases.MessageNone
@@ -1722,23 +1811,25 @@ var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{
 	(*MessageOneofUnsatisfiable)(nil),             // 18: buf.validate.conformance.cases.MessageOneofUnsatisfiable
 	(*MessageOneofIgnoreUnpopulated)(nil),         // 19: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulated
 	(*MessageOneofIgnoreUnpopulatedRequired)(nil), // 20: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulatedRequired
-	(*MessageNone_NoneMsg)(nil),                   // 21: buf.validate.conformance.cases.MessageNone.NoneMsg
-	(*other_package.Embed)(nil),                   // 22: buf.validate.conformance.cases.other_package.Embed
+	(*MessageOneofIgnoreOverride)(nil),            // 21: buf.validate.conformance.cases.MessageOneofIgnoreOverride
+	(*MessageNone_NoneMsg)(nil),                   // 22: buf.validate.conformance.cases.MessageNone.NoneMsg
+	(*other_package.Embed)(nil),                   // 23: buf.validate.conformance.cases.other_package.Embed
 }
 var file_buf_validate_conformance_cases_messages_proto_depIdxs = []int32{
 	0,  // 0: buf.validate.conformance.cases.TestMsg.nested:type_name -> buf.validate.conformance.cases.TestMsg
-	21, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
+	22, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
 	0,  // 2: buf.validate.conformance.cases.Message.val:type_name -> buf.validate.conformance.cases.TestMsg
-	22, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
+	23, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
 	0,  // 4: buf.validate.conformance.cases.MessageSkip.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 5: buf.validate.conformance.cases.MessageRequired.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 6: buf.validate.conformance.cases.MessageRequiredButOptional.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 7: buf.validate.conformance.cases.MessageRequiredOneof.val:type_name -> buf.validate.conformance.cases.TestMsg
-	8,  // [8:8] is the sub-list for method output_type
-	8,  // [8:8] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	0,  // 8: buf.validate.conformance.cases.MessageOneofIgnoreOverride.msg_field:type_name -> buf.validate.conformance.cases.TestMsg
+	9,  // [9:9] is the sub-list for method output_type
+	9,  // [9:9] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_buf_validate_conformance_cases_messages_proto_init() }
@@ -1756,7 +1847,7 @@ func file_buf_validate_conformance_cases_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_messages_proto_rawDesc), len(file_buf_validate_conformance_cases_messages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   23,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
