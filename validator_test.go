@@ -432,6 +432,41 @@ func TestValidator_ValidateCompilationError(t *testing.T) {
 	})
 }
 
+func TestValidator_WithDisableLazy(t *testing.T) {
+	t.Parallel()
+
+	t.Run("no_evaluator_available", func(t *testing.T) {
+		t.Parallel()
+		val, err := New(
+			WithDisableLazy(),
+		)
+		require.NoError(t, err)
+		msg := &pb.Simple{}
+		err = val.Validate(msg)
+		compErr := &CompilationError{}
+		require.ErrorAs(t, err, &compErr)
+		require.ErrorContains(t, err, "no evaluator available for tests.example.v1.Simple")
+	})
+}
+
+func TestValidator_WithMessages(t *testing.T) {
+	t.Parallel()
+
+	t.Run("defers_compile_error", func(t *testing.T) {
+		t.Parallel()
+		val, err := New(
+			WithMessages(&pb.MismatchRules{}),
+			WithDisableLazy(), // disable lazy to ensure pre-warmed descriptors are used
+		)
+		require.NoError(t, err)
+		msg := &pb.MismatchRules{}
+		err = val.Validate(msg)
+		compErr := &CompilationError{}
+		require.ErrorAs(t, err, &compErr)
+		require.ErrorContains(t, err, "expected rule \"buf.validate.FieldRules.string\"")
+	})
+}
+
 func TestValidator_WithNowFunc_Issue211(t *testing.T) {
 	t.Parallel()
 
