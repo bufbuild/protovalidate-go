@@ -1,4 +1,4 @@
-[![The Buf logo](.github/buf-logo.svg)][buf] 
+[![The Buf logo](.github/buf-logo.svg)][buf]
 
 # protovalidate-go
 
@@ -8,33 +8,28 @@
 [![GoDoc](https://pkg.go.dev/badge/buf.build/go/protovalidate.svg)](https://pkg.go.dev/buf.build/go/protovalidate)
 [![BSR](https://img.shields.io/badge/BSR-Module-0C65EC)][buf-mod]
 
-[Protovalidate][protovalidate] provides standard annotations to validate common rules on messages and fields, as well as the ability to use [CEL][cel] to write custom rules. It's the next generation of [protoc-gen-validate][protoc-gen-validate], the only widely used validation library for Protobuf.
+[Protovalidate][protovalidate] is the semantic validation library for Protobuf. It provides standard annotations to validate common rules on messages and fields, as well as the ability to use [CEL][cel] to write custom rules. It's the next generation of [protoc-gen-validate][protoc-gen-validate].
 
 With Protovalidate, you can annotate your Protobuf messages with both standard and custom validation rules:
 
 ```protobuf
 syntax = "proto3";
 
-package banking.v1;
+package acme.user.v1;
 
 import "buf/validate/validate.proto";
 
-message MoneyTransfer {
-  string to_account_id = 1 [
-    // Standard rule: `to_account_id` must be a UUID.
-    (buf.validate.field).string.uuid = true
-  ];
+message User {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+  uint32 age = 2 [(buf.validate.field).uint32.lte = 150]; // We can only hope.
+  string email = 3 [(buf.validate.field).string.email = true];
+  string first_name = 4 [(buf.validate.field).string.max_len = 64];
+  string last_name = 5 [(buf.validate.field).string.max_len = 64];
 
-  string from_account_id = 2 [
-    // Standard rule: `from_account_id` must be a UUID.
-    (buf.validate.field).string.uuid = true
-  ];
-
-  // Custom rule: `to_account_id` and `from_account_id` can't be the same.
   option (buf.validate.message).cel = {
-    id: "to_account_id.not.from_account_id"
-    message: "to_account_id and from_account_id should not be the same value"
-    expression: "this.to_account_id != this.from_account_id"
+    id: "first_name_requires_last_name"
+    message: "last_name must be present if first_name is present"
+    expression: "!has(this.first_name) || has(this.last_name)"
   };
 }
 ```
@@ -84,18 +79,13 @@ Additionally, [protovalidate's core repository](https://github.com/bufbuild/prot
 - [Protovalidate's Protobuf API][validate-proto]
 - [Conformance testing utilities][conformance] for acceptance testing of `protovalidate` implementations
 
-## Contribution
+## Contributing
 
 We genuinely appreciate any help! If you'd like to contribute, check out these resources:
 
 - [Contributing Guidelines][contributing]: Guidelines to make your contribution process straightforward and meaningful
 - [Conformance testing utilities](https://github.com/bufbuild/protovalidate/tree/main/docs/conformance.md): Utilities providing acceptance testing of `protovalidate` implementations
 - [Go conformance executor][conformance-executable]: Conformance testing executor for `protovalidate-go`
-
-## Related Sites
-
-- [Buf][buf]: Enterprise-grade Kafka and gRPC for the modern age
-- [Common Expression Language (CEL)][cel]: The open-source technology at the core of Protovalidate
 
 ## Legal
 
