@@ -65,7 +65,7 @@ Highlights for Go developers include:
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
-## Additional Languages and Repositories
+## Additional languages and repositories
 
 Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 
 
