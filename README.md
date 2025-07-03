@@ -106,17 +106,17 @@ Offered under the [Apache 2 license][license].
 
 [protoc-gen-validate]: https://github.com/bufbuild/protoc-gen-validate
 
-[protovalidate]: https://buf.build/docs/protovalidate/
-[quickstart]: https://buf.build/docs/protovalidate/quickstart/
-[connect-go]: https://buf.build/docs/protovalidate/quickstart/connect-go/
-[grpc-go]: https://buf.build/docs/protovalidate/quickstart/grpc-go/
-[grpc-java]: https://buf.build/docs/protovalidate/quickstart/grpc-java/
-[grpc-python]: https://buf.build/docs/protovalidate/quickstart/grpc-python/
-[migration-guide]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
+[protovalidate]: https://protovalidate.com/
+[quickstart]: https://protovalidate.com/quickstart/
+[connect-go]: https://protovalidate.com/quickstart/connect-go/
+[grpc-go]: https://protovalidate.com/quickstart/grpc-go/
+[grpc-java]: https://protovalidate.com/quickstart/grpc-java/
+[grpc-python]: https://protovalidate.com/quickstart/grpc-python/
+[migration-guide]: https://protovalidate.com/migration-guides/migrate-from-protoc-gen-validate/
 [conformance-executable]: ./internal/cmd/protovalidate-conformance-go/README.md
 [pkg-go]: https://pkg.go.dev/buf.build/go/protovalidate
 
 [validate-proto]: https://buf.build/bufbuild/protovalidate/docs/main:buf.validate
 [conformance]: https://github.com/bufbuild/protovalidate/blob/main/docs/conformance.md
 [examples]: https://github.com/bufbuild/protovalidate/tree/main/examples
-[migrate]: https://buf.build/docs/migration-guides/migrate-from-protoc-gen-validate/
+[migrate]: https://protovalidate.com/migration-guides/migrate-from-protoc-gen-validate/
