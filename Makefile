@@ -62,7 +62,7 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
 	rm -rf internal/gen/*/
-	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
+	$(BIN)/buf generate https://github.com/bufbuild/protovalidate.git#branch=next,subdir=proto/protovalidate-testing
 	$(BIN)/buf generate
 
 .PHONY: generate-license
@@ -106,7 +106,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@next
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)

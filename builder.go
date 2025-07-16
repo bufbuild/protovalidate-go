@@ -124,9 +124,6 @@ func (bldr *builder) buildMessage(
 	cache messageCache,
 ) {
 	msgRules, _ := ResolveMessageRules(desc)
-	if msgRules.GetDisabled() {
-		return
-	}
 
 	steps := []func(
 		desc protoreflect.MessageDescriptor,
@@ -265,9 +262,6 @@ func (bldr *builder) buildField(
 		HasPresence: fieldDescriptor.HasPresence(),
 		Required:    fieldRules.GetRequired(),
 		Ignore:      fieldRules.GetIgnore(),
-	}
-	if fld.shouldIgnoreDefault() {
-		fld.Zero = bldr.zeroValue(fieldDescriptor, false)
 	}
 	err := bldr.buildValue(fieldDescriptor, fieldRules, &fld.Value, cache)
 	return fld, err
@@ -577,8 +571,7 @@ func (bldr *builder) shouldIgnoreAlways(rules *validate.FieldRules) bool {
 }
 
 func (bldr *builder) shouldIgnoreEmpty(rules *validate.FieldRules) bool {
-	return rules.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED ||
-		rules.GetIgnore() == validate.Ignore_IGNORE_IF_DEFAULT_VALUE
+	return rules.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED
 }
 
 func (bldr *builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool) protoreflect.Value {
