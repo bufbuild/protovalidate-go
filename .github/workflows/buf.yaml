@@ -30,5 +30,6 @@ jobs:
           lint: true
           push: false
           archive: false
+          breaking: false
       - name: Check Generate
         run: make checkgenerate

@@ -349,162 +349,6 @@ func (b0 EditionsScalarExplicitPresenceIgnoreEmptyWithDefault_builder) Build() *
 	return m0
 }
 
-type EditionsScalarExplicitPresenceIgnoreDefault struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         int32                  `protobuf:"varint,1,opt,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) Reset() {
-	*x = EditionsScalarExplicitPresenceIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsScalarExplicitPresenceIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) GetVal() int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return 0
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) SetVal(v int32) {
-	x.xxx_hidden_Val = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefault) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = 0
-}
-
-type EditionsScalarExplicitPresenceIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *int32
-}
-
-func (b0 EditionsScalarExplicitPresenceIgnoreDefault_builder) Build() *EditionsScalarExplicitPresenceIgnoreDefault {
-	m0 := &EditionsScalarExplicitPresenceIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = *b.Val
-	}
-	return m0
-}
-
-type EditionsScalarExplicitPresenceIgnoreDefaultWithDefault struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         int32                  `protobuf:"varint,1,opt,name=val,def=-42"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-// Default values for EditionsScalarExplicitPresenceIgnoreDefaultWithDefault fields.
-const (
-	Default_EditionsScalarExplicitPresenceIgnoreDefaultWithDefault_Val = int32(-42)
-)
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) Reset() {
-	*x = EditionsScalarExplicitPresenceIgnoreDefaultWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) ProtoMessage() {}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) GetVal() int32 {
-	if x != nil {
-		if protoimpl.X.Present(&(x.XXX_presence[0]), 0) {
-			return x.xxx_hidden_Val
-		}
-	}
-	return Default_EditionsScalarExplicitPresenceIgnoreDefaultWithDefault_Val
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) SetVal(v int32) {
-	x.xxx_hidden_Val = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-}
-
-type EditionsScalarExplicitPresenceIgnoreDefaultWithDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *int32
-}
-
-func (b0 EditionsScalarExplicitPresenceIgnoreDefaultWithDefault_builder) Build() *EditionsScalarExplicitPresenceIgnoreDefaultWithDefault {
-	m0 := &EditionsScalarExplicitPresenceIgnoreDefaultWithDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = *b.Val
-	}
-	return m0
-}
-
 type EditionsScalarExplicitPresenceIgnoreAlways struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val         int32                  `protobuf:"varint,1,opt,name=val"`
@@ -516,7 +360,7 @@ type EditionsScalarExplicitPresenceIgnoreAlways struct {
 
 func (x *EditionsScalarExplicitPresenceIgnoreAlways) Reset() {
 	*x = EditionsScalarExplicitPresenceIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -528,7 +372,7 @@ func (x *EditionsScalarExplicitPresenceIgnoreAlways) String() string {
 func (*EditionsScalarExplicitPresenceIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsScalarExplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -596,7 +440,7 @@ const (
 
 func (x *EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault) Reset() {
 	*x = EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -608,7 +452,7 @@ func (x *EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault) String() string 
 func (*EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault) ProtoMessage() {}
 
 func (x *EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -670,7 +514,7 @@ type EditionsScalarImplicitPresenceIgnoreUnspecified struct {
 
 func (x *EditionsScalarImplicitPresenceIgnoreUnspecified) Reset() {
 	*x = EditionsScalarImplicitPresenceIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -682,7 +526,7 @@ func (x *EditionsScalarImplicitPresenceIgnoreUnspecified) String() string {
 func (*EditionsScalarImplicitPresenceIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsScalarImplicitPresenceIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -727,7 +571,7 @@ type EditionsScalarImplicitPresenceIgnoreEmpty struct {
 
 func (x *EditionsScalarImplicitPresenceIgnoreEmpty) Reset() {
 	*x = EditionsScalarImplicitPresenceIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -739,7 +583,7 @@ func (x *EditionsScalarImplicitPresenceIgnoreEmpty) String() string {
 func (*EditionsScalarImplicitPresenceIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsScalarImplicitPresenceIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -775,63 +619,6 @@ func (b0 EditionsScalarImplicitPresenceIgnoreEmpty_builder) Build() *EditionsSca
 	return m0
 }
 
-type EditionsScalarImplicitPresenceIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val int32                  `protobuf:"varint,1,opt,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsScalarImplicitPresenceIgnoreDefault) Reset() {
-	*x = EditionsScalarImplicitPresenceIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsScalarImplicitPresenceIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsScalarImplicitPresenceIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsScalarImplicitPresenceIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsScalarImplicitPresenceIgnoreDefault) GetVal() int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return 0
-}
-
-func (x *EditionsScalarImplicitPresenceIgnoreDefault) SetVal(v int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsScalarImplicitPresenceIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val int32
-}
-
-func (b0 EditionsScalarImplicitPresenceIgnoreDefault_builder) Build() *EditionsScalarImplicitPresenceIgnoreDefault {
-	m0 := &EditionsScalarImplicitPresenceIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsScalarImplicitPresenceIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val int32                  `protobuf:"varint,1,opt,name=val"`
@@ -841,7 +628,7 @@ type EditionsScalarImplicitPresenceIgnoreAlways struct {
 
 func (x *EditionsScalarImplicitPresenceIgnoreAlways) Reset() {
 	*x = EditionsScalarImplicitPresenceIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -853,7 +640,7 @@ func (x *EditionsScalarImplicitPresenceIgnoreAlways) String() string {
 func (*EditionsScalarImplicitPresenceIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsScalarImplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -900,7 +687,7 @@ type EditionsScalarLegacyRequiredIgnoreUnspecified struct {
 
 func (x *EditionsScalarLegacyRequiredIgnoreUnspecified) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -912,7 +699,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreUnspecified) String() string {
 func (*EditionsScalarLegacyRequiredIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -980,7 +767,7 @@ const (
 
 func (x *EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -992,7 +779,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault) String() stri
 func (*EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1056,7 +843,7 @@ type EditionsScalarLegacyRequiredIgnoreEmpty struct {
 
 func (x *EditionsScalarLegacyRequiredIgnoreEmpty) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1068,7 +855,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreEmpty) String() string {
 func (*EditionsScalarLegacyRequiredIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1136,7 +923,7 @@ const (
 
 func (x *EditionsScalarLegacyRequiredIgnoreEmptyWithDefault) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreEmptyWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1148,7 +935,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreEmptyWithDefault) String() string {
 func (*EditionsScalarLegacyRequiredIgnoreEmptyWithDefault) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreEmptyWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1201,162 +988,6 @@ func (b0 EditionsScalarLegacyRequiredIgnoreEmptyWithDefault_builder) Build() *Ed
 	return m0
 }
 
-type EditionsScalarLegacyRequiredIgnoreDefault struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         int32                  `protobuf:"varint,1,req,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) Reset() {
-	*x = EditionsScalarLegacyRequiredIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsScalarLegacyRequiredIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) GetVal() int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return 0
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) SetVal(v int32) {
-	x.xxx_hidden_Val = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefault) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = 0
-}
-
-type EditionsScalarLegacyRequiredIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *int32
-}
-
-func (b0 EditionsScalarLegacyRequiredIgnoreDefault_builder) Build() *EditionsScalarLegacyRequiredIgnoreDefault {
-	m0 := &EditionsScalarLegacyRequiredIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = *b.Val
-	}
-	return m0
-}
-
-type EditionsScalarLegacyRequiredIgnoreDefaultWithDefault struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         int32                  `protobuf:"varint,1,req,name=val,def=-42"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-// Default values for EditionsScalarLegacyRequiredIgnoreDefaultWithDefault fields.
-const (
-	Default_EditionsScalarLegacyRequiredIgnoreDefaultWithDefault_Val = int32(-42)
-)
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) Reset() {
-	*x = EditionsScalarLegacyRequiredIgnoreDefaultWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) ProtoMessage() {}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) GetVal() int32 {
-	if x != nil {
-		if protoimpl.X.Present(&(x.XXX_presence[0]), 0) {
-			return x.xxx_hidden_Val
-		}
-	}
-	return Default_EditionsScalarLegacyRequiredIgnoreDefaultWithDefault_Val
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) SetVal(v int32) {
-	x.xxx_hidden_Val = v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-}
-
-type EditionsScalarLegacyRequiredIgnoreDefaultWithDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *int32
-}
-
-func (b0 EditionsScalarLegacyRequiredIgnoreDefaultWithDefault_builder) Build() *EditionsScalarLegacyRequiredIgnoreDefaultWithDefault {
-	m0 := &EditionsScalarLegacyRequiredIgnoreDefaultWithDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = *b.Val
-	}
-	return m0
-}
-
 type EditionsScalarLegacyRequiredIgnoreAlways struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val         int32                  `protobuf:"varint,1,req,name=val"`
@@ -1368,7 +999,7 @@ type EditionsScalarLegacyRequiredIgnoreAlways struct {
 
 func (x *EditionsScalarLegacyRequiredIgnoreAlways) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1380,7 +1011,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreAlways) String() string {
 func (*EditionsScalarLegacyRequiredIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1448,7 +1079,7 @@ const (
 
 func (x *EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault) Reset() {
 	*x = EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1460,7 +1091,7 @@ func (x *EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault) String() string {
 func (*EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault) ProtoMessage() {}
 
 func (x *EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1522,7 +1153,7 @@ type EditionsMessageExplicitPresenceIgnoreUnspecified struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreUnspecified) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1534,7 +1165,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreUnspecified) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1590,7 +1221,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1602,7 +1233,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified) String() str
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1658,7 +1289,7 @@ type EditionsMessageExplicitPresenceIgnoreEmpty struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreEmpty) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1670,7 +1301,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreEmpty) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1726,7 +1357,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreEmpty struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[23]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1738,7 +1369,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty) String() string {
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[23]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1785,142 +1416,6 @@ func (b0 EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_builder) Build() *E
 	return m0
 }
 
-type EditionsMessageExplicitPresenceIgnoreDefault struct {
-	state          protoimpl.MessageState                            `protogen:"opaque.v1"`
-	xxx_hidden_Val *EditionsMessageExplicitPresenceIgnoreDefault_Msg `protobuf:"bytes,1,opt,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) Reset() {
-	*x = EditionsMessageExplicitPresenceIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageExplicitPresenceIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) GetVal() *EditionsMessageExplicitPresenceIgnoreDefault_Msg {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) SetVal(v *EditionsMessageExplicitPresenceIgnoreDefault_Msg) {
-	x.xxx_hidden_Val = v
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Val != nil
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault) ClearVal() {
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageExplicitPresenceIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *EditionsMessageExplicitPresenceIgnoreDefault_Msg
-}
-
-func (b0 EditionsMessageExplicitPresenceIgnoreDefault_builder) Build() *EditionsMessageExplicitPresenceIgnoreDefault {
-	m0 := &EditionsMessageExplicitPresenceIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
-type EditionsMessageExplicitPresenceDelimitedIgnoreDefault struct {
-	state          protoimpl.MessageState                                     `protogen:"opaque.v1"`
-	xxx_hidden_Val *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg `protobuf:"group,1,opt,name=Msg,json=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) Reset() {
-	*x = EditionsMessageExplicitPresenceDelimitedIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageExplicitPresenceDelimitedIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) GetVal() *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) SetVal(v *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) {
-	x.xxx_hidden_Val = v
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Val != nil
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault) ClearVal() {
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageExplicitPresenceDelimitedIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg
-}
-
-func (b0 EditionsMessageExplicitPresenceDelimitedIgnoreDefault_builder) Build() *EditionsMessageExplicitPresenceDelimitedIgnoreDefault {
-	m0 := &EditionsMessageExplicitPresenceDelimitedIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsMessageExplicitPresenceIgnoreAlways struct {
 	state          protoimpl.MessageState                           `protogen:"opaque.v1"`
 	xxx_hidden_Val *EditionsMessageExplicitPresenceIgnoreAlways_Msg `protobuf:"bytes,1,opt,name=val"`
@@ -1930,7 +1425,7 @@ type EditionsMessageExplicitPresenceIgnoreAlways struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreAlways) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[26]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1942,7 +1437,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreAlways) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[26]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1998,7 +1493,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreAlways struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2010,7 +1505,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways) String() string {
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2066,7 +1561,7 @@ type EditionsMessageLegacyRequiredIgnoreUnspecified struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreUnspecified) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2078,7 +1573,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreUnspecified) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2134,7 +1629,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2146,7 +1641,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified) String() strin
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2202,7 +1697,7 @@ type EditionsMessageLegacyRequiredIgnoreEmpty struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreEmpty) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2214,7 +1709,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreEmpty) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2270,7 +1765,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreEmpty struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2282,7 +1777,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty) String() string {
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2329,142 +1824,6 @@ func (b0 EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_builder) Build() *Edi
 	return m0
 }
 
-type EditionsMessageLegacyRequiredIgnoreDefault struct {
-	state          protoimpl.MessageState                          `protogen:"opaque.v1"`
-	xxx_hidden_Val *EditionsMessageLegacyRequiredIgnoreDefault_Msg `protobuf:"bytes,1,req,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) Reset() {
-	*x = EditionsMessageLegacyRequiredIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageLegacyRequiredIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) GetVal() *EditionsMessageLegacyRequiredIgnoreDefault_Msg {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) SetVal(v *EditionsMessageLegacyRequiredIgnoreDefault_Msg) {
-	x.xxx_hidden_Val = v
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Val != nil
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault) ClearVal() {
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageLegacyRequiredIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *EditionsMessageLegacyRequiredIgnoreDefault_Msg
-}
-
-func (b0 EditionsMessageLegacyRequiredIgnoreDefault_builder) Build() *EditionsMessageLegacyRequiredIgnoreDefault {
-	m0 := &EditionsMessageLegacyRequiredIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
-type EditionsMessageLegacyRequiredDelimitedIgnoreDefault struct {
-	state          protoimpl.MessageState                                   `protogen:"opaque.v1"`
-	xxx_hidden_Val *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg `protobuf:"group,1,req,name=Msg,json=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) Reset() {
-	*x = EditionsMessageLegacyRequiredDelimitedIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[33]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageLegacyRequiredDelimitedIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[33]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) GetVal() *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) SetVal(v *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) {
-	x.xxx_hidden_Val = v
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_Val != nil
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault) ClearVal() {
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageLegacyRequiredDelimitedIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg
-}
-
-func (b0 EditionsMessageLegacyRequiredDelimitedIgnoreDefault_builder) Build() *EditionsMessageLegacyRequiredDelimitedIgnoreDefault {
-	m0 := &EditionsMessageLegacyRequiredDelimitedIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsMessageLegacyRequiredIgnoreAlways struct {
 	state          protoimpl.MessageState                         `protogen:"opaque.v1"`
 	xxx_hidden_Val *EditionsMessageLegacyRequiredIgnoreAlways_Msg `protobuf:"bytes,1,req,name=val"`
@@ -2474,7 +1833,7 @@ type EditionsMessageLegacyRequiredIgnoreAlways struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreAlways) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[34]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2486,7 +1845,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreAlways) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[34]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2542,7 +1901,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreAlways struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[35]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2554,7 +1913,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways) String() string {
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[35]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2610,7 +1969,7 @@ type EditionsOneofIgnoreUnspecified struct {
 
 func (x *EditionsOneofIgnoreUnspecified) Reset() {
 	*x = EditionsOneofIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2622,7 +1981,7 @@ func (x *EditionsOneofIgnoreUnspecified) String() string {
 func (*EditionsOneofIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2707,7 +2066,7 @@ func (b0 EditionsOneofIgnoreUnspecified_builder) Build() *EditionsOneofIgnoreUns
 type case_EditionsOneofIgnoreUnspecified_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreUnspecified_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -2738,7 +2097,7 @@ const (
 
 func (x *EditionsOneofIgnoreUnspecifiedWithDefault) Reset() {
 	*x = EditionsOneofIgnoreUnspecifiedWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2750,7 +2109,7 @@ func (x *EditionsOneofIgnoreUnspecifiedWithDefault) String() string {
 func (*EditionsOneofIgnoreUnspecifiedWithDefault) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreUnspecifiedWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2835,7 +2194,7 @@ func (b0 EditionsOneofIgnoreUnspecifiedWithDefault_builder) Build() *EditionsOne
 type case_EditionsOneofIgnoreUnspecifiedWithDefault_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreUnspecifiedWithDefault_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -2862,7 +2221,7 @@ type EditionsOneofIgnoreEmpty struct {
 
 func (x *EditionsOneofIgnoreEmpty) Reset() {
 	*x = EditionsOneofIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2874,7 +2233,7 @@ func (x *EditionsOneofIgnoreEmpty) String() string {
 func (*EditionsOneofIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2959,7 +2318,7 @@ func (b0 EditionsOneofIgnoreEmpty_builder) Build() *EditionsOneofIgnoreEmpty {
 type case_EditionsOneofIgnoreEmpty_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreEmpty_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -2990,7 +2349,7 @@ const (
 
 func (x *EditionsOneofIgnoreEmptyWithDefault) Reset() {
 	*x = EditionsOneofIgnoreEmptyWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3002,7 +2361,7 @@ func (x *EditionsOneofIgnoreEmptyWithDefault) String() string {
 func (*EditionsOneofIgnoreEmptyWithDefault) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreEmptyWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3087,7 +2446,7 @@ func (b0 EditionsOneofIgnoreEmptyWithDefault_builder) Build() *EditionsOneofIgno
 type case_EditionsOneofIgnoreEmptyWithDefault_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreEmptyWithDefault_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -3104,257 +2463,6 @@ type editionsOneofIgnoreEmptyWithDefault_Val struct {
 
 func (*editionsOneofIgnoreEmptyWithDefault_Val) isEditionsOneofIgnoreEmptyWithDefault_O() {}
 
-type EditionsOneofIgnoreDefault struct {
-	state         protoimpl.MessageState         `protogen:"opaque.v1"`
-	xxx_hidden_O  isEditionsOneofIgnoreDefault_O `protobuf_oneof:"o"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *EditionsOneofIgnoreDefault) Reset() {
-	*x = EditionsOneofIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsOneofIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsOneofIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsOneofIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsOneofIgnoreDefault) GetVal() int32 {
-	if x != nil {
-		if x, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefault_Val); ok {
-			return x.Val
-		}
-	}
-	return 0
-}
-
-func (x *EditionsOneofIgnoreDefault) SetVal(v int32) {
-	x.xxx_hidden_O = &editionsOneofIgnoreDefault_Val{v}
-}
-
-func (x *EditionsOneofIgnoreDefault) HasO() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_O != nil
-}
-
-func (x *EditionsOneofIgnoreDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	_, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefault_Val)
-	return ok
-}
-
-func (x *EditionsOneofIgnoreDefault) ClearO() {
-	x.xxx_hidden_O = nil
-}
-
-func (x *EditionsOneofIgnoreDefault) ClearVal() {
-	if _, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefault_Val); ok {
-		x.xxx_hidden_O = nil
-	}
-}
-
-const EditionsOneofIgnoreDefault_O_not_set_case case_EditionsOneofIgnoreDefault_O = 0
-const EditionsOneofIgnoreDefault_Val_case case_EditionsOneofIgnoreDefault_O = 1
-
-func (x *EditionsOneofIgnoreDefault) WhichO() case_EditionsOneofIgnoreDefault_O {
-	if x == nil {
-		return EditionsOneofIgnoreDefault_O_not_set_case
-	}
-	switch x.xxx_hidden_O.(type) {
-	case *editionsOneofIgnoreDefault_Val:
-		return EditionsOneofIgnoreDefault_Val_case
-	default:
-		return EditionsOneofIgnoreDefault_O_not_set_case
-	}
-}
-
-type EditionsOneofIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	// Fields of oneof xxx_hidden_O:
-	Val *int32
-	// -- end of xxx_hidden_O
-}
-
-func (b0 EditionsOneofIgnoreDefault_builder) Build() *EditionsOneofIgnoreDefault {
-	m0 := &EditionsOneofIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		x.xxx_hidden_O = &editionsOneofIgnoreDefault_Val{*b.Val}
-	}
-	return m0
-}
-
-type case_EditionsOneofIgnoreDefault_O protoreflect.FieldNumber
-
-func (x case_EditionsOneofIgnoreDefault_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40].Descriptor()
-	if x == 0 {
-		return "not set"
-	}
-	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
-}
-
-type isEditionsOneofIgnoreDefault_O interface {
-	isEditionsOneofIgnoreDefault_O()
-}
-
-type editionsOneofIgnoreDefault_Val struct {
-	Val int32 `protobuf:"varint,1,opt,name=val,oneof"`
-}
-
-func (*editionsOneofIgnoreDefault_Val) isEditionsOneofIgnoreDefault_O() {}
-
-type EditionsOneofIgnoreDefaultWithDefault struct {
-	state         protoimpl.MessageState                    `protogen:"opaque.v1"`
-	xxx_hidden_O  isEditionsOneofIgnoreDefaultWithDefault_O `protobuf_oneof:"o"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-// Default values for EditionsOneofIgnoreDefaultWithDefault fields.
-const (
-	Default_EditionsOneofIgnoreDefaultWithDefault_Val = int32(-42)
-)
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) Reset() {
-	*x = EditionsOneofIgnoreDefaultWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsOneofIgnoreDefaultWithDefault) ProtoMessage() {}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) GetVal() int32 {
-	if x != nil {
-		if x, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefaultWithDefault_Val); ok {
-			return x.Val
-		}
-	}
-	return Default_EditionsOneofIgnoreDefaultWithDefault_Val
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) SetVal(v int32) {
-	x.xxx_hidden_O = &editionsOneofIgnoreDefaultWithDefault_Val{v}
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) HasO() bool {
-	if x == nil {
-		return false
-	}
-	return x.xxx_hidden_O != nil
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	_, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefaultWithDefault_Val)
-	return ok
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) ClearO() {
-	x.xxx_hidden_O = nil
-}
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) ClearVal() {
-	if _, ok := x.xxx_hidden_O.(*editionsOneofIgnoreDefaultWithDefault_Val); ok {
-		x.xxx_hidden_O = nil
-	}
-}
-
-const EditionsOneofIgnoreDefaultWithDefault_O_not_set_case case_EditionsOneofIgnoreDefaultWithDefault_O = 0
-const EditionsOneofIgnoreDefaultWithDefault_Val_case case_EditionsOneofIgnoreDefaultWithDefault_O = 1
-
-func (x *EditionsOneofIgnoreDefaultWithDefault) WhichO() case_EditionsOneofIgnoreDefaultWithDefault_O {
-	if x == nil {
-		return EditionsOneofIgnoreDefaultWithDefault_O_not_set_case
-	}
-	switch x.xxx_hidden_O.(type) {
-	case *editionsOneofIgnoreDefaultWithDefault_Val:
-		return EditionsOneofIgnoreDefaultWithDefault_Val_case
-	default:
-		return EditionsOneofIgnoreDefaultWithDefault_O_not_set_case
-	}
-}
-
-type EditionsOneofIgnoreDefaultWithDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	// Fields of oneof xxx_hidden_O:
-	Val *int32
-	// -- end of xxx_hidden_O
-}
-
-func (b0 EditionsOneofIgnoreDefaultWithDefault_builder) Build() *EditionsOneofIgnoreDefaultWithDefault {
-	m0 := &EditionsOneofIgnoreDefaultWithDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		x.xxx_hidden_O = &editionsOneofIgnoreDefaultWithDefault_Val{*b.Val}
-	}
-	return m0
-}
-
-type case_EditionsOneofIgnoreDefaultWithDefault_O protoreflect.FieldNumber
-
-func (x case_EditionsOneofIgnoreDefaultWithDefault_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41].Descriptor()
-	if x == 0 {
-		return "not set"
-	}
-	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
-}
-
-type isEditionsOneofIgnoreDefaultWithDefault_O interface {
-	isEditionsOneofIgnoreDefaultWithDefault_O()
-}
-
-type editionsOneofIgnoreDefaultWithDefault_Val struct {
-	Val int32 `protobuf:"varint,1,opt,name=val,oneof,def=-42"`
-}
-
-func (*editionsOneofIgnoreDefaultWithDefault_Val) isEditionsOneofIgnoreDefaultWithDefault_O() {}
-
 type EditionsOneofIgnoreAlways struct {
 	state         protoimpl.MessageState        `protogen:"opaque.v1"`
 	xxx_hidden_O  isEditionsOneofIgnoreAlways_O `protobuf_oneof:"o"`
@@ -3364,7 +2472,7 @@ type EditionsOneofIgnoreAlways struct {
 
 func (x *EditionsOneofIgnoreAlways) Reset() {
 	*x = EditionsOneofIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3376,7 +2484,7 @@ func (x *EditionsOneofIgnoreAlways) String() string {
 func (*EditionsOneofIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3461,7 +2569,7 @@ func (b0 EditionsOneofIgnoreAlways_builder) Build() *EditionsOneofIgnoreAlways {
 type case_EditionsOneofIgnoreAlways_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreAlways_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -3492,7 +2600,7 @@ const (
 
 func (x *EditionsOneofIgnoreAlwaysWithDefault) Reset() {
 	*x = EditionsOneofIgnoreAlwaysWithDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3504,7 +2612,7 @@ func (x *EditionsOneofIgnoreAlwaysWithDefault) String() string {
 func (*EditionsOneofIgnoreAlwaysWithDefault) ProtoMessage() {}
 
 func (x *EditionsOneofIgnoreAlwaysWithDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3589,7 +2697,7 @@ func (b0 EditionsOneofIgnoreAlwaysWithDefault_builder) Build() *EditionsOneofIgn
 type case_EditionsOneofIgnoreAlwaysWithDefault_O protoreflect.FieldNumber
 
 func (x case_EditionsOneofIgnoreAlwaysWithDefault_O) String() string {
-	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43].Descriptor()
+	md := file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -3615,7 +2723,7 @@ type EditionsRepeatedIgnoreUnspecified struct {
 
 func (x *EditionsRepeatedIgnoreUnspecified) Reset() {
 	*x = EditionsRepeatedIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[44]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3627,7 +2735,7 @@ func (x *EditionsRepeatedIgnoreUnspecified) String() string {
 func (*EditionsRepeatedIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsRepeatedIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[44]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3672,7 +2780,7 @@ type EditionsRepeatedExpandedIgnoreUnspecified struct {
 
 func (x *EditionsRepeatedExpandedIgnoreUnspecified) Reset() {
 	*x = EditionsRepeatedExpandedIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[45]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3684,7 +2792,7 @@ func (x *EditionsRepeatedExpandedIgnoreUnspecified) String() string {
 func (*EditionsRepeatedExpandedIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[45]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3729,7 +2837,7 @@ type EditionsRepeatedIgnoreEmpty struct {
 
 func (x *EditionsRepeatedIgnoreEmpty) Reset() {
 	*x = EditionsRepeatedIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[46]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3741,7 +2849,7 @@ func (x *EditionsRepeatedIgnoreEmpty) String() string {
 func (*EditionsRepeatedIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsRepeatedIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[46]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3786,7 +2894,7 @@ type EditionsRepeatedExpandedIgnoreEmpty struct {
 
 func (x *EditionsRepeatedExpandedIgnoreEmpty) Reset() {
 	*x = EditionsRepeatedExpandedIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[47]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3798,7 +2906,7 @@ func (x *EditionsRepeatedExpandedIgnoreEmpty) String() string {
 func (*EditionsRepeatedExpandedIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[47]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3834,120 +2942,6 @@ func (b0 EditionsRepeatedExpandedIgnoreEmpty_builder) Build() *EditionsRepeatedE
 	return m0
 }
 
-type EditionsRepeatedIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,packed,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsRepeatedIgnoreDefault) Reset() {
-	*x = EditionsRepeatedIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[48]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsRepeatedIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsRepeatedIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsRepeatedIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[48]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsRepeatedIgnoreDefault) GetVal() []int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsRepeatedIgnoreDefault) SetVal(v []int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsRepeatedIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val []int32
-}
-
-func (b0 EditionsRepeatedIgnoreDefault_builder) Build() *EditionsRepeatedIgnoreDefault {
-	m0 := &EditionsRepeatedIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
-type EditionsRepeatedExpandedIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsRepeatedExpandedIgnoreDefault) Reset() {
-	*x = EditionsRepeatedExpandedIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[49]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsRepeatedExpandedIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsRepeatedExpandedIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsRepeatedExpandedIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[49]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsRepeatedExpandedIgnoreDefault) GetVal() []int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsRepeatedExpandedIgnoreDefault) SetVal(v []int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsRepeatedExpandedIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val []int32
-}
-
-func (b0 EditionsRepeatedExpandedIgnoreDefault_builder) Build() *EditionsRepeatedExpandedIgnoreDefault {
-	m0 := &EditionsRepeatedExpandedIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsRepeatedIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,packed,name=val"`
@@ -3957,7 +2951,7 @@ type EditionsRepeatedIgnoreAlways struct {
 
 func (x *EditionsRepeatedIgnoreAlways) Reset() {
 	*x = EditionsRepeatedIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[50]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3969,7 +2963,7 @@ func (x *EditionsRepeatedIgnoreAlways) String() string {
 func (*EditionsRepeatedIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsRepeatedIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[50]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4014,7 +3008,7 @@ type EditionsRepeatedExpandedIgnoreAlways struct {
 
 func (x *EditionsRepeatedExpandedIgnoreAlways) Reset() {
 	*x = EditionsRepeatedExpandedIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[51]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4026,7 +3020,7 @@ func (x *EditionsRepeatedExpandedIgnoreAlways) String() string {
 func (*EditionsRepeatedExpandedIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[51]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4071,7 +3065,7 @@ type EditionsMapIgnoreUnspecified struct {
 
 func (x *EditionsMapIgnoreUnspecified) Reset() {
 	*x = EditionsMapIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[52]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4083,7 +3077,7 @@ func (x *EditionsMapIgnoreUnspecified) String() string {
 func (*EditionsMapIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMapIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[52]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4128,7 +3122,7 @@ type EditionsMapIgnoreEmpty struct {
 
 func (x *EditionsMapIgnoreEmpty) Reset() {
 	*x = EditionsMapIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[53]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4140,7 +3134,7 @@ func (x *EditionsMapIgnoreEmpty) String() string {
 func (*EditionsMapIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMapIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[53]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4176,63 +3170,6 @@ func (b0 EditionsMapIgnoreEmpty_builder) Build() *EditionsMapIgnoreEmpty {
 	return m0
 }
 
-type EditionsMapIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMapIgnoreDefault) Reset() {
-	*x = EditionsMapIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[54]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMapIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMapIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMapIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[54]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMapIgnoreDefault) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMapIgnoreDefault) SetVal(v map[int32]int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsMapIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 EditionsMapIgnoreDefault_builder) Build() *EditionsMapIgnoreDefault {
-	m0 := &EditionsMapIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsMapIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
@@ -4242,7 +3179,7 @@ type EditionsMapIgnoreAlways struct {
 
 func (x *EditionsMapIgnoreAlways) Reset() {
 	*x = EditionsMapIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[55]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4254,7 +3191,7 @@ func (x *EditionsMapIgnoreAlways) String() string {
 func (*EditionsMapIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMapIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[55]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4299,7 +3236,7 @@ type EditionsRepeatedItemIgnoreUnspecified struct {
 
 func (x *EditionsRepeatedItemIgnoreUnspecified) Reset() {
 	*x = EditionsRepeatedItemIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[56]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4311,7 +3248,7 @@ func (x *EditionsRepeatedItemIgnoreUnspecified) String() string {
 func (*EditionsRepeatedItemIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsRepeatedItemIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[56]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4356,7 +3293,7 @@ type EditionsRepeatedExpandedItemIgnoreUnspecified struct {
 
 func (x *EditionsRepeatedExpandedItemIgnoreUnspecified) Reset() {
 	*x = EditionsRepeatedExpandedItemIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[57]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4368,7 +3305,7 @@ func (x *EditionsRepeatedExpandedItemIgnoreUnspecified) String() string {
 func (*EditionsRepeatedExpandedItemIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedItemIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[57]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4413,7 +3350,7 @@ type EditionsRepeatedItemIgnoreEmpty struct {
 
 func (x *EditionsRepeatedItemIgnoreEmpty) Reset() {
 	*x = EditionsRepeatedItemIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[58]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4425,7 +3362,7 @@ func (x *EditionsRepeatedItemIgnoreEmpty) String() string {
 func (*EditionsRepeatedItemIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsRepeatedItemIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[58]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4470,7 +3407,7 @@ type EditionsRepeatedExpandedItemIgnoreEmpty struct {
 
 func (x *EditionsRepeatedExpandedItemIgnoreEmpty) Reset() {
 	*x = EditionsRepeatedExpandedItemIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[59]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4482,7 +3419,7 @@ func (x *EditionsRepeatedExpandedItemIgnoreEmpty) String() string {
 func (*EditionsRepeatedExpandedItemIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedItemIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[59]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4518,120 +3455,6 @@ func (b0 EditionsRepeatedExpandedItemIgnoreEmpty_builder) Build() *EditionsRepea
 	return m0
 }
 
-type EditionsRepeatedItemIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,packed,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsRepeatedItemIgnoreDefault) Reset() {
-	*x = EditionsRepeatedItemIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[60]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsRepeatedItemIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsRepeatedItemIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsRepeatedItemIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[60]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsRepeatedItemIgnoreDefault) GetVal() []int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsRepeatedItemIgnoreDefault) SetVal(v []int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsRepeatedItemIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val []int32
-}
-
-func (b0 EditionsRepeatedItemIgnoreDefault_builder) Build() *EditionsRepeatedItemIgnoreDefault {
-	m0 := &EditionsRepeatedItemIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
-type EditionsRepeatedExpandedItemIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,name=val"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsRepeatedExpandedItemIgnoreDefault) Reset() {
-	*x = EditionsRepeatedExpandedItemIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[61]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsRepeatedExpandedItemIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsRepeatedExpandedItemIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsRepeatedExpandedItemIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[61]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsRepeatedExpandedItemIgnoreDefault) GetVal() []int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsRepeatedExpandedItemIgnoreDefault) SetVal(v []int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsRepeatedExpandedItemIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val []int32
-}
-
-func (b0 EditionsRepeatedExpandedItemIgnoreDefault_builder) Build() *EditionsRepeatedExpandedItemIgnoreDefault {
-	m0 := &EditionsRepeatedExpandedItemIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsRepeatedItemIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val []int32                `protobuf:"varint,1,rep,packed,name=val"`
@@ -4641,7 +3464,7 @@ type EditionsRepeatedItemIgnoreAlways struct {
 
 func (x *EditionsRepeatedItemIgnoreAlways) Reset() {
 	*x = EditionsRepeatedItemIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[62]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4653,7 +3476,7 @@ func (x *EditionsRepeatedItemIgnoreAlways) String() string {
 func (*EditionsRepeatedItemIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsRepeatedItemIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[62]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4698,7 +3521,7 @@ type EditionsRepeatedExpandedItemIgnoreAlways struct {
 
 func (x *EditionsRepeatedExpandedItemIgnoreAlways) Reset() {
 	*x = EditionsRepeatedExpandedItemIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[63]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4710,7 +3533,7 @@ func (x *EditionsRepeatedExpandedItemIgnoreAlways) String() string {
 func (*EditionsRepeatedExpandedItemIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsRepeatedExpandedItemIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[63]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4755,7 +3578,7 @@ type EditionsMapKeyIgnoreUnspecified struct {
 
 func (x *EditionsMapKeyIgnoreUnspecified) Reset() {
 	*x = EditionsMapKeyIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[64]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4767,7 +3590,7 @@ func (x *EditionsMapKeyIgnoreUnspecified) String() string {
 func (*EditionsMapKeyIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMapKeyIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[64]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4812,7 +3635,7 @@ type EditionsMapKeyIgnoreEmpty struct {
 
 func (x *EditionsMapKeyIgnoreEmpty) Reset() {
 	*x = EditionsMapKeyIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[65]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4824,7 +3647,7 @@ func (x *EditionsMapKeyIgnoreEmpty) String() string {
 func (*EditionsMapKeyIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMapKeyIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[65]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4860,63 +3683,6 @@ func (b0 EditionsMapKeyIgnoreEmpty_builder) Build() *EditionsMapKeyIgnoreEmpty {
 	return m0
 }
 
-type EditionsMapKeyIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMapKeyIgnoreDefault) Reset() {
-	*x = EditionsMapKeyIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[66]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMapKeyIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMapKeyIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMapKeyIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[66]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMapKeyIgnoreDefault) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMapKeyIgnoreDefault) SetVal(v map[int32]int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsMapKeyIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 EditionsMapKeyIgnoreDefault_builder) Build() *EditionsMapKeyIgnoreDefault {
-	m0 := &EditionsMapKeyIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsMapKeyIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
@@ -4926,7 +3692,7 @@ type EditionsMapKeyIgnoreAlways struct {
 
 func (x *EditionsMapKeyIgnoreAlways) Reset() {
 	*x = EditionsMapKeyIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[67]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4938,7 +3704,7 @@ func (x *EditionsMapKeyIgnoreAlways) String() string {
 func (*EditionsMapKeyIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMapKeyIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[67]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4983,7 +3749,7 @@ type EditionsMapValueIgnoreUnspecified struct {
 
 func (x *EditionsMapValueIgnoreUnspecified) Reset() {
 	*x = EditionsMapValueIgnoreUnspecified{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[68]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4995,7 +3761,7 @@ func (x *EditionsMapValueIgnoreUnspecified) String() string {
 func (*EditionsMapValueIgnoreUnspecified) ProtoMessage() {}
 
 func (x *EditionsMapValueIgnoreUnspecified) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[68]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5040,7 +3806,7 @@ type EditionsMapValueIgnoreEmpty struct {
 
 func (x *EditionsMapValueIgnoreEmpty) Reset() {
 	*x = EditionsMapValueIgnoreEmpty{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[69]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5052,7 +3818,7 @@ func (x *EditionsMapValueIgnoreEmpty) String() string {
 func (*EditionsMapValueIgnoreEmpty) ProtoMessage() {}
 
 func (x *EditionsMapValueIgnoreEmpty) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[69]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5088,63 +3854,6 @@ func (b0 EditionsMapValueIgnoreEmpty_builder) Build() *EditionsMapValueIgnoreEmp
 	return m0
 }
 
-type EditionsMapValueIgnoreDefault struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *EditionsMapValueIgnoreDefault) Reset() {
-	*x = EditionsMapValueIgnoreDefault{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[70]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMapValueIgnoreDefault) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMapValueIgnoreDefault) ProtoMessage() {}
-
-func (x *EditionsMapValueIgnoreDefault) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[70]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMapValueIgnoreDefault) GetVal() map[int32]int32 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return nil
-}
-
-func (x *EditionsMapValueIgnoreDefault) SetVal(v map[int32]int32) {
-	x.xxx_hidden_Val = v
-}
-
-type EditionsMapValueIgnoreDefault_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val map[int32]int32
-}
-
-func (b0 EditionsMapValueIgnoreDefault_builder) Build() *EditionsMapValueIgnoreDefault {
-	m0 := &EditionsMapValueIgnoreDefault{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type EditionsMapValueIgnoreAlways struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val map[int32]int32        `protobuf:"bytes,1,rep,name=val" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
@@ -5154,7 +3863,7 @@ type EditionsMapValueIgnoreAlways struct {
 
 func (x *EditionsMapValueIgnoreAlways) Reset() {
 	*x = EditionsMapValueIgnoreAlways{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[71]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5166,7 +3875,7 @@ func (x *EditionsMapValueIgnoreAlways) String() string {
 func (*EditionsMapValueIgnoreAlways) ProtoMessage() {}
 
 func (x *EditionsMapValueIgnoreAlways) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[71]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5213,7 +3922,7 @@ type EditionsMessageExplicitPresenceIgnoreUnspecified_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreUnspecified_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreUnspecified_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[72]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5225,7 +3934,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreUnspecified_Msg) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreUnspecified_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreUnspecified_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[72]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5291,7 +4000,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[73]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5303,7 +4012,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg) String()
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[73]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5369,7 +4078,7 @@ type EditionsMessageExplicitPresenceIgnoreEmpty_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreEmpty_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreEmpty_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[74]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5381,7 +4090,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreEmpty_Msg) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreEmpty_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreEmpty_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[74]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5447,7 +4156,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[75]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5459,7 +4168,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg) String() strin
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[75]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5514,162 +4223,6 @@ func (b0 EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg_builder) Build(
 	return m0
 }
 
-type EditionsMessageExplicitPresenceIgnoreDefault_Msg struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) Reset() {
-	*x = EditionsMessageExplicitPresenceIgnoreDefault_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[76]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageExplicitPresenceIgnoreDefault_Msg) ProtoMessage() {}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[76]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) GetVal() string {
-	if x != nil {
-		if x.xxx_hidden_Val != nil {
-			return *x.xxx_hidden_Val
-		}
-		return ""
-	}
-	return ""
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) SetVal(v string) {
-	x.xxx_hidden_Val = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsMessageExplicitPresenceIgnoreDefault_Msg) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageExplicitPresenceIgnoreDefault_Msg_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *string
-}
-
-func (b0 EditionsMessageExplicitPresenceIgnoreDefault_Msg_builder) Build() *EditionsMessageExplicitPresenceIgnoreDefault_Msg {
-	m0 := &EditionsMessageExplicitPresenceIgnoreDefault_Msg{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = b.Val
-	}
-	return m0
-}
-
-type EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) Reset() {
-	*x = EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[77]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) ProtoMessage() {}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[77]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) GetVal() string {
-	if x != nil {
-		if x.xxx_hidden_Val != nil {
-			return *x.xxx_hidden_Val
-		}
-		return ""
-	}
-	return ""
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) SetVal(v string) {
-	x.xxx_hidden_Val = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *string
-}
-
-func (b0 EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg_builder) Build() *EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg {
-	m0 := &EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = b.Val
-	}
-	return m0
-}
-
 type EditionsMessageExplicitPresenceIgnoreAlways_Msg struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
@@ -5681,7 +4234,7 @@ type EditionsMessageExplicitPresenceIgnoreAlways_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceIgnoreAlways_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceIgnoreAlways_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[78]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5693,7 +4246,7 @@ func (x *EditionsMessageExplicitPresenceIgnoreAlways_Msg) String() string {
 func (*EditionsMessageExplicitPresenceIgnoreAlways_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[78]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5759,7 +4312,7 @@ type EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg struct {
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) Reset() {
 	*x = EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[79]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5771,7 +4324,7 @@ func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) String() stri
 func (*EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[79]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5837,7 +4390,7 @@ type EditionsMessageLegacyRequiredIgnoreUnspecified_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreUnspecified_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreUnspecified_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[80]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5849,7 +4402,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreUnspecified_Msg) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreUnspecified_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreUnspecified_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[80]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5915,7 +4468,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[81]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5927,7 +4480,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg) String() s
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[81]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5993,7 +4546,7 @@ type EditionsMessageLegacyRequiredIgnoreEmpty_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreEmpty_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreEmpty_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[82]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6005,7 +4558,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreEmpty_Msg) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreEmpty_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreEmpty_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[82]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6071,7 +4624,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[83]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6083,7 +4636,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg) String() string 
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[83]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6138,162 +4691,6 @@ func (b0 EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg_builder) Build() 
 	return m0
 }
 
-type EditionsMessageLegacyRequiredIgnoreDefault_Msg struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) Reset() {
-	*x = EditionsMessageLegacyRequiredIgnoreDefault_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[84]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageLegacyRequiredIgnoreDefault_Msg) ProtoMessage() {}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[84]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) GetVal() string {
-	if x != nil {
-		if x.xxx_hidden_Val != nil {
-			return *x.xxx_hidden_Val
-		}
-		return ""
-	}
-	return ""
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) SetVal(v string) {
-	x.xxx_hidden_Val = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsMessageLegacyRequiredIgnoreDefault_Msg) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageLegacyRequiredIgnoreDefault_Msg_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *string
-}
-
-func (b0 EditionsMessageLegacyRequiredIgnoreDefault_Msg_builder) Build() *EditionsMessageLegacyRequiredIgnoreDefault_Msg {
-	m0 := &EditionsMessageLegacyRequiredIgnoreDefault_Msg{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = b.Val
-	}
-	return m0
-}
-
-type EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg struct {
-	state                  protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
-	XXX_raceDetectHookData protoimpl.RaceDetectHookData
-	XXX_presence           [1]uint32
-	unknownFields          protoimpl.UnknownFields
-	sizeCache              protoimpl.SizeCache
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) Reset() {
-	*x = EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[85]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) ProtoMessage() {}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[85]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) GetVal() string {
-	if x != nil {
-		if x.xxx_hidden_Val != nil {
-			return *x.xxx_hidden_Val
-		}
-		return ""
-	}
-	return ""
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) SetVal(v string) {
-	x.xxx_hidden_Val = &v
-	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 1)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) HasVal() bool {
-	if x == nil {
-		return false
-	}
-	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
-}
-
-func (x *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg) ClearVal() {
-	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
-	x.xxx_hidden_Val = nil
-}
-
-type EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val *string
-}
-
-func (b0 EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg_builder) Build() *EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg {
-	m0 := &EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg{}
-	b, x := &b0, m0
-	_, _ = b, x
-	if b.Val != nil {
-		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 1)
-		x.xxx_hidden_Val = b.Val
-	}
-	return m0
-}
-
 type EditionsMessageLegacyRequiredIgnoreAlways_Msg struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val         *string                `protobuf:"bytes,1,opt,name=val"`
@@ -6305,7 +4702,7 @@ type EditionsMessageLegacyRequiredIgnoreAlways_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredIgnoreAlways_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredIgnoreAlways_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[86]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[64]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6317,7 +4714,7 @@ func (x *EditionsMessageLegacyRequiredIgnoreAlways_Msg) String() string {
 func (*EditionsMessageLegacyRequiredIgnoreAlways_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[86]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[64]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6383,7 +4780,7 @@ type EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg struct {
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg) Reset() {
 	*x = EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg{}
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[87]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -6395,7 +4792,7 @@ func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg) String() string
 func (*EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg) ProtoMessage() {}
 
 func (x *EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[87]
+	mi := &file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6464,13 +4861,7 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\xbaH\a\xd8\x01\x01\x1a\x02 \x00R\x03val\"Y\n" +
 	"4EditionsScalarExplicitPresenceIgnoreEmptyWithDefault\x12!\n" +
 	"\x03val\x18\x01 \x01(\x05:\x03-42B\n" +
-	"\xbaH\a\xd8\x01\x01\x1a\x02 \x00R\x03val\"K\n" +
-	"+EditionsScalarExplicitPresenceIgnoreDefault\x12\x1c\n" +
-	"\x03val\x18\x01 \x01(\x05B\n" +
-	"\xbaH\a\xd8\x01\x02\x1a\x02 \x00R\x03val\"[\n" +
-	"6EditionsScalarExplicitPresenceIgnoreDefaultWithDefault\x12!\n" +
-	"\x03val\x18\x01 \x01(\x05:\x03-42B\n" +
-	"\xbaH\a\xd8\x01\x02\x1a\x02 \x00R\x03val\"J\n" +
+	"\xbaH\a\xd8\x01\x01\x1a\x02 \x00R\x03val\"J\n" +
 	"*EditionsScalarExplicitPresenceIgnoreAlways\x12\x1c\n" +
 	"\x03val\x18\x01 \x01(\x05B\n" +
 	"\xbaH\a\xd8\x01\x03\x1a\x02 \x00R\x03val\"Z\n" +
@@ -6480,9 +4871,7 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"/EditionsScalarImplicitPresenceIgnoreUnspecified\x12\x1e\n" +
 	"\x03val\x18\x01 \x01(\x05B\f\xbaH\x04\x1a\x02 \x00\xaa\x01\x02\b\x02R\x03val\"N\n" +
 	")EditionsScalarImplicitPresenceIgnoreEmpty\x12!\n" +
-	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\b\x02R\x03val\"P\n" +
-	"+EditionsScalarImplicitPresenceIgnoreDefault\x12!\n" +
-	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x02\x1a\x02 \x00\xaa\x01\x02\b\x02R\x03val\"O\n" +
+	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\b\x02R\x03val\"O\n" +
 	"*EditionsScalarImplicitPresenceIgnoreAlways\x12!\n" +
 	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x03\x1a\x02 \x00\xaa\x01\x02\b\x02R\x03val\"O\n" +
 	"-EditionsScalarLegacyRequiredIgnoreUnspecified\x12\x1e\n" +
@@ -6492,11 +4881,7 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"'EditionsScalarLegacyRequiredIgnoreEmpty\x12!\n" +
 	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"\\\n" +
 	"2EditionsScalarLegacyRequiredIgnoreEmptyWithDefault\x12&\n" +
-	"\x03val\x18\x01 \x01(\x05:\x03-42B\x0f\xbaH\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"N\n" +
-	")EditionsScalarLegacyRequiredIgnoreDefault\x12!\n" +
-	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x02\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"^\n" +
-	"4EditionsScalarLegacyRequiredIgnoreDefaultWithDefault\x12&\n" +
-	"\x03val\x18\x01 \x01(\x05:\x03-42B\x0f\xbaH\a\xd8\x01\x02\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"M\n" +
+	"\x03val\x18\x01 \x01(\x05:\x03-42B\x0f\xbaH\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"M\n" +
 	"(EditionsScalarLegacyRequiredIgnoreAlways\x12!\n" +
 	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\a\xd8\x01\x03\x1a\x02 \x00\xaa\x01\x02\b\x03R\x03val\"]\n" +
 	"3EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault\x12&\n" +
@@ -6519,16 +4904,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"3EditionsMessageExplicitPresenceDelimitedIgnoreEmpty\x12\xb9\x01\n" +
 	"\x03val\x18\x01 \x01(\v2W.buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.MsgBN\xbaHF\xba\x01@\n" +
 	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x01\xaa\x01\x02(\x02R\x03val\x1a\x17\n" +
-	"\x03Msg\x12\x10\n" +
-	"\x03val\x18\x01 \x01(\tR\x03val\"\xf7\x01\n" +
-	",EditionsMessageExplicitPresenceIgnoreDefault\x12\xad\x01\n" +
-	"\x03val\x18\x01 \x01(\v2P.buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreDefault.MsgBI\xbaHF\xba\x01@\n" +
-	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x02R\x03val\x1a\x17\n" +
-	"\x03Msg\x12\x10\n" +
-	"\x03val\x18\x01 \x01(\tR\x03val\"\x8e\x02\n" +
-	"5EditionsMessageExplicitPresenceDelimitedIgnoreDefault\x12\xbb\x01\n" +
-	"\x03val\x18\x01 \x01(\v2Y.buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreDefault.MsgBN\xbaHF\xba\x01@\n" +
-	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x02\xaa\x01\x02(\x02R\x03val\x1a\x17\n" +
 	"\x03Msg\x12\x10\n" +
 	"\x03val\x18\x01 \x01(\tR\x03val\"\xf6\x01\n" +
 	"+EditionsMessageExplicitPresenceIgnoreAlways\x12\xad\x01\n" +
@@ -6560,16 +4935,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x03val\x18\x01 \x01(\v2U.buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.MsgBP\xbaHF\xba\x01@\n" +
 	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x01\xaa\x01\x04\b\x03(\x02R\x03val\x1a\x17\n" +
 	"\x03Msg\x12\x10\n" +
-	"\x03val\x18\x01 \x01(\tR\x03val\"\xf8\x01\n" +
-	"*EditionsMessageLegacyRequiredIgnoreDefault\x12\xb0\x01\n" +
-	"\x03val\x18\x01 \x01(\v2N.buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreDefault.MsgBN\xbaHF\xba\x01@\n" +
-	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x02\xaa\x01\x02\b\x03R\x03val\x1a\x17\n" +
-	"\x03Msg\x12\x10\n" +
-	"\x03val\x18\x01 \x01(\tR\x03val\"\x8c\x02\n" +
-	"3EditionsMessageLegacyRequiredDelimitedIgnoreDefault\x12\xbb\x01\n" +
-	"\x03val\x18\x01 \x01(\v2W.buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreDefault.MsgBP\xbaHF\xba\x01@\n" +
-	"#proto.editions.message.ignore.empty\x12\x06foobar\x1a\x11this.val == 'foo'\xd8\x01\x02\xaa\x01\x04\b\x03(\x02R\x03val\x1a\x17\n" +
-	"\x03Msg\x12\x10\n" +
 	"\x03val\x18\x01 \x01(\tR\x03val\"\xf6\x01\n" +
 	")EditionsMessageLegacyRequiredIgnoreAlways\x12\xaf\x01\n" +
 	"\x03val\x18\x01 \x01(\v2M.buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.MsgBN\xbaHF\xba\x01@\n" +
@@ -6594,14 +4959,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"#EditionsOneofIgnoreEmptyWithDefault\x12#\n" +
 	"\x03val\x18\x01 \x01(\x05:\x03-42B\n" +
 	"\xbaH\a\xd8\x01\x01\x1a\x02 \x00H\x00R\x03valB\x03\n" +
-	"\x01o\"A\n" +
-	"\x1aEditionsOneofIgnoreDefault\x12\x1e\n" +
-	"\x03val\x18\x01 \x01(\x05B\n" +
-	"\xbaH\a\xd8\x01\x02\x1a\x02 \x00H\x00R\x03valB\x03\n" +
-	"\x01o\"Q\n" +
-	"%EditionsOneofIgnoreDefaultWithDefault\x12#\n" +
-	"\x03val\x18\x01 \x01(\x05:\x03-42B\n" +
-	"\xbaH\a\xd8\x01\x02\x1a\x02 \x00H\x00R\x03valB\x03\n" +
 	"\x01o\"@\n" +
 	"\x19EditionsOneofIgnoreAlways\x12\x1e\n" +
 	"\x03val\x18\x01 \x01(\x05B\n" +
@@ -6618,11 +4975,7 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x1bEditionsRepeatedIgnoreEmpty\x12\x1d\n" +
 	"\x03val\x18\x01 \x03(\x05B\v\xbaH\b\xd8\x01\x01\x92\x01\x02\b\x03R\x03val\"I\n" +
 	"#EditionsRepeatedExpandedIgnoreEmpty\x12\"\n" +
-	"\x03val\x18\x01 \x03(\x05B\x10\xbaH\b\xd8\x01\x01\x92\x01\x02\b\x03\xaa\x01\x02\x18\x02R\x03val\">\n" +
-	"\x1dEditionsRepeatedIgnoreDefault\x12\x1d\n" +
-	"\x03val\x18\x01 \x03(\x05B\v\xbaH\b\xd8\x01\x02\x92\x01\x02\b\x03R\x03val\"K\n" +
-	"%EditionsRepeatedExpandedIgnoreDefault\x12\"\n" +
-	"\x03val\x18\x01 \x03(\x05B\x10\xbaH\b\xd8\x01\x02\x92\x01\x02\b\x03\xaa\x01\x02\x18\x02R\x03val\"=\n" +
+	"\x03val\x18\x01 \x03(\x05B\x10\xbaH\b\xd8\x01\x01\x92\x01\x02\b\x03\xaa\x01\x02\x18\x02R\x03val\"=\n" +
 	"\x1cEditionsRepeatedIgnoreAlways\x12\x1d\n" +
 	"\x03val\x18\x01 \x03(\x05B\v\xbaH\b\xd8\x01\x03\x92\x01\x02\b\x03R\x03val\"J\n" +
 	"$EditionsRepeatedExpandedIgnoreAlways\x12\"\n" +
@@ -6634,11 +4987,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xb0\x01\n" +
 	"\x16EditionsMapIgnoreEmpty\x12^\n" +
 	"\x03val\x18\x01 \x03(\v2?.buf.validate.conformance.cases.EditionsMapIgnoreEmpty.ValEntryB\v\xbaH\b\xd8\x01\x01\x9a\x01\x02\b\x03R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xb4\x01\n" +
-	"\x18EditionsMapIgnoreDefault\x12`\n" +
-	"\x03val\x18\x01 \x03(\v2A.buf.validate.conformance.cases.EditionsMapIgnoreDefault.ValEntryB\v\xbaH\b\xd8\x01\x02\x9a\x01\x02\b\x03R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xb2\x01\n" +
@@ -6654,11 +5002,7 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x1fEditionsRepeatedItemIgnoreEmpty\x12!\n" +
 	"\x03val\x18\x01 \x03(\x05B\x0f\xbaH\f\x92\x01\t\"\a\xd8\x01\x01\x1a\x02 \x00R\x03val\"Q\n" +
 	"'EditionsRepeatedExpandedItemIgnoreEmpty\x12&\n" +
-	"\x03val\x18\x01 \x03(\x05B\x14\xbaH\f\x92\x01\t\"\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\x18\x02R\x03val\"F\n" +
-	"!EditionsRepeatedItemIgnoreDefault\x12!\n" +
-	"\x03val\x18\x01 \x03(\x05B\x0f\xbaH\f\x92\x01\t\"\a\xd8\x01\x02\x1a\x02 \x00R\x03val\"S\n" +
-	")EditionsRepeatedExpandedItemIgnoreDefault\x12&\n" +
-	"\x03val\x18\x01 \x03(\x05B\x14\xbaH\f\x92\x01\t\"\a\xd8\x01\x02\x1a\x02 \x00\xaa\x01\x02\x18\x02R\x03val\"E\n" +
+	"\x03val\x18\x01 \x03(\x05B\x14\xbaH\f\x92\x01\t\"\a\xd8\x01\x01\x1a\x02 \x00\xaa\x01\x02\x18\x02R\x03val\"E\n" +
 	" EditionsRepeatedItemIgnoreAlways\x12!\n" +
 	"\x03val\x18\x01 \x03(\x05B\x0f\xbaH\f\x92\x01\t\"\a\xd8\x01\x03\x1a\x02 \x00R\x03val\"R\n" +
 	"(EditionsRepeatedExpandedItemIgnoreAlways\x12&\n" +
@@ -6670,11 +5014,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xba\x01\n" +
 	"\x19EditionsMapKeyIgnoreEmpty\x12e\n" +
 	"\x03val\x18\x01 \x03(\v2B.buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.ValEntryB\x0f\xbaH\f\x9a\x01\t\"\a\xd8\x01\x01\x1a\x02 \x00R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xbe\x01\n" +
-	"\x1bEditionsMapKeyIgnoreDefault\x12g\n" +
-	"\x03val\x18\x01 \x03(\v2D.buf.validate.conformance.cases.EditionsMapKeyIgnoreDefault.ValEntryB\x0f\xbaH\f\x9a\x01\t\"\a\xd8\x01\x02\x1a\x02 \x00R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xbc\x01\n" +
@@ -6692,11 +5031,6 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x03val\x18\x01 \x03(\v2D.buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.ValEntryB\x0f\xbaH\f\x9a\x01\t*\a\xd8\x01\x01\x1a\x02 \x00R\x03val\x1a6\n" +
 	"\bValEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xc2\x01\n" +
-	"\x1dEditionsMapValueIgnoreDefault\x12i\n" +
-	"\x03val\x18\x01 \x03(\v2F.buf.validate.conformance.cases.EditionsMapValueIgnoreDefault.ValEntryB\x0f\xbaH\f\x9a\x01\t*\a\xd8\x01\x02\x1a\x02 \x00R\x03val\x1a6\n" +
-	"\bValEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01\"\xc0\x01\n" +
 	"\x1cEditionsMapValueIgnoreAlways\x12h\n" +
 	"\x03val\x18\x01 \x03(\v2E.buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.ValEntryB\x0f\xbaH\f\x9a\x01\t*\a\xd8\x01\x03\x1a\x02 \x00R\x03val\x1a6\n" +
@@ -6705,143 +5039,111 @@ const file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc = 
 	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x01B\xa2\x02\n" +
 	"\"com.buf.validate.conformance.casesB\x18IgnoreProtoEditionsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\beditionsp\xe8\a"
 
-var file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 100)
+var file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes = make([]protoimpl.MessageInfo, 75)
 var file_buf_validate_conformance_cases_ignore_proto_editions_proto_goTypes = []any{
 	(*EditionsScalarExplicitPresenceIgnoreUnspecified)(nil),               // 0: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreUnspecified
 	(*EditionsScalarExplicitPresenceIgnoreUnspecifiedWithDefault)(nil),    // 1: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreUnspecifiedWithDefault
 	(*EditionsScalarExplicitPresenceIgnoreEmpty)(nil),                     // 2: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreEmpty
 	(*EditionsScalarExplicitPresenceIgnoreEmptyWithDefault)(nil),          // 3: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreEmptyWithDefault
-	(*EditionsScalarExplicitPresenceIgnoreDefault)(nil),                   // 4: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreDefault
-	(*EditionsScalarExplicitPresenceIgnoreDefaultWithDefault)(nil),        // 5: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreDefaultWithDefault
-	(*EditionsScalarExplicitPresenceIgnoreAlways)(nil),                    // 6: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreAlways
-	(*EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault)(nil),         // 7: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault
-	(*EditionsScalarImplicitPresenceIgnoreUnspecified)(nil),               // 8: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreUnspecified
-	(*EditionsScalarImplicitPresenceIgnoreEmpty)(nil),                     // 9: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreEmpty
-	(*EditionsScalarImplicitPresenceIgnoreDefault)(nil),                   // 10: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreDefault
-	(*EditionsScalarImplicitPresenceIgnoreAlways)(nil),                    // 11: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreAlways
-	(*EditionsScalarLegacyRequiredIgnoreUnspecified)(nil),                 // 12: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreUnspecified
-	(*EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault)(nil),      // 13: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault
-	(*EditionsScalarLegacyRequiredIgnoreEmpty)(nil),                       // 14: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreEmpty
-	(*EditionsScalarLegacyRequiredIgnoreEmptyWithDefault)(nil),            // 15: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreEmptyWithDefault
-	(*EditionsScalarLegacyRequiredIgnoreDefault)(nil),                     // 16: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreDefault
-	(*EditionsScalarLegacyRequiredIgnoreDefaultWithDefault)(nil),          // 17: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreDefaultWithDefault
-	(*EditionsScalarLegacyRequiredIgnoreAlways)(nil),                      // 18: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreAlways
-	(*EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault)(nil),           // 19: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault
-	(*EditionsMessageExplicitPresenceIgnoreUnspecified)(nil),              // 20: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified)(nil),     // 21: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified
-	(*EditionsMessageExplicitPresenceIgnoreEmpty)(nil),                    // 22: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty)(nil),           // 23: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty
-	(*EditionsMessageExplicitPresenceIgnoreDefault)(nil),                  // 24: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreDefault
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreDefault)(nil),         // 25: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreDefault
-	(*EditionsMessageExplicitPresenceIgnoreAlways)(nil),                   // 26: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreAlways)(nil),          // 27: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways
-	(*EditionsMessageLegacyRequiredIgnoreUnspecified)(nil),                // 28: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified)(nil),       // 29: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified
-	(*EditionsMessageLegacyRequiredIgnoreEmpty)(nil),                      // 30: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty)(nil),             // 31: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty
-	(*EditionsMessageLegacyRequiredIgnoreDefault)(nil),                    // 32: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreDefault
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreDefault)(nil),           // 33: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreDefault
-	(*EditionsMessageLegacyRequiredIgnoreAlways)(nil),                     // 34: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreAlways)(nil),            // 35: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways
-	(*EditionsOneofIgnoreUnspecified)(nil),                                // 36: buf.validate.conformance.cases.EditionsOneofIgnoreUnspecified
-	(*EditionsOneofIgnoreUnspecifiedWithDefault)(nil),                     // 37: buf.validate.conformance.cases.EditionsOneofIgnoreUnspecifiedWithDefault
-	(*EditionsOneofIgnoreEmpty)(nil),                                      // 38: buf.validate.conformance.cases.EditionsOneofIgnoreEmpty
-	(*EditionsOneofIgnoreEmptyWithDefault)(nil),                           // 39: buf.validate.conformance.cases.EditionsOneofIgnoreEmptyWithDefault
-	(*EditionsOneofIgnoreDefault)(nil),                                    // 40: buf.validate.conformance.cases.EditionsOneofIgnoreDefault
-	(*EditionsOneofIgnoreDefaultWithDefault)(nil),                         // 41: buf.validate.conformance.cases.EditionsOneofIgnoreDefaultWithDefault
-	(*EditionsOneofIgnoreAlways)(nil),                                     // 42: buf.validate.conformance.cases.EditionsOneofIgnoreAlways
-	(*EditionsOneofIgnoreAlwaysWithDefault)(nil),                          // 43: buf.validate.conformance.cases.EditionsOneofIgnoreAlwaysWithDefault
-	(*EditionsRepeatedIgnoreUnspecified)(nil),                             // 44: buf.validate.conformance.cases.EditionsRepeatedIgnoreUnspecified
-	(*EditionsRepeatedExpandedIgnoreUnspecified)(nil),                     // 45: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreUnspecified
-	(*EditionsRepeatedIgnoreEmpty)(nil),                                   // 46: buf.validate.conformance.cases.EditionsRepeatedIgnoreEmpty
-	(*EditionsRepeatedExpandedIgnoreEmpty)(nil),                           // 47: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreEmpty
-	(*EditionsRepeatedIgnoreDefault)(nil),                                 // 48: buf.validate.conformance.cases.EditionsRepeatedIgnoreDefault
-	(*EditionsRepeatedExpandedIgnoreDefault)(nil),                         // 49: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreDefault
-	(*EditionsRepeatedIgnoreAlways)(nil),                                  // 50: buf.validate.conformance.cases.EditionsRepeatedIgnoreAlways
-	(*EditionsRepeatedExpandedIgnoreAlways)(nil),                          // 51: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreAlways
-	(*EditionsMapIgnoreUnspecified)(nil),                                  // 52: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified
-	(*EditionsMapIgnoreEmpty)(nil),                                        // 53: buf.validate.conformance.cases.EditionsMapIgnoreEmpty
-	(*EditionsMapIgnoreDefault)(nil),                                      // 54: buf.validate.conformance.cases.EditionsMapIgnoreDefault
-	(*EditionsMapIgnoreAlways)(nil),                                       // 55: buf.validate.conformance.cases.EditionsMapIgnoreAlways
-	(*EditionsRepeatedItemIgnoreUnspecified)(nil),                         // 56: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreUnspecified
-	(*EditionsRepeatedExpandedItemIgnoreUnspecified)(nil),                 // 57: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreUnspecified
-	(*EditionsRepeatedItemIgnoreEmpty)(nil),                               // 58: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreEmpty
-	(*EditionsRepeatedExpandedItemIgnoreEmpty)(nil),                       // 59: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreEmpty
-	(*EditionsRepeatedItemIgnoreDefault)(nil),                             // 60: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreDefault
-	(*EditionsRepeatedExpandedItemIgnoreDefault)(nil),                     // 61: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreDefault
-	(*EditionsRepeatedItemIgnoreAlways)(nil),                              // 62: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreAlways
-	(*EditionsRepeatedExpandedItemIgnoreAlways)(nil),                      // 63: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreAlways
-	(*EditionsMapKeyIgnoreUnspecified)(nil),                               // 64: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified
-	(*EditionsMapKeyIgnoreEmpty)(nil),                                     // 65: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty
-	(*EditionsMapKeyIgnoreDefault)(nil),                                   // 66: buf.validate.conformance.cases.EditionsMapKeyIgnoreDefault
-	(*EditionsMapKeyIgnoreAlways)(nil),                                    // 67: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways
-	(*EditionsMapValueIgnoreUnspecified)(nil),                             // 68: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified
-	(*EditionsMapValueIgnoreEmpty)(nil),                                   // 69: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty
-	(*EditionsMapValueIgnoreDefault)(nil),                                 // 70: buf.validate.conformance.cases.EditionsMapValueIgnoreDefault
-	(*EditionsMapValueIgnoreAlways)(nil),                                  // 71: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways
-	(*EditionsMessageExplicitPresenceIgnoreUnspecified_Msg)(nil),          // 72: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.Msg
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg)(nil), // 73: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.Msg
-	(*EditionsMessageExplicitPresenceIgnoreEmpty_Msg)(nil),                // 74: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.Msg
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg)(nil),       // 75: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.Msg
-	(*EditionsMessageExplicitPresenceIgnoreDefault_Msg)(nil),              // 76: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreDefault.Msg
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreDefault_Msg)(nil),     // 77: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreDefault.Msg
-	(*EditionsMessageExplicitPresenceIgnoreAlways_Msg)(nil),               // 78: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.Msg
-	(*EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg)(nil),      // 79: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
-	(*EditionsMessageLegacyRequiredIgnoreUnspecified_Msg)(nil),            // 80: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.Msg
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg)(nil),   // 81: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.Msg
-	(*EditionsMessageLegacyRequiredIgnoreEmpty_Msg)(nil),                  // 82: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.Msg
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg)(nil),         // 83: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.Msg
-	(*EditionsMessageLegacyRequiredIgnoreDefault_Msg)(nil),                // 84: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreDefault.Msg
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreDefault_Msg)(nil),       // 85: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreDefault.Msg
-	(*EditionsMessageLegacyRequiredIgnoreAlways_Msg)(nil),                 // 86: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.Msg
-	(*EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg)(nil),        // 87: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.Msg
-	nil, // 88: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.ValEntry
-	nil, // 89: buf.validate.conformance.cases.EditionsMapIgnoreEmpty.ValEntry
-	nil, // 90: buf.validate.conformance.cases.EditionsMapIgnoreDefault.ValEntry
-	nil, // 91: buf.validate.conformance.cases.EditionsMapIgnoreAlways.ValEntry
-	nil, // 92: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.ValEntry
-	nil, // 93: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.ValEntry
-	nil, // 94: buf.validate.conformance.cases.EditionsMapKeyIgnoreDefault.ValEntry
-	nil, // 95: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.ValEntry
-	nil, // 96: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.ValEntry
-	nil, // 97: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.ValEntry
-	nil, // 98: buf.validate.conformance.cases.EditionsMapValueIgnoreDefault.ValEntry
-	nil, // 99: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.ValEntry
+	(*EditionsScalarExplicitPresenceIgnoreAlways)(nil),                    // 4: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreAlways
+	(*EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault)(nil),         // 5: buf.validate.conformance.cases.EditionsScalarExplicitPresenceIgnoreAlwaysWithDefault
+	(*EditionsScalarImplicitPresenceIgnoreUnspecified)(nil),               // 6: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreUnspecified
+	(*EditionsScalarImplicitPresenceIgnoreEmpty)(nil),                     // 7: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreEmpty
+	(*EditionsScalarImplicitPresenceIgnoreAlways)(nil),                    // 8: buf.validate.conformance.cases.EditionsScalarImplicitPresenceIgnoreAlways
+	(*EditionsScalarLegacyRequiredIgnoreUnspecified)(nil),                 // 9: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreUnspecified
+	(*EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault)(nil),      // 10: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreUnspecifiedWithDefault
+	(*EditionsScalarLegacyRequiredIgnoreEmpty)(nil),                       // 11: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreEmpty
+	(*EditionsScalarLegacyRequiredIgnoreEmptyWithDefault)(nil),            // 12: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreEmptyWithDefault
+	(*EditionsScalarLegacyRequiredIgnoreAlways)(nil),                      // 13: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreAlways
+	(*EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault)(nil),           // 14: buf.validate.conformance.cases.EditionsScalarLegacyRequiredIgnoreAlwaysWithDefault
+	(*EditionsMessageExplicitPresenceIgnoreUnspecified)(nil),              // 15: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified)(nil),     // 16: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified
+	(*EditionsMessageExplicitPresenceIgnoreEmpty)(nil),                    // 17: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty)(nil),           // 18: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty
+	(*EditionsMessageExplicitPresenceIgnoreAlways)(nil),                   // 19: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreAlways)(nil),          // 20: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways
+	(*EditionsMessageLegacyRequiredIgnoreUnspecified)(nil),                // 21: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified)(nil),       // 22: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified
+	(*EditionsMessageLegacyRequiredIgnoreEmpty)(nil),                      // 23: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty)(nil),             // 24: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty
+	(*EditionsMessageLegacyRequiredIgnoreAlways)(nil),                     // 25: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreAlways)(nil),            // 26: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways
+	(*EditionsOneofIgnoreUnspecified)(nil),                                // 27: buf.validate.conformance.cases.EditionsOneofIgnoreUnspecified
+	(*EditionsOneofIgnoreUnspecifiedWithDefault)(nil),                     // 28: buf.validate.conformance.cases.EditionsOneofIgnoreUnspecifiedWithDefault
+	(*EditionsOneofIgnoreEmpty)(nil),                                      // 29: buf.validate.conformance.cases.EditionsOneofIgnoreEmpty
+	(*EditionsOneofIgnoreEmptyWithDefault)(nil),                           // 30: buf.validate.conformance.cases.EditionsOneofIgnoreEmptyWithDefault
+	(*EditionsOneofIgnoreAlways)(nil),                                     // 31: buf.validate.conformance.cases.EditionsOneofIgnoreAlways
+	(*EditionsOneofIgnoreAlwaysWithDefault)(nil),                          // 32: buf.validate.conformance.cases.EditionsOneofIgnoreAlwaysWithDefault
+	(*EditionsRepeatedIgnoreUnspecified)(nil),                             // 33: buf.validate.conformance.cases.EditionsRepeatedIgnoreUnspecified
+	(*EditionsRepeatedExpandedIgnoreUnspecified)(nil),                     // 34: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreUnspecified
+	(*EditionsRepeatedIgnoreEmpty)(nil),                                   // 35: buf.validate.conformance.cases.EditionsRepeatedIgnoreEmpty
+	(*EditionsRepeatedExpandedIgnoreEmpty)(nil),                           // 36: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreEmpty
+	(*EditionsRepeatedIgnoreAlways)(nil),                                  // 37: buf.validate.conformance.cases.EditionsRepeatedIgnoreAlways
+	(*EditionsRepeatedExpandedIgnoreAlways)(nil),                          // 38: buf.validate.conformance.cases.EditionsRepeatedExpandedIgnoreAlways
+	(*EditionsMapIgnoreUnspecified)(nil),                                  // 39: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified
+	(*EditionsMapIgnoreEmpty)(nil),                                        // 40: buf.validate.conformance.cases.EditionsMapIgnoreEmpty
+	(*EditionsMapIgnoreAlways)(nil),                                       // 41: buf.validate.conformance.cases.EditionsMapIgnoreAlways
+	(*EditionsRepeatedItemIgnoreUnspecified)(nil),                         // 42: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreUnspecified
+	(*EditionsRepeatedExpandedItemIgnoreUnspecified)(nil),                 // 43: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreUnspecified
+	(*EditionsRepeatedItemIgnoreEmpty)(nil),                               // 44: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreEmpty
+	(*EditionsRepeatedExpandedItemIgnoreEmpty)(nil),                       // 45: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreEmpty
+	(*EditionsRepeatedItemIgnoreAlways)(nil),                              // 46: buf.validate.conformance.cases.EditionsRepeatedItemIgnoreAlways
+	(*EditionsRepeatedExpandedItemIgnoreAlways)(nil),                      // 47: buf.validate.conformance.cases.EditionsRepeatedExpandedItemIgnoreAlways
+	(*EditionsMapKeyIgnoreUnspecified)(nil),                               // 48: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified
+	(*EditionsMapKeyIgnoreEmpty)(nil),                                     // 49: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty
+	(*EditionsMapKeyIgnoreAlways)(nil),                                    // 50: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways
+	(*EditionsMapValueIgnoreUnspecified)(nil),                             // 51: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified
+	(*EditionsMapValueIgnoreEmpty)(nil),                                   // 52: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty
+	(*EditionsMapValueIgnoreAlways)(nil),                                  // 53: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways
+	(*EditionsMessageExplicitPresenceIgnoreUnspecified_Msg)(nil),          // 54: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.Msg
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified_Msg)(nil), // 55: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.Msg
+	(*EditionsMessageExplicitPresenceIgnoreEmpty_Msg)(nil),                // 56: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.Msg
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreEmpty_Msg)(nil),       // 57: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.Msg
+	(*EditionsMessageExplicitPresenceIgnoreAlways_Msg)(nil),               // 58: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.Msg
+	(*EditionsMessageExplicitPresenceDelimitedIgnoreAlways_Msg)(nil),      // 59: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
+	(*EditionsMessageLegacyRequiredIgnoreUnspecified_Msg)(nil),            // 60: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.Msg
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified_Msg)(nil),   // 61: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.Msg
+	(*EditionsMessageLegacyRequiredIgnoreEmpty_Msg)(nil),                  // 62: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.Msg
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreEmpty_Msg)(nil),         // 63: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.Msg
+	(*EditionsMessageLegacyRequiredIgnoreAlways_Msg)(nil),                 // 64: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.Msg
+	(*EditionsMessageLegacyRequiredDelimitedIgnoreAlways_Msg)(nil),        // 65: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.Msg
+	nil, // 66: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.ValEntry
+	nil, // 67: buf.validate.conformance.cases.EditionsMapIgnoreEmpty.ValEntry
+	nil, // 68: buf.validate.conformance.cases.EditionsMapIgnoreAlways.ValEntry
+	nil, // 69: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.ValEntry
+	nil, // 70: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.ValEntry
+	nil, // 71: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.ValEntry
+	nil, // 72: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.ValEntry
+	nil, // 73: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.ValEntry
+	nil, // 74: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.ValEntry
 }
 var file_buf_validate_conformance_cases_ignore_proto_editions_proto_depIdxs = []int32{
-	72, // 0: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.Msg
-	73, // 1: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.Msg
-	74, // 2: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.Msg
-	75, // 3: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.Msg
-	76, // 4: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreDefault.Msg
-	77, // 5: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreDefault.Msg
-	78, // 6: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.Msg
-	79, // 7: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
-	80, // 8: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.Msg
-	81, // 9: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.Msg
-	82, // 10: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.Msg
-	83, // 11: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.Msg
-	84, // 12: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreDefault.Msg
-	85, // 13: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreDefault.Msg
-	86, // 14: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.Msg
-	87, // 15: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.Msg
-	88, // 16: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.ValEntry
-	89, // 17: buf.validate.conformance.cases.EditionsMapIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreEmpty.ValEntry
-	90, // 18: buf.validate.conformance.cases.EditionsMapIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreDefault.ValEntry
-	91, // 19: buf.validate.conformance.cases.EditionsMapIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreAlways.ValEntry
-	92, // 20: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.ValEntry
-	93, // 21: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.ValEntry
-	94, // 22: buf.validate.conformance.cases.EditionsMapKeyIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreDefault.ValEntry
-	95, // 23: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.ValEntry
-	96, // 24: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.ValEntry
-	97, // 25: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.ValEntry
-	98, // 26: buf.validate.conformance.cases.EditionsMapValueIgnoreDefault.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreDefault.ValEntry
-	99, // 27: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.ValEntry
-	28, // [28:28] is the sub-list for method output_type
-	28, // [28:28] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	54, // 0: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreUnspecified.Msg
+	55, // 1: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreUnspecified.Msg
+	56, // 2: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreEmpty.Msg
+	57, // 3: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreEmpty.Msg
+	58, // 4: buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceIgnoreAlways.Msg
+	59, // 5: buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageExplicitPresenceDelimitedIgnoreAlways.Msg
+	60, // 6: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreUnspecified.Msg
+	61, // 7: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreUnspecified.Msg
+	62, // 8: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreEmpty.Msg
+	63, // 9: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreEmpty.Msg
+	64, // 10: buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredIgnoreAlways.Msg
+	65, // 11: buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMessageLegacyRequiredDelimitedIgnoreAlways.Msg
+	66, // 12: buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreUnspecified.ValEntry
+	67, // 13: buf.validate.conformance.cases.EditionsMapIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreEmpty.ValEntry
+	68, // 14: buf.validate.conformance.cases.EditionsMapIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapIgnoreAlways.ValEntry
+	69, // 15: buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreUnspecified.ValEntry
+	70, // 16: buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreEmpty.ValEntry
+	71, // 17: buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapKeyIgnoreAlways.ValEntry
+	72, // 18: buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreUnspecified.ValEntry
+	73, // 19: buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreEmpty.ValEntry
+	74, // 20: buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.val:type_name -> buf.validate.conformance.cases.EditionsMapValueIgnoreAlways.ValEntry
+	21, // [21:21] is the sub-list for method output_type
+	21, // [21:21] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_buf_validate_conformance_cases_ignore_proto_editions_proto_init() }
@@ -6849,28 +5151,22 @@ func file_buf_validate_conformance_cases_ignore_proto_editions_proto_init() {
 	if File_buf_validate_conformance_cases_ignore_proto_editions_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[36].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[27].OneofWrappers = []any{
 		(*editionsOneofIgnoreUnspecified_Val)(nil),
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[37].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[28].OneofWrappers = []any{
 		(*editionsOneofIgnoreUnspecifiedWithDefault_Val)(nil),
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[38].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[29].OneofWrappers = []any{
 		(*editionsOneofIgnoreEmpty_Val)(nil),
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[39].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[30].OneofWrappers = []any{
 		(*editionsOneofIgnoreEmptyWithDefault_Val)(nil),
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[40].OneofWrappers = []any{
-		(*editionsOneofIgnoreDefault_Val)(nil),
-	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[41].OneofWrappers = []any{
-		(*editionsOneofIgnoreDefaultWithDefault_Val)(nil),
-	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[42].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[31].OneofWrappers = []any{
 		(*editionsOneofIgnoreAlways_Val)(nil),
 	}
-	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[43].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_ignore_proto_editions_proto_msgTypes[32].OneofWrappers = []any{
 		(*editionsOneofIgnoreAlwaysWithDefault_Val)(nil),
 	}
 	type x struct{}
@@ -6879,7 +5175,7 @@ func file_buf_validate_conformance_cases_ignore_proto_editions_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc), len(file_buf_validate_conformance_cases_ignore_proto_editions_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   100,
+			NumMessages:   75,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
