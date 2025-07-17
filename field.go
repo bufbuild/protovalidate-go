@@ -57,7 +57,7 @@ func (f field) shouldIgnoreAlways() bool {
 // This field is generally true for nullable fields or fields with the
 // ignore_empty rule explicitly set.
 func (f field) shouldIgnoreEmpty() bool {
-	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_UNPOPULATED
+	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_ZERO_VALUE
 }
 
 func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {

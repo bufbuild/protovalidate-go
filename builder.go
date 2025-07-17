@@ -253,7 +253,7 @@ func (bldr *builder) buildField(
 ) (field, error) {
 	if fieldRules != nil && !fieldRules.HasIgnore() && isPartOfMessageOneof(msgRules, fieldDescriptor) {
 		fieldRules = proto.CloneOf(fieldRules)
-		fieldRules.SetIgnore(validate.Ignore_IGNORE_IF_UNPOPULATED)
+		fieldRules.SetIgnore(validate.Ignore_IGNORE_IF_ZERO_VALUE)
 	}
 	fld := field{
 		Value: value{
@@ -571,7 +571,7 @@ func (bldr *builder) shouldIgnoreAlways(rules *validate.FieldRules) bool {
 }
 
 func (bldr *builder) shouldIgnoreEmpty(rules *validate.FieldRules) bool {
-	return rules.GetIgnore() == validate.Ignore_IGNORE_IF_UNPOPULATED
+	return rules.GetIgnore() == validate.Ignore_IGNORE_IF_ZERO_VALUE
 }
 
 func (bldr *builder) zeroValue(fdesc protoreflect.FieldDescriptor, forItems bool) protoreflect.Value {
