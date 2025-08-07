@@ -188,63 +188,6 @@ func (b0 MessageNone_builder) Build() *MessageNone {
 	return m0
 }
 
-type MessageDisabled struct {
-	state          protoimpl.MessageState `protogen:"opaque.v1"`
-	xxx_hidden_Val uint64                 `protobuf:"varint,1,opt,name=val,proto3"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *MessageDisabled) Reset() {
-	*x = MessageDisabled{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *MessageDisabled) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*MessageDisabled) ProtoMessage() {}
-
-func (x *MessageDisabled) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-func (x *MessageDisabled) GetVal() uint64 {
-	if x != nil {
-		return x.xxx_hidden_Val
-	}
-	return 0
-}
-
-func (x *MessageDisabled) SetVal(v uint64) {
-	x.xxx_hidden_Val = v
-}
-
-type MessageDisabled_builder struct {
-	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
-
-	Val uint64
-}
-
-func (b0 MessageDisabled_builder) Build() *MessageDisabled {
-	m0 := &MessageDisabled{}
-	b, x := &b0, m0
-	_, _ = b, x
-	x.xxx_hidden_Val = b.Val
-	return m0
-}
-
 type Message struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val *TestMsg               `protobuf:"bytes,1,opt,name=val,proto3"`
@@ -254,7 +197,7 @@ type Message struct {
 
 func (x *Message) Reset() {
 	*x = Message{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -266,7 +209,7 @@ func (x *Message) String() string {
 func (*Message) ProtoMessage() {}
 
 func (x *Message) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -322,7 +265,7 @@ type MessageCrossPackage struct {
 
 func (x *MessageCrossPackage) Reset() {
 	*x = MessageCrossPackage{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -334,7 +277,7 @@ func (x *MessageCrossPackage) String() string {
 func (*MessageCrossPackage) ProtoMessage() {}
 
 func (x *MessageCrossPackage) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -390,7 +333,7 @@ type MessageSkip struct {
 
 func (x *MessageSkip) Reset() {
 	*x = MessageSkip{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -402,7 +345,7 @@ func (x *MessageSkip) String() string {
 func (*MessageSkip) ProtoMessage() {}
 
 func (x *MessageSkip) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -458,7 +401,7 @@ type MessageRequired struct {
 
 func (x *MessageRequired) Reset() {
 	*x = MessageRequired{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -470,7 +413,7 @@ func (x *MessageRequired) String() string {
 func (*MessageRequired) ProtoMessage() {}
 
 func (x *MessageRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -526,7 +469,7 @@ type MessageRequiredButOptional struct {
 
 func (x *MessageRequiredButOptional) Reset() {
 	*x = MessageRequiredButOptional{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -538,7 +481,7 @@ func (x *MessageRequiredButOptional) String() string {
 func (*MessageRequiredButOptional) ProtoMessage() {}
 
 func (x *MessageRequiredButOptional) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -594,7 +537,7 @@ type MessageRequiredOneof struct {
 
 func (x *MessageRequiredOneof) Reset() {
 	*x = MessageRequiredOneof{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -606,7 +549,7 @@ func (x *MessageRequiredOneof) String() string {
 func (*MessageRequiredOneof) ProtoMessage() {}
 
 func (x *MessageRequiredOneof) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -695,7 +638,7 @@ func (b0 MessageRequiredOneof_builder) Build() *MessageRequiredOneof {
 type case_MessageRequiredOneof_One protoreflect.FieldNumber
 
 func (x case_MessageRequiredOneof_One) String() string {
-	md := file_buf_validate_conformance_cases_messages_proto_msgTypes[8].Descriptor()
+	md := file_buf_validate_conformance_cases_messages_proto_msgTypes[7].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -720,7 +663,7 @@ type MessageWith3DInside struct {
 
 func (x *MessageWith3DInside) Reset() {
 	*x = MessageWith3DInside{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -732,7 +675,7 @@ func (x *MessageWith3DInside) String() string {
 func (*MessageWith3DInside) ProtoMessage() {}
 
 func (x *MessageWith3DInside) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -765,7 +708,7 @@ type MessageOneofSingleField struct {
 
 func (x *MessageOneofSingleField) Reset() {
 	*x = MessageOneofSingleField{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -777,7 +720,7 @@ func (x *MessageOneofSingleField) String() string {
 func (*MessageOneofSingleField) ProtoMessage() {}
 
 func (x *MessageOneofSingleField) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -836,7 +779,7 @@ type MessageOneofSingleFieldRequired struct {
 
 func (x *MessageOneofSingleFieldRequired) Reset() {
 	*x = MessageOneofSingleFieldRequired{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -848,7 +791,7 @@ func (x *MessageOneofSingleFieldRequired) String() string {
 func (*MessageOneofSingleFieldRequired) ProtoMessage() {}
 
 func (x *MessageOneofSingleFieldRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -907,7 +850,7 @@ type MessageOneofMultipleFields struct {
 
 func (x *MessageOneofMultipleFields) Reset() {
 	*x = MessageOneofMultipleFields{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -919,7 +862,7 @@ func (x *MessageOneofMultipleFields) String() string {
 func (*MessageOneofMultipleFields) ProtoMessage() {}
 
 func (x *MessageOneofMultipleFields) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -978,7 +921,7 @@ type MessageOneofMultipleFieldsRequired struct {
 
 func (x *MessageOneofMultipleFieldsRequired) Reset() {
 	*x = MessageOneofMultipleFieldsRequired{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -990,7 +933,7 @@ func (x *MessageOneofMultipleFieldsRequired) String() string {
 func (*MessageOneofMultipleFieldsRequired) ProtoMessage() {}
 
 func (x *MessageOneofMultipleFieldsRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1050,7 +993,7 @@ type MessageOneofMultipleSharedFields struct {
 
 func (x *MessageOneofMultipleSharedFields) Reset() {
 	*x = MessageOneofMultipleSharedFields{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1062,7 +1005,7 @@ func (x *MessageOneofMultipleSharedFields) String() string {
 func (*MessageOneofMultipleSharedFields) ProtoMessage() {}
 
 func (x *MessageOneofMultipleSharedFields) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1133,7 +1076,7 @@ type MessageOneofUnknownFieldName struct {
 
 func (x *MessageOneofUnknownFieldName) Reset() {
 	*x = MessageOneofUnknownFieldName{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1145,7 +1088,7 @@ func (x *MessageOneofUnknownFieldName) String() string {
 func (*MessageOneofUnknownFieldName) ProtoMessage() {}
 
 func (x *MessageOneofUnknownFieldName) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1191,7 +1134,7 @@ type MessageOneofDuplicateField struct {
 
 func (x *MessageOneofDuplicateField) Reset() {
 	*x = MessageOneofDuplicateField{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1203,7 +1146,7 @@ func (x *MessageOneofDuplicateField) String() string {
 func (*MessageOneofDuplicateField) ProtoMessage() {}
 
 func (x *MessageOneofDuplicateField) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1262,7 +1205,7 @@ type MessageOneofZeroFields struct {
 
 func (x *MessageOneofZeroFields) Reset() {
 	*x = MessageOneofZeroFields{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1274,7 +1217,7 @@ func (x *MessageOneofZeroFields) String() string {
 func (*MessageOneofZeroFields) ProtoMessage() {}
 
 func (x *MessageOneofZeroFields) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1334,7 +1277,7 @@ type MessageOneofUnsatisfiable struct {
 
 func (x *MessageOneofUnsatisfiable) Reset() {
 	*x = MessageOneofUnsatisfiable{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1346,7 +1289,7 @@ func (x *MessageOneofUnsatisfiable) String() string {
 func (*MessageOneofUnsatisfiable) ProtoMessage() {}
 
 func (x *MessageOneofUnsatisfiable) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1418,7 +1361,7 @@ type MessageOneofIgnoreUnpopulated struct {
 
 func (x *MessageOneofIgnoreUnpopulated) Reset() {
 	*x = MessageOneofIgnoreUnpopulated{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1430,7 +1373,7 @@ func (x *MessageOneofIgnoreUnpopulated) String() string {
 func (*MessageOneofIgnoreUnpopulated) ProtoMessage() {}
 
 func (x *MessageOneofIgnoreUnpopulated) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1489,7 +1432,7 @@ type MessageOneofIgnoreUnpopulatedRequired struct {
 
 func (x *MessageOneofIgnoreUnpopulatedRequired) Reset() {
 	*x = MessageOneofIgnoreUnpopulatedRequired{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1501,7 +1444,7 @@ func (x *MessageOneofIgnoreUnpopulatedRequired) String() string {
 func (*MessageOneofIgnoreUnpopulatedRequired) ProtoMessage() {}
 
 func (x *MessageOneofIgnoreUnpopulatedRequired) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1560,7 +1503,7 @@ type MessageOneofIgnoreOverride struct {
 
 func (x *MessageOneofIgnoreOverride) Reset() {
 	*x = MessageOneofIgnoreOverride{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1572,7 +1515,7 @@ func (x *MessageOneofIgnoreOverride) String() string {
 func (*MessageOneofIgnoreOverride) ProtoMessage() {}
 
 func (x *MessageOneofIgnoreOverride) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1640,7 +1583,7 @@ type MessageNone_NoneMsg struct {
 
 func (x *MessageNone_NoneMsg) Reset() {
 	*x = MessageNone_NoneMsg{}
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1652,7 +1595,7 @@ func (x *MessageNone_NoneMsg) String() string {
 func (*MessageNone_NoneMsg) ProtoMessage() {}
 
 func (x *MessageNone_NoneMsg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_messages_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1687,9 +1630,7 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"\x06nested\x18\x02 \x01(\v2'.buf.validate.conformance.cases.TestMsgR\x06nested\"_\n" +
 	"\vMessageNone\x12E\n" +
 	"\x03val\x18\x01 \x01(\v23.buf.validate.conformance.cases.MessageNone.NoneMsgR\x03val\x1a\t\n" +
-	"\aNoneMsg\"3\n" +
-	"\x0fMessageDisabled\x12\x19\n" +
-	"\x03val\x18\x01 \x01(\x04B\a\xbaH\x042\x02 {R\x03val:\x05\xbaH\x02\b\x01\"D\n" +
+	"\aNoneMsg\"D\n" +
 	"\aMessage\x129\n" +
 	"\x03val\x18\x01 \x01(\v2'.buf.validate.conformance.cases.TestMsgR\x03val\"\\\n" +
 	"\x13MessageCrossPackage\x12E\n" +
@@ -1788,38 +1729,37 @@ const file_buf_validate_conformance_cases_messages_proto_rawDesc = "" +
 	"bool_fieldB\x97\x02\n" +
 	"\"com.buf.validate.conformance.casesB\rMessagesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_buf_validate_conformance_cases_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_buf_validate_conformance_cases_messages_proto_goTypes = []any{
 	(*TestMsg)(nil),                               // 0: buf.validate.conformance.cases.TestMsg
 	(*MessageNone)(nil),                           // 1: buf.validate.conformance.cases.MessageNone
-	(*MessageDisabled)(nil),                       // 2: buf.validate.conformance.cases.MessageDisabled
-	(*Message)(nil),                               // 3: buf.validate.conformance.cases.Message
-	(*MessageCrossPackage)(nil),                   // 4: buf.validate.conformance.cases.MessageCrossPackage
-	(*MessageSkip)(nil),                           // 5: buf.validate.conformance.cases.MessageSkip
-	(*MessageRequired)(nil),                       // 6: buf.validate.conformance.cases.MessageRequired
-	(*MessageRequiredButOptional)(nil),            // 7: buf.validate.conformance.cases.MessageRequiredButOptional
-	(*MessageRequiredOneof)(nil),                  // 8: buf.validate.conformance.cases.MessageRequiredOneof
-	(*MessageWith3DInside)(nil),                   // 9: buf.validate.conformance.cases.MessageWith3dInside
-	(*MessageOneofSingleField)(nil),               // 10: buf.validate.conformance.cases.MessageOneofSingleField
-	(*MessageOneofSingleFieldRequired)(nil),       // 11: buf.validate.conformance.cases.MessageOneofSingleFieldRequired
-	(*MessageOneofMultipleFields)(nil),            // 12: buf.validate.conformance.cases.MessageOneofMultipleFields
-	(*MessageOneofMultipleFieldsRequired)(nil),    // 13: buf.validate.conformance.cases.MessageOneofMultipleFieldsRequired
-	(*MessageOneofMultipleSharedFields)(nil),      // 14: buf.validate.conformance.cases.MessageOneofMultipleSharedFields
-	(*MessageOneofUnknownFieldName)(nil),          // 15: buf.validate.conformance.cases.MessageOneofUnknownFieldName
-	(*MessageOneofDuplicateField)(nil),            // 16: buf.validate.conformance.cases.MessageOneofDuplicateField
-	(*MessageOneofZeroFields)(nil),                // 17: buf.validate.conformance.cases.MessageOneofZeroFields
-	(*MessageOneofUnsatisfiable)(nil),             // 18: buf.validate.conformance.cases.MessageOneofUnsatisfiable
-	(*MessageOneofIgnoreUnpopulated)(nil),         // 19: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulated
-	(*MessageOneofIgnoreUnpopulatedRequired)(nil), // 20: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulatedRequired
-	(*MessageOneofIgnoreOverride)(nil),            // 21: buf.validate.conformance.cases.MessageOneofIgnoreOverride
-	(*MessageNone_NoneMsg)(nil),                   // 22: buf.validate.conformance.cases.MessageNone.NoneMsg
-	(*other_package.Embed)(nil),                   // 23: buf.validate.conformance.cases.other_package.Embed
+	(*Message)(nil),                               // 2: buf.validate.conformance.cases.Message
+	(*MessageCrossPackage)(nil),                   // 3: buf.validate.conformance.cases.MessageCrossPackage
+	(*MessageSkip)(nil),                           // 4: buf.validate.conformance.cases.MessageSkip
+	(*MessageRequired)(nil),                       // 5: buf.validate.conformance.cases.MessageRequired
+	(*MessageRequiredButOptional)(nil),            // 6: buf.validate.conformance.cases.MessageRequiredButOptional
+	(*MessageRequiredOneof)(nil),                  // 7: buf.validate.conformance.cases.MessageRequiredOneof
+	(*MessageWith3DInside)(nil),                   // 8: buf.validate.conformance.cases.MessageWith3dInside
+	(*MessageOneofSingleField)(nil),               // 9: buf.validate.conformance.cases.MessageOneofSingleField
+	(*MessageOneofSingleFieldRequired)(nil),       // 10: buf.validate.conformance.cases.MessageOneofSingleFieldRequired
+	(*MessageOneofMultipleFields)(nil),            // 11: buf.validate.conformance.cases.MessageOneofMultipleFields
+	(*MessageOneofMultipleFieldsRequired)(nil),    // 12: buf.validate.conformance.cases.MessageOneofMultipleFieldsRequired
+	(*MessageOneofMultipleSharedFields)(nil),      // 13: buf.validate.conformance.cases.MessageOneofMultipleSharedFields
+	(*MessageOneofUnknownFieldName)(nil),          // 14: buf.validate.conformance.cases.MessageOneofUnknownFieldName
+	(*MessageOneofDuplicateField)(nil),            // 15: buf.validate.conformance.cases.MessageOneofDuplicateField
+	(*MessageOneofZeroFields)(nil),                // 16: buf.validate.conformance.cases.MessageOneofZeroFields
+	(*MessageOneofUnsatisfiable)(nil),             // 17: buf.validate.conformance.cases.MessageOneofUnsatisfiable
+	(*MessageOneofIgnoreUnpopulated)(nil),         // 18: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulated
+	(*MessageOneofIgnoreUnpopulatedRequired)(nil), // 19: buf.validate.conformance.cases.MessageOneofIgnoreUnpopulatedRequired
+	(*MessageOneofIgnoreOverride)(nil),            // 20: buf.validate.conformance.cases.MessageOneofIgnoreOverride
+	(*MessageNone_NoneMsg)(nil),                   // 21: buf.validate.conformance.cases.MessageNone.NoneMsg
+	(*other_package.Embed)(nil),                   // 22: buf.validate.conformance.cases.other_package.Embed
 }
 var file_buf_validate_conformance_cases_messages_proto_depIdxs = []int32{
 	0,  // 0: buf.validate.conformance.cases.TestMsg.nested:type_name -> buf.validate.conformance.cases.TestMsg
-	22, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
+	21, // 1: buf.validate.conformance.cases.MessageNone.val:type_name -> buf.validate.conformance.cases.MessageNone.NoneMsg
 	0,  // 2: buf.validate.conformance.cases.Message.val:type_name -> buf.validate.conformance.cases.TestMsg
-	23, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
+	22, // 3: buf.validate.conformance.cases.MessageCrossPackage.val:type_name -> buf.validate.conformance.cases.other_package.Embed
 	0,  // 4: buf.validate.conformance.cases.MessageSkip.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 5: buf.validate.conformance.cases.MessageRequired.val:type_name -> buf.validate.conformance.cases.TestMsg
 	0,  // 6: buf.validate.conformance.cases.MessageRequiredButOptional.val:type_name -> buf.validate.conformance.cases.TestMsg
@@ -1837,8 +1777,8 @@ func file_buf_validate_conformance_cases_messages_proto_init() {
 	if File_buf_validate_conformance_cases_messages_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_messages_proto_msgTypes[7].OneofWrappers = []any{}
-	file_buf_validate_conformance_cases_messages_proto_msgTypes[8].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_messages_proto_msgTypes[6].OneofWrappers = []any{}
+	file_buf_validate_conformance_cases_messages_proto_msgTypes[7].OneofWrappers = []any{
 		(*messageRequiredOneof_Val)(nil),
 	}
 	type x struct{}
@@ -1847,7 +1787,7 @@ func file_buf_validate_conformance_cases_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_messages_proto_rawDesc), len(file_buf_validate_conformance_cases_messages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
