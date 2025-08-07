@@ -55,7 +55,7 @@ go get buf.build/go/protovalidate
 
 ## Documentation
 
-Comprehensive documentation for Protovalidate is available in [Buf's documentation library][protovalidate]. 
+Comprehensive documentation for Protovalidate is available at [protovalidate.com][protovalidate]. 
 
 Highlights for Go developers include:
 
