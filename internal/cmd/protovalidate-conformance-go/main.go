@@ -21,6 +21,7 @@ import (
 	"os"
 	"strings"
 
+	"buf.build/go/hyperpb"
 	"buf.build/go/protovalidate"
 	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/harness"
 	"google.golang.org/protobuf/proto"
@@ -96,7 +97,8 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 		return unexpectedErrorResult("expected message descriptor, got %T", desc)
 	}
 
-	dyn := dynamicpb.NewMessage(msgDesc)
+	msgType := hyperpb.CompileMessageDescriptor(msgDesc)
+	dyn := msgType.New().Interface()
 	if err = anypb.UnmarshalTo(testCase, dyn, proto.UnmarshalOptions{}); err != nil {
 		return unexpectedErrorResult("unable to unmarshal test case: %v", err)
 	}
