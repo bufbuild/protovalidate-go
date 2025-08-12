@@ -26,3 +26,5 @@ require (
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/google/cel-go => github.com/srikrsna/cel-go v0.26.1-0.20250812154235-7566fa9dcc5f
