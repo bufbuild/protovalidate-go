@@ -4,8 +4,8 @@ go 1.23.0
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.8-20250717185734-6c6e0d3c608e.1
-	github.com/google/cel-go v0.26.0
-	github.com/stretchr/testify v1.11.0
+	github.com/google/cel-go v0.26.1
+	github.com/stretchr/testify v1.11.1
 	google.golang.org/protobuf v1.36.8
 )
 
