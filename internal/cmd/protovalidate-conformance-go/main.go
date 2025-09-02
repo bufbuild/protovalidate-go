@@ -97,8 +97,7 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 		return unexpectedErrorResult("expected message descriptor, got %T", desc)
 	}
 
-	msgType := hyperpb.CompileMessageDescriptor(msgDesc)
-	dyn := msgType.New().Interface()
+	dyn := hyperpb.NewMessage(hyperpb.CompileMessageDescriptor(msgDesc))
 	if err = anypb.UnmarshalTo(testCase, dyn, proto.UnmarshalOptions{}); err != nil {
 		return unexpectedErrorResult("unable to unmarshal test case: %v", err)
 	}
