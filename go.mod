@@ -3,11 +3,11 @@ module buf.build/go/protovalidate
 go 1.23.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.7-20250717185734-6c6e0d3c608e.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.8-20250717185734-6c6e0d3c608e.1
 	buf.build/go/hyperpb v0.1.0
 	github.com/google/cel-go v0.26.1
-	github.com/stretchr/testify v1.10.0
-	google.golang.org/protobuf v1.36.7
+	github.com/stretchr/testify v1.11.0
+	google.golang.org/protobuf v1.36.8
 )
 
 require (
