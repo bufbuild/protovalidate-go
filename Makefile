@@ -12,11 +12,11 @@ LICENSE_IGNORE := -e internal/testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
 ARGS ?= --strict_message --strict_error
-GOLANGCI_LINT_VERSION ?= v2.1.2
+GOLANGCI_LINT_VERSION ?= v2.4.0
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v0.14.0
+CONFORMANCE_VERSION ?= v0.14.2
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -54,6 +54,10 @@ lint-fix:
 .PHONY: conformance
 conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
 	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
+
+.PHONY: conformance-hyperpb
+conformance-hyperpb: ## Run conformance tests against hyperpb
+	HYPERPB=true $(MAKE) conformance
 
 .PHONY: generate
 generate: generate-proto generate-license ## Regenerate code and license headers
