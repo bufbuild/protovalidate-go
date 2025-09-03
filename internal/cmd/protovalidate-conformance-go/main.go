@@ -32,9 +32,17 @@ import (
 	"google.golang.org/protobuf/types/known/anypb"
 )
 
+type Config struct {
+	HyperPB bool
+}
+
 func main() {
 	log.SetFlags(0)
 	log.SetPrefix("[protovalidate-go] ")
+
+	config := Config{
+		HyperPB: os.Getenv("HYPERPB") != "",
+	}
 
 	req := &harness.TestConformanceRequest{}
 	if data, err := io.ReadAll(os.Stdin); err != nil {
@@ -43,7 +51,7 @@ func main() {
 		log.Fatalf("failed to unmarshal conformance request: %v", err)
 	}
 
-	resp, err := TestConformance(req)
+	resp, err := TestConformance(req, config)
 	if err != nil {
 		log.Fatalf("unable to test conformance: %v", err)
 	} else if data, err := proto.Marshal(resp); err != nil {
@@ -53,7 +61,7 @@ func main() {
 	}
 }
 
-func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConformanceResponse, error) {
+func TestConformance(req *harness.TestConformanceRequest, config Config) (*harness.TestConformanceResponse, error) {
 	files, err := protodesc.NewFiles(req.GetFdset())
 	if err != nil {
 		err = fmt.Errorf("failed to parse file descriptors: %w", err)
@@ -80,12 +88,12 @@ func TestConformance(req *harness.TestConformanceRequest) (*harness.TestConforma
 	}
 	resp := &harness.TestConformanceResponse{Results: map[string]*harness.TestResult{}}
 	for caseName, testCase := range req.GetCases() {
-		resp.Results[caseName] = TestCase(val, files, testCase)
+		resp.Results[caseName] = TestCase(val, files, testCase, config.HyperPB)
 	}
 	return resp, nil
 }
 
-func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase *anypb.Any) *harness.TestResult {
+func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase *anypb.Any, useHyperPB bool) *harness.TestResult {
 	urlParts := strings.Split(testCase.GetTypeUrl(), "/")
 	fullName := protoreflect.FullName(urlParts[len(urlParts)-1])
 	desc, err := files.FindDescriptorByName(fullName)
@@ -97,7 +105,12 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 		return unexpectedErrorResult("expected message descriptor, got %T", desc)
 	}
 
-	dyn := hyperpb.NewMessage(hyperpb.CompileMessageDescriptor(msgDesc))
+	var dyn proto.Message
+	if useHyperPB {
+		dyn = hyperpb.NewMessage(hyperpb.CompileMessageDescriptor(msgDesc))
+	} else {
+		dyn = dynamicpb.NewMessage(msgDesc)
+	}
 	if err = anypb.UnmarshalTo(testCase, dyn, proto.UnmarshalOptions{}); err != nil {
 		return unexpectedErrorResult("unable to unmarshal test case: %v", err)
 	}

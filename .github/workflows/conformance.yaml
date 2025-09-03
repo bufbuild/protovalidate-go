@@ -27,5 +27,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
-      - name: Test conformance
+      - name: Test conformance (dynamicpb)
         run: make conformance
+      - name: Test conformance (hyperpb)
+        run: make conformance-hyperpb
