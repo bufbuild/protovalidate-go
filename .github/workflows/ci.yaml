@@ -35,5 +35,5 @@ jobs:
       - name: Lint
         # Often, lint guidelines depend on the Go version. To prevent
         # conflicting guidance, run only on the most recent supported version.
-        if: matrix.go-version == '1.24.x'
+        if: matrix.go-version == '1.25.x'
         run: make lint-go
