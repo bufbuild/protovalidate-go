@@ -35,7 +35,7 @@ test: ## Run all unit tests
 	$(GO) test -race -cover ./...
 
 .PHONY: test-opaque
-test: ## Test proto opaque API support
+test-opaque: ## Test proto opaque API support
 	$(GO) test --tags=protoopaque ./...
 
 .PHONY: lint
