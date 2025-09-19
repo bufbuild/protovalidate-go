@@ -86,11 +86,11 @@ func TestConformance(req *harness.TestConformanceRequest, config Config) (*harne
 		err = fmt.Errorf("failed to initialize validator: %w", err)
 		return nil, err
 	}
-	resp := &harness.TestConformanceResponse{Results: map[string]*harness.TestResult{}}
+	resp := harness.TestConformanceResponse_builder{Results: map[string]*harness.TestResult{}}
 	for caseName, testCase := range req.GetCases() {
 		resp.Results[caseName] = TestCase(val, files, testCase, config.HyperPB)
 	}
-	return resp, nil
+	return resp.Build(), nil
 }
 
 func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase *anypb.Any, useHyperPB bool) *harness.TestResult {
@@ -117,40 +117,30 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 
 	err = val.Validate(dyn)
 	if err == nil {
-		return &harness.TestResult{
-			Result: &harness.TestResult_Success{
-				Success: true,
-			},
-		}
+		return harness.TestResult_builder{
+			Success: proto.Bool(true),
+		}.Build()
 	}
 	switch res := err.(type) {
 	case *protovalidate.ValidationError:
-		return &harness.TestResult{
-			Result: &harness.TestResult_ValidationError{
-				ValidationError: res.ToProto(),
-			},
-		}
+		return harness.TestResult_builder{
+			ValidationError: res.ToProto(),
+		}.Build()
 	case *protovalidate.RuntimeError:
-		return &harness.TestResult{
-			Result: &harness.TestResult_RuntimeError{
-				RuntimeError: res.Error(),
-			},
-		}
+		return harness.TestResult_builder{
+			RuntimeError: proto.String(res.Error()),
+		}.Build()
 	case *protovalidate.CompilationError:
-		return &harness.TestResult{
-			Result: &harness.TestResult_CompilationError{
-				CompilationError: res.Error(),
-			},
-		}
+		return harness.TestResult_builder{
+			CompilationError: proto.String(res.Error()),
+		}.Build()
 	default:
 		return unexpectedErrorResult("unknown error: %v", err)
 	}
 }
 
 func unexpectedErrorResult(format string, args ...any) *harness.TestResult {
-	return &harness.TestResult{
-		Result: &harness.TestResult_UnexpectedError{
-			UnexpectedError: fmt.Sprintf(format, args...),
-		},
-	}
+	return harness.TestResult_builder{
+		UnexpectedError: proto.String(fmt.Sprintf(format, args...)),
+	}.Build()
 }

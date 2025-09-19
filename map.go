@@ -28,19 +28,19 @@ import (
 var (
 	mapRuleDescriptor     = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("map")
 	mapKeysRuleDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("keys")
-	mapKeysRulePath       = &validate.FieldPath{
+	mapKeysRulePath       = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(mapRuleDescriptor),
 			fieldPathElement(mapKeysRuleDescriptor),
 		},
-	}
+	}.Build()
 	mapValuesDescriptor = (&validate.MapRules{}).ProtoReflect().Descriptor().Fields().ByName("values")
-	mapValuesRulePath   = &validate.FieldPath{
+	mapValuesRulePath   = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(mapRuleDescriptor),
 			fieldPathElement(mapValuesDescriptor),
 		},
-	}
+	}.Build()
 )
 
 // kvPairs performs validation on a map field's KV Pairs.
@@ -66,7 +66,7 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 		evalErr := m.evalPairs(msg, key, value, cfg)
 		if evalErr != nil {
-			element := &validate.FieldPathElement{
+			element := validate.FieldPathElement_builder{
 				FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
 				FieldType:   m.base.FieldPathElement.GetFieldType().Enum(),
 				FieldName:   proto.String(m.FieldPathElement.GetFieldName()),
@@ -75,16 +75,16 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 			element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapValue().Kind()).Enum()
 			switch m.base.Descriptor.MapKey().Kind() {
 			case protoreflect.BoolKind:
-				element.Subscript = &validate.FieldPathElement_BoolKey{BoolKey: key.Bool()}
+				element.BoolKey = proto.Bool(key.Bool())
 			case protoreflect.Int32Kind, protoreflect.Int64Kind,
 				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
 				protoreflect.Sint32Kind, protoreflect.Sint64Kind:
-				element.Subscript = &validate.FieldPathElement_IntKey{IntKey: key.Int()}
+				element.IntKey = proto.Int64(key.Int())
 			case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
 				protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
-				element.Subscript = &validate.FieldPathElement_UintKey{UintKey: key.Uint()}
+				element.UintKey = proto.Uint64(key.Uint())
 			case protoreflect.StringKind:
-				element.Subscript = &validate.FieldPathElement_StringKey{StringKey: key.String()}
+				element.StringKey = proto.String(key.String())
 			case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
 				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
 				fallthrough
@@ -94,7 +94,7 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 					m.base.Descriptor.MapKey().Kind())}
 				return false
 			}
-			updateViolationPaths(evalErr, element, m.RulePrefix.GetElements())
+			updateViolationPaths(evalErr, element.Build(), m.RulePrefix.GetElements())
 		}
 		ok, err = mergeViolations(err, evalErr, cfg)
 		return ok

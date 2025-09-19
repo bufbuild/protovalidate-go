@@ -24,12 +24,12 @@ import (
 var (
 	repeatedRuleDescriptor      = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("repeated")
 	repeatedItemsRuleDescriptor = (&validate.RepeatedRules{}).ProtoReflect().Descriptor().Fields().ByName("items")
-	repeatedItemsRulePath       = &validate.FieldPath{
+	repeatedItemsRulePath       = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(repeatedRuleDescriptor),
 			fieldPathElement(repeatedItemsRuleDescriptor),
 		},
-	}
+	}.Build()
 )
 
 // listItems performs validation on the elements of a repeated field.
@@ -54,12 +54,12 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 	for i := range list.Len() {
 		itemErr := r.ItemRules.EvaluateField(msg, list.Get(i), cfg, true)
 		if itemErr != nil {
-			updateViolationPaths(itemErr, &validate.FieldPathElement{
+			updateViolationPaths(itemErr, validate.FieldPathElement_builder{
 				FieldNumber: proto.Int32(r.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
 				FieldName:   proto.String(r.FieldPathElement.GetFieldName()),
-				Subscript:   &validate.FieldPathElement_Index{Index: uint64(i)}, //nolint:gosec // indices are guaranteed to be non-negative
-			}, r.RulePrefix.GetElements())
+				Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+			}.Build(), r.RulePrefix.GetElements())
 		}
 		if ok, err = mergeViolations(err, itemErr, cfg); !ok {
 			return err

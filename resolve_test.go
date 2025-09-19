@@ -28,11 +28,11 @@ import (
 func TestResolve(t *testing.T) {
 	t.Parallel()
 
-	expectedRules := &validate.FieldRules{
+	expectedRules := validate.FieldRules_builder{
 		Cel: []*validate.Rule{
-			{Message: proto.String("test")},
+			validate.Rule_builder{Message: proto.String("test")}.Build(),
 		},
-	}
+	}.Build()
 	expectedRulesBytes, err := proto.Marshal(expectedRules)
 	require.NoError(t, err)
 

@@ -34,6 +34,10 @@ clean: ## Delete intermediate build artifacts
 test: ## Run all unit tests
 	$(GO) test -race -cover ./...
 
+.PHONY: test-opaque
+test-opaque: ## Test proto opaque API support
+	$(GO) test --tags=protoopaque ./...
+
 .PHONY: lint
 lint: lint-proto lint-go  ## Lint code and protos
 

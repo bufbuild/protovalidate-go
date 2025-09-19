@@ -32,8 +32,8 @@ func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cf
 		var valErr *ValidationError
 		if errors.As(err, &valErr) {
 			for _, violation := range valErr.Violations {
-				violation.Proto.Field = c.fieldPath()
-				violation.Proto.Rule = c.rulePath(violation.Proto.GetRule())
+				violation.Proto.SetField(c.fieldPath())
+				violation.Proto.SetRule(c.rulePath(violation.Proto.GetRule()))
 				violation.FieldValue = val
 				violation.FieldDescriptor = c.Descriptor
 			}

@@ -23,11 +23,11 @@ import (
 //nolint:gochecknoglobals
 var (
 	requiredRuleDescriptor = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("required")
-	requiredRulePath       = &validate.FieldPath{
+	requiredRulePath       = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(requiredRuleDescriptor),
 		},
-	}
+	}.Build()
 )
 
 // field performs validation on a single message field, defined by its
@@ -78,12 +78,12 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 
 	if f.Required && !msg.Has(f.Value.Descriptor) {
 		return &ValidationError{Violations: []*Violation{{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				Field:   fieldPath(f.Value.Descriptor),
 				Rule:    prefixRulePath(f.Value.NestedRule, requiredRulePath),
 				RuleId:  proto.String("required"),
 				Message: proto.String("value is required"),
-			},
+			}.Build(),
 			FieldValue:      protoreflect.Value{},
 			FieldDescriptor: f.Value.Descriptor,
 			RuleValue:       protoreflect.ValueOfBool(true),

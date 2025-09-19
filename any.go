@@ -24,19 +24,19 @@ import (
 var (
 	anyRuleDescriptor   = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("any")
 	anyInRuleDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("in")
-	anyInRulePath       = &validate.FieldPath{
+	anyInRulePath       = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(anyRuleDescriptor),
 			fieldPathElement(anyInRuleDescriptor),
 		},
-	}
+	}.Build()
 	anyNotInDescriptor = (&validate.AnyRules{}).ProtoReflect().Descriptor().Fields().ByName("not_in")
-	anyNotInRulePath   = &validate.FieldPath{
+	anyNotInRulePath   = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(anyRuleDescriptor),
 			fieldPathElement(anyNotInDescriptor),
 		},
-	}
+	}.Build()
 )
 
 // anyPB is a specialized evaluator for applying validate.AnyRules to an
@@ -65,12 +65,12 @@ func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 	if len(a.In) > 0 {
 		if _, ok := a.In[typeURL]; !ok {
 			err.Violations = append(err.Violations, &Violation{
-				Proto: &validate.Violation{
+				Proto: validate.Violation_builder{
 					Field:   a.base.fieldPath(),
 					Rule:    a.base.rulePath(anyInRulePath),
 					RuleId:  proto.String("any.in"),
 					Message: proto.String("type URL must be in the allow list"),
-				},
+				}.Build(),
 				FieldValue:      val,
 				FieldDescriptor: a.base.Descriptor,
 				RuleValue:       a.InValue,
@@ -85,12 +85,12 @@ func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 	if len(a.NotIn) > 0 {
 		if _, ok := a.NotIn[typeURL]; ok {
 			err.Violations = append(err.Violations, &Violation{
-				Proto: &validate.Violation{
+				Proto: validate.Violation_builder{
 					Field:   a.base.fieldPath(),
 					Rule:    a.base.rulePath(anyNotInRulePath),
 					RuleId:  proto.String("any.not_in"),
 					Message: proto.String("type URL must not be in the block list"),
-				},
+				}.Build(),
 				FieldValue:      val,
 				FieldDescriptor: a.base.Descriptor,
 				RuleValue:       a.NotInValue,

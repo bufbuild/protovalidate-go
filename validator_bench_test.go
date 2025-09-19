@@ -23,8 +23,8 @@ import (
 )
 
 func BenchmarkValidator(b *testing.B) {
-	successMsg := &pb.HasMsgExprs{X: 2, Y: 43}
-	failureMsg := &pb.HasMsgExprs{X: 9, Y: 2}
+	successMsg := pb.HasMsgExprs_builder{X: 2, Y: 43}.Build()
+	failureMsg := pb.HasMsgExprs_builder{X: 9, Y: 2}.Build()
 
 	b.Run("ColdStart", func(b *testing.B) {
 		b.ReportAllocs()

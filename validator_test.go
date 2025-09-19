@@ -43,11 +43,11 @@ func TestValidator_Validate(t *testing.T) {
 			exErr bool
 		}{
 			{
-				&pb.HasMsgExprs{X: 2, Y: 43},
+				pb.HasMsgExprs_builder{X: 2, Y: 43}.Build(),
 				false,
 			},
 			{
-				&pb.HasMsgExprs{X: 9, Y: 8},
+				pb.HasMsgExprs_builder{X: 9, Y: 8}.Build(),
 				true,
 			},
 		}
@@ -74,11 +74,11 @@ func TestValidator_ValidateGlobal(t *testing.T) {
 			exErr bool
 		}{
 			{
-				&pb.HasMsgExprs{X: 2, Y: 43},
+				pb.HasMsgExprs_builder{X: 2, Y: 43}.Build(),
 				false,
 			},
 			{
-				&pb.HasMsgExprs{X: 9, Y: 8},
+				pb.HasMsgExprs_builder{X: 9, Y: 8}.Build(),
 				true,
 			},
 		}
@@ -105,11 +105,11 @@ func TestGlobalValidator(t *testing.T) {
 			exErr bool
 		}{
 			{
-				&pb.HasMsgExprs{X: 2, Y: 43},
+				pb.HasMsgExprs_builder{X: 2, Y: 43}.Build(),
 				false,
 			},
 			{
-				&pb.HasMsgExprs{X: 9, Y: 8},
+				pb.HasMsgExprs_builder{X: 9, Y: 8}.Build(),
 				true,
 			},
 		}
@@ -130,11 +130,11 @@ func TestRecursive(t *testing.T) {
 	val, err := New()
 	require.NoError(t, err)
 
-	selfRec := &pb.SelfRecursive{X: 123, Turtle: &pb.SelfRecursive{X: 456}}
+	selfRec := pb.SelfRecursive_builder{X: 123, Turtle: pb.SelfRecursive_builder{X: 456}.Build()}.Build()
 	err = val.Validate(selfRec)
 	require.NoError(t, err)
 
-	loopRec := &pb.LoopRecursiveA{B: &pb.LoopRecursiveB{}}
+	loopRec := pb.LoopRecursiveA_builder{B: &pb.LoopRecursiveB{}}.Build()
 	err = val.Validate(loopRec)
 	require.NoError(t, err)
 }
@@ -143,15 +143,15 @@ func TestValidator_ValidateOneof(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	oneofMessage := &pb.MsgHasOneof{O: &pb.MsgHasOneof_X{X: "foo"}}
+	oneofMessage := pb.MsgHasOneof_builder{X: proto.String("foo")}.Build()
 	err = val.Validate(oneofMessage)
 	require.NoError(t, err)
 
-	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Y{Y: 42}}
+	oneofMessage = pb.MsgHasOneof_builder{Y: proto.Int32(42)}.Build()
 	err = val.Validate(oneofMessage)
 	require.NoError(t, err)
 
-	oneofMessage = &pb.MsgHasOneof{O: &pb.MsgHasOneof_Msg{Msg: &pb.HasMsgExprs{X: 4, Y: 50}}}
+	oneofMessage = pb.MsgHasOneof_builder{Msg: pb.HasMsgExprs_builder{X: 4, Y: 50}.Build()}.Build()
 	err = val.Validate(oneofMessage)
 	require.NoError(t, err)
 
@@ -164,19 +164,20 @@ func TestValidator_ValidateRepeatedFoo(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	repeatMessage := &pb.MsgHasRepeated{
+	repeatMessage := pb.MsgHasRepeated_builder{
 		X: []float32{1, 2, 3},
 		Y: []string{"foo", "bar"},
 		Z: []*pb.HasMsgExprs{
-			{
+			pb.HasMsgExprs_builder{
 				X: 4,
 				Y: 55,
-			}, {
+			}.Build(),
+			pb.HasMsgExprs_builder{
 				X: 4,
 				Y: 60,
-			},
+			}.Build(),
 		},
-	}
+	}.Build()
 	err = val.Validate(repeatMessage)
 	require.NoError(t, err)
 }
@@ -185,11 +186,11 @@ func TestValidator_ValidateMapFoo(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	mapMessage := &pb.MsgHasMap{
+	mapMessage := pb.MsgHasMap_builder{
 		Int32Map:   map[int32]int32{-1: 1, 2: 2},
 		StringMap:  map[string]string{"foo": "foo", "bar": "bar", "baz": "baz"},
 		MessageMap: map[int64]*pb.LoopRecursiveA{0: nil},
-	}
+	}.Build()
 	err = val.Validate(mapMessage)
 	require.Error(t, err)
 }
@@ -198,9 +199,9 @@ func TestValidator_Validate_TransitiveFieldRules(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := &pb.TransitiveFieldRule{
+	msg := pb.TransitiveFieldRule_builder{
 		Mask: &fieldmaskpb.FieldMask{Paths: []string{"foo", "bar"}},
-	}
+	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
@@ -209,13 +210,13 @@ func TestValidator_Validate_MultipleStepsTransitiveFieldRules(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := &pb.MultipleStepsTransitiveFieldRules{
+	msg := pb.MultipleStepsTransitiveFieldRules_builder{
 		Api: &apipb.Api{
 			SourceContext: &sourcecontextpb.SourceContext{
 				FileName: "path/file",
 			},
 		},
-	}
+	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
@@ -224,12 +225,12 @@ func TestValidator_Validate_FieldOfTypeAny(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	simple := &pb.Simple{S: "foo"}
+	simple := pb.Simple_builder{S: "foo"}.Build()
 	anyFromSimple, err := anypb.New(simple)
 	require.NoError(t, err)
-	msg := &pb.FieldOfTypeAny{
+	msg := pb.FieldOfTypeAny_builder{
 		Any: anyFromSimple,
-	}
+	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
@@ -238,14 +239,14 @@ func TestValidator_Validate_CelMapOnARepeated(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := &pb.CelMapOnARepeated{Values: []*pb.CelMapOnARepeated_Value{
-		{Name: "foo"},
-		{Name: "bar"},
-		{Name: "baz"},
-	}}
+	msg := pb.CelMapOnARepeated_builder{Values: []*pb.CelMapOnARepeated_Value{
+		pb.CelMapOnARepeated_Value_builder{Name: "foo"}.Build(),
+		pb.CelMapOnARepeated_Value_builder{Name: "bar"}.Build(),
+		pb.CelMapOnARepeated_Value_builder{Name: "baz"}.Build(),
+	}}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
-	msg.Values = append(msg.Values, &pb.CelMapOnARepeated_Value{Name: "foo"})
+	msg.SetValues(append(msg.GetValues(), pb.CelMapOnARepeated_Value_builder{Name: "foo"}.Build()))
 	err = val.Validate(msg)
 	valErr := &ValidationError{}
 	require.ErrorAs(t, err, &valErr)
@@ -255,10 +256,10 @@ func TestValidator_Validate_RepeatedItemCel(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := &pb.RepeatedItemCel{Paths: []string{"foo"}}
+	msg := pb.RepeatedItemCel_builder{Paths: []string{"foo"}}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
-	msg.Paths = append(msg.Paths, " bar")
+	msg.SetPaths(append(msg.GetPaths(), " bar"))
 	err = val.Validate(msg)
 	valErr := &ValidationError{}
 	require.ErrorAs(t, err, &valErr)
@@ -309,12 +310,12 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.NestedRules{
+		msg := pb.NestedRules_builder{
 			Field:         &pb.AllRuleTypes{},
 			RepeatedField: []*pb.AllRuleTypes{{}},
 			MapField:      map[string]*pb.AllRuleTypes{"test": {}},
-		}
-		descs := []string{}
+		}.Build()
+		var descs []string
 		err = val.Validate(msg, WithFilter(FilterFunc(
 			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
 				descs = append(descs, string(d.FullName()))
@@ -361,10 +362,10 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.MixedValidInvalidRules{
+		msg := pb.MixedValidInvalidRules_builder{
 			StringFieldBoolRule: "foo",
 			ValidStringRule:     "bar",
-		}
+		}.Build()
 		err = val.Validate(msg, WithFilter(FilterFunc(
 			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
 				return d == msg.ProtoReflect().Descriptor().Fields().Get(0)
@@ -381,10 +382,10 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.MixedValidInvalidRules{
+		msg := pb.MixedValidInvalidRules_builder{
 			ValidStringRule:     "bar",
 			StringFieldBoolRule: "foo",
-		}
+		}.Build()
 		err = val.Validate(msg, WithFilter(FilterFunc(
 			func(_ protoreflect.Message, d protoreflect.Descriptor) bool {
 				return d == msg.ProtoReflect().Descriptor().Fields().Get(1)
@@ -419,10 +420,10 @@ func TestValidator_ValidateCompilationError(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.MixedValidInvalidRules{
+		msg := pb.MixedValidInvalidRules_builder{
 			StringFieldBoolRule: "foo",
 			ValidStringRule:     "bar",
-		}
+		}.Build()
 		err = val.Validate(msg)
 		require.Error(t, err)
 		compErr := &CompilationError{}
@@ -474,9 +475,9 @@ func TestValidator_WithNowFunc_Issue211(t *testing.T) {
 		return timestamppb.New(time.Now().Add(time.Hour))
 	}
 
-	msg := &pb.Issue211{
+	msg := pb.Issue211_builder{
 		Value: timestamppb.New(time.Now().Add(time.Minute)),
-	}
+	}.Build()
 	val, err := New()
 	require.NoError(t, err)
 	err = val.Validate(msg)
@@ -509,11 +510,11 @@ func TestValidator_Validate_Issue141(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.OneTwo{
-			Field1: &pb.F1{
+		msg := pb.OneTwo_builder{
+			Field1: pb.F1_builder{
 				Field: &pb.FieldWithIssue{},
-			},
-		}
+			}.Build(),
+		}.Build()
 		err = val.Validate(msg)
 		var valErr *ValidationError
 		require.ErrorAs(t, err, &valErr)
@@ -523,11 +524,11 @@ func TestValidator_Validate_Issue141(t *testing.T) {
 		t.Parallel()
 		val, err := New()
 		require.NoError(t, err)
-		msg := &pb.TwoOne{
-			Field1: &pb.F1{
+		msg := pb.TwoOne_builder{
+			Field1: pb.F1_builder{
 				Field: &pb.FieldWithIssue{},
-			},
-		}
+			}.Build(),
+		}.Build()
 		err = val.Validate(msg)
 		var valErr *ValidationError
 		require.ErrorAs(t, err, &valErr)
@@ -538,7 +539,7 @@ func TestValidator_Validate_Issue148(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := &pb.Issue148{Test: proto.Int32(1)}
+	msg := pb.Issue148_builder{Test: proto.Int32(1)}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }

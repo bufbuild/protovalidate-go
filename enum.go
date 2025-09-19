@@ -24,12 +24,12 @@ import (
 var (
 	enumRuleDescriptor            = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("enum")
 	enumDefinedOnlyRuleDescriptor = (&validate.EnumRules{}).ProtoReflect().Descriptor().Fields().ByName("defined_only")
-	enumDefinedOnlyRulePath       = &validate.FieldPath{
+	enumDefinedOnlyRulePath       = validate.FieldPath_builder{
 		Elements: []*validate.FieldPathElement{
 			fieldPathElement(enumRuleDescriptor),
 			fieldPathElement(enumDefinedOnlyRuleDescriptor),
 		},
-	}
+	}.Build()
 )
 
 // definedEnum is an evaluator that checks an enum value being a member of
@@ -45,12 +45,12 @@ type definedEnum struct {
 func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &ValidationError{Violations: []*Violation{{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				Field:   d.fieldPath(),
 				Rule:    d.rulePath(enumDefinedOnlyRulePath),
 				RuleId:  proto.String("enum.defined_only"),
 				Message: proto.String("value must be one of the defined enum values"),
-			},
+			}.Build(),
 			FieldValue:      val,
 			FieldDescriptor: d.Descriptor,
 			RuleValue:       protoreflect.ValueOfBool(true),

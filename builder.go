@@ -338,14 +338,12 @@ func (bldr *builder) processFieldExpressions(
 	}
 	for i := range compiledExpressions {
 		compiledExpressions[i].Path = []*validate.FieldPathElement{
-			{
+			validate.FieldPathElement_builder{
 				FieldNumber: proto.Int32(celRuleField.GetFieldNumber()),
 				FieldType:   celRuleField.GetFieldType().Enum(),
 				FieldName:   proto.String(celRuleField.GetFieldName()),
-				Subscript: &validate.FieldPathElement_Index{
-					Index: uint64(i), //nolint:gosec // indices are guaranteed to be non-negative
-				},
-			},
+				Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+			}.Build(),
 		}
 		compiledExpressions[i].Descriptor = celRuleDescriptor
 	}
