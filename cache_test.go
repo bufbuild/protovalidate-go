@@ -61,35 +61,43 @@ func TestCache_BuildStandardRules(t *testing.T) {
 		{
 			name: "list rules",
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			cons: &validate.FieldRules{Type: &validate.FieldRules_Repeated{Repeated: &validate.RepeatedRules{
-				MinItems: proto.Uint64(3),
-			}}},
+			cons: validate.FieldRules_builder{
+				Repeated: validate.RepeatedRules_builder{
+					MinItems: proto.Uint64(3),
+				}.Build(),
+			}.Build(),
 			exCt: 1,
 		},
 		{
 			name: "list item rules",
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
-			cons: &validate.FieldRules{Type: &validate.FieldRules_Int64{Int64: &validate.Int64Rules{
-				NotIn: []int64{123},
-				Const: proto.Int64(456),
-			}}},
+			cons: validate.FieldRules_builder{
+				Int64: validate.Int64Rules_builder{
+					NotIn: []int64{123},
+					Const: proto.Int64(456),
+				}.Build(),
+			}.Build(),
 			forItems: true,
 			exCt:     2,
 		},
 		{
 			name: "map rules",
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
-			cons: &validate.FieldRules{Type: &validate.FieldRules_Map{Map: &validate.MapRules{
-				MinPairs: proto.Uint64(2),
-			}}},
+			cons: validate.FieldRules_builder{
+				Map: validate.MapRules_builder{
+					MinPairs: proto.Uint64(2),
+				}.Build(),
+			}.Build(),
 			exCt: 1,
 		},
 		{
 			name: "mismatch rules",
 			desc: getFieldDesc(t, &cases.AnyNone{}, "val"),
-			cons: &validate.FieldRules{Type: &validate.FieldRules_Float{Float: &validate.FloatRules{
-				Const: proto.Float32(1.23),
-			}}},
+			cons: validate.FieldRules_builder{
+				Float: validate.FloatRules_builder{
+					Const: proto.Float32(1.23),
+				}.Build(),
+			}.Build(),
 			exErr: true,
 		},
 	}

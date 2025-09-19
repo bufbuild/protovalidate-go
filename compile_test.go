@@ -43,8 +43,8 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				{Id: proto.String("foo"), Expression: proto.String("this == 123")},
-				{Id: proto.String("bar"), Expression: proto.String("'a string'")},
+				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("this == 123")}.Build(),
+				validate.Rule_builder{Id: proto.String("bar"), Expression: proto.String("'a string'")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
@@ -56,7 +56,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				{Id: proto.String("foo"), Expression: proto.String("0 != 0")},
+				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("0 != 0")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Types(true))
@@ -69,7 +69,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")},
+				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv)
@@ -82,7 +82,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				{Id: proto.String("foo"), Expression: proto.String("1.23")},
+				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("1.23")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv)

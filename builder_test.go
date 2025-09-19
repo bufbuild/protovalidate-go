@@ -39,11 +39,11 @@ func TestBuildCache(t *testing.T) {
 	wg := sync.WaitGroup{}
 	for i := range 100 {
 		wg.Add(1)
-		dynamicMsg := dynamicProto{&pb.Person{
+		dynamicMsg := dynamicProto{pb.Person_builder{
 			Id:    1234,
 			Email: "protovalidate@buf.build",
 			Name:  "Protocol Buffer",
-		}, int32(i)}
+		}.Build(), int32(i)}
 		desc := dynamicMsg.ProtoReflect().Descriptor()
 		go func() {
 			defer wg.Done()

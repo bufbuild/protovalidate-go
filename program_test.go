@@ -52,14 +52,14 @@ func TestCompiled(t *testing.T) {
 		{
 			name:   "invalid bool",
 			prog:   mockProgram{Val: types.False},
-			src:    &validate.Rule{Id: proto.String("foo"), Message: proto.String("bar")},
-			exViol: &validate.Violation{RuleId: proto.String("foo"), Message: proto.String("bar")},
+			src:    validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("bar")}.Build(),
+			exViol: validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("bar")}.Build(),
 		},
 		{
 			name:   "invalid string",
 			prog:   mockProgram{Val: types.String("bar")},
-			src:    &validate.Rule{Id: proto.String("foo")},
-			exViol: &validate.Violation{RuleId: proto.String("foo"), Message: proto.String("bar")},
+			src:    validate.Rule_builder{Id: proto.String("foo")}.Build(),
+			exViol: validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("bar")}.Build(),
 		},
 		{
 			name:  "eval error",
@@ -140,19 +140,19 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Rule{Id: proto.String("foo"), Message: proto.String("fizz")},
+					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Rule{Id: proto.String("bar")},
+					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
 				},
 			},
-			exViols: &validate.Violations{
+			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
-					{RuleId: proto.String("foo"), Message: proto.String("fizz")},
-					{RuleId: proto.String("bar"), Message: proto.String("buzz")},
+					validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+					validate.Violation_builder{RuleId: proto.String("bar"), Message: proto.String("buzz")}.Build(),
 				},
-			},
+			}.Build(),
 		},
 		{
 			name:     "invalid fail fast",
@@ -160,18 +160,18 @@ func TestSet(t *testing.T) {
 			set: programSet{
 				compiledProgram{
 					Program: mockProgram{Val: types.False},
-					Source:  &validate.Rule{Id: proto.String("foo"), Message: proto.String("fizz")},
+					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
 				},
 				compiledProgram{
 					Program: mockProgram{Val: types.String("buzz")},
-					Source:  &validate.Rule{Id: proto.String("bar")},
+					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
 				},
 			},
-			exViols: &validate.Violations{
+			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
-					{RuleId: proto.String("foo"), Message: proto.String("fizz")},
+					validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("fizz")}.Build(),
 				},
-			},
+			}.Build(),
 		},
 	}
 
