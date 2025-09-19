@@ -57,19 +57,19 @@ func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationC
 		}
 		if count > 1 {
 			err.Violations = append(err.Violations, &Violation{
-				Proto: &validate.Violation{
+				Proto: validate.Violation_builder{
 					RuleId:  proto.String("message.oneof"),
 					Message: proto.String(fmt.Sprintf("only one of %s can be set", o.formatFields())),
-				},
+				}.Build(),
 			})
 			return err
 		}
 		if o.Required && count != 1 {
 			err.Violations = append(err.Violations, &Violation{
-				Proto: &validate.Violation{
+				Proto: validate.Violation_builder{
 					RuleId:  proto.String("message.oneof"),
 					Message: proto.String(fmt.Sprintf("one of %s must be set", o.formatFields())),
-				},
+				}.Build(),
 			})
 			return err
 		}

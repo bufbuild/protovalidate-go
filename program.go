@@ -123,11 +123,11 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 			return nil, nil
 		}
 		return &Violation{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				Rule:    expr.rulePath(),
 				RuleId:  proto.String(expr.Source.GetId()),
 				Message: proto.String(val),
-			},
+			}.Build(),
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,
 		}, nil
@@ -136,11 +136,11 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 			return nil, nil
 		}
 		return &Violation{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				Rule:    expr.rulePath(),
 				RuleId:  proto.String(expr.Source.GetId()),
 				Message: proto.String(expr.Source.GetMessage()),
-			},
+			}.Build(),
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,
 		}, nil
@@ -152,7 +152,7 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 
 func (expr compiledProgram) rulePath() *validate.FieldPath {
 	if len(expr.Path) > 0 {
-		return &validate.FieldPath{Elements: expr.Path}
+		return validate.FieldPath_builder{Elements: expr.Path}.Build()
 	}
 	return nil
 }

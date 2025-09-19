@@ -45,11 +45,11 @@ func (err *ValidationError) Error() string {
 
 // ToProto converts this error into its proto.Message form.
 func (err *ValidationError) ToProto() *validate.Violations {
-	violations := &validate.Violations{
+	violations := &validate.Violations_builder{
 		Violations: make([]*validate.Violation, len(err.Violations)),
 	}
 	for i, violation := range err.Violations {
 		violations.Violations[i] = violation.Proto
 	}
-	return violations
+	return violations.Build()
 }

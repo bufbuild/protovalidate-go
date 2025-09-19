@@ -38,15 +38,17 @@ func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 		return nil
 	}
 	return &ValidationError{Violations: []*Violation{{
-		Proto: &validate.Violation{
-			Field: &validate.FieldPath{
-				Elements: []*validate.FieldPathElement{{
-					FieldName: proto.String(string(o.Descriptor.Name())),
-				}},
-			},
+		Proto: validate.Violation_builder{
+			Field: validate.FieldPath_builder{
+				Elements: []*validate.FieldPathElement{
+					validate.FieldPathElement_builder{
+						FieldName: proto.String(string(o.Descriptor.Name())),
+					}.Build(),
+				},
+			}.Build(),
 			RuleId:  proto.String("required"),
 			Message: proto.String("exactly one field is required in oneof"),
-		},
+		}.Build(),
 	}}}
 }
 

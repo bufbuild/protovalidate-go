@@ -6,6 +6,7 @@ linters:
     - depguard          # we can manage dependencies strictly if the need arises in the future
     - err113            # internal error causes may be dynamic
     - embeddedstructfieldcheck # over-generous whitespace violates house style
+    - exhaustive        # don't _always_ need to exhaustively test all enum values
     - exhaustruct       # don't _always_ need to exhaustively create struct
     - funcorder         # consider enabling in the future
     - funlen            # rely on code review to limit function length
