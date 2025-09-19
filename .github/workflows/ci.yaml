@@ -32,6 +32,8 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Test
         run: make test
+      - name: Test Opaque
+        run: make test-opaque
       - name: Lint
         # Often, lint guidelines depend on the Go version. To prevent
         # conflicting guidance, run only on the most recent supported version.
