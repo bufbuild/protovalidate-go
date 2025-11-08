@@ -137,7 +137,7 @@ func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Vi
 		}
 		message := expr.Source.GetMessage()
 		if message == "" {
-			message = fmt.Sprintf("expression was false: %s", expr.Source.GetExpression())
+			message = fmt.Sprintf("%q returned false", expr.Source.GetExpression())
 		}
 		return &Violation{
 			Proto: validate.Violation_builder{
