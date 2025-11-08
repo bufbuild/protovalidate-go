@@ -36,9 +36,10 @@ func (err *ValidationError) Error() string {
 			bldr.WriteString(fieldPath)
 			bldr.WriteString(": ")
 		}
-		_, _ = fmt.Fprintf(bldr, "%s [%s]",
-			violation.Proto.GetMessage(),
-			violation.Proto.GetRuleId())
+		bldr.WriteString(violation.Proto.GetMessage())
+		if ruleID := violation.Proto.GetRuleId(); ruleID != "" {
+			_, _ = fmt.Fprintf(bldr, " [%s]", ruleID)
+		}
 	}
 	return bldr.String()
 }
