@@ -100,8 +100,7 @@ func (c *cache) Build(
 		return nil, err
 	}
 
-	rulesGlobal := cel.Globals(&variable{Name: "rules", Val: rules.Interface()})
-	set, err = asts.ReduceResiduals(rulesGlobal)
+	set, err = asts.ReduceResiduals(rules)
 	return set, err
 }
 

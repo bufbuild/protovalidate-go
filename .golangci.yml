@@ -21,6 +21,7 @@ linters:
     - noinlineerr       # inline is fine
     - nonamedreturns    # usage of named returns should be selective
     - testpackage       # internal tests are fine
+    - thelper           # overzealous breaking of stack traces
     - wrapcheck         # don't _always_ need to wrap errors
     - wsl               # over-generous whitespace violates house style
     - wsl_v5            # over-generous whitespace violates house style

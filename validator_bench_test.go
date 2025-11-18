@@ -18,111 +18,47 @@ import (
 	"testing"
 
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
-	"github.com/stretchr/testify/assert"
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/rodaine/protogofakeit"
 	"github.com/stretchr/testify/require"
+	"google.golang.org/protobuf/proto"
 )
 
-func BenchmarkValidator(b *testing.B) {
-	successMsg := pb.HasMsgExprs_builder{X: 2, Y: 43}.Build()
-	failureMsg := pb.HasMsgExprs_builder{X: 9, Y: 2}.Build()
+func BenchmarkScalar(b *testing.B) {
+	benchSuccess(b, &pb.BenchScalar{})
+}
 
-	b.Run("ColdStart", func(b *testing.B) {
-		b.ReportAllocs()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				val, err := New()
-				require.NoError(b, err)
-				err = val.Validate(successMsg)
-				require.NoError(b, err)
-			}
+func BenchmarkRepeated(b *testing.B) {
+	b.Run("Scalar", func(b *testing.B) {
+		benchSuccess(b, &pb.BenchRepeatedScalar{})
+	})
+	b.Run("Message", func(b *testing.B) {
+		benchSuccess(b, &pb.BenchRepeatedMessage{})
+	})
+	b.Run("Unique", func(b *testing.B) {
+		b.Run("Scalar", func(b *testing.B) {
+			benchSuccess(b, &pb.BenchRepeatedScalarUnique{})
+		})
+		b.Run("Bytes", func(b *testing.B) {
+			benchSuccess(b, &pb.BenchRepeatedBytesUnique{})
 		})
 	})
+}
 
-	b.Run("Lazy/Valid", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New()
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(successMsg)
-				require.NoError(b, err)
-			}
-		})
-	})
+func benchSuccess(b *testing.B, msg proto.Message) {
+	b.Helper()
 
-	b.Run("Lazy/Invalid", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New()
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(failureMsg)
-				assert.Error(b, err)
-			}
-		})
-	})
+	faker := protogofakeit.New(gofakeit.New(1))
+	require.NoError(b, faker.FakeProto(msg))
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(b, err)
 
-	b.Run("Lazy/FailFast", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New(WithFailFast())
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(failureMsg)
-				assert.Error(b, err)
-			}
-		})
-	})
-
-	b.Run("PreWarmed/Valid", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New(
-			WithMessages(successMsg),
-			WithDisableLazy(),
-		)
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(successMsg)
-				require.NoError(b, err)
-			}
-		})
-	})
-
-	b.Run("PreWarmed/Invalid", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New(
-			WithMessages(failureMsg),
-			WithDisableLazy(),
-		)
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(failureMsg)
-				assert.Error(b, err)
-			}
-		})
-	})
-
-	b.Run("PreWarmed/FailFast", func(b *testing.B) {
-		b.ReportAllocs()
-		val, err := New(
-			WithFailFast(),
-			WithMessages(failureMsg),
-			WithDisableLazy(),
-		)
-		require.NoError(b, err)
-		b.ResetTimer()
-		b.RunParallel(func(p *testing.PB) {
-			for p.Next() {
-				err := val.Validate(failureMsg)
-				assert.Error(b, err)
-			}
-		})
+	b.ReportAllocs()
+	b.ResetTimer()
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			err := val.Validate(msg)
+			require.NoError(b, err)
+		}
 	})
 }

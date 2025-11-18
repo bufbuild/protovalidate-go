@@ -5,7 +5,9 @@ go 1.24.0
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20250912141014-52f32327d4b0.1
 	buf.build/go/hyperpb v0.1.3
+	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/google/cel-go v0.26.1
+	github.com/rodaine/protogofakeit v0.1.1
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/protobuf v1.36.10
 )
