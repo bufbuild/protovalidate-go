@@ -2,3 +2,4 @@
 *.pprof
 *.svg
 cover.out
+*.test

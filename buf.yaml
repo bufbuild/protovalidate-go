@@ -3,6 +3,7 @@ modules:
   - path: proto
 deps:
   - buf.build/bufbuild/protovalidate:v1.0.0
+  - buf.build/rodaine/protogofakeit
 lint:
   use:
     - STANDARD
