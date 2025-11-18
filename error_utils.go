@@ -91,7 +91,7 @@ func fieldPath(field protoreflect.FieldDescriptor) *validate.FieldPath {
 // path is reversed. Rule paths are generally static, so this optimization isn't
 // applied for rule paths.
 func updateViolationPaths(err error, fieldSuffix *validate.FieldPathElement, rulePrefix []*validate.FieldPathElement) {
-	if fieldSuffix == nil && len(rulePrefix) == 0 {
+	if err == nil || (fieldSuffix == nil && len(rulePrefix) == 0) {
 		return
 	}
 	var valErr *ValidationError
@@ -117,6 +117,9 @@ func updateViolationPaths(err error, fieldSuffix *validate.FieldPathElement, rul
 // finalizeViolationPaths reverses all field paths in the error and populates
 // the deprecated string-based field path.
 func finalizeViolationPaths(err error) {
+	if err == nil {
+		return
+	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
@@ -161,6 +164,9 @@ func FieldPathString(path *validate.FieldPath) string {
 // markViolationForKey marks the provided error as being for a map key, by
 // setting the `for_key` flag on each violation within the validation error.
 func markViolationForKey(err error) {
+	if err == nil {
+		return
+	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
