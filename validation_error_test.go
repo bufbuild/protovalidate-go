@@ -23,6 +23,7 @@ import (
 )
 
 func TestValidationErrorString(t *testing.T) {
+	t.Parallel()
 	require.Equal(
 		t,
 		`validation error: one.two: foo`,

@@ -23,6 +23,7 @@ import (
 )
 
 func TestViolationString(t *testing.T) {
+	t.Parallel()
 	require.Equal(
 		t,
 		"one.two: foo",
