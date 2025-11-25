@@ -15,7 +15,6 @@
 package protovalidate
 
 import (
-	"fmt"
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -28,17 +27,22 @@ type ValidationError struct {
 }
 
 func (err *ValidationError) Error() string {
+	if err == nil {
+		return ""
+	}
 	bldr := &strings.Builder{}
 	bldr.WriteString("validation error:")
-	for _, violation := range err.Violations {
-		bldr.WriteString("\n - ")
-		if fieldPath := FieldPathString(violation.Proto.GetField()); fieldPath != "" {
-			bldr.WriteString(fieldPath)
-			bldr.WriteString(": ")
+	switch len(err.Violations) {
+	case 0:
+		return ""
+	case 1:
+		bldr.WriteString(" ")
+		bldr.WriteString(err.Violations[0].String())
+	default:
+		for _, violation := range err.Violations {
+			bldr.WriteString("\n - ")
+			bldr.WriteString(violation.String())
 		}
-		_, _ = fmt.Fprintf(bldr, "%s [%s]",
-			violation.Proto.GetMessage(),
-			violation.Proto.GetRuleId())
 	}
 	return bldr.String()
 }
