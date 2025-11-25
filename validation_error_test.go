@@ -29,20 +29,20 @@ func TestValidationErrorString(t *testing.T) {
 		(&ValidationError{
 			Violations: []*Violation{
 				{
-					Proto: &validate.Violation{
-						Field: &validate.FieldPath{
+					Proto: validate.Violation_builder{
+						Field: validate.FieldPath_builder{
 							Elements: []*validate.FieldPathElement{
-								{
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("one"),
-								},
-								{
+								}.Build(),
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("two"),
-								},
+								}.Build(),
 							},
-						},
+						}.Build(),
 						Message: proto.String("foo"),
 						RuleId:  proto.String("bar"),
-					},
+					}.Build(),
 				},
 			},
 		}).Error(),
@@ -55,35 +55,35 @@ func TestValidationErrorString(t *testing.T) {
 		(&ValidationError{
 			Violations: []*Violation{
 				{
-					Proto: &validate.Violation{
-						Field: &validate.FieldPath{
+					Proto: validate.Violation_builder{
+						Field: validate.FieldPath_builder{
 							Elements: []*validate.FieldPathElement{
-								{
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("one"),
-								},
-								{
+								}.Build(),
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("two"),
-								},
+								}.Build(),
 							},
-						},
+						}.Build(),
 						Message: proto.String("foo"),
 						RuleId:  proto.String("bar"),
-					},
+					}.Build(),
 				},
 				{
-					Proto: &validate.Violation{
-						Field: &validate.FieldPath{
+					Proto: validate.Violation_builder{
+						Field: validate.FieldPath_builder{
 							Elements: []*validate.FieldPathElement{
-								{
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("one"),
-								},
-								{
+								}.Build(),
+								validate.FieldPathElement_builder{
 									FieldName: proto.String("three"),
-								},
+								}.Build(),
 							},
-						},
+						}.Build(),
 						RuleId: proto.String("bar"),
-					},
+					}.Build(),
 				},
 			},
 		}).Error(),

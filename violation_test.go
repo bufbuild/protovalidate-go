@@ -27,39 +27,39 @@ func TestViolationString(t *testing.T) {
 		t,
 		"one.two: foo",
 		(&Violation{
-			Proto: &validate.Violation{
-				Field: &validate.FieldPath{
+			Proto: validate.Violation_builder{
+				Field: validate.FieldPath_builder{
 					Elements: []*validate.FieldPathElement{
-						{
+						validate.FieldPathElement_builder{
 							FieldName: proto.String("one"),
-						},
-						{
+						}.Build(),
+						validate.FieldPathElement_builder{
 							FieldName: proto.String("two"),
-						},
+						}.Build(),
 					},
-				},
+				}.Build(),
 				Message: proto.String("foo"),
 				RuleId:  proto.String("bar"),
-			},
+			}.Build(),
 		}).String(),
 	)
 	require.Equal(
 		t,
 		"foo",
 		(&Violation{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				Message: proto.String("foo"),
 				RuleId:  proto.String("bar"),
-			},
+			}.Build(),
 		}).String(),
 	)
 	require.Equal(
 		t,
 		"[bar]",
 		(&Violation{
-			Proto: &validate.Violation{
+			Proto: validate.Violation_builder{
 				RuleId: proto.String("bar"),
-			},
+			}.Build(),
 		}).String(),
 	)
 	require.Equal(
