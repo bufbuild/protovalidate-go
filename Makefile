@@ -6,7 +6,9 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 MAKEFLAGS += --no-print-directory
-BIN := .tmp/bin
+TMP := .tmp
+BIN := $(TMP)/bin
+BENCH_TMP := $(TMP)/bench
 COPYRIGHT_YEARS := 2023-2025
 LICENSE_IGNORE := -e internal/testdata/
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
@@ -94,9 +96,25 @@ checkgenerate: generate
 	@# Used in CI to verify that `make generate` doesn't produce a diff.
 	test -z "$$(git status --porcelain | tee /dev/stderr)"
 
+
+BENCH ?= .
+BENCH_COUNT ?= 10
+BENCH_NAME ?= $(shell date +%F:%T)
+.PHONY: bench
+bench: $(BENCH_TMP)
+	go test -bench="$(BENCH)" -benchmem \
+		-memprofile "$(BENCH_TMP)/$(BENCH_NAME).mem.profile" \
+		-cpuprofile "$(BENCH_TMP)/$(BENCH_NAME).cpu.profile" \
+		-count $(BENCH_COUNT) \
+		| tee "$(BENCH_TMP)/$(BENCH_NAME).bench.txt"
+
+
 .PHONY: upgrade-go
 upgrade-go:
 	$(GO) get -u -t ./... && $(GO) mod tidy -v
+
+$(BENCH_TMP):
+	@mkdir -p $(BENCH_TMP)
 
 $(BIN):
 	@mkdir -p $(BIN)

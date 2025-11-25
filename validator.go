@@ -79,16 +79,18 @@ func New(options ...ValidatorOption) (Validator, error) {
 	)
 
 	return &validator{
-		failFast: cfg.failFast,
-		builder:  bldr,
-		nowFn:    cfg.nowFn,
+		builder: bldr,
+		cfg: &validationConfig{
+			failFast: cfg.failFast,
+			filter:   nopFilter{},
+			nowFn:    cfg.nowFn,
+		},
 	}, nil
 }
 
 type validator struct {
-	builder  *builder
-	failFast bool
-	nowFn    func() *timestamppb.Timestamp
+	builder *builder
+	cfg     *validationConfig
 }
 
 func (v *validator) Validate(
@@ -98,17 +100,16 @@ func (v *validator) Validate(
 	if msg == nil {
 		return nil
 	}
-	cfg := validationConfig{
-		failFast: v.failFast,
-		filter:   nopFilter{},
-		nowFn:    v.nowFn,
-	}
-	for _, opt := range options {
-		opt.applyToValidation(&cfg)
+	cfg := v.cfg
+	if len(options) > 0 {
+		cfg = cfg.clone()
+		for _, opt := range options {
+			opt.applyToValidation(cfg)
+		}
 	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	err := eval.EvaluateMessage(refl, &cfg)
+	err := eval.EvaluateMessage(refl, cfg)
 	finalizeViolationPaths(err)
 	return err
 }
@@ -138,6 +139,11 @@ type validationConfig struct {
 	failFast bool
 	filter   Filter
 	nowFn    func() *timestamppb.Timestamp
+}
+
+func (cfg *validationConfig) clone() *validationConfig {
+	clonedCfg := *cfg
+	return &clonedCfg
 }
 
 type globalValidator struct{}

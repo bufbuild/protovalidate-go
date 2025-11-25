@@ -15,7 +15,6 @@
 package protovalidate
 
 import (
-	"fmt"
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -28,20 +27,23 @@ type ValidationError struct {
 }
 
 func (err *ValidationError) Error() string {
-	bldr := &strings.Builder{}
-	bldr.WriteString("validation error:")
-	for _, violation := range err.Violations {
-		bldr.WriteString("\n - ")
-		if fieldPath := FieldPathString(violation.Proto.GetField()); fieldPath != "" {
-			bldr.WriteString(fieldPath)
-			bldr.WriteString(": ")
-		}
-		bldr.WriteString(violation.Proto.GetMessage())
-		if ruleID := violation.Proto.GetRuleId(); ruleID != "" {
-			_, _ = fmt.Fprintf(bldr, " [%s]", ruleID)
-		}
+	if err == nil {
+		return ""
 	}
-	return bldr.String()
+	switch len(err.Violations) {
+	case 0:
+		return ""
+	case 1:
+		return "validation error: " + err.Violations[0].String()
+	default:
+		bldr := &strings.Builder{}
+		bldr.WriteString("validation errors:")
+		for _, violation := range err.Violations {
+			bldr.WriteString("\n - ")
+			bldr.WriteString(violation.String())
+		}
+		return bldr.String()
+	}
 }
 
 // ToProto converts this error into its proto.Message form.

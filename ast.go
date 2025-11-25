@@ -21,7 +21,6 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -41,7 +40,7 @@ func (set astSet) Merge(other astSet) astSet {
 // either a true or empty string constant result, no compiledProgram is
 // generated for it. The main usage of this is to elide tautological expressions
 // from the final result.
-func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error) {
+func (set astSet) ReduceResiduals(rules protoreflect.Message, opts ...cel.ProgramOption) (programSet, error) {
 	residuals := make(astSet, 0, len(set))
 	options := append([]cel.ProgramOption{
 		cel.EvalOptions(
@@ -52,17 +51,26 @@ func (set astSet) ReduceResiduals(opts ...cel.ProgramOption) (programSet, error)
 		),
 	}, opts...)
 
+	baseActivation := &variable{
+		Name: "rules",
+		Val:  rules.Interface(),
+	}
+
 	for _, ast := range set {
-		options := slices.Clone(options)
+		activation := baseActivation
 		if ast.Value.IsValid() {
-			options = append(options, cel.Globals(&variable{Name: "rule", Val: ast.Value.Interface()}))
+			activation = &variable{
+				Name: "rule",
+				Val:  ast.Value.Interface(),
+				Next: activation,
+			}
 		}
 		program, err := ast.toProgram(ast.Env, options...)
 		if err != nil {
 			residuals = append(residuals, ast)
 			continue
 		}
-		val, details, _ := program.Program.Eval(interpreter.EmptyActivation())
+		val, details, _ := program.Program.Eval(activation)
 		if val != nil {
 			switch value := val.Value().(type) {
 			case bool:

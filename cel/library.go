@@ -22,6 +22,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 	"unicode/utf8"
 
 	"github.com/google/cel-go/cel"
@@ -49,7 +50,14 @@ var (
 // Using this function, you can create a CEL environment that is identical to
 // the one used to evaluate protovalidate CEL expressions.
 func NewLibrary() cel.Library {
-	return library{}
+	return &library{
+		uniqueScalarPool: sync.Pool{New: func() any {
+			return map[ref.Val]struct{}{}
+		}},
+		uniqueBytesPool: sync.Pool{New: func() any {
+			return map[string]struct{}{}
+		}},
+	}
 }
 
 // library is the collection of functions and settings required by protovalidate
@@ -59,9 +67,12 @@ func NewLibrary() cel.Library {
 //
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
-type library struct{}
+type library struct {
+	uniqueScalarPool sync.Pool
+	uniqueBytesPool  sync.Pool
+}
 
-func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
+func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	return []cel.EnvOption{
 		cel.TypeDescs(protoregistry.GlobalFiles),
 		cel.DefaultUTCTimeZone(true),
@@ -375,7 +386,7 @@ func (l library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	}
 }
 
-func (l library) ProgramOptions() []cel.ProgramOption {
+func (l *library) ProgramOptions() []cel.ProgramOption {
 	return []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
@@ -383,7 +394,7 @@ func (l library) ProgramOptions() []cel.ProgramOption {
 	}
 }
 
-func (l library) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {
+func (l *library) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {
 	return cel.MemberOverload(
 		itemType.String()+"_unique_bool",
 		[]*cel.Type{cel.ListType(itemType)},
@@ -398,7 +409,7 @@ func (l library) uniqueMemberOverload(itemType *cel.Type, overload func(lister t
 	)
 }
 
-func (l library) uniqueScalar(list traits.Lister) ref.Val {
+func (l *library) uniqueScalar(list traits.Lister) ref.Val {
 	size, ok := list.Size().Value().(int64)
 	if !ok {
 		return types.UnsupportedRefValConversionErr(list.Size().Value())
@@ -406,7 +417,11 @@ func (l library) uniqueScalar(list traits.Lister) ref.Val {
 	if size <= 1 {
 		return types.Bool(true)
 	}
-	exist := make(map[ref.Val]struct{}, size)
+	exist := l.uniqueScalarPool.Get().(map[ref.Val]struct{}) //nolint:errcheck // guaranteed to match
+	defer func() {
+		clear(exist)
+		l.uniqueScalarPool.Put(exist)
+	}()
 	for i := range size {
 		val := list.Get(types.Int(i))
 		if _, ok := exist[val]; ok {
@@ -421,7 +436,7 @@ func (l library) uniqueScalar(list traits.Lister) ref.Val {
 // compares bytes type CEL values. This function is used instead of uniqueScalar
 // as the bytes ([]uint8) type is not hashable in Go; we cheat this by converting
 // the value to a string.
-func (l library) uniqueBytes(list traits.Lister) ref.Val {
+func (l *library) uniqueBytes(list traits.Lister) ref.Val {
 	size, ok := list.Size().Value().(int64)
 	if !ok {
 		return types.UnsupportedRefValConversionErr(list.Size().Value())
@@ -429,16 +444,22 @@ func (l library) uniqueBytes(list traits.Lister) ref.Val {
 	if size <= 1 {
 		return types.Bool(true)
 	}
-	exist := make(map[any]struct{}, size)
+	exist := l.uniqueBytesPool.Get().(map[string]struct{}) //nolint:errcheck // guaranteed to match
+	defer func() {
+		clear(exist)
+		l.uniqueBytesPool.Put(exist)
+	}()
 	for i := range size {
 		val := list.Get(types.Int(i)).Value()
-		if b, ok := val.([]uint8); ok {
-			val = string(b)
+		b, ok := val.([]byte)
+		if !ok {
+			return types.NewErr("expected bytes, got %v", val)
 		}
-		if _, ok := exist[val]; ok {
+		str := string(b)
+		if _, ok := exist[str]; ok {
 			return types.Bool(false)
 		}
-		exist[val] = struct{}{}
+		exist[str] = struct{}{}
 	}
 	return types.Bool(true)
 }
