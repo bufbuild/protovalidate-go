@@ -30,21 +30,20 @@ func (err *ValidationError) Error() string {
 	if err == nil {
 		return ""
 	}
-	bldr := &strings.Builder{}
-	bldr.WriteString("validation error:")
 	switch len(err.Violations) {
 	case 0:
 		return ""
 	case 1:
-		bldr.WriteString(" ")
-		bldr.WriteString(err.Violations[0].String())
+		return "validation error: " + err.Violations[0].String()
 	default:
+		bldr := &strings.Builder{}
+		bldr.WriteString("validation errors:")
 		for _, violation := range err.Violations {
 			bldr.WriteString("\n - ")
 			bldr.WriteString(violation.String())
 		}
+		return bldr.String()
 	}
-	return bldr.String()
 }
 
 // ToProto converts this error into its proto.Message form.

@@ -66,7 +66,7 @@ func ExampleWithFailFast() {
 	fmt.Println("fail fast:", err)
 
 	// output:
-	// default: validation error:
+	// default: validation errors:
 	//  - lat: value must be greater than or equal to -90 and less than or equal to 90
 	//  - lng: value must be greater than or equal to -180 and less than or equal to 180
 	// fail fast: validation error: lat: value must be greater than or equal to -90 and less than or equal to 90
