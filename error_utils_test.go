@@ -19,10 +19,46 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/descriptorpb"
 )
+
+func TestFieldPathElement(t *testing.T) {
+	t.Parallel()
+
+	t.Run("group field", func(t *testing.T) {
+		t.Parallel()
+
+		groupFieldDescriptor := (&pb.Proto2Group{}).ProtoReflect().Descriptor().Fields().ByName("optional")
+		element := fieldPathElement(groupFieldDescriptor)
+		require.NotNil(t, element)
+		require.Equal(t, int32(1), element.GetFieldNumber())
+		require.Equal(t, "optional", element.GetFieldName())
+		require.Equal(t, descriptorpb.FieldDescriptorProto_TYPE_GROUP, element.GetFieldType())
+	})
+	t.Run("message field", func(t *testing.T) {
+		t.Parallel()
+
+		messageFieldDescriptor := (&descriptorpb.FileDescriptorProto{}).ProtoReflect().Descriptor().Fields().ByName("options")
+		element := fieldPathElement(messageFieldDescriptor)
+		require.NotNil(t, element)
+		require.Equal(t, int32(8), element.GetFieldNumber())
+		require.Equal(t, "options", element.GetFieldName())
+		require.Equal(t, descriptorpb.FieldDescriptorProto_TYPE_MESSAGE, element.GetFieldType())
+	})
+	t.Run("extension field", func(t *testing.T) {
+		t.Parallel()
+
+		extensionTypeDescriptor := validate.E_Field.TypeDescriptor()
+		element := fieldPathElement(extensionTypeDescriptor)
+		require.NotNil(t, element)
+		require.Equal(t, "[buf.validate.field]", element.GetFieldName())
+		require.Equal(t, descriptorpb.FieldDescriptorProto_TYPE_MESSAGE, element.GetFieldType())
+	})
+}
 
 func TestMerge(t *testing.T) {
 	t.Parallel()
