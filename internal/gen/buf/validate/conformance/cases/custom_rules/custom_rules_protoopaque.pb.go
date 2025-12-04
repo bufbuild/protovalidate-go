@@ -325,6 +325,63 @@ func (b0 MessageExpressions_builder) Build() *MessageExpressions {
 	return m0
 }
 
+type MessageExpressionOnly struct {
+	state         protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_A  int32                  `protobuf:"varint,1,opt,name=a,proto3"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageExpressionOnly) Reset() {
+	*x = MessageExpressionOnly{}
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageExpressionOnly) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageExpressionOnly) ProtoMessage() {}
+
+func (x *MessageExpressionOnly) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MessageExpressionOnly) GetA() int32 {
+	if x != nil {
+		return x.xxx_hidden_A
+	}
+	return 0
+}
+
+func (x *MessageExpressionOnly) SetA(v int32) {
+	x.xxx_hidden_A = v
+}
+
+type MessageExpressionOnly_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	A int32
+}
+
+func (b0 MessageExpressionOnly_builder) Build() *MessageExpressionOnly {
+	m0 := &MessageExpressionOnly{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_A = b.A
+	return m0
+}
+
 type MissingField struct {
 	state         protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_A  int32                  `protobuf:"varint,1,opt,name=a,proto3"`
@@ -334,7 +391,7 @@ type MissingField struct {
 
 func (x *MissingField) Reset() {
 	*x = MissingField{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -346,7 +403,7 @@ func (x *MissingField) String() string {
 func (*MissingField) ProtoMessage() {}
 
 func (x *MissingField) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[2]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -391,7 +448,7 @@ type IncorrectType struct {
 
 func (x *IncorrectType) Reset() {
 	*x = IncorrectType{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +460,7 @@ func (x *IncorrectType) String() string {
 func (*IncorrectType) ProtoMessage() {}
 
 func (x *IncorrectType) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[3]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -448,7 +505,7 @@ type DynRuntimeError struct {
 
 func (x *DynRuntimeError) Reset() {
 	*x = DynRuntimeError{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -460,7 +517,7 @@ func (x *DynRuntimeError) String() string {
 func (*DynRuntimeError) ProtoMessage() {}
 
 func (x *DynRuntimeError) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[4]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -504,7 +561,7 @@ type NowEqualsNow struct {
 
 func (x *NowEqualsNow) Reset() {
 	*x = NowEqualsNow{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -516,7 +573,7 @@ func (x *NowEqualsNow) String() string {
 func (*NowEqualsNow) ProtoMessage() {}
 
 func (x *NowEqualsNow) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[5]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -539,6 +596,63 @@ func (b0 NowEqualsNow_builder) Build() *NowEqualsNow {
 	return m0
 }
 
+type FieldExpressionOnly struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val int32                  `protobuf:"varint,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *FieldExpressionOnly) Reset() {
+	*x = FieldExpressionOnly{}
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FieldExpressionOnly) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FieldExpressionOnly) ProtoMessage() {}
+
+func (x *FieldExpressionOnly) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *FieldExpressionOnly) GetVal() int32 {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return 0
+}
+
+func (x *FieldExpressionOnly) SetVal(v int32) {
+	x.xxx_hidden_Val = v
+}
+
+type FieldExpressionOnly_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val int32
+}
+
+func (b0 FieldExpressionOnly_builder) Build() *FieldExpressionOnly {
+	m0 := &FieldExpressionOnly{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
 type FieldExpressionMultipleScalar struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val int32                  `protobuf:"varint,1,opt,name=val,proto3"`
@@ -548,7 +662,7 @@ type FieldExpressionMultipleScalar struct {
 
 func (x *FieldExpressionMultipleScalar) Reset() {
 	*x = FieldExpressionMultipleScalar{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -560,7 +674,7 @@ func (x *FieldExpressionMultipleScalar) String() string {
 func (*FieldExpressionMultipleScalar) ProtoMessage() {}
 
 func (x *FieldExpressionMultipleScalar) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[6]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -605,7 +719,7 @@ type FieldExpressionNestedScalar struct {
 
 func (x *FieldExpressionNestedScalar) Reset() {
 	*x = FieldExpressionNestedScalar{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +731,7 @@ func (x *FieldExpressionNestedScalar) String() string {
 func (*FieldExpressionNestedScalar) ProtoMessage() {}
 
 func (x *FieldExpressionNestedScalar) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[7]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -675,7 +789,7 @@ type FieldExpressionOptionalScalar struct {
 
 func (x *FieldExpressionOptionalScalar) Reset() {
 	*x = FieldExpressionOptionalScalar{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -687,7 +801,7 @@ func (x *FieldExpressionOptionalScalar) String() string {
 func (*FieldExpressionOptionalScalar) ProtoMessage() {}
 
 func (x *FieldExpressionOptionalScalar) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[8]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -748,7 +862,7 @@ type FieldExpressionScalar struct {
 
 func (x *FieldExpressionScalar) Reset() {
 	*x = FieldExpressionScalar{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -760,7 +874,7 @@ func (x *FieldExpressionScalar) String() string {
 func (*FieldExpressionScalar) ProtoMessage() {}
 
 func (x *FieldExpressionScalar) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[9]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -805,7 +919,7 @@ type FieldExpressionEnum struct {
 
 func (x *FieldExpressionEnum) Reset() {
 	*x = FieldExpressionEnum{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -817,7 +931,7 @@ func (x *FieldExpressionEnum) String() string {
 func (*FieldExpressionEnum) ProtoMessage() {}
 
 func (x *FieldExpressionEnum) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[10]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -862,7 +976,7 @@ type FieldExpressionMessage struct {
 
 func (x *FieldExpressionMessage) Reset() {
 	*x = FieldExpressionMessage{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -874,7 +988,7 @@ func (x *FieldExpressionMessage) String() string {
 func (*FieldExpressionMessage) ProtoMessage() {}
 
 func (x *FieldExpressionMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[11]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -930,7 +1044,7 @@ type FieldExpressionMapInt32 struct {
 
 func (x *FieldExpressionMapInt32) Reset() {
 	*x = FieldExpressionMapInt32{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -942,7 +1056,7 @@ func (x *FieldExpressionMapInt32) String() string {
 func (*FieldExpressionMapInt32) ProtoMessage() {}
 
 func (x *FieldExpressionMapInt32) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[12]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -987,7 +1101,7 @@ type FieldExpressionMapInt64 struct {
 
 func (x *FieldExpressionMapInt64) Reset() {
 	*x = FieldExpressionMapInt64{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -999,7 +1113,7 @@ func (x *FieldExpressionMapInt64) String() string {
 func (*FieldExpressionMapInt64) ProtoMessage() {}
 
 func (x *FieldExpressionMapInt64) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[13]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1044,7 +1158,7 @@ type FieldExpressionMapUint32 struct {
 
 func (x *FieldExpressionMapUint32) Reset() {
 	*x = FieldExpressionMapUint32{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1056,7 +1170,7 @@ func (x *FieldExpressionMapUint32) String() string {
 func (*FieldExpressionMapUint32) ProtoMessage() {}
 
 func (x *FieldExpressionMapUint32) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[14]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1101,7 +1215,7 @@ type FieldExpressionMapUint64 struct {
 
 func (x *FieldExpressionMapUint64) Reset() {
 	*x = FieldExpressionMapUint64{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1113,7 +1227,7 @@ func (x *FieldExpressionMapUint64) String() string {
 func (*FieldExpressionMapUint64) ProtoMessage() {}
 
 func (x *FieldExpressionMapUint64) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[15]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1158,7 +1272,7 @@ type FieldExpressionMapBool struct {
 
 func (x *FieldExpressionMapBool) Reset() {
 	*x = FieldExpressionMapBool{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[16]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1170,7 +1284,7 @@ func (x *FieldExpressionMapBool) String() string {
 func (*FieldExpressionMapBool) ProtoMessage() {}
 
 func (x *FieldExpressionMapBool) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[16]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1215,7 +1329,7 @@ type FieldExpressionMapString struct {
 
 func (x *FieldExpressionMapString) Reset() {
 	*x = FieldExpressionMapString{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[17]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1227,7 +1341,7 @@ func (x *FieldExpressionMapString) String() string {
 func (*FieldExpressionMapString) ProtoMessage() {}
 
 func (x *FieldExpressionMapString) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[17]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1272,7 +1386,7 @@ type FieldExpressionMapEnum struct {
 
 func (x *FieldExpressionMapEnum) Reset() {
 	*x = FieldExpressionMapEnum{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1284,7 +1398,7 @@ func (x *FieldExpressionMapEnum) String() string {
 func (*FieldExpressionMapEnum) ProtoMessage() {}
 
 func (x *FieldExpressionMapEnum) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[18]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1329,7 +1443,7 @@ type FieldExpressionMapMessage struct {
 
 func (x *FieldExpressionMapMessage) Reset() {
 	*x = FieldExpressionMapMessage{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1341,7 +1455,7 @@ func (x *FieldExpressionMapMessage) String() string {
 func (*FieldExpressionMapMessage) ProtoMessage() {}
 
 func (x *FieldExpressionMapMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[19]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1386,7 +1500,7 @@ type FieldExpressionMapKeys struct {
 
 func (x *FieldExpressionMapKeys) Reset() {
 	*x = FieldExpressionMapKeys{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1398,7 +1512,7 @@ func (x *FieldExpressionMapKeys) String() string {
 func (*FieldExpressionMapKeys) ProtoMessage() {}
 
 func (x *FieldExpressionMapKeys) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1443,7 +1557,7 @@ type FieldExpressionMapScalarValues struct {
 
 func (x *FieldExpressionMapScalarValues) Reset() {
 	*x = FieldExpressionMapScalarValues{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1455,7 +1569,7 @@ func (x *FieldExpressionMapScalarValues) String() string {
 func (*FieldExpressionMapScalarValues) ProtoMessage() {}
 
 func (x *FieldExpressionMapScalarValues) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[21]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1500,7 +1614,7 @@ type FieldExpressionMapEnumValues struct {
 
 func (x *FieldExpressionMapEnumValues) Reset() {
 	*x = FieldExpressionMapEnumValues{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1512,7 +1626,7 @@ func (x *FieldExpressionMapEnumValues) String() string {
 func (*FieldExpressionMapEnumValues) ProtoMessage() {}
 
 func (x *FieldExpressionMapEnumValues) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[22]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1557,7 +1671,7 @@ type FieldExpressionMapMessageValues struct {
 
 func (x *FieldExpressionMapMessageValues) Reset() {
 	*x = FieldExpressionMapMessageValues{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[23]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1569,7 +1683,7 @@ func (x *FieldExpressionMapMessageValues) String() string {
 func (*FieldExpressionMapMessageValues) ProtoMessage() {}
 
 func (x *FieldExpressionMapMessageValues) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[23]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1614,7 +1728,7 @@ type FieldExpressionRepeatedScalar struct {
 
 func (x *FieldExpressionRepeatedScalar) Reset() {
 	*x = FieldExpressionRepeatedScalar{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[24]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1626,7 +1740,7 @@ func (x *FieldExpressionRepeatedScalar) String() string {
 func (*FieldExpressionRepeatedScalar) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedScalar) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[24]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1671,7 +1785,7 @@ type FieldExpressionRepeatedEnum struct {
 
 func (x *FieldExpressionRepeatedEnum) Reset() {
 	*x = FieldExpressionRepeatedEnum{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[25]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1683,7 +1797,7 @@ func (x *FieldExpressionRepeatedEnum) String() string {
 func (*FieldExpressionRepeatedEnum) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedEnum) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[25]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1728,7 +1842,7 @@ type FieldExpressionRepeatedMessage struct {
 
 func (x *FieldExpressionRepeatedMessage) Reset() {
 	*x = FieldExpressionRepeatedMessage{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[26]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1740,7 +1854,7 @@ func (x *FieldExpressionRepeatedMessage) String() string {
 func (*FieldExpressionRepeatedMessage) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[26]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1787,7 +1901,7 @@ type FieldExpressionRepeatedScalarItems struct {
 
 func (x *FieldExpressionRepeatedScalarItems) Reset() {
 	*x = FieldExpressionRepeatedScalarItems{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[27]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1799,7 +1913,7 @@ func (x *FieldExpressionRepeatedScalarItems) String() string {
 func (*FieldExpressionRepeatedScalarItems) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedScalarItems) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[27]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1844,7 +1958,7 @@ type FieldExpressionRepeatedEnumItems struct {
 
 func (x *FieldExpressionRepeatedEnumItems) Reset() {
 	*x = FieldExpressionRepeatedEnumItems{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[28]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1856,7 +1970,7 @@ func (x *FieldExpressionRepeatedEnumItems) String() string {
 func (*FieldExpressionRepeatedEnumItems) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedEnumItems) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[28]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1901,7 +2015,7 @@ type FieldExpressionRepeatedMessageItems struct {
 
 func (x *FieldExpressionRepeatedMessageItems) Reset() {
 	*x = FieldExpressionRepeatedMessageItems{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[29]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1913,7 +2027,7 @@ func (x *FieldExpressionRepeatedMessageItems) String() string {
 func (*FieldExpressionRepeatedMessageItems) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedMessageItems) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[29]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1959,7 +2073,7 @@ type NoExpressions_Nested struct {
 
 func (x *NoExpressions_Nested) Reset() {
 	*x = NoExpressions_Nested{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[30]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1971,7 +2085,7 @@ func (x *NoExpressions_Nested) String() string {
 func (*NoExpressions_Nested) ProtoMessage() {}
 
 func (x *NoExpressions_Nested) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[30]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2004,7 +2118,7 @@ type MessageExpressions_Nested struct {
 
 func (x *MessageExpressions_Nested) Reset() {
 	*x = MessageExpressions_Nested{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[31]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2016,7 +2130,7 @@ func (x *MessageExpressions_Nested) String() string {
 func (*MessageExpressions_Nested) ProtoMessage() {}
 
 func (x *MessageExpressions_Nested) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[31]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2074,7 +2188,7 @@ type FieldExpressionMessage_Msg struct {
 
 func (x *FieldExpressionMessage_Msg) Reset() {
 	*x = FieldExpressionMessage_Msg{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[32]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2086,7 +2200,7 @@ func (x *FieldExpressionMessage_Msg) String() string {
 func (*FieldExpressionMessage_Msg) ProtoMessage() {}
 
 func (x *FieldExpressionMessage_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[32]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2131,7 +2245,7 @@ type FieldExpressionMapMessage_Msg struct {
 
 func (x *FieldExpressionMapMessage_Msg) Reset() {
 	*x = FieldExpressionMapMessage_Msg{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[41]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2143,7 +2257,7 @@ func (x *FieldExpressionMapMessage_Msg) String() string {
 func (*FieldExpressionMapMessage_Msg) ProtoMessage() {}
 
 func (x *FieldExpressionMapMessage_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[41]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2188,7 +2302,7 @@ type FieldExpressionMapMessageValues_Msg struct {
 
 func (x *FieldExpressionMapMessageValues_Msg) Reset() {
 	*x = FieldExpressionMapMessageValues_Msg{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[46]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2200,7 +2314,7 @@ func (x *FieldExpressionMapMessageValues_Msg) String() string {
 func (*FieldExpressionMapMessageValues_Msg) ProtoMessage() {}
 
 func (x *FieldExpressionMapMessageValues_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[46]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2245,7 +2359,7 @@ type FieldExpressionRepeatedMessage_Msg struct {
 
 func (x *FieldExpressionRepeatedMessage_Msg) Reset() {
 	*x = FieldExpressionRepeatedMessage_Msg{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[47]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2257,7 +2371,7 @@ func (x *FieldExpressionRepeatedMessage_Msg) String() string {
 func (*FieldExpressionRepeatedMessage_Msg) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedMessage_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[47]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2302,7 +2416,7 @@ type FieldExpressionRepeatedMessageItems_Msg struct {
 
 func (x *FieldExpressionRepeatedMessageItems_Msg) Reset() {
 	*x = FieldExpressionRepeatedMessageItems_Msg{}
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[48]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2314,7 +2428,7 @@ func (x *FieldExpressionRepeatedMessageItems_Msg) String() string {
 func (*FieldExpressionRepeatedMessageItems_Msg) ProtoMessage() {}
 
 func (x *FieldExpressionRepeatedMessageItems_Msg) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[48]
+	mi := &file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2373,7 +2487,10 @@ const file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDes
 	"\x19message_expression_nested\x1a0this.a > this.b ? '': 'a must be greater than b':\xd0\x01\xbaH\xcc\x01\x1aC\n" +
 	"\x19message_expression_scalar\x12\x15a must be less than b\x1a\x0fthis.a < this.b\x1a?\n" +
 	"\x17message_expression_enum\x12\x12c must not equal d\x1a\x10this.c != this.d\x1aD\n" +
-	"\x18message_expression_embed\x12\x12e.a must equal f.a\x1a\x14this.e.a == this.f.a\"R\n" +
+	"\x18message_expression_embed\x12\x12e.a must equal f.a\x1a\x14this.e.a == this.f.a\"6\n" +
+	"\x15MessageExpressionOnly\x12\f\n" +
+	"\x01a\x18\x01 \x01(\x05R\x01a:\x0f\xbaH\f*\n" +
+	"this.a > 0\"R\n" +
 	"\fMissingField\x12\f\n" +
 	"\x01a\x18\x01 \x01(\x05R\x01a:4\xbaH1\x1a/\n" +
 	"\rmissing_field\x12\x12b must be positive\x1a\n" +
@@ -2386,7 +2503,9 @@ const file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDes
 	"\x0fdyn_runtime_err\x12.dynamic type tries to use a non-existent field\x1a\x14dyn(this).b == 'foo'\"\\\n" +
 	"\fNowEqualsNow:L\xbaHI\x1aG\n" +
 	"\x0enow_equals_now\x12)now should equal now within an expression\x1a\n" +
-	"now == now\"\xdf\x02\n" +
+	"now == now\"8\n" +
+	"\x13FieldExpressionOnly\x12!\n" +
+	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\f\xe2\x01\tthis > 42R\x03val\"\xdf\x02\n" +
 	"\x1dFieldExpressionMultipleScalar\x12\xbd\x02\n" +
 	"\x03val\x18\x01 \x01(\x05B\xaa\x02\xbaH\xa6\x02\xba\x01_\n" +
 	"\"field_expression.multiple.scalar.1\x12/test message field_expression.multiple.scalar.1\x1a\bthis > 0\xba\x01_\n" +
@@ -2513,89 +2632,91 @@ const file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDes
 	"/com.buf.validate.conformance.cases.custom_rulesB\x10CustomRulesProtoP\x01ZSbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases/custom_rules\xa2\x02\x05BVCCC\xaa\x02*Buf.Validate.Conformance.Cases.CustomRules\xca\x02*Buf\\Validate\\Conformance\\Cases\\CustomRules\xe2\x026Buf\\Validate\\Conformance\\Cases\\CustomRules\\GPBMetadata\xea\x02.Buf::Validate::Conformance::Cases::CustomRulesb\x06proto3"
 
 var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes = make([]protoimpl.MessageInfo, 49)
+var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes = make([]protoimpl.MessageInfo, 51)
 var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_goTypes = []any{
 	(Enum)(0),                                   // 0: buf.validate.conformance.cases.custom_rules.Enum
 	(*NoExpressions)(nil),                       // 1: buf.validate.conformance.cases.custom_rules.NoExpressions
 	(*MessageExpressions)(nil),                  // 2: buf.validate.conformance.cases.custom_rules.MessageExpressions
-	(*MissingField)(nil),                        // 3: buf.validate.conformance.cases.custom_rules.MissingField
-	(*IncorrectType)(nil),                       // 4: buf.validate.conformance.cases.custom_rules.IncorrectType
-	(*DynRuntimeError)(nil),                     // 5: buf.validate.conformance.cases.custom_rules.DynRuntimeError
-	(*NowEqualsNow)(nil),                        // 6: buf.validate.conformance.cases.custom_rules.NowEqualsNow
-	(*FieldExpressionMultipleScalar)(nil),       // 7: buf.validate.conformance.cases.custom_rules.FieldExpressionMultipleScalar
-	(*FieldExpressionNestedScalar)(nil),         // 8: buf.validate.conformance.cases.custom_rules.FieldExpressionNestedScalar
-	(*FieldExpressionOptionalScalar)(nil),       // 9: buf.validate.conformance.cases.custom_rules.FieldExpressionOptionalScalar
-	(*FieldExpressionScalar)(nil),               // 10: buf.validate.conformance.cases.custom_rules.FieldExpressionScalar
-	(*FieldExpressionEnum)(nil),                 // 11: buf.validate.conformance.cases.custom_rules.FieldExpressionEnum
-	(*FieldExpressionMessage)(nil),              // 12: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage
-	(*FieldExpressionMapInt32)(nil),             // 13: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32
-	(*FieldExpressionMapInt64)(nil),             // 14: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64
-	(*FieldExpressionMapUint32)(nil),            // 15: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32
-	(*FieldExpressionMapUint64)(nil),            // 16: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64
-	(*FieldExpressionMapBool)(nil),              // 17: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool
-	(*FieldExpressionMapString)(nil),            // 18: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString
-	(*FieldExpressionMapEnum)(nil),              // 19: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum
-	(*FieldExpressionMapMessage)(nil),           // 20: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage
-	(*FieldExpressionMapKeys)(nil),              // 21: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys
-	(*FieldExpressionMapScalarValues)(nil),      // 22: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues
-	(*FieldExpressionMapEnumValues)(nil),        // 23: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues
-	(*FieldExpressionMapMessageValues)(nil),     // 24: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues
-	(*FieldExpressionRepeatedScalar)(nil),       // 25: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedScalar
-	(*FieldExpressionRepeatedEnum)(nil),         // 26: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnum
-	(*FieldExpressionRepeatedMessage)(nil),      // 27: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage
-	(*FieldExpressionRepeatedScalarItems)(nil),  // 28: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedScalarItems
-	(*FieldExpressionRepeatedEnumItems)(nil),    // 29: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnumItems
-	(*FieldExpressionRepeatedMessageItems)(nil), // 30: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems
-	(*NoExpressions_Nested)(nil),                // 31: buf.validate.conformance.cases.custom_rules.NoExpressions.Nested
-	(*MessageExpressions_Nested)(nil),           // 32: buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
-	(*FieldExpressionMessage_Msg)(nil),          // 33: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.Msg
-	nil,                                         // 34: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.ValEntry
-	nil,                                         // 35: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.ValEntry
-	nil,                                         // 36: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.ValEntry
-	nil,                                         // 37: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.ValEntry
-	nil,                                         // 38: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.ValEntry
-	nil,                                         // 39: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.ValEntry
-	nil,                                         // 40: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.ValEntry
-	nil,                                         // 41: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry
-	(*FieldExpressionMapMessage_Msg)(nil),       // 42: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.Msg
-	nil,                                         // 43: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.ValEntry
-	nil,                                         // 44: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.ValEntry
-	nil,                                         // 45: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.ValEntry
-	nil,                                         // 46: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry
-	(*FieldExpressionMapMessageValues_Msg)(nil),     // 47: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.Msg
-	(*FieldExpressionRepeatedMessage_Msg)(nil),      // 48: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.Msg
-	(*FieldExpressionRepeatedMessageItems_Msg)(nil), // 49: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.Msg
+	(*MessageExpressionOnly)(nil),               // 3: buf.validate.conformance.cases.custom_rules.MessageExpressionOnly
+	(*MissingField)(nil),                        // 4: buf.validate.conformance.cases.custom_rules.MissingField
+	(*IncorrectType)(nil),                       // 5: buf.validate.conformance.cases.custom_rules.IncorrectType
+	(*DynRuntimeError)(nil),                     // 6: buf.validate.conformance.cases.custom_rules.DynRuntimeError
+	(*NowEqualsNow)(nil),                        // 7: buf.validate.conformance.cases.custom_rules.NowEqualsNow
+	(*FieldExpressionOnly)(nil),                 // 8: buf.validate.conformance.cases.custom_rules.FieldExpressionOnly
+	(*FieldExpressionMultipleScalar)(nil),       // 9: buf.validate.conformance.cases.custom_rules.FieldExpressionMultipleScalar
+	(*FieldExpressionNestedScalar)(nil),         // 10: buf.validate.conformance.cases.custom_rules.FieldExpressionNestedScalar
+	(*FieldExpressionOptionalScalar)(nil),       // 11: buf.validate.conformance.cases.custom_rules.FieldExpressionOptionalScalar
+	(*FieldExpressionScalar)(nil),               // 12: buf.validate.conformance.cases.custom_rules.FieldExpressionScalar
+	(*FieldExpressionEnum)(nil),                 // 13: buf.validate.conformance.cases.custom_rules.FieldExpressionEnum
+	(*FieldExpressionMessage)(nil),              // 14: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage
+	(*FieldExpressionMapInt32)(nil),             // 15: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32
+	(*FieldExpressionMapInt64)(nil),             // 16: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64
+	(*FieldExpressionMapUint32)(nil),            // 17: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32
+	(*FieldExpressionMapUint64)(nil),            // 18: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64
+	(*FieldExpressionMapBool)(nil),              // 19: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool
+	(*FieldExpressionMapString)(nil),            // 20: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString
+	(*FieldExpressionMapEnum)(nil),              // 21: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum
+	(*FieldExpressionMapMessage)(nil),           // 22: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage
+	(*FieldExpressionMapKeys)(nil),              // 23: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys
+	(*FieldExpressionMapScalarValues)(nil),      // 24: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues
+	(*FieldExpressionMapEnumValues)(nil),        // 25: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues
+	(*FieldExpressionMapMessageValues)(nil),     // 26: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues
+	(*FieldExpressionRepeatedScalar)(nil),       // 27: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedScalar
+	(*FieldExpressionRepeatedEnum)(nil),         // 28: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnum
+	(*FieldExpressionRepeatedMessage)(nil),      // 29: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage
+	(*FieldExpressionRepeatedScalarItems)(nil),  // 30: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedScalarItems
+	(*FieldExpressionRepeatedEnumItems)(nil),    // 31: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnumItems
+	(*FieldExpressionRepeatedMessageItems)(nil), // 32: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems
+	(*NoExpressions_Nested)(nil),                // 33: buf.validate.conformance.cases.custom_rules.NoExpressions.Nested
+	(*MessageExpressions_Nested)(nil),           // 34: buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
+	(*FieldExpressionMessage_Msg)(nil),          // 35: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.Msg
+	nil,                                         // 36: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.ValEntry
+	nil,                                         // 37: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.ValEntry
+	nil,                                         // 38: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.ValEntry
+	nil,                                         // 39: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.ValEntry
+	nil,                                         // 40: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.ValEntry
+	nil,                                         // 41: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.ValEntry
+	nil,                                         // 42: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.ValEntry
+	nil,                                         // 43: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry
+	(*FieldExpressionMapMessage_Msg)(nil),       // 44: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.Msg
+	nil,                                         // 45: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.ValEntry
+	nil,                                         // 46: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.ValEntry
+	nil,                                         // 47: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.ValEntry
+	nil,                                         // 48: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry
+	(*FieldExpressionMapMessageValues_Msg)(nil),     // 49: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.Msg
+	(*FieldExpressionRepeatedMessage_Msg)(nil),      // 50: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.Msg
+	(*FieldExpressionRepeatedMessageItems_Msg)(nil), // 51: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.Msg
 }
 var file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_depIdxs = []int32{
 	0,  // 0: buf.validate.conformance.cases.custom_rules.NoExpressions.b:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	31, // 1: buf.validate.conformance.cases.custom_rules.NoExpressions.c:type_name -> buf.validate.conformance.cases.custom_rules.NoExpressions.Nested
+	33, // 1: buf.validate.conformance.cases.custom_rules.NoExpressions.c:type_name -> buf.validate.conformance.cases.custom_rules.NoExpressions.Nested
 	0,  // 2: buf.validate.conformance.cases.custom_rules.MessageExpressions.c:type_name -> buf.validate.conformance.cases.custom_rules.Enum
 	0,  // 3: buf.validate.conformance.cases.custom_rules.MessageExpressions.d:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	32, // 4: buf.validate.conformance.cases.custom_rules.MessageExpressions.e:type_name -> buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
-	32, // 5: buf.validate.conformance.cases.custom_rules.MessageExpressions.f:type_name -> buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
-	10, // 6: buf.validate.conformance.cases.custom_rules.FieldExpressionNestedScalar.nested:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionScalar
+	34, // 4: buf.validate.conformance.cases.custom_rules.MessageExpressions.e:type_name -> buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
+	34, // 5: buf.validate.conformance.cases.custom_rules.MessageExpressions.f:type_name -> buf.validate.conformance.cases.custom_rules.MessageExpressions.Nested
+	12, // 6: buf.validate.conformance.cases.custom_rules.FieldExpressionNestedScalar.nested:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionScalar
 	0,  // 7: buf.validate.conformance.cases.custom_rules.FieldExpressionEnum.val:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	33, // 8: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.Msg
-	34, // 9: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.ValEntry
-	35, // 10: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.ValEntry
-	36, // 11: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.ValEntry
-	37, // 12: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.ValEntry
-	38, // 13: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.ValEntry
-	39, // 14: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.ValEntry
-	40, // 15: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.ValEntry
-	41, // 16: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry
-	43, // 17: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.ValEntry
-	44, // 18: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.ValEntry
-	45, // 19: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.ValEntry
-	46, // 20: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry
+	35, // 8: buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMessage.Msg
+	36, // 9: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt32.ValEntry
+	37, // 10: buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapInt64.ValEntry
+	38, // 11: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint32.ValEntry
+	39, // 12: buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapUint64.ValEntry
+	40, // 13: buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapBool.ValEntry
+	41, // 14: buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapString.ValEntry
+	42, // 15: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.ValEntry
+	43, // 16: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry
+	45, // 17: buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapKeys.ValEntry
+	46, // 18: buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapScalarValues.ValEntry
+	47, // 19: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.ValEntry
+	48, // 20: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry
 	0,  // 21: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnum.val:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	48, // 22: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.Msg
+	50, // 22: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessage.Msg
 	0,  // 23: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedEnumItems.val:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	49, // 24: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.Msg
+	51, // 24: buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.val:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionRepeatedMessageItems.Msg
 	0,  // 25: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnum.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	42, // 26: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.Msg
+	44, // 26: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessage.Msg
 	0,  // 27: buf.validate.conformance.cases.custom_rules.FieldExpressionMapEnumValues.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.Enum
-	47, // 28: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.Msg
+	49, // 28: buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.ValEntry.value:type_name -> buf.validate.conformance.cases.custom_rules.FieldExpressionMapMessageValues.Msg
 	29, // [29:29] is the sub-list for method output_type
 	29, // [29:29] is the sub-list for method input_type
 	29, // [29:29] is the sub-list for extension type_name
@@ -2608,14 +2729,14 @@ func file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_init() 
 	if File_buf_validate_conformance_cases_custom_rules_custom_rules_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[8].OneofWrappers = []any{}
+	file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDesc), len(file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   49,
+			NumMessages:   51,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

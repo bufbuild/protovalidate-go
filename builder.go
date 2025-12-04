@@ -32,8 +32,10 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	celRuleDescriptor = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("cel")
-	celRuleField      = fieldPathElement(celRuleDescriptor)
+	celExpressionDescriptor = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("cel_expression")
+	celExpressionField      = fieldPathElement(celExpressionDescriptor)
+	celRuleDescriptor       = (&validate.FieldRules{}).ProtoReflect().Descriptor().Fields().ByName("cel")
+	celRuleField            = fieldPathElement(celRuleDescriptor)
 )
 
 // builder is a build-through cache of message evaluators keyed off the provided
@@ -148,8 +150,14 @@ func (bldr *builder) processMessageExpressions(
 	msgEval *message,
 	_ messageCache,
 ) {
+	rules := make([]*validate.Rule, 0, len(msgRules.GetCelExpression())+len(msgRules.GetCel()))
+	for _, expr := range msgRules.GetCelExpression() {
+		rules = append(rules, validate.Rule_builder{
+			Expression: proto.String(expr),
+		}.Build())
+	}
 	exprs := expressions{
-		Rules: msgRules.GetCel(),
+		Rules: append(rules, msgRules.GetCel()...),
 	}
 	compiledExprs, err := compile(
 		exprs,
@@ -323,30 +331,56 @@ func (bldr *builder) processFieldExpressions(
 	eval *value,
 	_ messageCache,
 ) error {
-	exprs := expressions{
-		Rules: fieldRules.GetCel(),
-	}
-
 	celTyp := pvcel.ProtoFieldToType(fieldDesc, false, eval.NestedRule != nil)
 	opts := append(
 		pvcel.RequiredEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
 	)
-	compiledExpressions, err := compile(exprs, bldr.env, opts...)
+	compileWithPath := func(exprs expressions, fieldPathElement *validate.FieldPathElement, descriptor protoreflect.FieldDescriptor) (programSet, error) {
+		compiledExpressions, err := compile(exprs, bldr.env, opts...)
+		if err != nil {
+			return nil, err
+		}
+		for i := range compiledExpressions {
+			compiledExpressions[i].Path = []*validate.FieldPathElement{
+				validate.FieldPathElement_builder{
+					FieldNumber: proto.Int32(fieldPathElement.GetFieldNumber()),
+					FieldType:   fieldPathElement.GetFieldType().Enum(),
+					FieldName:   proto.String(fieldPathElement.GetFieldName()),
+					Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+				}.Build(),
+			}
+			compiledExpressions[i].Descriptor = descriptor
+		}
+		return compiledExpressions, nil
+	}
+	rules := make([]*validate.Rule, 0, len(fieldRules.GetCelExpression()))
+	for _, expr := range fieldRules.GetCelExpression() {
+		rules = append(rules, validate.Rule_builder{
+			Expression: proto.String(expr),
+		}.Build())
+	}
+	compiledExpressions, err := compileWithPath(
+		expressions{
+			Rules: rules,
+		},
+		celExpressionField,
+		celExpressionDescriptor,
+	)
 	if err != nil {
 		return err
 	}
-	for i := range compiledExpressions {
-		compiledExpressions[i].Path = []*validate.FieldPathElement{
-			validate.FieldPathElement_builder{
-				FieldNumber: proto.Int32(celRuleField.GetFieldNumber()),
-				FieldType:   celRuleField.GetFieldType().Enum(),
-				FieldName:   proto.String(celRuleField.GetFieldName()),
-				Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
-			}.Build(),
-		}
-		compiledExpressions[i].Descriptor = celRuleDescriptor
+	celRuleCompiledExpressions, err := compileWithPath(
+		expressions{
+			Rules: fieldRules.GetCel(),
+		},
+		celRuleField,
+		celRuleDescriptor,
+	)
+	if err != nil {
+		return err
 	}
+	compiledExpressions = append(compiledExpressions, celRuleCompiledExpressions...)
 	if len(compiledExpressions) > 0 {
 		eval.Rules = append(eval.Rules,
 			celPrograms{
