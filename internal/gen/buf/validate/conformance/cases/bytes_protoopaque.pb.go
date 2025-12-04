@@ -1237,6 +1237,186 @@ func (b0 BytesIPv6Ignore_builder) Build() *BytesIPv6Ignore {
 	return m0
 }
 
+type BytesUUID struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val []byte                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BytesUUID) Reset() {
+	*x = BytesUUID{}
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BytesUUID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BytesUUID) ProtoMessage() {}
+
+func (x *BytesUUID) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BytesUUID) GetVal() []byte {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *BytesUUID) SetVal(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Val = v
+}
+
+type BytesUUID_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []byte
+}
+
+func (b0 BytesUUID_builder) Build() *BytesUUID {
+	m0 := &BytesUUID{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type BytesNotUUID struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val []byte                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BytesNotUUID) Reset() {
+	*x = BytesNotUUID{}
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BytesNotUUID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BytesNotUUID) ProtoMessage() {}
+
+func (x *BytesNotUUID) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BytesNotUUID) GetVal() []byte {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *BytesNotUUID) SetVal(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Val = v
+}
+
+type BytesNotUUID_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []byte
+}
+
+func (b0 BytesNotUUID_builder) Build() *BytesNotUUID {
+	m0 := &BytesNotUUID{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type BytesUUIDIgnore struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val []byte                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BytesUUIDIgnore) Reset() {
+	*x = BytesUUIDIgnore{}
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BytesUUIDIgnore) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BytesUUIDIgnore) ProtoMessage() {}
+
+func (x *BytesUUIDIgnore) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BytesUUIDIgnore) GetVal() []byte {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *BytesUUIDIgnore) SetVal(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.xxx_hidden_Val = v
+}
+
+type BytesUUIDIgnore_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []byte
+}
+
+func (b0 BytesUUIDIgnore_builder) Build() *BytesUUIDIgnore {
+	m0 := &BytesUUIDIgnore{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
 type BytesExample struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val []byte                 `protobuf:"bytes,1,opt,name=val,proto3"`
@@ -1246,7 +1426,7 @@ type BytesExample struct {
 
 func (x *BytesExample) Reset() {
 	*x = BytesExample{}
-	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1258,7 +1438,7 @@ func (x *BytesExample) String() string {
 func (*BytesExample) ProtoMessage() {}
 
 func (x *BytesExample) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[20]
+	mi := &file_buf_validate_conformance_cases_bytes_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1349,13 +1529,20 @@ const file_buf_validate_conformance_cases_bytes_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x01(\fB\a\xbaH\x04z\x02`\x00R\x03val\"/\n" +
 	"\x0fBytesIPv6Ignore\x12\x1c\n" +
 	"\x03val\x18\x01 \x01(\fB\n" +
-	"\xbaH\a\xd8\x01\x01z\x02`\x01R\x03val\"*\n" +
+	"\xbaH\a\xd8\x01\x01z\x02`\x01R\x03val\"&\n" +
+	"\tBytesUUID\x12\x19\n" +
+	"\x03val\x18\x01 \x01(\fB\a\xbaH\x04z\x02x\x01R\x03val\")\n" +
+	"\fBytesNotUUID\x12\x19\n" +
+	"\x03val\x18\x01 \x01(\fB\a\xbaH\x04z\x02x\x00R\x03val\"/\n" +
+	"\x0fBytesUUIDIgnore\x12\x1c\n" +
+	"\x03val\x18\x01 \x01(\fB\n" +
+	"\xbaH\a\xd8\x01\x01z\x02x\x01R\x03val\"*\n" +
 	"\fBytesExample\x12\x1a\n" +
 	"\x03val\x18\x01 \x01(\fB\b\xbaH\x05z\x03r\x01\x99R\x03valB\x94\x02\n" +
 	"\"com.buf.validate.conformance.casesB\n" +
 	"BytesProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_bytes_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_buf_validate_conformance_cases_bytes_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
 var file_buf_validate_conformance_cases_bytes_proto_goTypes = []any{
 	(*BytesNone)(nil),           // 0: buf.validate.conformance.cases.BytesNone
 	(*BytesConst)(nil),          // 1: buf.validate.conformance.cases.BytesConst
@@ -1377,7 +1564,10 @@ var file_buf_validate_conformance_cases_bytes_proto_goTypes = []any{
 	(*BytesIPv6)(nil),           // 17: buf.validate.conformance.cases.BytesIPv6
 	(*BytesNotIPv6)(nil),        // 18: buf.validate.conformance.cases.BytesNotIPv6
 	(*BytesIPv6Ignore)(nil),     // 19: buf.validate.conformance.cases.BytesIPv6Ignore
-	(*BytesExample)(nil),        // 20: buf.validate.conformance.cases.BytesExample
+	(*BytesUUID)(nil),           // 20: buf.validate.conformance.cases.BytesUUID
+	(*BytesNotUUID)(nil),        // 21: buf.validate.conformance.cases.BytesNotUUID
+	(*BytesUUIDIgnore)(nil),     // 22: buf.validate.conformance.cases.BytesUUIDIgnore
+	(*BytesExample)(nil),        // 23: buf.validate.conformance.cases.BytesExample
 }
 var file_buf_validate_conformance_cases_bytes_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -1398,7 +1588,7 @@ func file_buf_validate_conformance_cases_bytes_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_bytes_proto_rawDesc), len(file_buf_validate_conformance_cases_bytes_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   24,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
