@@ -55,18 +55,23 @@ func mergeViolations(dst, src error, cfg *validationConfig) (ok bool, err error)
 	return !(cfg.failFast && len(dstValErrs.Violations) > 0), dst
 }
 
-// fieldPathElement returns a buf.validate.fieldPathElement that corresponds to
+// fieldPathElement returns a buf.validate.FieldPathElement that corresponds to
 // a provided FieldDescriptor. If the provided FieldDescriptor is nil, nil is
 // returned.
 func fieldPathElement(field protoreflect.FieldDescriptor) *validate.FieldPathElement {
 	if field == nil {
 		return nil
 	}
-	return validate.FieldPathElement_builder{
+	element := validate.FieldPathElement_builder{
 		FieldNumber: proto.Int32(int32(field.Number())),
-		FieldName:   proto.String(field.TextName()),
 		FieldType:   descriptorpb.FieldDescriptorProto_Type(field.Kind()).Enum(),
-	}.Build()
+	}
+	if field.IsExtension() {
+		element.FieldName = proto.String(field.TextName())
+	} else {
+		element.FieldName = proto.String(string(field.Name()))
+	}
+	return element.Build()
 }
 
 // fieldPath returns a single-element buf.validate.fieldPath corresponding to
