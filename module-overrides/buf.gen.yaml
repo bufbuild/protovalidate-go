@@ -1,6 +1,6 @@
 version: v2
 inputs:
-  - git_repo: https://github.com/bufbuild/protovalidate.git#subdir=proto/protovalidate,ref=774f3764e09fcfc921b3ef5a42271754f0b7063a
+  - git_repo: https://github.com/bufbuild/protovalidate.git#subdir=proto/protovalidate,ref=8ed821b7c3ee9cad5d840a12ef32339af0dd2cbd
 plugins:
   - remote: buf.build/protocolbuffers/go:v1.36.6
     out: ./protovalidate

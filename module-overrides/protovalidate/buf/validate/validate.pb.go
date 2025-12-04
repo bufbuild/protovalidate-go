@@ -27,6 +27,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	descriptorpb "google.golang.org/protobuf/types/descriptorpb"
 	durationpb "google.golang.org/protobuf/types/known/durationpb"
+	fieldmaskpb "google.golang.org/protobuf/types/known/fieldmaskpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	unsafe "unsafe"
@@ -378,7 +379,8 @@ type MessageRules struct {
 	// rule to be applied to this message. These rules are written in Common Expression Language (CEL) syntax.
 	//
 	// This is a simplified form of the `cel` Rule field, where only `expression` is set. This allows for
-	// simpler syntax when defining CEL Rules where `id` and `message` are largely redundant.
+	// simpler syntax when defining CEL Rules where `id` and `message` derived from the `expression`. `id` will
+	// be same as the `expression`.
 	//
 	// For more information, [see our documentation](https://buf.build/docs/protovalidate/schemas/custom-rules/).
 	//
@@ -518,7 +520,8 @@ type MessageRules_builder struct {
 	// rule to be applied to this message. These rules are written in Common Expression Language (CEL) syntax.
 	//
 	// This is a simplified form of the `cel` Rule field, where only `expression` is set. This allows for
-	// simpler syntax when defining CEL Rules where `id` and `message` are largely redundant.
+	// simpler syntax when defining CEL Rules where `id` and `message` derived from the `expression`. `id` will
+	// be same as the `expression`.
 	//
 	// For more information, [see our documentation](https://buf.build/docs/protovalidate/schemas/custom-rules/).
 	//
@@ -805,7 +808,8 @@ type FieldRules struct {
 	// rule to be applied to this message. These rules are written in Common Expression Language (CEL) syntax.
 	//
 	// This is a simplified form of the `cel` Rule field, where only `expression` is set. This allows for
-	// simpler syntax when defining CEL Rules where `id` and `message` are largely redundant.
+	// simpler syntax when defining CEL Rules where `id` and `message` derived from the `expression`. `id` will
+	// be same as the `expression`.
 	//
 	// For more information, [see our documentation](https://buf.build/docs/protovalidate/schemas/custom-rules/).
 	//
@@ -817,7 +821,7 @@ type FieldRules struct {
 	//	}
 	//
 	// ```
-	CelExpression []string `protobuf:"bytes,28,rep,name=cel_expression,json=celExpression" json:"cel_expression,omitempty"`
+	CelExpression []string `protobuf:"bytes,29,rep,name=cel_expression,json=celExpression" json:"cel_expression,omitempty"`
 	// `cel` is a repeated field used to represent a textual expression
 	// in the Common Expression Language (CEL) syntax. For more information,
 	// [see our documentation](https://buf.build/docs/protovalidate/schemas/custom-rules/).
@@ -931,6 +935,7 @@ type FieldRules struct {
 	//	*FieldRules_Map
 	//	*FieldRules_Any
 	//	*FieldRules_Duration
+	//	*FieldRules_FieldMask
 	//	*FieldRules_Timestamp
 	Type          isFieldRules_Type `protobuf_oneof:"type"`
 	unknownFields protoimpl.UnknownFields
@@ -1182,6 +1187,15 @@ func (x *FieldRules) GetDuration() *DurationRules {
 	return nil
 }
 
+func (x *FieldRules) GetFieldMask() *FieldMaskRules {
+	if x != nil {
+		if x, ok := x.Type.(*FieldRules_FieldMask); ok {
+			return x.FieldMask
+		}
+	}
+	return nil
+}
+
 func (x *FieldRules) GetTimestamp() *TimestampRules {
 	if x != nil {
 		if x, ok := x.Type.(*FieldRules_Timestamp); ok {
@@ -1365,6 +1379,14 @@ func (x *FieldRules) SetDuration(v *DurationRules) {
 		return
 	}
 	x.Type = &FieldRules_Duration{v}
+}
+
+func (x *FieldRules) SetFieldMask(v *FieldMaskRules) {
+	if v == nil {
+		x.Type = nil
+		return
+	}
+	x.Type = &FieldRules_FieldMask{v}
 }
 
 func (x *FieldRules) SetTimestamp(v *TimestampRules) {
@@ -1556,6 +1578,14 @@ func (x *FieldRules) HasDuration() bool {
 	return ok
 }
 
+func (x *FieldRules) HasFieldMask() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Type.(*FieldRules_FieldMask)
+	return ok
+}
+
 func (x *FieldRules) HasTimestamp() bool {
 	if x == nil {
 		return false
@@ -1696,6 +1726,12 @@ func (x *FieldRules) ClearDuration() {
 	}
 }
 
+func (x *FieldRules) ClearFieldMask() {
+	if _, ok := x.Type.(*FieldRules_FieldMask); ok {
+		x.Type = nil
+	}
+}
+
 func (x *FieldRules) ClearTimestamp() {
 	if _, ok := x.Type.(*FieldRules_Timestamp); ok {
 		x.Type = nil
@@ -1723,6 +1759,7 @@ const FieldRules_Repeated_case case_FieldRules_Type = 18
 const FieldRules_Map_case case_FieldRules_Type = 19
 const FieldRules_Any_case case_FieldRules_Type = 20
 const FieldRules_Duration_case case_FieldRules_Type = 21
+const FieldRules_FieldMask_case case_FieldRules_Type = 28
 const FieldRules_Timestamp_case case_FieldRules_Type = 22
 
 func (x *FieldRules) WhichType() case_FieldRules_Type {
@@ -1770,6 +1807,8 @@ func (x *FieldRules) WhichType() case_FieldRules_Type {
 		return FieldRules_Any_case
 	case *FieldRules_Duration:
 		return FieldRules_Duration_case
+	case *FieldRules_FieldMask:
+		return FieldRules_FieldMask_case
 	case *FieldRules_Timestamp:
 		return FieldRules_Timestamp_case
 	default:
@@ -1784,7 +1823,8 @@ type FieldRules_builder struct {
 	// rule to be applied to this message. These rules are written in Common Expression Language (CEL) syntax.
 	//
 	// This is a simplified form of the `cel` Rule field, where only `expression` is set. This allows for
-	// simpler syntax when defining CEL Rules where `id` and `message` are largely redundant.
+	// simpler syntax when defining CEL Rules where `id` and `message` derived from the `expression`. `id` will
+	// be same as the `expression`.
 	//
 	// For more information, [see our documentation](https://buf.build/docs/protovalidate/schemas/custom-rules/).
 	//
@@ -1912,6 +1952,7 @@ type FieldRules_builder struct {
 	// Well-Known Field Types
 	Any       *AnyRules
 	Duration  *DurationRules
+	FieldMask *FieldMaskRules
 	Timestamp *TimestampRules
 	// -- end of Type
 }
@@ -1983,6 +2024,9 @@ func (b0 FieldRules_builder) Build() *FieldRules {
 	}
 	if b.Duration != nil {
 		x.Type = &FieldRules_Duration{b.Duration}
+	}
+	if b.FieldMask != nil {
+		x.Type = &FieldRules_FieldMask{b.FieldMask}
 	}
 	if b.Timestamp != nil {
 		x.Type = &FieldRules_Timestamp{b.Timestamp}
@@ -2087,6 +2131,10 @@ type FieldRules_Duration struct {
 	Duration *DurationRules `protobuf:"bytes,21,opt,name=duration,oneof"`
 }
 
+type FieldRules_FieldMask struct {
+	FieldMask *FieldMaskRules `protobuf:"bytes,28,opt,name=field_mask,json=fieldMask,oneof"`
+}
+
 type FieldRules_Timestamp struct {
 	Timestamp *TimestampRules `protobuf:"bytes,22,opt,name=timestamp,oneof"`
 }
@@ -2130,6 +2178,8 @@ func (*FieldRules_Map) isFieldRules_Type() {}
 func (*FieldRules_Any) isFieldRules_Type() {}
 
 func (*FieldRules_Duration) isFieldRules_Type() {}
+
+func (*FieldRules_FieldMask) isFieldRules_Type() {}
 
 func (*FieldRules_Timestamp) isFieldRules_Type() {}
 
@@ -9834,6 +9884,7 @@ type StringRules struct {
 	//	*StringRules_Ipv4Prefix
 	//	*StringRules_Ipv6Prefix
 	//	*StringRules_HostAndPort
+	//	*StringRules_Ulid
 	//	*StringRules_WellKnownRegex
 	WellKnown isStringRules_WellKnown `protobuf_oneof:"well_known"`
 	// This applies to regexes `HTTP_HEADER_NAME` and `HTTP_HEADER_VALUE` to
@@ -10154,6 +10205,15 @@ func (x *StringRules) GetHostAndPort() bool {
 	return false
 }
 
+func (x *StringRules) GetUlid() bool {
+	if x != nil {
+		if x, ok := x.WellKnown.(*StringRules_Ulid); ok {
+			return x.Ulid
+		}
+	}
+	return false
+}
+
 func (x *StringRules) GetWellKnownRegex() KnownRegex {
 	if x != nil {
 		if x, ok := x.WellKnown.(*StringRules_WellKnownRegex); ok {
@@ -10299,6 +10359,10 @@ func (x *StringRules) SetIpv6Prefix(v bool) {
 
 func (x *StringRules) SetHostAndPort(v bool) {
 	x.WellKnown = &StringRules_HostAndPort{v}
+}
+
+func (x *StringRules) SetUlid(v bool) {
+	x.WellKnown = &StringRules_Ulid{v}
 }
 
 func (x *StringRules) SetWellKnownRegex(v KnownRegex) {
@@ -10540,6 +10604,14 @@ func (x *StringRules) HasHostAndPort() bool {
 	return ok
 }
 
+func (x *StringRules) HasUlid() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.WellKnown.(*StringRules_Ulid)
+	return ok
+}
+
 func (x *StringRules) HasWellKnownRegex() bool {
 	if x == nil {
 		return false
@@ -10709,6 +10781,12 @@ func (x *StringRules) ClearHostAndPort() {
 	}
 }
 
+func (x *StringRules) ClearUlid() {
+	if _, ok := x.WellKnown.(*StringRules_Ulid); ok {
+		x.WellKnown = nil
+	}
+}
+
 func (x *StringRules) ClearWellKnownRegex() {
 	if _, ok := x.WellKnown.(*StringRules_WellKnownRegex); ok {
 		x.WellKnown = nil
@@ -10737,6 +10815,7 @@ const StringRules_IpPrefix_case case_StringRules_WellKnown = 29
 const StringRules_Ipv4Prefix_case case_StringRules_WellKnown = 30
 const StringRules_Ipv6Prefix_case case_StringRules_WellKnown = 31
 const StringRules_HostAndPort_case case_StringRules_WellKnown = 32
+const StringRules_Ulid_case case_StringRules_WellKnown = 35
 const StringRules_WellKnownRegex_case case_StringRules_WellKnown = 24
 
 func (x *StringRules) WhichWellKnown() case_StringRules_WellKnown {
@@ -10778,6 +10857,8 @@ func (x *StringRules) WhichWellKnown() case_StringRules_WellKnown {
 		return StringRules_Ipv6Prefix_case
 	case *StringRules_HostAndPort:
 		return StringRules_HostAndPort_case
+	case *StringRules_Ulid:
+		return StringRules_Ulid_case
 	case *StringRules_WellKnownRegex:
 		return StringRules_WellKnownRegex_case
 	default:
@@ -11253,6 +11334,19 @@ type StringRules_builder struct {
 	// The port is separated by a colon. It must be non-empty, with a decimal number
 	// in the range of 0-65535, inclusive.
 	HostAndPort *bool
+	// `ulid` specifies that the field value must be a valid ULID (Universally Unique
+	// Lexicographically Sortable Identifier) as defined by the [ULID specification](https://github.com/ulid/spec).
+	// If the field value isn't a valid ULID, an error message will be generated.
+	//
+	// ```proto
+	//
+	//	message MyString {
+	//	  // value must be a valid ULID
+	//	  string value = 1 [(buf.validate.field).string.ulid = true];
+	//	}
+	//
+	// ```
+	Ulid *bool
 	// `well_known_regex` specifies a common well-known pattern
 	// defined as a regex. If the field value doesn't match the well-known
 	// regex, an error message will be generated.
@@ -11377,6 +11471,9 @@ func (b0 StringRules_builder) Build() *StringRules {
 	}
 	if b.HostAndPort != nil {
 		x.WellKnown = &StringRules_HostAndPort{*b.HostAndPort}
+	}
+	if b.Ulid != nil {
+		x.WellKnown = &StringRules_Ulid{*b.Ulid}
 	}
 	if b.WellKnownRegex != nil {
 		x.WellKnown = &StringRules_WellKnownRegex{*b.WellKnownRegex}
@@ -11727,6 +11824,22 @@ type StringRules_HostAndPort struct {
 	HostAndPort bool `protobuf:"varint,32,opt,name=host_and_port,json=hostAndPort,oneof"`
 }
 
+type StringRules_Ulid struct {
+	// `ulid` specifies that the field value must be a valid ULID (Universally Unique
+	// Lexicographically Sortable Identifier) as defined by the [ULID specification](https://github.com/ulid/spec).
+	// If the field value isn't a valid ULID, an error message will be generated.
+	//
+	// ```proto
+	//
+	//	message MyString {
+	//	  // value must be a valid ULID
+	//	  string value = 1 [(buf.validate.field).string.ulid = true];
+	//	}
+	//
+	// ```
+	Ulid bool `protobuf:"varint,35,opt,name=ulid,oneof"`
+}
+
 type StringRules_WellKnownRegex struct {
 	// `well_known_regex` specifies a common well-known pattern
 	// defined as a regex. If the field value doesn't match the well-known
@@ -11786,6 +11899,8 @@ func (*StringRules_Ipv4Prefix) isStringRules_WellKnown() {}
 func (*StringRules_Ipv6Prefix) isStringRules_WellKnown() {}
 
 func (*StringRules_HostAndPort) isStringRules_WellKnown() {}
+
+func (*StringRules_Ulid) isStringRules_WellKnown() {}
 
 func (*StringRules_WellKnownRegex) isStringRules_WellKnown() {}
 
@@ -11888,7 +12003,7 @@ type BytesRules struct {
 	// the string.
 	// If the field value doesn't meet the requirement, an error message is generated.
 	//
-	// ```protobuf
+	// ```proto
 	//
 	//	message MyBytes {
 	//	  // value does not contain \x02\x03
@@ -11901,7 +12016,7 @@ type BytesRules struct {
 	// values. If the field value doesn't match any of the specified values, an
 	// error message is generated.
 	//
-	// ```protobuf
+	// ```proto
 	//
 	//	message MyBytes {
 	//	  // value must in ["\x01\x02", "\x02\x03", "\x03\x04"]
@@ -11932,6 +12047,7 @@ type BytesRules struct {
 	//	*BytesRules_Ip
 	//	*BytesRules_Ipv4
 	//	*BytesRules_Ipv6
+	//	*BytesRules_Uuid
 	WellKnown isBytesRules_WellKnown `protobuf_oneof:"well_known"`
 	// `example` specifies values that the field may have. These values SHOULD
 	// conform to other rules. `example` values will not impact validation
@@ -12082,6 +12198,15 @@ func (x *BytesRules) GetIpv6() bool {
 	return false
 }
 
+func (x *BytesRules) GetUuid() bool {
+	if x != nil {
+		if x, ok := x.WellKnown.(*BytesRules_Uuid); ok {
+			return x.Uuid
+		}
+	}
+	return false
+}
+
 func (x *BytesRules) GetExample() [][]byte {
 	if x != nil {
 		return x.Example
@@ -12151,6 +12276,10 @@ func (x *BytesRules) SetIpv4(v bool) {
 
 func (x *BytesRules) SetIpv6(v bool) {
 	x.WellKnown = &BytesRules_Ipv6{v}
+}
+
+func (x *BytesRules) SetUuid(v bool) {
+	x.WellKnown = &BytesRules_Uuid{v}
 }
 
 func (x *BytesRules) SetExample(v [][]byte) {
@@ -12244,6 +12373,14 @@ func (x *BytesRules) HasIpv6() bool {
 	return ok
 }
 
+func (x *BytesRules) HasUuid() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.WellKnown.(*BytesRules_Uuid)
+	return ok
+}
+
 func (x *BytesRules) ClearConst() {
 	x.Const = nil
 }
@@ -12298,10 +12435,17 @@ func (x *BytesRules) ClearIpv6() {
 	}
 }
 
+func (x *BytesRules) ClearUuid() {
+	if _, ok := x.WellKnown.(*BytesRules_Uuid); ok {
+		x.WellKnown = nil
+	}
+}
+
 const BytesRules_WellKnown_not_set_case case_BytesRules_WellKnown = 0
 const BytesRules_Ip_case case_BytesRules_WellKnown = 10
 const BytesRules_Ipv4_case case_BytesRules_WellKnown = 11
 const BytesRules_Ipv6_case case_BytesRules_WellKnown = 12
+const BytesRules_Uuid_case case_BytesRules_WellKnown = 15
 
 func (x *BytesRules) WhichWellKnown() case_BytesRules_WellKnown {
 	if x == nil {
@@ -12314,6 +12458,8 @@ func (x *BytesRules) WhichWellKnown() case_BytesRules_WellKnown {
 		return BytesRules_Ipv4_case
 	case *BytesRules_Ipv6:
 		return BytesRules_Ipv6_case
+	case *BytesRules_Uuid:
+		return BytesRules_Uuid_case
 	default:
 		return BytesRules_WellKnown_not_set_case
 	}
@@ -12417,7 +12563,7 @@ type BytesRules_builder struct {
 	// the string.
 	// If the field value doesn't meet the requirement, an error message is generated.
 	//
-	// ```protobuf
+	// ```proto
 	//
 	//	message MyBytes {
 	//	  // value does not contain \x02\x03
@@ -12430,7 +12576,7 @@ type BytesRules_builder struct {
 	// values. If the field value doesn't match any of the specified values, an
 	// error message is generated.
 	//
-	// ```protobuf
+	// ```proto
 	//
 	//	message MyBytes {
 	//	  // value must in ["\x01\x02", "\x02\x03", "\x03\x04"]
@@ -12492,6 +12638,21 @@ type BytesRules_builder struct {
 	//
 	// ```
 	Ipv6 *bool
+	// `uuid` ensures that the field `value` encodes the 128-bit UUID data as
+	// defined by [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122#section-4.1.2).
+	// The field must contain exactly 16 bytes
+	// representing the UUID. If the field value isn't a valid UUID, an error
+	// message will be generated.
+	//
+	// ```proto
+	//
+	//	message MyBytes {
+	//	  // value must be a valid UUID
+	//	  optional bytes value = 1 [(buf.validate.field).bytes.uuid = true];
+	//	}
+	//
+	// ```
+	Uuid *bool
 	// -- end of WellKnown
 	// `example` specifies values that the field may have. These values SHOULD
 	// conform to other rules. `example` values will not impact validation
@@ -12532,6 +12693,9 @@ func (b0 BytesRules_builder) Build() *BytesRules {
 	}
 	if b.Ipv6 != nil {
 		x.WellKnown = &BytesRules_Ipv6{*b.Ipv6}
+	}
+	if b.Uuid != nil {
+		x.WellKnown = &BytesRules_Uuid{*b.Uuid}
 	}
 	x.Example = b.Example
 	return m0
@@ -12595,11 +12759,31 @@ type BytesRules_Ipv6 struct {
 	Ipv6 bool `protobuf:"varint,12,opt,name=ipv6,oneof"`
 }
 
+type BytesRules_Uuid struct {
+	// `uuid` ensures that the field `value` encodes the 128-bit UUID data as
+	// defined by [RFC 4122](https://datatracker.ietf.org/doc/html/rfc4122#section-4.1.2).
+	// The field must contain exactly 16 bytes
+	// representing the UUID. If the field value isn't a valid UUID, an error
+	// message will be generated.
+	//
+	// ```proto
+	//
+	//	message MyBytes {
+	//	  // value must be a valid UUID
+	//	  optional bytes value = 1 [(buf.validate.field).bytes.uuid = true];
+	//	}
+	//
+	// ```
+	Uuid bool `protobuf:"varint,15,opt,name=uuid,oneof"`
+}
+
 func (*BytesRules_Ip) isBytesRules_WellKnown() {}
 
 func (*BytesRules_Ipv4) isBytesRules_WellKnown() {}
 
 func (*BytesRules_Ipv6) isBytesRules_WellKnown() {}
+
+func (*BytesRules_Uuid) isBytesRules_WellKnown() {}
 
 // EnumRules describe the rules applied to `enum` values.
 type EnumRules struct {
@@ -14178,6 +14362,238 @@ func (*DurationRules_Gt) isDurationRules_GreaterThan() {}
 
 func (*DurationRules_Gte) isDurationRules_GreaterThan() {}
 
+// FieldMaskRules describe rules applied exclusively to the `google.protobuf.FieldMask` well-known type.
+type FieldMaskRules struct {
+	state protoimpl.MessageState `protogen:"hybrid.v1"`
+	// `const` dictates that the field must match the specified value of the `google.protobuf.FieldMask` type exactly.
+	// If the field's value deviates from the specified value, an error message
+	// will be generated.
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  // value must equal ["a"]
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask.const = {
+	//	      paths: ["a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	Const *fieldmaskpb.FieldMask `protobuf:"bytes,1,opt,name=const" json:"const,omitempty"`
+	// `in` requires the field value to only contain paths matching specified
+	// values or their subpaths.
+	// If any of the field value's paths doesn't match the rule,
+	// an error message is generated.
+	// See: https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  //  The `value` FieldMask must only contain paths listed in `in`.
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask = {
+	//	      in: ["a", "b", "c.a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	In []string `protobuf:"bytes,2,rep,name=in" json:"in,omitempty"`
+	// `not_in` requires the field value to not contain paths matching specified
+	// values or their subpaths.
+	// If any of the field value's paths matches the rule,
+	// an error message is generated.
+	// See: https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  //  The `value` FieldMask shall not contain paths listed in `not_in`.
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask = {
+	//	      not_in: ["forbidden", "immutable", "c.a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	NotIn []string `protobuf:"bytes,3,rep,name=not_in,json=notIn" json:"not_in,omitempty"`
+	// `example` specifies values that the field may have. These values SHOULD
+	// conform to other rules. `example` values will not impact validation
+	// but may be used as helpful guidance on how to populate the given field.
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  google.protobuf.FieldMask value = 1 [
+	//	    (buf.validate.field).field_mask.example = { paths: ["a", "b"] },
+	//	    (buf.validate.field).field_mask.example = { paths: ["c.a", "d"] },
+	//	  ];
+	//	}
+	//
+	// ```
+	Example         []*fieldmaskpb.FieldMask `protobuf:"bytes,4,rep,name=example" json:"example,omitempty"`
+	extensionFields protoimpl.ExtensionFields
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *FieldMaskRules) Reset() {
+	*x = FieldMaskRules{}
+	mi := &file_buf_validate_validate_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FieldMaskRules) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FieldMaskRules) ProtoMessage() {}
+
+func (x *FieldMaskRules) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_validate_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *FieldMaskRules) GetConst() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.Const
+	}
+	return nil
+}
+
+func (x *FieldMaskRules) GetIn() []string {
+	if x != nil {
+		return x.In
+	}
+	return nil
+}
+
+func (x *FieldMaskRules) GetNotIn() []string {
+	if x != nil {
+		return x.NotIn
+	}
+	return nil
+}
+
+func (x *FieldMaskRules) GetExample() []*fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.Example
+	}
+	return nil
+}
+
+func (x *FieldMaskRules) SetConst(v *fieldmaskpb.FieldMask) {
+	x.Const = v
+}
+
+func (x *FieldMaskRules) SetIn(v []string) {
+	x.In = v
+}
+
+func (x *FieldMaskRules) SetNotIn(v []string) {
+	x.NotIn = v
+}
+
+func (x *FieldMaskRules) SetExample(v []*fieldmaskpb.FieldMask) {
+	x.Example = v
+}
+
+func (x *FieldMaskRules) HasConst() bool {
+	if x == nil {
+		return false
+	}
+	return x.Const != nil
+}
+
+func (x *FieldMaskRules) ClearConst() {
+	x.Const = nil
+}
+
+type FieldMaskRules_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	// `const` dictates that the field must match the specified value of the `google.protobuf.FieldMask` type exactly.
+	// If the field's value deviates from the specified value, an error message
+	// will be generated.
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  // value must equal ["a"]
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask.const = {
+	//	      paths: ["a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	Const *fieldmaskpb.FieldMask
+	// `in` requires the field value to only contain paths matching specified
+	// values or their subpaths.
+	// If any of the field value's paths doesn't match the rule,
+	// an error message is generated.
+	// See: https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  //  The `value` FieldMask must only contain paths listed in `in`.
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask = {
+	//	      in: ["a", "b", "c.a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	In []string
+	// `not_in` requires the field value to not contain paths matching specified
+	// values or their subpaths.
+	// If any of the field value's paths matches the rule,
+	// an error message is generated.
+	// See: https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  //  The `value` FieldMask shall not contain paths listed in `not_in`.
+	//	  google.protobuf.FieldMask value = 1 [(buf.validate.field).field_mask = {
+	//	      not_in: ["forbidden", "immutable", "c.a"]
+	//	  }];
+	//	}
+	//
+	// ```
+	NotIn []string
+	// `example` specifies values that the field may have. These values SHOULD
+	// conform to other rules. `example` values will not impact validation
+	// but may be used as helpful guidance on how to populate the given field.
+	//
+	// ```proto
+	//
+	//	message MyFieldMask {
+	//	  google.protobuf.FieldMask value = 1 [
+	//	    (buf.validate.field).field_mask.example = { paths: ["a", "b"] },
+	//	    (buf.validate.field).field_mask.example = { paths: ["c.a", "d"] },
+	//	  ];
+	//	}
+	//
+	// ```
+	Example []*fieldmaskpb.FieldMask
+}
+
+func (b0 FieldMaskRules_builder) Build() *FieldMaskRules {
+	m0 := &FieldMaskRules{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Const = b.Const
+	x.In = b.In
+	x.NotIn = b.NotIn
+	x.Example = b.Example
+	return m0
+}
+
 // TimestampRules describe the rules applied exclusively to the `google.protobuf.Timestamp` well-known type.
 type TimestampRules struct {
 	state protoimpl.MessageState `protogen:"hybrid.v1"`
@@ -14237,7 +14653,7 @@ type TimestampRules struct {
 
 func (x *TimestampRules) Reset() {
 	*x = TimestampRules{}
-	mi := &file_buf_validate_validate_proto_msgTypes[26]
+	mi := &file_buf_validate_validate_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -14249,7 +14665,7 @@ func (x *TimestampRules) String() string {
 func (*TimestampRules) ProtoMessage() {}
 
 func (x *TimestampRules) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_validate_proto_msgTypes[26]
+	mi := &file_buf_validate_validate_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -14734,7 +15150,7 @@ func (b0 TimestampRules_builder) Build() *TimestampRules {
 type case_TimestampRules_LessThan protoreflect.FieldNumber
 
 func (x case_TimestampRules_LessThan) String() string {
-	md := file_buf_validate_validate_proto_msgTypes[26].Descriptor()
+	md := file_buf_validate_validate_proto_msgTypes[27].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -14744,7 +15160,7 @@ func (x case_TimestampRules_LessThan) String() string {
 type case_TimestampRules_GreaterThan protoreflect.FieldNumber
 
 func (x case_TimestampRules_GreaterThan) String() string {
-	md := file_buf_validate_validate_proto_msgTypes[26].Descriptor()
+	md := file_buf_validate_validate_proto_msgTypes[27].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -14888,7 +15304,7 @@ type Violations struct {
 
 func (x *Violations) Reset() {
 	*x = Violations{}
-	mi := &file_buf_validate_validate_proto_msgTypes[27]
+	mi := &file_buf_validate_validate_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -14900,7 +15316,7 @@ func (x *Violations) String() string {
 func (*Violations) ProtoMessage() {}
 
 func (x *Violations) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_validate_proto_msgTypes[27]
+	mi := &file_buf_validate_validate_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15058,7 +15474,7 @@ type Violation struct {
 
 func (x *Violation) Reset() {
 	*x = Violation{}
-	mi := &file_buf_validate_validate_proto_msgTypes[28]
+	mi := &file_buf_validate_validate_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -15070,7 +15486,7 @@ func (x *Violation) String() string {
 func (*Violation) ProtoMessage() {}
 
 func (x *Violation) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_validate_proto_msgTypes[28]
+	mi := &file_buf_validate_validate_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15288,7 +15704,7 @@ type FieldPath struct {
 
 func (x *FieldPath) Reset() {
 	*x = FieldPath{}
-	mi := &file_buf_validate_validate_proto_msgTypes[29]
+	mi := &file_buf_validate_validate_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -15300,7 +15716,7 @@ func (x *FieldPath) String() string {
 func (*FieldPath) ProtoMessage() {}
 
 func (x *FieldPath) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_validate_proto_msgTypes[29]
+	mi := &file_buf_validate_validate_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15383,7 +15799,7 @@ type FieldPathElement struct {
 
 func (x *FieldPathElement) Reset() {
 	*x = FieldPathElement{}
-	mi := &file_buf_validate_validate_proto_msgTypes[30]
+	mi := &file_buf_validate_validate_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -15395,7 +15811,7 @@ func (x *FieldPathElement) String() string {
 func (*FieldPathElement) ProtoMessage() {}
 
 func (x *FieldPathElement) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_validate_proto_msgTypes[30]
+	mi := &file_buf_validate_validate_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -15768,7 +16184,7 @@ func (b0 FieldPathElement_builder) Build() *FieldPathElement {
 type case_FieldPathElement_Subscript protoreflect.FieldNumber
 
 func (x case_FieldPathElement_Subscript) String() string {
-	md := file_buf_validate_validate_proto_msgTypes[30].Descriptor()
+	md := file_buf_validate_validate_proto_msgTypes[31].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -15901,7 +16317,7 @@ var File_buf_validate_validate_proto protoreflect.FileDescriptor
 
 const file_buf_validate_validate_proto_rawDesc = "" +
 	"\n" +
-	"\x1bbuf/validate/validate.proto\x12\fbuf.validate\x1a google/protobuf/descriptor.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"P\n" +
+	"\x1bbuf/validate/validate.proto\x12\fbuf.validate\x1a google/protobuf/descriptor.proto\x1a\x1egoogle/protobuf/duration.proto\x1a google/protobuf/field_mask.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"P\n" +
 	"\x04Rule\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1e\n" +
@@ -15917,11 +16333,11 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\brequired\x18\x02 \x01(\bR\brequired\"(\n" +
 	"\n" +
 	"OneofRules\x12\x1a\n" +
-	"\brequired\x18\x01 \x01(\bR\brequired\"\xa4\n" +
+	"\brequired\x18\x01 \x01(\bR\brequired\"\xe3\n" +
 	"\n" +
 	"\n" +
 	"FieldRules\x12%\n" +
-	"\x0ecel_expression\x18\x1c \x03(\tR\rcelExpression\x12$\n" +
+	"\x0ecel_expression\x18\x1d \x03(\tR\rcelExpression\x12$\n" +
 	"\x03cel\x18\x17 \x03(\v2\x12.buf.validate.RuleR\x03cel\x12\x1a\n" +
 	"\brequired\x18\x19 \x01(\bR\brequired\x12,\n" +
 	"\x06ignore\x18\x1b \x01(\x0e2\x14.buf.validate.IgnoreR\x06ignore\x120\n" +
@@ -15945,7 +16361,9 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\brepeated\x18\x12 \x01(\v2\x1b.buf.validate.RepeatedRulesH\x00R\brepeated\x12*\n" +
 	"\x03map\x18\x13 \x01(\v2\x16.buf.validate.MapRulesH\x00R\x03map\x12*\n" +
 	"\x03any\x18\x14 \x01(\v2\x16.buf.validate.AnyRulesH\x00R\x03any\x129\n" +
-	"\bduration\x18\x15 \x01(\v2\x1b.buf.validate.DurationRulesH\x00R\bduration\x12<\n" +
+	"\bduration\x18\x15 \x01(\v2\x1b.buf.validate.DurationRulesH\x00R\bduration\x12=\n" +
+	"\n" +
+	"field_mask\x18\x1c \x01(\v2\x1c.buf.validate.FieldMaskRulesH\x00R\tfieldMask\x12<\n" +
 	"\ttimestamp\x18\x16 \x01(\v2\x1c.buf.validate.TimestampRulesH\x00R\ttimestampB\x06\n" +
 	"\x04typeJ\x04\b\x18\x10\x19J\x04\b\x1a\x10\x1bR\askippedR\fignore_empty\"Z\n" +
 	"\x0fPredefinedRules\x12$\n" +
@@ -16498,7 +16916,7 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"bool.const\x1a`this != getField(rules, 'const') ? 'value must equal %s'.format([getField(rules, 'const')]) : ''R\x05const\x123\n" +
 	"\aexample\x18\x02 \x03(\bB\x19\xc2H\x16\n" +
 	"\x14\n" +
-	"\fbool.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02\"\xd19\n" +
+	"\fbool.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02\"\xcf;\n" +
 	"\vStringRules\x12\x8d\x01\n" +
 	"\x05const\x18\x01 \x01(\tBw\xc2Ht\n" +
 	"r\n" +
@@ -16629,7 +17047,12 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\x99\x01\n" +
 	"\x14string.host_and_port\x12Avalue must be a valid host (hostname or IP address) and port pair\x1a>!rules.host_and_port || this == '' || this.isHostAndPort(true)\n" +
 	"y\n" +
-	"\x1astring.host_and_port_empty\x127value is empty, which is not a valid host and port pair\x1a\"!rules.host_and_port || this != ''H\x00R\vhostAndPort\x12\xb8\x05\n" +
+	"\x1astring.host_and_port_empty\x127value is empty, which is not a valid host and port pair\x1a\"!rules.host_and_port || this != ''H\x00R\vhostAndPort\x12\xfb\x01\n" +
+	"\x04ulid\x18# \x01(\bB\xe4\x01\xc2H\xe0\x01\n" +
+	"\x82\x01\n" +
+	"\vstring.ulid\x12\x1avalue must be a valid ULID\x1aW!rules.ulid || this == '' || this.matches('^[0-7][0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{25}$')\n" +
+	"Y\n" +
+	"\x11string.ulid_empty\x12)value is empty, which is not a valid ULID\x1a\x19!rules.ulid || this != ''H\x00R\x04ulid\x12\xb8\x05\n" +
 	"\x10well_known_regex\x18\x18 \x01(\x0e2\x18.buf.validate.KnownRegexB\xf1\x04\xc2H\xed\x04\n" +
 	"\xf0\x01\n" +
 	"#string.well_known_regex.header_name\x12&value must be a valid HTTP header name\x1a\xa0\x01rules.well_known_regex != 1 || this == '' || this.matches(!has(rules.strict) || rules.strict ?'^:?[0-9a-zA-Z!#$%&\\'*+-.^_|~\\x60]+$' :'^[^\\u0000\\u000A\\u000D]+$')\n" +
@@ -16642,7 +17065,7 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\x16\n" +
 	"\x0estring.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02B\f\n" +
 	"\n" +
-	"well_known\"\xce\x11\n" +
+	"well_known\"\xac\x13\n" +
 	"\n" +
 	"BytesRules\x12\x87\x01\n" +
 	"\x05const\x18\x01 \x01(\fBq\xc2Hn\n" +
@@ -16692,7 +17115,13 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\n" +
 	"bytes.ipv6\x12\"value must be a valid IPv6 address\x1a4!rules.ipv6 || this.size() == 0 || this.size() == 16\n" +
 	"f\n" +
-	"\x10bytes.ipv6_empty\x121value is empty, which is not a valid IPv6 address\x1a\x1f!rules.ipv6 || this.size() != 0H\x00R\x04ipv6\x124\n" +
+	"\x10bytes.ipv6_empty\x121value is empty, which is not a valid IPv6 address\x1a\x1f!rules.ipv6 || this.size() != 0H\x00R\x04ipv6\x12\xdb\x01\n" +
+	"\x04uuid\x18\x0f \x01(\bB\xc4\x01\xc2H\xc0\x01\n" +
+	"^\n" +
+	"\n" +
+	"bytes.uuid\x12\x1avalue must be a valid UUID\x1a4!rules.uuid || this.size() == 0 || this.size() == 16\n" +
+	"^\n" +
+	"\x10bytes.uuid_empty\x12)value is empty, which is not a valid UUID\x1a\x1f!rules.uuid || this.size() != 0H\x00R\x04uuid\x124\n" +
 	"\aexample\x18\x0e \x03(\fB\x1a\xc2H\x17\n" +
 	"\x15\n" +
 	"\rbytes.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02B\f\n" +
@@ -16778,7 +17207,20 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\x18\n" +
 	"\x10duration.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02B\v\n" +
 	"\tless_thanB\x0e\n" +
-	"\fgreater_than\"\xca\x18\n" +
+	"\fgreater_than\"\x8c\x06\n" +
+	"\x0eFieldMaskRules\x12\xba\x01\n" +
+	"\x05const\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskB\x87\x01\xc2H\x83\x01\n" +
+	"\x80\x01\n" +
+	"\x10field_mask.const\x1althis != getField(rules, 'const') ? 'value must equal paths %s'.format([getField(rules, 'const').paths]) : ''R\x05const\x12\xdd\x01\n" +
+	"\x02in\x18\x02 \x03(\tB\xcc\x01\xc2H\xc8\x01\n" +
+	"\xc5\x01\n" +
+	"\rfield_mask.in\x1a\xb3\x01!this.paths.all(p, p in getField(rules, 'in') || getField(rules, 'in').exists(f, p.startsWith(f+'.'))) ? 'value must only contain paths in %s'.format([getField(rules, 'in')]) : ''R\x02in\x12\xfa\x01\n" +
+	"\x06not_in\x18\x03 \x03(\tB\xe2\x01\xc2H\xde\x01\n" +
+	"\xdb\x01\n" +
+	"\x11field_mask.not_in\x1a\xc5\x01!this.paths.all(p, !(p in getField(rules, 'not_in') || getField(rules, 'not_in').exists(f, p.startsWith(f+'.')))) ? 'value must not contain any paths in %s'.format([getField(rules, 'not_in')]) : ''R\x05notIn\x12U\n" +
+	"\aexample\x18\x04 \x03(\v2\x1a.google.protobuf.FieldMaskB\x1f\xc2H\x1c\n" +
+	"\x1a\n" +
+	"\x12field_mask.example\x1a\x04trueR\aexample*\t\b\xe8\a\x10\x80\x80\x80\x80\x02\"\xca\x18\n" +
 	"\x0eTimestampRules\x12\xaa\x01\n" +
 	"\x05const\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampBx\xc2Hu\n" +
 	"s\n" +
@@ -16875,7 +17317,7 @@ const file_buf_validate_validate_proto_rawDesc = "" +
 	"\x12build.buf.validateB\rValidateProtoP\x01ZGbuf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 
 var file_buf_validate_validate_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_buf_validate_validate_proto_msgTypes = make([]protoimpl.MessageInfo, 31)
+var file_buf_validate_validate_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_buf_validate_validate_proto_goTypes = []any{
 	(Ignore)(0),                                 // 0: buf.validate.Ignore
 	(KnownRegex)(0),                             // 1: buf.validate.KnownRegex
@@ -16905,17 +17347,19 @@ var file_buf_validate_validate_proto_goTypes = []any{
 	(*MapRules)(nil),                            // 25: buf.validate.MapRules
 	(*AnyRules)(nil),                            // 26: buf.validate.AnyRules
 	(*DurationRules)(nil),                       // 27: buf.validate.DurationRules
-	(*TimestampRules)(nil),                      // 28: buf.validate.TimestampRules
-	(*Violations)(nil),                          // 29: buf.validate.Violations
-	(*Violation)(nil),                           // 30: buf.validate.Violation
-	(*FieldPath)(nil),                           // 31: buf.validate.FieldPath
-	(*FieldPathElement)(nil),                    // 32: buf.validate.FieldPathElement
-	(*durationpb.Duration)(nil),                 // 33: google.protobuf.Duration
-	(*timestamppb.Timestamp)(nil),               // 34: google.protobuf.Timestamp
-	(descriptorpb.FieldDescriptorProto_Type)(0), // 35: google.protobuf.FieldDescriptorProto.Type
-	(*descriptorpb.MessageOptions)(nil),         // 36: google.protobuf.MessageOptions
-	(*descriptorpb.OneofOptions)(nil),           // 37: google.protobuf.OneofOptions
-	(*descriptorpb.FieldOptions)(nil),           // 38: google.protobuf.FieldOptions
+	(*FieldMaskRules)(nil),                      // 28: buf.validate.FieldMaskRules
+	(*TimestampRules)(nil),                      // 29: buf.validate.TimestampRules
+	(*Violations)(nil),                          // 30: buf.validate.Violations
+	(*Violation)(nil),                           // 31: buf.validate.Violation
+	(*FieldPath)(nil),                           // 32: buf.validate.FieldPath
+	(*FieldPathElement)(nil),                    // 33: buf.validate.FieldPathElement
+	(*durationpb.Duration)(nil),                 // 34: google.protobuf.Duration
+	(*fieldmaskpb.FieldMask)(nil),               // 35: google.protobuf.FieldMask
+	(*timestamppb.Timestamp)(nil),               // 36: google.protobuf.Timestamp
+	(descriptorpb.FieldDescriptorProto_Type)(0), // 37: google.protobuf.FieldDescriptorProto.Type
+	(*descriptorpb.MessageOptions)(nil),         // 38: google.protobuf.MessageOptions
+	(*descriptorpb.OneofOptions)(nil),           // 39: google.protobuf.OneofOptions
+	(*descriptorpb.FieldOptions)(nil),           // 40: google.protobuf.FieldOptions
 }
 var file_buf_validate_validate_proto_depIdxs = []int32{
 	2,  // 0: buf.validate.MessageRules.cel:type_name -> buf.validate.Rule
@@ -16942,47 +17386,50 @@ var file_buf_validate_validate_proto_depIdxs = []int32{
 	25, // 21: buf.validate.FieldRules.map:type_name -> buf.validate.MapRules
 	26, // 22: buf.validate.FieldRules.any:type_name -> buf.validate.AnyRules
 	27, // 23: buf.validate.FieldRules.duration:type_name -> buf.validate.DurationRules
-	28, // 24: buf.validate.FieldRules.timestamp:type_name -> buf.validate.TimestampRules
-	2,  // 25: buf.validate.PredefinedRules.cel:type_name -> buf.validate.Rule
-	1,  // 26: buf.validate.StringRules.well_known_regex:type_name -> buf.validate.KnownRegex
-	6,  // 27: buf.validate.RepeatedRules.items:type_name -> buf.validate.FieldRules
-	6,  // 28: buf.validate.MapRules.keys:type_name -> buf.validate.FieldRules
-	6,  // 29: buf.validate.MapRules.values:type_name -> buf.validate.FieldRules
-	33, // 30: buf.validate.DurationRules.const:type_name -> google.protobuf.Duration
-	33, // 31: buf.validate.DurationRules.lt:type_name -> google.protobuf.Duration
-	33, // 32: buf.validate.DurationRules.lte:type_name -> google.protobuf.Duration
-	33, // 33: buf.validate.DurationRules.gt:type_name -> google.protobuf.Duration
-	33, // 34: buf.validate.DurationRules.gte:type_name -> google.protobuf.Duration
-	33, // 35: buf.validate.DurationRules.in:type_name -> google.protobuf.Duration
-	33, // 36: buf.validate.DurationRules.not_in:type_name -> google.protobuf.Duration
-	33, // 37: buf.validate.DurationRules.example:type_name -> google.protobuf.Duration
-	34, // 38: buf.validate.TimestampRules.const:type_name -> google.protobuf.Timestamp
-	34, // 39: buf.validate.TimestampRules.lt:type_name -> google.protobuf.Timestamp
-	34, // 40: buf.validate.TimestampRules.lte:type_name -> google.protobuf.Timestamp
-	34, // 41: buf.validate.TimestampRules.gt:type_name -> google.protobuf.Timestamp
-	34, // 42: buf.validate.TimestampRules.gte:type_name -> google.protobuf.Timestamp
-	33, // 43: buf.validate.TimestampRules.within:type_name -> google.protobuf.Duration
-	34, // 44: buf.validate.TimestampRules.example:type_name -> google.protobuf.Timestamp
-	30, // 45: buf.validate.Violations.violations:type_name -> buf.validate.Violation
-	31, // 46: buf.validate.Violation.field:type_name -> buf.validate.FieldPath
-	31, // 47: buf.validate.Violation.rule:type_name -> buf.validate.FieldPath
-	32, // 48: buf.validate.FieldPath.elements:type_name -> buf.validate.FieldPathElement
-	35, // 49: buf.validate.FieldPathElement.field_type:type_name -> google.protobuf.FieldDescriptorProto.Type
-	35, // 50: buf.validate.FieldPathElement.key_type:type_name -> google.protobuf.FieldDescriptorProto.Type
-	35, // 51: buf.validate.FieldPathElement.value_type:type_name -> google.protobuf.FieldDescriptorProto.Type
-	36, // 52: buf.validate.message:extendee -> google.protobuf.MessageOptions
-	37, // 53: buf.validate.oneof:extendee -> google.protobuf.OneofOptions
-	38, // 54: buf.validate.field:extendee -> google.protobuf.FieldOptions
-	38, // 55: buf.validate.predefined:extendee -> google.protobuf.FieldOptions
-	3,  // 56: buf.validate.message:type_name -> buf.validate.MessageRules
-	5,  // 57: buf.validate.oneof:type_name -> buf.validate.OneofRules
-	6,  // 58: buf.validate.field:type_name -> buf.validate.FieldRules
-	7,  // 59: buf.validate.predefined:type_name -> buf.validate.PredefinedRules
-	60, // [60:60] is the sub-list for method output_type
-	60, // [60:60] is the sub-list for method input_type
-	56, // [56:60] is the sub-list for extension type_name
-	52, // [52:56] is the sub-list for extension extendee
-	0,  // [0:52] is the sub-list for field type_name
+	28, // 24: buf.validate.FieldRules.field_mask:type_name -> buf.validate.FieldMaskRules
+	29, // 25: buf.validate.FieldRules.timestamp:type_name -> buf.validate.TimestampRules
+	2,  // 26: buf.validate.PredefinedRules.cel:type_name -> buf.validate.Rule
+	1,  // 27: buf.validate.StringRules.well_known_regex:type_name -> buf.validate.KnownRegex
+	6,  // 28: buf.validate.RepeatedRules.items:type_name -> buf.validate.FieldRules
+	6,  // 29: buf.validate.MapRules.keys:type_name -> buf.validate.FieldRules
+	6,  // 30: buf.validate.MapRules.values:type_name -> buf.validate.FieldRules
+	34, // 31: buf.validate.DurationRules.const:type_name -> google.protobuf.Duration
+	34, // 32: buf.validate.DurationRules.lt:type_name -> google.protobuf.Duration
+	34, // 33: buf.validate.DurationRules.lte:type_name -> google.protobuf.Duration
+	34, // 34: buf.validate.DurationRules.gt:type_name -> google.protobuf.Duration
+	34, // 35: buf.validate.DurationRules.gte:type_name -> google.protobuf.Duration
+	34, // 36: buf.validate.DurationRules.in:type_name -> google.protobuf.Duration
+	34, // 37: buf.validate.DurationRules.not_in:type_name -> google.protobuf.Duration
+	34, // 38: buf.validate.DurationRules.example:type_name -> google.protobuf.Duration
+	35, // 39: buf.validate.FieldMaskRules.const:type_name -> google.protobuf.FieldMask
+	35, // 40: buf.validate.FieldMaskRules.example:type_name -> google.protobuf.FieldMask
+	36, // 41: buf.validate.TimestampRules.const:type_name -> google.protobuf.Timestamp
+	36, // 42: buf.validate.TimestampRules.lt:type_name -> google.protobuf.Timestamp
+	36, // 43: buf.validate.TimestampRules.lte:type_name -> google.protobuf.Timestamp
+	36, // 44: buf.validate.TimestampRules.gt:type_name -> google.protobuf.Timestamp
+	36, // 45: buf.validate.TimestampRules.gte:type_name -> google.protobuf.Timestamp
+	34, // 46: buf.validate.TimestampRules.within:type_name -> google.protobuf.Duration
+	36, // 47: buf.validate.TimestampRules.example:type_name -> google.protobuf.Timestamp
+	31, // 48: buf.validate.Violations.violations:type_name -> buf.validate.Violation
+	32, // 49: buf.validate.Violation.field:type_name -> buf.validate.FieldPath
+	32, // 50: buf.validate.Violation.rule:type_name -> buf.validate.FieldPath
+	33, // 51: buf.validate.FieldPath.elements:type_name -> buf.validate.FieldPathElement
+	37, // 52: buf.validate.FieldPathElement.field_type:type_name -> google.protobuf.FieldDescriptorProto.Type
+	37, // 53: buf.validate.FieldPathElement.key_type:type_name -> google.protobuf.FieldDescriptorProto.Type
+	37, // 54: buf.validate.FieldPathElement.value_type:type_name -> google.protobuf.FieldDescriptorProto.Type
+	38, // 55: buf.validate.message:extendee -> google.protobuf.MessageOptions
+	39, // 56: buf.validate.oneof:extendee -> google.protobuf.OneofOptions
+	40, // 57: buf.validate.field:extendee -> google.protobuf.FieldOptions
+	40, // 58: buf.validate.predefined:extendee -> google.protobuf.FieldOptions
+	3,  // 59: buf.validate.message:type_name -> buf.validate.MessageRules
+	5,  // 60: buf.validate.oneof:type_name -> buf.validate.OneofRules
+	6,  // 61: buf.validate.field:type_name -> buf.validate.FieldRules
+	7,  // 62: buf.validate.predefined:type_name -> buf.validate.PredefinedRules
+	63, // [63:63] is the sub-list for method output_type
+	63, // [63:63] is the sub-list for method input_type
+	59, // [59:63] is the sub-list for extension type_name
+	55, // [55:59] is the sub-list for extension extendee
+	0,  // [0:55] is the sub-list for field type_name
 }
 
 func init() { file_buf_validate_validate_proto_init() }
@@ -17011,6 +17458,7 @@ func file_buf_validate_validate_proto_init() {
 		(*FieldRules_Map)(nil),
 		(*FieldRules_Any)(nil),
 		(*FieldRules_Duration)(nil),
+		(*FieldRules_FieldMask)(nil),
 		(*FieldRules_Timestamp)(nil),
 	}
 	file_buf_validate_validate_proto_msgTypes[6].OneofWrappers = []any{
@@ -17103,12 +17551,14 @@ func file_buf_validate_validate_proto_init() {
 		(*StringRules_Ipv4Prefix)(nil),
 		(*StringRules_Ipv6Prefix)(nil),
 		(*StringRules_HostAndPort)(nil),
+		(*StringRules_Ulid)(nil),
 		(*StringRules_WellKnownRegex)(nil),
 	}
 	file_buf_validate_validate_proto_msgTypes[20].OneofWrappers = []any{
 		(*BytesRules_Ip)(nil),
 		(*BytesRules_Ipv4)(nil),
 		(*BytesRules_Ipv6)(nil),
+		(*BytesRules_Uuid)(nil),
 	}
 	file_buf_validate_validate_proto_msgTypes[25].OneofWrappers = []any{
 		(*DurationRules_Lt)(nil),
@@ -17116,7 +17566,7 @@ func file_buf_validate_validate_proto_init() {
 		(*DurationRules_Gt)(nil),
 		(*DurationRules_Gte)(nil),
 	}
-	file_buf_validate_validate_proto_msgTypes[26].OneofWrappers = []any{
+	file_buf_validate_validate_proto_msgTypes[27].OneofWrappers = []any{
 		(*TimestampRules_Lt)(nil),
 		(*TimestampRules_Lte)(nil),
 		(*TimestampRules_LtNow)(nil),
@@ -17124,7 +17574,7 @@ func file_buf_validate_validate_proto_init() {
 		(*TimestampRules_Gte)(nil),
 		(*TimestampRules_GtNow)(nil),
 	}
-	file_buf_validate_validate_proto_msgTypes[30].OneofWrappers = []any{
+	file_buf_validate_validate_proto_msgTypes[31].OneofWrappers = []any{
 		(*FieldPathElement_Index)(nil),
 		(*FieldPathElement_BoolKey)(nil),
 		(*FieldPathElement_IntKey)(nil),
@@ -17137,7 +17587,7 @@ func file_buf_validate_validate_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_validate_proto_rawDesc), len(file_buf_validate_validate_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   31,
+			NumMessages:   32,
 			NumExtensions: 4,
 			NumServices:   0,
 		},

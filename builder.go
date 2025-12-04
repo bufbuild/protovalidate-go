@@ -150,14 +150,8 @@ func (bldr *builder) processMessageExpressions(
 	msgEval *message,
 	_ messageCache,
 ) {
-	rules := make([]*validate.Rule, 0, len(msgRules.GetCelExpression())+len(msgRules.GetCel()))
-	for _, expr := range msgRules.GetCelExpression() {
-		rules = append(rules, validate.Rule_builder{
-			Expression: proto.String(expr),
-		}.Build())
-	}
 	exprs := expressions{
-		Rules: append(rules, msgRules.GetCel()...),
+		Rules: append(expressionsToRules(msgRules.GetCelExpression()), msgRules.GetCel()...),
 	}
 	compiledExprs, err := compile(
 		exprs,
@@ -354,15 +348,9 @@ func (bldr *builder) processFieldExpressions(
 		}
 		return compiledExpressions, nil
 	}
-	rules := make([]*validate.Rule, 0, len(fieldRules.GetCelExpression()))
-	for _, expr := range fieldRules.GetCelExpression() {
-		rules = append(rules, validate.Rule_builder{
-			Expression: proto.String(expr),
-		}.Build())
-	}
 	compiledExpressions, err := compileWithPath(
 		expressions{
-			Rules: rules,
+			Rules: expressionsToRules(fieldRules.GetCelExpression()),
 		},
 		celExpressionField,
 		celExpressionDescriptor,
@@ -646,4 +634,15 @@ func isPartOfMessageOneof(msgRules *validate.MessageRules, field protoreflect.Fi
 	return slices.ContainsFunc(msgRules.GetOneof(), func(oneof *validate.MessageOneofRule) bool {
 		return slices.Contains(oneof.GetFields(), string(field.Name()))
 	})
+}
+
+func expressionsToRules(expressions []string) []*validate.Rule {
+	rules := make([]*validate.Rule, 0, len(expressions))
+	for _, expr := range expressions {
+		rules = append(rules, validate.Rule_builder{
+			Id:         proto.String(expr),
+			Expression: proto.String(expr),
+		}.Build())
+	}
+	return rules
 }

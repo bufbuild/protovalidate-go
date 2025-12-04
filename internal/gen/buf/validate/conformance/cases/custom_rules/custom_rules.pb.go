@@ -2494,7 +2494,7 @@ const file_buf_validate_conformance_cases_custom_rules_custom_rules_proto_rawDes
 	"\x0enow_equals_now\x12)now should equal now within an expression\x1a\n" +
 	"now == now\"8\n" +
 	"\x13FieldExpressionOnly\x12!\n" +
-	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\f\xe2\x01\tthis > 42R\x03val\"\xdf\x02\n" +
+	"\x03val\x18\x01 \x01(\x05B\x0f\xbaH\f\xea\x01\tthis > 42R\x03val\"\xdf\x02\n" +
 	"\x1dFieldExpressionMultipleScalar\x12\xbd\x02\n" +
 	"\x03val\x18\x01 \x01(\x05B\xaa\x02\xbaH\xa6\x02\xba\x01_\n" +
 	"\"field_expression.multiple.scalar.1\x12/test message field_expression.multiple.scalar.1\x1a\bthis > 0\xba\x01_\n" +

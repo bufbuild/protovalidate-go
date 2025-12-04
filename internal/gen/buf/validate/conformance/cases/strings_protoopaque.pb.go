@@ -3001,6 +3001,177 @@ func (b0 StringNotTUUID_builder) Build() *StringNotTUUID {
 	return m0
 }
 
+type StringULID struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val string                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *StringULID) Reset() {
+	*x = StringULID{}
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StringULID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StringULID) ProtoMessage() {}
+
+func (x *StringULID) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *StringULID) GetVal() string {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return ""
+}
+
+func (x *StringULID) SetVal(v string) {
+	x.xxx_hidden_Val = v
+}
+
+type StringULID_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 StringULID_builder) Build() *StringULID {
+	m0 := &StringULID{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type StringNotULID struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val string                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *StringNotULID) Reset() {
+	*x = StringNotULID{}
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StringNotULID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StringNotULID) ProtoMessage() {}
+
+func (x *StringNotULID) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *StringNotULID) GetVal() string {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return ""
+}
+
+func (x *StringNotULID) SetVal(v string) {
+	x.xxx_hidden_Val = v
+}
+
+type StringNotULID_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 StringNotULID_builder) Build() *StringNotULID {
+	m0 := &StringNotULID{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type StringULIDIgnore struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val string                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *StringULIDIgnore) Reset() {
+	*x = StringULIDIgnore{}
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StringULIDIgnore) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StringULIDIgnore) ProtoMessage() {}
+
+func (x *StringULIDIgnore) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *StringULIDIgnore) GetVal() string {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return ""
+}
+
+func (x *StringULIDIgnore) SetVal(v string) {
+	x.xxx_hidden_Val = v
+}
+
+type StringULIDIgnore_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 StringULIDIgnore_builder) Build() *StringULIDIgnore {
+	m0 := &StringULIDIgnore{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
 type StringHttpHeaderName struct {
 	state          protoimpl.MessageState `protogen:"opaque.v1"`
 	xxx_hidden_Val string                 `protobuf:"bytes,1,opt,name=val,proto3"`
@@ -3010,7 +3181,7 @@ type StringHttpHeaderName struct {
 
 func (x *StringHttpHeaderName) Reset() {
 	*x = StringHttpHeaderName{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[52]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3022,7 +3193,7 @@ func (x *StringHttpHeaderName) String() string {
 func (*StringHttpHeaderName) ProtoMessage() {}
 
 func (x *StringHttpHeaderName) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[52]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3067,7 +3238,7 @@ type StringHttpHeaderValue struct {
 
 func (x *StringHttpHeaderValue) Reset() {
 	*x = StringHttpHeaderValue{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[53]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3079,7 +3250,7 @@ func (x *StringHttpHeaderValue) String() string {
 func (*StringHttpHeaderValue) ProtoMessage() {}
 
 func (x *StringHttpHeaderValue) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[53]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3124,7 +3295,7 @@ type StringHttpHeaderNameLoose struct {
 
 func (x *StringHttpHeaderNameLoose) Reset() {
 	*x = StringHttpHeaderNameLoose{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[54]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3136,7 +3307,7 @@ func (x *StringHttpHeaderNameLoose) String() string {
 func (*StringHttpHeaderNameLoose) ProtoMessage() {}
 
 func (x *StringHttpHeaderNameLoose) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[54]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3181,7 +3352,7 @@ type StringHttpHeaderValueLoose struct {
 
 func (x *StringHttpHeaderValueLoose) Reset() {
 	*x = StringHttpHeaderValueLoose{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[55]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3193,7 +3364,7 @@ func (x *StringHttpHeaderValueLoose) String() string {
 func (*StringHttpHeaderValueLoose) ProtoMessage() {}
 
 func (x *StringHttpHeaderValueLoose) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[55]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3238,7 +3409,7 @@ type StringUUIDIgnore struct {
 
 func (x *StringUUIDIgnore) Reset() {
 	*x = StringUUIDIgnore{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[56]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3250,7 +3421,7 @@ func (x *StringUUIDIgnore) String() string {
 func (*StringUUIDIgnore) ProtoMessage() {}
 
 func (x *StringUUIDIgnore) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[56]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3295,7 +3466,7 @@ type StringInOneof struct {
 
 func (x *StringInOneof) Reset() {
 	*x = StringInOneof{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[57]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3307,7 +3478,7 @@ func (x *StringInOneof) String() string {
 func (*StringInOneof) ProtoMessage() {}
 
 func (x *StringInOneof) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[57]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3392,7 +3563,7 @@ func (b0 StringInOneof_builder) Build() *StringInOneof {
 type case_StringInOneof_Foo protoreflect.FieldNumber
 
 func (x case_StringInOneof_Foo) String() string {
-	md := file_buf_validate_conformance_cases_strings_proto_msgTypes[57].Descriptor()
+	md := file_buf_validate_conformance_cases_strings_proto_msgTypes[60].Descriptor()
 	if x == 0 {
 		return "not set"
 	}
@@ -3418,7 +3589,7 @@ type StringHostAndPort struct {
 
 func (x *StringHostAndPort) Reset() {
 	*x = StringHostAndPort{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[58]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[61]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3430,7 +3601,7 @@ func (x *StringHostAndPort) String() string {
 func (*StringHostAndPort) ProtoMessage() {}
 
 func (x *StringHostAndPort) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[58]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[61]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3475,7 +3646,7 @@ type StringHostAndOptionalPort struct {
 
 func (x *StringHostAndOptionalPort) Reset() {
 	*x = StringHostAndOptionalPort{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[59]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[62]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3487,7 +3658,7 @@ func (x *StringHostAndOptionalPort) String() string {
 func (*StringHostAndOptionalPort) ProtoMessage() {}
 
 func (x *StringHostAndOptionalPort) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[59]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[62]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3532,7 +3703,7 @@ type StringExample struct {
 
 func (x *StringExample) Reset() {
 	*x = StringExample{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[60]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3544,7 +3715,7 @@ func (x *StringExample) String() string {
 func (*StringExample) ProtoMessage() {}
 
 func (x *StringExample) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[60]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3699,7 +3870,14 @@ const file_buf_validate_conformance_cases_strings_proto_rawDesc = "" +
 	"\vStringTUUID\x12\x1a\n" +
 	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x88\x02\x01R\x03val\",\n" +
 	"\x0eStringNotTUUID\x12\x1a\n" +
-	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x88\x02\x00R\x03val\"2\n" +
+	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x88\x02\x00R\x03val\"(\n" +
+	"\n" +
+	"StringULID\x12\x1a\n" +
+	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x98\x02\x01R\x03val\"+\n" +
+	"\rStringNotULID\x12\x1a\n" +
+	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x98\x02\x00R\x03val\"1\n" +
+	"\x10StringULIDIgnore\x12\x1d\n" +
+	"\x03val\x18\x01 \x01(\tB\v\xbaH\b\xd8\x01\x01r\x03\x98\x02\x01R\x03val\"2\n" +
 	"\x14StringHttpHeaderName\x12\x1a\n" +
 	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xc0\x01\x01R\x03val\"3\n" +
 	"\x15StringHttpHeaderValue\x12\x1a\n" +
@@ -3722,7 +3900,7 @@ const file_buf_validate_conformance_cases_strings_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x01(\tB\v\xbaH\br\x06\x92\x02\x03fooR\x03valB\x96\x02\n" +
 	"\"com.buf.validate.conformance.casesB\fStringsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_strings_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
+var file_buf_validate_conformance_cases_strings_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
 var file_buf_validate_conformance_cases_strings_proto_goTypes = []any{
 	(*StringNone)(nil),                 // 0: buf.validate.conformance.cases.StringNone
 	(*StringConst)(nil),                // 1: buf.validate.conformance.cases.StringConst
@@ -3776,15 +3954,18 @@ var file_buf_validate_conformance_cases_strings_proto_goTypes = []any{
 	(*StringNotUUID)(nil),              // 49: buf.validate.conformance.cases.StringNotUUID
 	(*StringTUUID)(nil),                // 50: buf.validate.conformance.cases.StringTUUID
 	(*StringNotTUUID)(nil),             // 51: buf.validate.conformance.cases.StringNotTUUID
-	(*StringHttpHeaderName)(nil),       // 52: buf.validate.conformance.cases.StringHttpHeaderName
-	(*StringHttpHeaderValue)(nil),      // 53: buf.validate.conformance.cases.StringHttpHeaderValue
-	(*StringHttpHeaderNameLoose)(nil),  // 54: buf.validate.conformance.cases.StringHttpHeaderNameLoose
-	(*StringHttpHeaderValueLoose)(nil), // 55: buf.validate.conformance.cases.StringHttpHeaderValueLoose
-	(*StringUUIDIgnore)(nil),           // 56: buf.validate.conformance.cases.StringUUIDIgnore
-	(*StringInOneof)(nil),              // 57: buf.validate.conformance.cases.StringInOneof
-	(*StringHostAndPort)(nil),          // 58: buf.validate.conformance.cases.StringHostAndPort
-	(*StringHostAndOptionalPort)(nil),  // 59: buf.validate.conformance.cases.StringHostAndOptionalPort
-	(*StringExample)(nil),              // 60: buf.validate.conformance.cases.StringExample
+	(*StringULID)(nil),                 // 52: buf.validate.conformance.cases.StringULID
+	(*StringNotULID)(nil),              // 53: buf.validate.conformance.cases.StringNotULID
+	(*StringULIDIgnore)(nil),           // 54: buf.validate.conformance.cases.StringULIDIgnore
+	(*StringHttpHeaderName)(nil),       // 55: buf.validate.conformance.cases.StringHttpHeaderName
+	(*StringHttpHeaderValue)(nil),      // 56: buf.validate.conformance.cases.StringHttpHeaderValue
+	(*StringHttpHeaderNameLoose)(nil),  // 57: buf.validate.conformance.cases.StringHttpHeaderNameLoose
+	(*StringHttpHeaderValueLoose)(nil), // 58: buf.validate.conformance.cases.StringHttpHeaderValueLoose
+	(*StringUUIDIgnore)(nil),           // 59: buf.validate.conformance.cases.StringUUIDIgnore
+	(*StringInOneof)(nil),              // 60: buf.validate.conformance.cases.StringInOneof
+	(*StringHostAndPort)(nil),          // 61: buf.validate.conformance.cases.StringHostAndPort
+	(*StringHostAndOptionalPort)(nil),  // 62: buf.validate.conformance.cases.StringHostAndOptionalPort
+	(*StringExample)(nil),              // 63: buf.validate.conformance.cases.StringExample
 }
 var file_buf_validate_conformance_cases_strings_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -3799,7 +3980,7 @@ func file_buf_validate_conformance_cases_strings_proto_init() {
 	if File_buf_validate_conformance_cases_strings_proto != nil {
 		return
 	}
-	file_buf_validate_conformance_cases_strings_proto_msgTypes[57].OneofWrappers = []any{
+	file_buf_validate_conformance_cases_strings_proto_msgTypes[60].OneofWrappers = []any{
 		(*stringInOneof_Bar)(nil),
 	}
 	type x struct{}
@@ -3808,7 +3989,7 @@ func file_buf_validate_conformance_cases_strings_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_strings_proto_rawDesc), len(file_buf_validate_conformance_cases_strings_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   61,
+			NumMessages:   64,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
