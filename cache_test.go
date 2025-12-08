@@ -184,6 +184,10 @@ func TestCache_GetExpectedRuleDescriptor(t *testing.T) {
 			ex:   expectedWKTRules["google.protobuf.Duration"],
 		},
 		{
+			desc: getFieldDesc(t, &cases.FieldMaskNone{}, "val"),
+			ex:   expectedWKTRules["google.protobuf.FieldMask"],
+		},
+		{
 			desc: getFieldDesc(t, &cases.StringNone{}, "val"),
 			ex:   expectedStandardRules[protoreflect.StringKind],
 		},
