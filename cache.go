@@ -88,7 +88,7 @@ func (c *cache) Build(
 				return false
 			}
 		}
-		precomputedASTs, compileErr = precomputedASTs.WithRuleValue(rule, desc)
+		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(rules, rule, desc)
 		if compileErr != nil {
 			err = compileErr
 			return false

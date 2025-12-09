@@ -19,7 +19,6 @@ import (
 	"slices"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -90,6 +89,7 @@ func (set astSet) ReduceResiduals(rules protoreflect.Message, opts ...cel.Progra
 			residuals = append(residuals, compiledAST{
 				AST:        residual,
 				Env:        ast.Env,
+				Rules:      ast.Rules,
 				Source:     ast.Source,
 				Path:       ast.Path,
 				Value:      ast.Value,
@@ -116,23 +116,15 @@ func (set astSet) ToProgramSet(opts ...cel.ProgramOption) (out programSet, err e
 	return out, nil
 }
 
-// SetRuleValue sets the rule value for the programs in the ASTSet.
-func (set astSet) WithRuleValue(
+// SetRuleValue sets the rule and rules value for the programs in the ASTSet.
+func (set astSet) WithRuleValues(
+	rules protoreflect.Message,
 	ruleValue protoreflect.Value,
 	ruleDescriptor protoreflect.FieldDescriptor,
 ) (out astSet, err error) {
 	out = slices.Clone(set)
 	for i := range set {
-		out[i].Env, err = out[i].Env.Extend(
-			cel.Constant(
-				"rule",
-				pvcel.ProtoFieldToType(ruleDescriptor, true, false),
-				pvcel.ProtoFieldToValue(ruleDescriptor, ruleValue, false),
-			),
-		)
-		if err != nil {
-			return nil, err
-		}
+		out[i].Rules = rules
 		out[i].Value = ruleValue
 		out[i].Descriptor = ruleDescriptor
 	}
@@ -142,6 +134,7 @@ func (set astSet) WithRuleValue(
 type compiledAST struct {
 	AST        *cel.Ast
 	Env        *cel.Env
+	Rules      protoreflect.Message
 	Source     *validate.Rule
 	Path       []*validate.FieldPathElement
 	Value      protoreflect.Value
@@ -155,6 +148,7 @@ func (ast compiledAST) toProgram(env *cel.Env, opts ...cel.ProgramOption) (out c
 	}
 	return compiledProgram{
 		Program:    prog,
+		Rules:      ast.Rules,
 		Source:     ast.Source,
 		Path:       ast.Path,
 		Value:      ast.Value,
