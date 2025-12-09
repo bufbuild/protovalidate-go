@@ -1,5 +1,7 @@
 buf.build/gen/go/bufbuild/hyperpb-examples/protocolbuffers/go v1.36.7-20250725192734-0dd56aa9cbbc.1 h1:bFnppdLYActzr2F0iomSrkjUnGgVufb0DtZxjKgTLGc=
 buf.build/gen/go/bufbuild/hyperpb-examples/protocolbuffers/go v1.36.7-20250725192734-0dd56aa9cbbc.1/go.mod h1:x7jYNX5/7EPnsKHEq596krkOGzvR97/MsZw2fw3Mrq0=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20251209175733-2a1774d88802.1 h1:ZnX3qpF/pDiYrf+Q3p+/zCzZ5ELSpszy5hdVarDMSV4=
+buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.10-20251209175733-2a1774d88802.1/go.mod h1:fUl8CEN/6ZAMk6bP8ahBJPUJw7rbp+j4x+wCcYi2IG4=
 buf.build/go/hyperpb v0.1.3 h1:wiw2F7POvAe2VA2kkB0TAsFwj91lXbFrKM41D3ZgU1w=
 buf.build/go/hyperpb v0.1.3/go.mod h1:IHXAM5qnS0/Fsnd7/HGDghFNvUET646WoHmq1FDZXIE=
 cel.dev/expr v0.24.0 h1:56OvJKSH3hDGL0ml5uSxZmz3/3Pq4tJ+fb1unVLAFcY=
