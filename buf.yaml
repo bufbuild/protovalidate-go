@@ -2,7 +2,7 @@ version: v2
 modules:
   - path: proto
 deps:
-  - buf.build/bufbuild/protovalidate:v1.0.0
+  - buf.build/bufbuild/protovalidate:v1.1.0
   - buf.build/rodaine/protogofakeit
 lint:
   use:
