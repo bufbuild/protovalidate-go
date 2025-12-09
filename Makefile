@@ -18,7 +18,7 @@ GOLANGCI_LINT_VERSION ?= v2.4.0
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v1.0.0
+CONFORMANCE_VERSION ?= v1.1.0
 
 .PHONY: help
 help: ## Describe useful make targets

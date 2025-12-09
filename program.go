@@ -100,6 +100,7 @@ func (s programSet) bindThis(val any) *variable {
 // source Expression.
 type compiledProgram struct {
 	Program    cel.Program
+	Rules      protoreflect.Message
 	Source     *validate.Rule
 	Path       []*validate.FieldPathElement
 	Value      protoreflect.Value
@@ -110,7 +111,11 @@ type compiledProgram struct {
 func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Violation, error) {
 	now := globalNowPool.Get(cfg.nowFn)
 	defer globalNowPool.Put(now)
-	bindings.Next = now
+	bindings.Next = &variable{
+		Next: now,
+		Name: "rules",
+		Val:  expr.Rules,
+	}
 
 	value, _, err := expr.Program.Eval(bindings)
 	if err != nil {

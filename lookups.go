@@ -60,6 +60,7 @@ var expectedStandardRules = map[protoreflect.Kind]protoreflect.FieldDescriptor{
 var expectedWKTRules = map[protoreflect.FullName]protoreflect.FieldDescriptor{
 	"google.protobuf.Any":       fieldRulesDesc.Fields().ByName("any"),
 	"google.protobuf.Duration":  fieldRulesDesc.Fields().ByName("duration"),
+	"google.protobuf.FieldMask": fieldRulesDesc.Fields().ByName("field_mask"),
 	"google.protobuf.Timestamp": fieldRulesDesc.Fields().ByName("timestamp"),
 }
 
