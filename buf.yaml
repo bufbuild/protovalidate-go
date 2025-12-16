@@ -1,8 +1,9 @@
 version: v2
 modules:
   - path: proto
-deps:
-  - buf.build/bufbuild/protovalidate:v1.1.0
+  - path: upstream/proto
+    name: buf.build/bufbuild/protovalidate
+deps:  
   - buf.build/rodaine/protogofakeit
 lint:
   use:
@@ -12,6 +13,8 @@ lint:
       - proto/tests/example/v1/validations.proto
       - proto/tests/example/v1/filter.proto
       - proto/tests/example/v1/compile.proto
+  ignore:
+    - upstream/proto
 breaking:
   use:
     - FILE
