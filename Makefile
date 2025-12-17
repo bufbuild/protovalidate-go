@@ -84,7 +84,6 @@ generate-proto: $(BIN)/buf upstream
 	rm -rf internal/gen/*/
 	$(BIN)/buf generate $(PROTOVALIDATE_TESTING_PROTO_PATH)
 	$(BIN)/buf generate proto
-	rm -rf internal/gen/buf/validate/*.go
 
 .PHONY: upstream
 upstream: $(BIN)/buf
