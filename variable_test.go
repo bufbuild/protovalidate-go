@@ -31,7 +31,7 @@ func TestPredefinedRuleVariable(t *testing.T) {
 	t.Parallel()
 	var (
 		this  = 123
-		rules = &validate.Int32Rules{In: []int32{1}}
+		rules = validate.Int32Rules_builder{In: []int32{1}}.Build()
 		rule  = rules.GetIn()
 	)
 	v := variables{
