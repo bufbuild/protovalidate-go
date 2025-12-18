@@ -23,12 +23,6 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-//nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
-var globalVarPool = &variablePool{New: func() any { return &variable{} }}
-
-//nolint:gochecknoglobals // amortized, eliminates allocations for all CEL programs
-var globalNowPool = &nowPool{New: func() any { return &now{} }}
-
 // programSet is a list of compiledProgram expressions that are evaluated
 // together with the same input value. All expressions in a programSet may refer
 // to a `this` variable.
@@ -39,12 +33,12 @@ type programSet []compiledProgram
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
 func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
-	binding := s.bindThis(val.Interface())
-	defer globalVarPool.Put(binding)
-
+	activation := getVariables()
+	defer putVariables(activation)
+	activation.This = newOptional(thisToCel(val.Interface()))
 	var violations []*Violation
 	for _, expr := range s {
-		violation, err := expr.eval(binding, cfg)
+		violation, err := expr.eval(activation, cfg)
 		if err != nil {
 			return err
 		}
@@ -63,13 +57,10 @@ func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 	return nil
 }
 
-func (s programSet) bindThis(val any) *variable {
-	binding := globalVarPool.Get()
-	binding.Name = "this"
-
+func thisToCel(val any) any {
 	switch value := val.(type) {
 	case protoreflect.Message:
-		binding.Val = value.Interface()
+		return value.Interface()
 	case protoreflect.Map:
 		// TODO: expensive to create this copy, but getting this into a ref.Val with
 		//  traits.Mapper is not terribly feasible from this type.
@@ -88,12 +79,10 @@ func (s programSet) bindThis(val any) *variable {
 			}
 			return true
 		})
-		binding.Val = bindingVal
+		return bindingVal
 	default:
-		binding.Val = value
+		return value
 	}
-
-	return binding
 }
 
 // compiledProgram is a parsed and type-checked cel.Program along with the
@@ -108,16 +97,15 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(bindings *variable, cfg *validationConfig) (*Violation, error) {
-	now := globalNowPool.Get(cfg.nowFn)
-	defer globalNowPool.Put(now)
-	bindings.Next = &variable{
-		Next: now,
-		Name: "rules",
-		Val:  expr.Rules,
+func (expr compiledProgram) eval(activation *variables, cfg *validationConfig) (*Violation, error) {
+	activation.NowFn = cfg.nowFn
+	if expr.Rules != nil {
+		activation.Rules = expr.Rules.Interface()
 	}
-
-	value, _, err := expr.Program.Eval(bindings)
+	if expr.Value.IsValid() {
+		activation.Rule = expr.Value.Interface()
+	}
+	value, _, err := expr.Program.Eval(activation)
 	if err != nil {
 		return nil, &RuntimeError{cause: fmt.Errorf(
 			"error evaluating %s: %w", expr.Source.GetId(), err)}

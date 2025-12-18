@@ -93,7 +93,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	assert.Len(t, asts, 1)
 	set, err := asts.ReduceResiduals(
 		(&validate.StringRules{}).ProtoReflect(),
-		cel.Globals(&variable{Name: "foo", Val: true}),
+		cel.Globals(map[string]any{"foo": true}),
 	)
 	require.NoError(t, err)
 	assert.Empty(t, set)

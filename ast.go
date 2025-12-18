@@ -50,20 +50,12 @@ func (set astSet) ReduceResiduals(rules protoreflect.Message, opts ...cel.Progra
 		),
 	}, opts...)
 
-	baseActivation := &variable{
-		Name: "rules",
-		Val:  rules.Interface(),
-	}
+	activation := getVariables()
+	defer putVariables(activation)
+	activation.Rules = rules.Interface()
 
 	for _, ast := range set {
-		activation := baseActivation
-		if ast.Value.IsValid() {
-			activation = &variable{
-				Name: "rule",
-				Val:  ast.Value.Interface(),
-				Next: activation,
-			}
-		}
+		activation.Rule = ast.Value.Interface()
 		program, err := ast.toProgram(ast.Env, options...)
 		if err != nil {
 			residuals = append(residuals, ast)

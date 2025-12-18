@@ -17,6 +17,7 @@ syntax = "proto2";
 package tests.example.v1;
 
 import "buf/validate/validate.proto";
+import "google/protobuf/field_mask.proto";
 
 // https://github.com/bufbuild/protovalidate-go/issues/148
 message Issue148 {
@@ -44,5 +45,19 @@ extend buf.validate.BoolRules {
   optional bool this_equals_rule = 1800 [(buf.validate.predefined).cel = {
     id: "bool.this_equals_rule"
     expression: "this == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])"
+  }];
+}
+
+// https://github.com/bufbuild/protovalidate-go/issues/296
+message Issue296 {
+  optional google.protobuf.FieldMask fm = 1 [(buf.validate.field).field_mask.(fm_rules_extension) = {
+    paths: ["a"]
+  }];
+}
+
+extend buf.validate.FieldMaskRules {
+  optional google.protobuf.FieldMask fm_rules_extension = 1801 [(buf.validate.predefined).cel = {
+    id: "field_mask.fm_rules_extension"
+    expression: "this == rule"
   }];
 }

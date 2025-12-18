@@ -7,6 +7,7 @@ require (
 	buf.build/go/hyperpb v0.1.3
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/google/cel-go v0.26.1
+	github.com/google/go-cmp v0.7.0
 	github.com/rodaine/protogofakeit v0.1.1
 	github.com/stretchr/testify v1.11.1
 	google.golang.org/protobuf v1.36.11

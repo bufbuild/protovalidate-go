@@ -18,74 +18,66 @@ import (
 	"sync"
 
 	"github.com/google/cel-go/interpreter"
+	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // variable implements interpreter.Activation, providing a lightweight named
 // variable to cel.Program executions.
-type variable struct {
-	// Next is the parent activation
-	Next interpreter.Activation
-	// Name is the variable's name
-	Name string
-	// Val is the value for this variable
-	Val any
+type variables struct {
+	This  optional[any]
+	Rules protoreflect.ProtoMessage
+	Rule  any
+	NowFn func() *timestamppb.Timestamp
+	ts    *timestamppb.Timestamp
 }
 
-func (v *variable) ResolveName(name string) (any, bool) {
-	switch {
-	case name == v.Name:
-		return v.Val, true
-	case v.Next != nil:
-		return v.Next.ResolveName(name)
-	default:
-		return nil, false
+// ResolveName implements interpreter.Activation.
+func (p *variables) ResolveName(name string) (any, bool) {
+	switch name {
+	case "this":
+		return p.This.Val, p.This.Set
+	case "rules":
+		return p.Rules, p.Rules != nil
+	case "rule":
+		return p.Rule, p.Rule != nil
+	case "now":
+		if p.NowFn != nil {
+			if p.ts == nil {
+				p.ts = p.NowFn()
+			}
+			return p.ts, true
+		}
 	}
+	return nil, false
 }
 
-func (v *variable) Parent() interpreter.Activation { return nil }
+// Parent implements interpreter.Activation.
+func (p *variables) Parent() interpreter.Activation { return nil }
 
-type variablePool sync.Pool
-
-func (p *variablePool) Put(v *variable) {
-	(*sync.Pool)(p).Put(v)
+//nolint:gochecknoglobals
+var variablesPool = &sync.Pool{
+	New: func() any { return &variables{} },
 }
 
-func (p *variablePool) Get() *variable {
-	v := (*sync.Pool)(p).Get().(*variable) //nolint:errcheck,forcetypeassert
-	v.Next = nil
-	return v
+func getVariables() *variables {
+	return variablesPool.Get().(*variables) //nolint:errcheck,forcetypeassert
 }
 
-// now implements interpreter.Activation, providing a lazily produced timestamp
-// for accessing the variable `now` that's constant within an evaluation.
-type now struct {
-	// TS is the already resolved timestamp. If unset, the field is populated with
-	// the output of nowFn.
-	TS    *timestamppb.Timestamp
-	nowFn func() *timestamppb.Timestamp
+func putVariables(vars *variables) {
+	vars.ts = nil
+	vars.NowFn = nil
+	vars.This = optional[any]{}
+	vars.Rules = nil
+	vars.Rule = nil
+	variablesPool.Put(vars)
 }
 
-func (n *now) ResolveName(name string) (any, bool) {
-	if name != "now" {
-		return nil, false
-	} else if n.TS == nil {
-		n.TS = n.nowFn()
-	}
-	return n.TS, true
+type optional[T any] struct {
+	Val T
+	Set bool
 }
 
-func (n *now) Parent() interpreter.Activation { return nil }
-
-type nowPool sync.Pool
-
-func (p *nowPool) Put(v *now) {
-	(*sync.Pool)(p).Put(v)
-}
-
-func (p *nowPool) Get(nowFn func() *timestamppb.Timestamp) *now {
-	n := (*sync.Pool)(p).Get().(*now) //nolint:errcheck,forcetypeassert
-	n.nowFn = nowFn
-	n.TS = nil
-	return n
+func newOptional[T any](v T) optional[T] {
+	return optional[T]{Val: v, Set: true}
 }
