@@ -17,17 +17,15 @@ ARGS ?= --strict_message --strict_error
 GOLANGCI_LINT_VERSION ?= v2.4.0
 # Set to use a different version of protovalidate
 PROTOVALIDATE_VERSION ?= 895eefca6d1346f742fc18b9983d40478820906d
-PROTOVALIDATE_RELEASE_VERSION := TRUE
 
-PROTOVALIDATE_PROTO_PATH := buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_VERSION)
-PROTOVALIDATE_TESTING_PROTO_PATH := buf.build/bufbuild/protovalidate-testing:$(PROTOVALIDATE_VERSION)
-ifneq ($(shell echo ${PROTOVALIDATE_VERSION} | grep -E "^v\d+\.\d+.\d+(-.+)?$$"), $(PROTOVALIDATE_VERSION))
-  PROTOVALIDATE_PROTO_PATH = https://github.com/bufbuild/protovalidate.git\#subdir=proto/protovalidate,ref=$(PROTOVALIDATE_VERSION)
-  PROTOVALIDATE_TESTING_PROTO_PATH = https://github.com/bufbuild/protovalidate.git\#subdir=proto/protovalidate-testing,ref=$(PROTOVALIDATE_VERSION)
-  PROTOVALIDATE_RELEASE_VERSION = FALSE
-else
+PROTOVALIDATE_PROTO_PATH = https://github.com/bufbuild/protovalidate.git\#subdir=proto/protovalidate,ref=$(PROTOVALIDATE_VERSION)
+PROTOVALIDATE_TESTING_PROTO_PATH = https://github.com/bufbuild/protovalidate.git\#subdir=proto/protovalidate-testing,ref=$(PROTOVALIDATE_VERSION)
+ifeq ($(shell echo ${PROTOVALIDATE_VERSION} | grep -E "^v\d+\.\d+.\d+(-.+)?$$"), $(PROTOVALIDATE_VERSION))
+  PROTOVALIDATE_RELEASE_VERSION := TRUE
+  PROTOVALIDATE_PROTO_PATH = buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_VERSION)
+  PROTOVALIDATE_TESTING_PROTO_PATH = buf.build/bufbuild/protovalidate-testing:$(PROTOVALIDATE_VERSION)
   PROTOBUF_GO_VERSION := $(shell go list -json -m google.golang.org/protobuf  | jq -r '.Version')
-  PROTOVALIDATE_GEN_SDK_VERSION := $(shell buf registry sdk version --module=buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_VERSION) --plugin=buf.build/protocolbuffers/go:$(PROTOBUF_GO_VERSION))
+  PROTOVALIDATE_GEN_SDK_VERSION := $(shell buf registry sdk version --module=buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_VERSION) --plugin=buf.build/protocolbuffers/go:$(PROTOBUF_GO_VERSION))  
 endif
 
 .PHONY: help
