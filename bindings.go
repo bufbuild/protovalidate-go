@@ -56,17 +56,17 @@ func (p *bindings) ResolveName(name string) (any, bool) {
 func (p *bindings) Parent() interpreter.Activation { return nil }
 
 //nolint:gochecknoglobals
-var variablesPool = &sync.Pool{
+var bindingsPool = &sync.Pool{
 	New: func() any { return &bindings{} },
 }
 
 func getBindings() *bindings {
-	return variablesPool.Get().(*bindings) //nolint:errcheck,forcetypeassert
+	return bindingsPool.Get().(*bindings) //nolint:errcheck,forcetypeassert
 }
 
 func putBindings(binds *bindings) {
 	*binds = bindings{}
-	variablesPool.Put(binds)
+	bindingsPool.Put(binds)
 }
 
 type optional[T any] struct {
