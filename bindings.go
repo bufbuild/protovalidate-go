@@ -22,9 +22,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// variable implements interpreter.Activation, providing a lightweight named
-// variable to cel.Program executions.
-type variables struct {
+// bindings implements interpreter.Activation, providing a lightweight named
+// bindings to cel.Program executions.
+type bindings struct {
 	This  optional[any]
 	Rules protoreflect.ProtoMessage
 	Rule  any
@@ -33,7 +33,7 @@ type variables struct {
 }
 
 // ResolveName implements interpreter.Activation.
-func (p *variables) ResolveName(name string) (any, bool) {
+func (p *bindings) ResolveName(name string) (any, bool) {
 	switch name {
 	case "this":
 		return p.This.Val, p.This.Set
@@ -53,24 +53,20 @@ func (p *variables) ResolveName(name string) (any, bool) {
 }
 
 // Parent implements interpreter.Activation.
-func (p *variables) Parent() interpreter.Activation { return nil }
+func (p *bindings) Parent() interpreter.Activation { return nil }
 
 //nolint:gochecknoglobals
 var variablesPool = &sync.Pool{
-	New: func() any { return &variables{} },
+	New: func() any { return &bindings{} },
 }
 
-func getVariables() *variables {
-	return variablesPool.Get().(*variables) //nolint:errcheck,forcetypeassert
+func getBindings() *bindings {
+	return variablesPool.Get().(*bindings) //nolint:errcheck,forcetypeassert
 }
 
-func putVariables(vars *variables) {
-	vars.ts = nil
-	vars.NowFn = nil
-	vars.This = optional[any]{}
-	vars.Rules = nil
-	vars.Rule = nil
-	variablesPool.Put(vars)
+func putBindings(binds *bindings) {
+	*binds = bindings{}
+	variablesPool.Put(binds)
 }
 
 type optional[T any] struct {

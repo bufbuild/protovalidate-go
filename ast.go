@@ -50,8 +50,8 @@ func (set astSet) ReduceResiduals(rules protoreflect.Message, opts ...cel.Progra
 		),
 	}, opts...)
 
-	activation := getVariables()
-	defer putVariables(activation)
+	activation := getBindings()
+	defer putBindings(activation)
 	activation.Rules = rules.Interface()
 
 	for _, ast := range set {

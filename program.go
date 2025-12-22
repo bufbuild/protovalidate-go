@@ -33,8 +33,8 @@ type programSet []compiledProgram
 // if there is a type or range error. If failFast is true, execution stops at
 // the first failed expression.
 func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
-	activation := getVariables()
-	defer putVariables(activation)
+	activation := getBindings()
+	defer putBindings(activation)
 	activation.This = newOptional(thisToCel(val.Interface()))
 	var violations []*Violation
 	for _, expr := range s {
@@ -97,7 +97,7 @@ type compiledProgram struct {
 }
 
 //nolint:nilnil // non-existence of violations is intentional
-func (expr compiledProgram) eval(activation *variables, cfg *validationConfig) (*Violation, error) {
+func (expr compiledProgram) eval(activation *bindings, cfg *validationConfig) (*Violation, error) {
 	activation.NowFn = cfg.nowFn
 	if expr.Rules != nil {
 		activation.Rules = expr.Rules.Interface()
