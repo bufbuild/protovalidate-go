@@ -81,7 +81,7 @@ func TestCompiled(t *testing.T) {
 				Program: test.prog,
 				Source:  test.src,
 			}
-			violation, err := expr.eval(&variable{}, &validationConfig{nowFn: timestamppb.Now})
+			violation, err := expr.eval(&bindings{}, &validationConfig{nowFn: timestamppb.Now})
 			if test.exErr {
 				require.Error(t, err)
 			} else {
@@ -253,8 +253,6 @@ func TestSet_BindThis(t *testing.T) {
 		},
 	}
 
-	set := programSet{}
-
 	for _, tc := range tests {
 		test := tc
 		t.Run(test.name, func(t *testing.T) {
@@ -266,7 +264,7 @@ func TestSet_BindThis(t *testing.T) {
 			require.NoError(t, issues.Err())
 			prog, err := env.Program(ast)
 			require.NoError(t, err)
-			res, _, err := prog.Eval(set.bindThis(test.val))
+			res, _, err := prog.Eval(&bindings{This: newOptional(thisToCel(test.val))})
 			require.NoError(t, err)
 			assert.Equal(t, test.exType.String(), res.Type().TypeName())
 		})

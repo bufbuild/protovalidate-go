@@ -555,3 +555,16 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
+
+func TestValidator_Validate_Issue296(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	msg := pb.Issue296_builder{
+		Fm: &fieldmaskpb.FieldMask{
+			Paths: []string{"a"},
+		},
+	}.Build()
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
