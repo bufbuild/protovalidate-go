@@ -21,7 +21,7 @@ import (
 	"os"
 	"text/template"
 
-	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/example/v1"
 	"google.golang.org/protobuf/reflect/protoregistry"
 )
 
@@ -92,7 +92,7 @@ func ExampleWithMessages() {
 }
 
 func ExampleWithMessageDescriptors() {
-	pbType, err := protoregistry.GlobalTypes.FindMessageByName("tests.example.v1.Person")
+	pbType, err := protoregistry.GlobalTypes.FindMessageByName("example.v1.Person")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -143,7 +143,7 @@ func ExampleWithDisableLazy() {
 
 	// output:
 	// person.Home: <nil>
-	// person: compilation error: no evaluator available for tests.example.v1.Person
+	// person: compilation error: no evaluator available for example.v1.Person
 }
 
 func ExampleValidationError() {

@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package tests.example.v1;
+package example.v1;
 
 import "buf/validate/validate.proto";
 

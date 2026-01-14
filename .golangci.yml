@@ -93,6 +93,26 @@ linters:
           - revive
         text: "empty-block"
         path: cel/library.go
+      # Loosen requirements on tools
+      - path: tools/
+        linters:
+          - gosec
+          - forbidigo
+      # gci is confused by "slices" and suggests to move it to the end of the import list
+      - path: tools/protovalidate-conformance/internal/results/result.go
+        linters:
+          - gci
+      # Building the conformance test suites
+      - path: tools/protovalidate-conformance/internal/cases/
+        linters:
+          - funlen
+          - maintidx
+          - mnd
+          - dupl
+          - gosmopolitan
+      - path: tools/protovalidate-migrate/internal/migrator/migrator_test.go
+        linters:
+          - noctx      
       ### BEGIN Temporary exclusions from golangci-lint upgrade.
       # Will remove in a future PR.
       - linters:

@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"testing"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"buf.build/go/protovalidate/gen/buf/validate"
 	"github.com/google/cel-go/interpreter"
 	"github.com/google/go-cmp/cmp"
 	"github.com/stretchr/testify/assert"

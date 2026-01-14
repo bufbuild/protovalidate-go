@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"strings"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"buf.build/go/protovalidate/gen/buf/validate"
 )
 
 // A ValidationError is returned if one or more rule violations were

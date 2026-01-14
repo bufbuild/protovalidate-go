@@ -21,8 +21,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/gen/buf/validate"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"

@@ -17,8 +17,8 @@ package protovalidate
 import (
 	"testing"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/gen/buf/validate"
 	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
 	"github.com/google/cel-go/cel"
 	"github.com/stretchr/testify/assert"

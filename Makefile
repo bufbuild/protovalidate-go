@@ -15,10 +15,6 @@ LICENSE_IGNORE := -e internal/testdata/
 GO ?= go
 ARGS ?= --strict_message --strict_error
 GOLANGCI_LINT_VERSION ?= v2.4.0
-# Set to use a different version of protovalidate-conformance.
-# Should be kept in sync with the version referenced in buf.yaml and
-# 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v1.1.0
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -71,9 +67,8 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
-	rm -rf internal/gen/*/
-	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
-	$(BIN)/buf generate
+	$(BIN)/buf generate 
+	$(BIN)/buf generate --template buf.gen.internal.yaml
 
 .PHONY: generate-license
 generate-license: $(BIN)/license-header
@@ -132,7 +127,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+    	./tools/protovalidate-conformance
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)

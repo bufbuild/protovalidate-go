@@ -1,0 +1,203 @@
+// Copyright 2023-2025 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package buf.validate.conformance.cases;
+
+import "buf/validate/conformance/cases/other_package/embed.proto";
+import "buf/validate/validate.proto";
+
+message TestMsg {
+  string const = 1 [(buf.validate.field).string.const = "foo"];
+  TestMsg nested = 2;
+}
+
+message MessageNone {
+  NoneMsg val = 1;
+  message NoneMsg {}
+}
+
+message Message {
+  TestMsg val = 1;
+}
+message MessageCrossPackage {
+  other_package.Embed val = 1;
+}
+message MessageSkip {
+  TestMsg val = 1 [(buf.validate.field).ignore = IGNORE_ALWAYS];
+}
+message MessageRequired {
+  TestMsg val = 1 [(buf.validate.field).required = true];
+}
+message MessageRequiredButOptional {
+  optional TestMsg val = 1 [(buf.validate.field).required = true];
+}
+
+message MessageRequiredOneof {
+  oneof one {
+    option (buf.validate.oneof).required = true;
+    TestMsg val = 1 [(buf.validate.field).required = true];
+  }
+}
+
+message MessageWith3dInside {}
+
+message MessageOneofSingleField {
+  option (buf.validate.message).oneof = {
+    fields: ["str_field"]
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofSingleFieldRequired {
+  option (buf.validate.message).oneof = {
+    fields: ["str_field"]
+    required: true
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofMultipleFields {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field"
+    ]
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofMultipleFieldsRequired {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field"
+    ]
+    required: true
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofMultipleSharedFields {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field"
+    ]
+    required: true
+  };
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "int_field"
+    ]
+    required: true
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+  int32 int_field = 3;
+}
+
+message MessageOneofUnknownFieldName {
+  option (buf.validate.message).oneof = {
+    fields: ["xxx"]
+  };
+  string str_field = 1;
+}
+
+message MessageOneofDuplicateField {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field",
+      "str_field"
+    ]
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofZeroFields {
+  option (buf.validate.message).oneof = {
+    fields: []
+  };
+  string str_field = 1;
+  bool bool_field = 2;
+}
+
+message MessageOneofUnsatisfiable {
+  bool a = 1;
+  bool b = 2;
+  bool c = 3;
+  option (buf.validate.message).oneof = {
+    fields: [
+      "a",
+      "b"
+    ]
+    required: true
+  };
+  option (buf.validate.message).oneof = {
+    fields: [
+      "b",
+      "c"
+    ]
+    required: true
+  };
+  option (buf.validate.message).oneof = {
+    fields: [
+      "a",
+      "c"
+    ]
+    required: true
+  };
+}
+
+message MessageOneofIgnoreUnpopulated {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field"
+    ]
+  };
+  string str_field = 1;
+  bool bool_field = 2 [(buf.validate.field).bool.const = true];
+}
+
+message MessageOneofIgnoreUnpopulatedRequired {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "str_field",
+      "bool_field"
+    ]
+    required: true
+  };
+  string str_field = 1;
+  bool bool_field = 2 [(buf.validate.field).bool.const = true];
+}
+
+message MessageOneofIgnoreOverride {
+  option (buf.validate.message).oneof = {
+    fields: [
+      "msg_field",
+      "bool_field"
+    ]
+  };
+  TestMsg msg_field = 1 [(buf.validate.field).ignore = IGNORE_ALWAYS];
+  bool bool_field = 2;
+}

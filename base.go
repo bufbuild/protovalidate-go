@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"slices"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"buf.build/go/protovalidate/gen/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 

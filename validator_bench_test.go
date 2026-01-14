@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"testing"
 
-	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/example/v1"
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/rodaine/protogofakeit"
 	"github.com/stretchr/testify/require"

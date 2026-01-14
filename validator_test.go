@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
+	pb "buf.build/go/protovalidate/internal/gen/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -323,12 +323,12 @@ func TestValidator_Validate_Filter(t *testing.T) {
 			},
 		)))
 		require.Equal(t, []string{
-			"tests.example.v1.NestedRules",
-			"tests.example.v1.NestedRules.required_oneof",
-			"tests.example.v1.NestedRules.field",
-			"tests.example.v1.NestedRules.field2",
-			"tests.example.v1.NestedRules.repeated_field",
-			"tests.example.v1.NestedRules.map_field",
+			"example.v1.NestedRules",
+			"example.v1.NestedRules.required_oneof",
+			"example.v1.NestedRules.field",
+			"example.v1.NestedRules.field2",
+			"example.v1.NestedRules.repeated_field",
+			"example.v1.NestedRules.map_field",
 		}, descs)
 		require.NoError(t, err)
 		descs = []string{}
@@ -339,21 +339,21 @@ func TestValidator_Validate_Filter(t *testing.T) {
 			},
 		)))
 		require.Equal(t, []string{
-			"tests.example.v1.NestedRules",
-			"tests.example.v1.NestedRules.required_oneof",
-			"tests.example.v1.NestedRules.field",
-			"tests.example.v1.AllRuleTypes",
-			"tests.example.v1.AllRuleTypes.required_oneof",
-			"tests.example.v1.AllRuleTypes.field",
-			"tests.example.v1.NestedRules.field2",
-			"tests.example.v1.NestedRules.repeated_field",
-			"tests.example.v1.AllRuleTypes",
-			"tests.example.v1.AllRuleTypes.required_oneof",
-			"tests.example.v1.AllRuleTypes.field",
-			"tests.example.v1.NestedRules.map_field",
-			"tests.example.v1.AllRuleTypes",
-			"tests.example.v1.AllRuleTypes.required_oneof",
-			"tests.example.v1.AllRuleTypes.field",
+			"example.v1.NestedRules",
+			"example.v1.NestedRules.required_oneof",
+			"example.v1.NestedRules.field",
+			"example.v1.AllRuleTypes",
+			"example.v1.AllRuleTypes.required_oneof",
+			"example.v1.AllRuleTypes.field",
+			"example.v1.NestedRules.field2",
+			"example.v1.NestedRules.repeated_field",
+			"example.v1.AllRuleTypes",
+			"example.v1.AllRuleTypes.required_oneof",
+			"example.v1.AllRuleTypes.field",
+			"example.v1.NestedRules.map_field",
+			"example.v1.AllRuleTypes",
+			"example.v1.AllRuleTypes.required_oneof",
+			"example.v1.AllRuleTypes.field",
 		}, descs)
 		require.Error(t, err)
 	})
@@ -446,7 +446,7 @@ func TestValidator_WithDisableLazy(t *testing.T) {
 		err = val.Validate(msg)
 		compErr := &CompilationError{}
 		require.ErrorAs(t, err, &compErr)
-		require.ErrorContains(t, err, "no evaluator available for tests.example.v1.Simple")
+		require.ErrorContains(t, err, "no evaluator available for example.v1.Simple")
 	})
 }
 

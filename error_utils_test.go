@@ -18,8 +18,8 @@ import (
 	"errors"
 	"testing"
 
-	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
+	"buf.build/go/protovalidate/gen/buf/validate"
+	pb "buf.build/go/protovalidate/internal/gen/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
