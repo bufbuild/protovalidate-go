@@ -38,6 +38,50 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type BenchEnum int32
+
+const (
+	BenchEnum_BENCH_ENUM_UNSPECIFIED BenchEnum = 0
+	BenchEnum_BENCH_ENUM_ONE         BenchEnum = 1
+	BenchEnum_BENCH_ENUM_TWO         BenchEnum = 2
+)
+
+// Enum value maps for BenchEnum.
+var (
+	BenchEnum_name = map[int32]string{
+		0: "BENCH_ENUM_UNSPECIFIED",
+		1: "BENCH_ENUM_ONE",
+		2: "BENCH_ENUM_TWO",
+	}
+	BenchEnum_value = map[string]int32{
+		"BENCH_ENUM_UNSPECIFIED": 0,
+		"BENCH_ENUM_ONE":         1,
+		"BENCH_ENUM_TWO":         2,
+	}
+)
+
+func (x BenchEnum) Enum() *BenchEnum {
+	p := new(BenchEnum)
+	*p = x
+	return p
+}
+
+func (x BenchEnum) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (BenchEnum) Descriptor() protoreflect.EnumDescriptor {
+	return file_tests_example_v1_bench_proto_enumTypes[0].Descriptor()
+}
+
+func (BenchEnum) Type() protoreflect.EnumType {
+	return &file_tests_example_v1_bench_proto_enumTypes[0]
+}
+
+func (x BenchEnum) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
 type BenchScalar struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	X             int32                  `protobuf:"varint,1,opt,name=x,proto3" json:"x,omitempty"`
@@ -323,6 +367,735 @@ func (b0 BenchRepeatedBytesUnique_builder) Build() *BenchRepeatedBytesUnique {
 	return m0
 }
 
+// Map validation benchmark - tests thisToCel() map copying overhead
+type BenchMap struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Entries       map[string]string      `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchMap) Reset() {
+	*x = BenchMap{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchMap) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchMap) ProtoMessage() {}
+
+func (x *BenchMap) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchMap) GetEntries() map[string]string {
+	if x != nil {
+		return x.Entries
+	}
+	return nil
+}
+
+func (x *BenchMap) SetEntries(v map[string]string) {
+	x.Entries = v
+}
+
+type BenchMap_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Entries map[string]string
+}
+
+func (b0 BenchMap_builder) Build() *BenchMap {
+	m0 := &BenchMap{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Entries = b.Entries
+	return m0
+}
+
+// Complex schema benchmark - tests compile-time registry copying overhead
+type BenchComplexSchema struct {
+	state protoimpl.MessageState `protogen:"hybrid.v1"`
+	// Scalars with various constraints
+	S1   string  `protobuf:"bytes,1,opt,name=s1,proto3" json:"s1,omitempty"`
+	S2   string  `protobuf:"bytes,2,opt,name=s2,proto3" json:"s2,omitempty"`
+	I32  int32   `protobuf:"varint,3,opt,name=i32,proto3" json:"i32,omitempty"`
+	I64  int64   `protobuf:"varint,4,opt,name=i64,proto3" json:"i64,omitempty"`
+	U32  uint32  `protobuf:"varint,5,opt,name=u32,proto3" json:"u32,omitempty"`
+	U64  uint64  `protobuf:"varint,6,opt,name=u64,proto3" json:"u64,omitempty"`
+	Si32 int32   `protobuf:"zigzag32,7,opt,name=si32,proto3" json:"si32,omitempty"`
+	Si64 int64   `protobuf:"zigzag64,8,opt,name=si64,proto3" json:"si64,omitempty"`
+	F32  uint32  `protobuf:"fixed32,9,opt,name=f32,proto3" json:"f32,omitempty"`
+	F64  uint64  `protobuf:"fixed64,10,opt,name=f64,proto3" json:"f64,omitempty"`
+	Sf32 int32   `protobuf:"fixed32,11,opt,name=sf32,proto3" json:"sf32,omitempty"`
+	Sf64 int64   `protobuf:"fixed64,12,opt,name=sf64,proto3" json:"sf64,omitempty"`
+	Fl   float32 `protobuf:"fixed32,13,opt,name=fl,proto3" json:"fl,omitempty"`
+	Db   float64 `protobuf:"fixed64,14,opt,name=db,proto3" json:"db,omitempty"`
+	Bl   bool    `protobuf:"varint,15,opt,name=bl,proto3" json:"bl,omitempty"`
+	By   []byte  `protobuf:"bytes,16,opt,name=by,proto3" json:"by,omitempty"`
+	// Nested message
+	Nested *BenchScalar `protobuf:"bytes,17,opt,name=nested,proto3" json:"nested,omitempty"`
+	// Self-referential
+	SelfRef *BenchComplexSchema `protobuf:"bytes,18,opt,name=self_ref,json=selfRef,proto3" json:"self_ref,omitempty"`
+	// Repeated scalars
+	RepStr   []string `protobuf:"bytes,19,rep,name=rep_str,json=repStr,proto3" json:"rep_str,omitempty"`
+	RepI32   []int32  `protobuf:"varint,20,rep,packed,name=rep_i32,json=repI32,proto3" json:"rep_i32,omitempty"`
+	RepBytes [][]byte `protobuf:"bytes,21,rep,name=rep_bytes,json=repBytes,proto3" json:"rep_bytes,omitempty"`
+	// Repeated messages
+	RepMsg []*BenchScalar `protobuf:"bytes,22,rep,name=rep_msg,json=repMsg,proto3" json:"rep_msg,omitempty"`
+	// Maps with scalar keys and values
+	MapStrStr   map[string]string `protobuf:"bytes,23,rep,name=map_str_str,json=mapStrStr,proto3" json:"map_str_str,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapI32I64   map[int32]int64   `protobuf:"bytes,24,rep,name=map_i32_i64,json=mapI32I64,proto3" json:"map_i32_i64,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapU64Bool  map[uint64]bool   `protobuf:"bytes,25,rep,name=map_u64_bool,json=mapU64Bool,proto3" json:"map_u64_bool,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	MapStrBytes map[string][]byte `protobuf:"bytes,26,rep,name=map_str_bytes,json=mapStrBytes,proto3" json:"map_str_bytes,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Maps with message values
+	MapStrMsg map[string]*BenchScalar `protobuf:"bytes,27,rep,name=map_str_msg,json=mapStrMsg,proto3" json:"map_str_msg,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	MapI64Msg map[int64]*BenchScalar  `protobuf:"bytes,28,rep,name=map_i64_msg,json=mapI64Msg,proto3" json:"map_i64_msg,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// Enum field
+	EnumField BenchEnum `protobuf:"varint,29,opt,name=enum_field,json=enumField,proto3,enum=tests.example.v1.BenchEnum" json:"enum_field,omitempty"`
+	// Oneof
+	//
+	// Types that are valid to be assigned to Choice:
+	//
+	//	*BenchComplexSchema_OneofStr
+	//	*BenchComplexSchema_OneofI32
+	//	*BenchComplexSchema_OneofMsg
+	Choice        isBenchComplexSchema_Choice `protobuf_oneof:"choice"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchComplexSchema) Reset() {
+	*x = BenchComplexSchema{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchComplexSchema) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchComplexSchema) ProtoMessage() {}
+
+func (x *BenchComplexSchema) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchComplexSchema) GetS1() string {
+	if x != nil {
+		return x.S1
+	}
+	return ""
+}
+
+func (x *BenchComplexSchema) GetS2() string {
+	if x != nil {
+		return x.S2
+	}
+	return ""
+}
+
+func (x *BenchComplexSchema) GetI32() int32 {
+	if x != nil {
+		return x.I32
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetI64() int64 {
+	if x != nil {
+		return x.I64
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetU32() uint32 {
+	if x != nil {
+		return x.U32
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetU64() uint64 {
+	if x != nil {
+		return x.U64
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetSi32() int32 {
+	if x != nil {
+		return x.Si32
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetSi64() int64 {
+	if x != nil {
+		return x.Si64
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetF32() uint32 {
+	if x != nil {
+		return x.F32
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetF64() uint64 {
+	if x != nil {
+		return x.F64
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetSf32() int32 {
+	if x != nil {
+		return x.Sf32
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetSf64() int64 {
+	if x != nil {
+		return x.Sf64
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetFl() float32 {
+	if x != nil {
+		return x.Fl
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetDb() float64 {
+	if x != nil {
+		return x.Db
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetBl() bool {
+	if x != nil {
+		return x.Bl
+	}
+	return false
+}
+
+func (x *BenchComplexSchema) GetBy() []byte {
+	if x != nil {
+		return x.By
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetNested() *BenchScalar {
+	if x != nil {
+		return x.Nested
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetSelfRef() *BenchComplexSchema {
+	if x != nil {
+		return x.SelfRef
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetRepStr() []string {
+	if x != nil {
+		return x.RepStr
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetRepI32() []int32 {
+	if x != nil {
+		return x.RepI32
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetRepBytes() [][]byte {
+	if x != nil {
+		return x.RepBytes
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetRepMsg() []*BenchScalar {
+	if x != nil {
+		return x.RepMsg
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapStrStr() map[string]string {
+	if x != nil {
+		return x.MapStrStr
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapI32I64() map[int32]int64 {
+	if x != nil {
+		return x.MapI32I64
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapU64Bool() map[uint64]bool {
+	if x != nil {
+		return x.MapU64Bool
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapStrBytes() map[string][]byte {
+	if x != nil {
+		return x.MapStrBytes
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapStrMsg() map[string]*BenchScalar {
+	if x != nil {
+		return x.MapStrMsg
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetMapI64Msg() map[int64]*BenchScalar {
+	if x != nil {
+		return x.MapI64Msg
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetEnumField() BenchEnum {
+	if x != nil {
+		return x.EnumField
+	}
+	return BenchEnum_BENCH_ENUM_UNSPECIFIED
+}
+
+func (x *BenchComplexSchema) GetChoice() isBenchComplexSchema_Choice {
+	if x != nil {
+		return x.Choice
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) GetOneofStr() string {
+	if x != nil {
+		if x, ok := x.Choice.(*BenchComplexSchema_OneofStr); ok {
+			return x.OneofStr
+		}
+	}
+	return ""
+}
+
+func (x *BenchComplexSchema) GetOneofI32() int32 {
+	if x != nil {
+		if x, ok := x.Choice.(*BenchComplexSchema_OneofI32); ok {
+			return x.OneofI32
+		}
+	}
+	return 0
+}
+
+func (x *BenchComplexSchema) GetOneofMsg() *BenchScalar {
+	if x != nil {
+		if x, ok := x.Choice.(*BenchComplexSchema_OneofMsg); ok {
+			return x.OneofMsg
+		}
+	}
+	return nil
+}
+
+func (x *BenchComplexSchema) SetS1(v string) {
+	x.S1 = v
+}
+
+func (x *BenchComplexSchema) SetS2(v string) {
+	x.S2 = v
+}
+
+func (x *BenchComplexSchema) SetI32(v int32) {
+	x.I32 = v
+}
+
+func (x *BenchComplexSchema) SetI64(v int64) {
+	x.I64 = v
+}
+
+func (x *BenchComplexSchema) SetU32(v uint32) {
+	x.U32 = v
+}
+
+func (x *BenchComplexSchema) SetU64(v uint64) {
+	x.U64 = v
+}
+
+func (x *BenchComplexSchema) SetSi32(v int32) {
+	x.Si32 = v
+}
+
+func (x *BenchComplexSchema) SetSi64(v int64) {
+	x.Si64 = v
+}
+
+func (x *BenchComplexSchema) SetF32(v uint32) {
+	x.F32 = v
+}
+
+func (x *BenchComplexSchema) SetF64(v uint64) {
+	x.F64 = v
+}
+
+func (x *BenchComplexSchema) SetSf32(v int32) {
+	x.Sf32 = v
+}
+
+func (x *BenchComplexSchema) SetSf64(v int64) {
+	x.Sf64 = v
+}
+
+func (x *BenchComplexSchema) SetFl(v float32) {
+	x.Fl = v
+}
+
+func (x *BenchComplexSchema) SetDb(v float64) {
+	x.Db = v
+}
+
+func (x *BenchComplexSchema) SetBl(v bool) {
+	x.Bl = v
+}
+
+func (x *BenchComplexSchema) SetBy(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.By = v
+}
+
+func (x *BenchComplexSchema) SetNested(v *BenchScalar) {
+	x.Nested = v
+}
+
+func (x *BenchComplexSchema) SetSelfRef(v *BenchComplexSchema) {
+	x.SelfRef = v
+}
+
+func (x *BenchComplexSchema) SetRepStr(v []string) {
+	x.RepStr = v
+}
+
+func (x *BenchComplexSchema) SetRepI32(v []int32) {
+	x.RepI32 = v
+}
+
+func (x *BenchComplexSchema) SetRepBytes(v [][]byte) {
+	x.RepBytes = v
+}
+
+func (x *BenchComplexSchema) SetRepMsg(v []*BenchScalar) {
+	x.RepMsg = v
+}
+
+func (x *BenchComplexSchema) SetMapStrStr(v map[string]string) {
+	x.MapStrStr = v
+}
+
+func (x *BenchComplexSchema) SetMapI32I64(v map[int32]int64) {
+	x.MapI32I64 = v
+}
+
+func (x *BenchComplexSchema) SetMapU64Bool(v map[uint64]bool) {
+	x.MapU64Bool = v
+}
+
+func (x *BenchComplexSchema) SetMapStrBytes(v map[string][]byte) {
+	x.MapStrBytes = v
+}
+
+func (x *BenchComplexSchema) SetMapStrMsg(v map[string]*BenchScalar) {
+	x.MapStrMsg = v
+}
+
+func (x *BenchComplexSchema) SetMapI64Msg(v map[int64]*BenchScalar) {
+	x.MapI64Msg = v
+}
+
+func (x *BenchComplexSchema) SetEnumField(v BenchEnum) {
+	x.EnumField = v
+}
+
+func (x *BenchComplexSchema) SetOneofStr(v string) {
+	x.Choice = &BenchComplexSchema_OneofStr{v}
+}
+
+func (x *BenchComplexSchema) SetOneofI32(v int32) {
+	x.Choice = &BenchComplexSchema_OneofI32{v}
+}
+
+func (x *BenchComplexSchema) SetOneofMsg(v *BenchScalar) {
+	if v == nil {
+		x.Choice = nil
+		return
+	}
+	x.Choice = &BenchComplexSchema_OneofMsg{v}
+}
+
+func (x *BenchComplexSchema) HasNested() bool {
+	if x == nil {
+		return false
+	}
+	return x.Nested != nil
+}
+
+func (x *BenchComplexSchema) HasSelfRef() bool {
+	if x == nil {
+		return false
+	}
+	return x.SelfRef != nil
+}
+
+func (x *BenchComplexSchema) HasChoice() bool {
+	if x == nil {
+		return false
+	}
+	return x.Choice != nil
+}
+
+func (x *BenchComplexSchema) HasOneofStr() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Choice.(*BenchComplexSchema_OneofStr)
+	return ok
+}
+
+func (x *BenchComplexSchema) HasOneofI32() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Choice.(*BenchComplexSchema_OneofI32)
+	return ok
+}
+
+func (x *BenchComplexSchema) HasOneofMsg() bool {
+	if x == nil {
+		return false
+	}
+	_, ok := x.Choice.(*BenchComplexSchema_OneofMsg)
+	return ok
+}
+
+func (x *BenchComplexSchema) ClearNested() {
+	x.Nested = nil
+}
+
+func (x *BenchComplexSchema) ClearSelfRef() {
+	x.SelfRef = nil
+}
+
+func (x *BenchComplexSchema) ClearChoice() {
+	x.Choice = nil
+}
+
+func (x *BenchComplexSchema) ClearOneofStr() {
+	if _, ok := x.Choice.(*BenchComplexSchema_OneofStr); ok {
+		x.Choice = nil
+	}
+}
+
+func (x *BenchComplexSchema) ClearOneofI32() {
+	if _, ok := x.Choice.(*BenchComplexSchema_OneofI32); ok {
+		x.Choice = nil
+	}
+}
+
+func (x *BenchComplexSchema) ClearOneofMsg() {
+	if _, ok := x.Choice.(*BenchComplexSchema_OneofMsg); ok {
+		x.Choice = nil
+	}
+}
+
+const BenchComplexSchema_Choice_not_set_case case_BenchComplexSchema_Choice = 0
+const BenchComplexSchema_OneofStr_case case_BenchComplexSchema_Choice = 30
+const BenchComplexSchema_OneofI32_case case_BenchComplexSchema_Choice = 31
+const BenchComplexSchema_OneofMsg_case case_BenchComplexSchema_Choice = 32
+
+func (x *BenchComplexSchema) WhichChoice() case_BenchComplexSchema_Choice {
+	if x == nil {
+		return BenchComplexSchema_Choice_not_set_case
+	}
+	switch x.Choice.(type) {
+	case *BenchComplexSchema_OneofStr:
+		return BenchComplexSchema_OneofStr_case
+	case *BenchComplexSchema_OneofI32:
+		return BenchComplexSchema_OneofI32_case
+	case *BenchComplexSchema_OneofMsg:
+		return BenchComplexSchema_OneofMsg_case
+	default:
+		return BenchComplexSchema_Choice_not_set_case
+	}
+}
+
+type BenchComplexSchema_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	// Scalars with various constraints
+	S1   string
+	S2   string
+	I32  int32
+	I64  int64
+	U32  uint32
+	U64  uint64
+	Si32 int32
+	Si64 int64
+	F32  uint32
+	F64  uint64
+	Sf32 int32
+	Sf64 int64
+	Fl   float32
+	Db   float64
+	Bl   bool
+	By   []byte
+	// Nested message
+	Nested *BenchScalar
+	// Self-referential
+	SelfRef *BenchComplexSchema
+	// Repeated scalars
+	RepStr   []string
+	RepI32   []int32
+	RepBytes [][]byte
+	// Repeated messages
+	RepMsg []*BenchScalar
+	// Maps with scalar keys and values
+	MapStrStr   map[string]string
+	MapI32I64   map[int32]int64
+	MapU64Bool  map[uint64]bool
+	MapStrBytes map[string][]byte
+	// Maps with message values
+	MapStrMsg map[string]*BenchScalar
+	MapI64Msg map[int64]*BenchScalar
+	// Enum field
+	EnumField BenchEnum
+	// Oneof
+
+	// Fields of oneof Choice:
+	OneofStr *string
+	OneofI32 *int32
+	OneofMsg *BenchScalar
+	// -- end of Choice
+}
+
+func (b0 BenchComplexSchema_builder) Build() *BenchComplexSchema {
+	m0 := &BenchComplexSchema{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.S1 = b.S1
+	x.S2 = b.S2
+	x.I32 = b.I32
+	x.I64 = b.I64
+	x.U32 = b.U32
+	x.U64 = b.U64
+	x.Si32 = b.Si32
+	x.Si64 = b.Si64
+	x.F32 = b.F32
+	x.F64 = b.F64
+	x.Sf32 = b.Sf32
+	x.Sf64 = b.Sf64
+	x.Fl = b.Fl
+	x.Db = b.Db
+	x.Bl = b.Bl
+	x.By = b.By
+	x.Nested = b.Nested
+	x.SelfRef = b.SelfRef
+	x.RepStr = b.RepStr
+	x.RepI32 = b.RepI32
+	x.RepBytes = b.RepBytes
+	x.RepMsg = b.RepMsg
+	x.MapStrStr = b.MapStrStr
+	x.MapI32I64 = b.MapI32I64
+	x.MapU64Bool = b.MapU64Bool
+	x.MapStrBytes = b.MapStrBytes
+	x.MapStrMsg = b.MapStrMsg
+	x.MapI64Msg = b.MapI64Msg
+	x.EnumField = b.EnumField
+	if b.OneofStr != nil {
+		x.Choice = &BenchComplexSchema_OneofStr{*b.OneofStr}
+	}
+	if b.OneofI32 != nil {
+		x.Choice = &BenchComplexSchema_OneofI32{*b.OneofI32}
+	}
+	if b.OneofMsg != nil {
+		x.Choice = &BenchComplexSchema_OneofMsg{b.OneofMsg}
+	}
+	return m0
+}
+
+type case_BenchComplexSchema_Choice protoreflect.FieldNumber
+
+func (x case_BenchComplexSchema_Choice) String() string {
+	md := file_tests_example_v1_bench_proto_msgTypes[6].Descriptor()
+	if x == 0 {
+		return "not set"
+	}
+	return protoimpl.X.MessageFieldStringOf(md, protoreflect.FieldNumber(x))
+}
+
+type isBenchComplexSchema_Choice interface {
+	isBenchComplexSchema_Choice()
+}
+
+type BenchComplexSchema_OneofStr struct {
+	OneofStr string `protobuf:"bytes,30,opt,name=oneof_str,json=oneofStr,proto3,oneof"`
+}
+
+type BenchComplexSchema_OneofI32 struct {
+	OneofI32 int32 `protobuf:"varint,31,opt,name=oneof_i32,json=oneofI32,proto3,oneof"`
+}
+
+type BenchComplexSchema_OneofMsg struct {
+	OneofMsg *BenchScalar `protobuf:"bytes,32,opt,name=oneof_msg,json=oneofMsg,proto3,oneof"`
+}
+
+func (*BenchComplexSchema_OneofStr) isBenchComplexSchema_Choice() {}
+
+func (*BenchComplexSchema_OneofI32) isBenchComplexSchema_Choice() {}
+
+func (*BenchComplexSchema_OneofMsg) isBenchComplexSchema_Choice() {}
+
 var File_tests_example_v1_bench_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_bench_proto_rawDesc = "" +
@@ -341,25 +1114,120 @@ const file_tests_example_v1_bench_proto_rawDesc = "" +
 	"\x19BenchRepeatedScalarUnique\x12\x16\n" +
 	"\x01x\x18\x01 \x03(\x02B\b\xbaH\x05\x92\x01\x02\x18\x01R\x01x\"2\n" +
 	"\x18BenchRepeatedBytesUnique\x12\x16\n" +
-	"\x01x\x18\x01 \x03(\fB\b\xbaH\x05\x92\x01\x02\x18\x01R\x01xB\xc8\x01\n" +
+	"\x01x\x18\x01 \x03(\fB\b\xbaH\x05\x92\x01\x02\x18\x01R\x01x\"\x9f\x01\n" +
+	"\bBenchMap\x12W\n" +
+	"\aentries\x18\x01 \x03(\v2'.tests.example.v1.BenchMap.EntriesEntryB\x14\xbaH\x05\x9a\x01\x02\b\x01\xca\xe66\b*\x06\x12\x04\b\x05\x10\n" +
+	"R\aentries\x1a:\n" +
+	"\fEntriesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xe4\x12\n" +
+	"\x12BenchComplexSchema\x12#\n" +
+	"\x02s1\x18\x01 \x01(\tB\x13\xbaH\x04r\x02\x10\x01\xca\xe66\b\x12\x06{word}R\x02s1\x12#\n" +
+	"\x02s2\x18\x02 \x01(\tB\x13\xbaH\x04r\x02\x18d\xca\xe66\b\x12\x06{word}R\x02s2\x12/\n" +
+	"\x03i32\x18\x03 \x01(\x05B\x1d\xbaH\x04\x1a\x02 \x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x03i32\x120\n" +
+	"\x03i64\x18\x04 \x01(\x03B\x1e\xbaH\x05\"\x03\x10\xe8\a\xca\xe66\x12\x12\x10{intrange:1,999}R\x03i64\x12/\n" +
+	"\x03u32\x18\x05 \x01(\rB\x1d\xbaH\x04*\x02(\x01\xca\xe66\x12\x12\x10{intrange:1,100}R\x03u32\x120\n" +
+	"\x03u64\x18\x06 \x01(\x04B\x1e\xbaH\x052\x03\x18\xe8\a\xca\xe66\x12\x12\x10{intrange:1,100}R\x03u64\x121\n" +
+	"\x04si32\x18\a \x01(\x11B\x1d\xbaH\x04:\x02 \x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x04si32\x122\n" +
+	"\x04si64\x18\b \x01(\x12B\x1e\xbaH\x05B\x03\x10\xd0\x0f\xca\xe66\x12\x12\x10{intrange:1,999}R\x04si64\x122\n" +
+	"\x03f32\x18\t \x01(\aB \xbaH\aJ\x05-\x01\x00\x00\x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x03f32\x126\n" +
+	"\x03f64\x18\n" +
+	" \x01(\x06B$\xbaH\vR\t\x19\xe8\x03\x00\x00\x00\x00\x00\x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x03f64\x124\n" +
+	"\x04sf32\x18\v \x01(\x0fB \xbaH\aZ\x05%\x00\x00\x00\x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x04sf32\x128\n" +
+	"\x04sf64\x18\f \x01(\x10B$\xbaH\vb\t\x11\xe8\x03\x00\x00\x00\x00\x00\x00\xca\xe66\x12\x12\x10{intrange:1,999}R\x04sf64\x121\n" +
+	"\x02fl\x18\r \x01(\x02B!\xbaH\x04\n" +
+	"\x02@\x01\xca\xe66\x16\x12\x14{float32range:1,100}R\x02fl\x121\n" +
+	"\x02db\x18\x0e \x01(\x01B!\xbaH\x04\x12\x02@\x01\xca\xe66\x16\x12\x14{float64range:1,100}R\x02db\x12\x0e\n" +
+	"\x02bl\x18\x0f \x01(\bR\x02bl\x12)\n" +
+	"\x02by\x18\x10 \x01(\fB\x19\xbaH\x04z\x02\x10\x01\xca\xe66\x0e\x12\f{sentence:3}R\x02by\x125\n" +
+	"\x06nested\x18\x11 \x01(\v2\x1d.tests.example.v1.BenchScalarR\x06nested\x12?\n" +
+	"\bself_ref\x18\x12 \x01(\v2$.tests.example.v1.BenchComplexSchemaR\aselfRef\x12+\n" +
+	"\arep_str\x18\x13 \x03(\tB\x12\xbaH\x05\x92\x01\x02\x10\n" +
+	"\xca\xe66\x06\"\x042\x02\x10\x03R\x06repStr\x12-\n" +
+	"\arep_i32\x18\x14 \x03(\x05B\x14\xbaH\x05\x92\x01\x02\b\x01\xca\xe66\b\"\x062\x04\b\x01\x10\x03R\x06repI32\x12/\n" +
+	"\trep_bytes\x18\x15 \x03(\fB\x12\xbaH\x05\x92\x01\x02\x18\x01\xca\xe66\x06\"\x042\x02\x10\x03R\brepBytes\x12J\n" +
+	"\arep_msg\x18\x16 \x03(\v2\x1d.tests.example.v1.BenchScalarB\x12\xbaH\x05\x92\x01\x02\x10\x05\xca\xe66\x06\"\x042\x02\x10\x02R\x06repMsg\x12i\n" +
+	"\vmap_str_str\x18\x17 \x03(\v23.tests.example.v1.BenchComplexSchema.MapStrStrEntryB\x14\xbaH\x05\x9a\x01\x02\b\x01\xca\xe66\b*\x06\x12\x04\b\x01\x10\x03R\tmapStrStr\x12g\n" +
+	"\vmap_i32_i64\x18\x18 \x03(\v23.tests.example.v1.BenchComplexSchema.MapI32I64EntryB\x12\xbaH\x05\x9a\x01\x02\x10\n" +
+	"\xca\xe66\x06*\x04\x12\x02\x10\x03R\tmapI32I64\x12b\n" +
+	"\fmap_u64_bool\x18\x19 \x03(\v24.tests.example.v1.BenchComplexSchema.MapU64BoolEntryB\n" +
+	"\xca\xe66\x06*\x04\x12\x02\x10\x03R\n" +
+	"mapU64Bool\x12q\n" +
+	"\rmap_str_bytes\x18\x1a \x03(\v25.tests.example.v1.BenchComplexSchema.MapStrBytesEntryB\x16\xbaH\t\x9a\x01\x06\"\x04r\x02\x10\x01\xca\xe66\x06*\x04\x12\x02\x10\x03R\vmapStrBytes\x12j\n" +
+	"\vmap_str_msg\x18\x1b \x03(\v23.tests.example.v1.BenchComplexSchema.MapStrMsgEntryB\x15\xbaH\b\x9a\x01\x05*\x03\xc8\x01\x01\xca\xe66\x06*\x04\x12\x02\x10\x02R\tmapStrMsg\x12_\n" +
+	"\vmap_i64_msg\x18\x1c \x03(\v23.tests.example.v1.BenchComplexSchema.MapI64MsgEntryB\n" +
+	"\xca\xe66\x06*\x04\x12\x02\x10\x02R\tmapI64Msg\x12D\n" +
+	"\n" +
+	"enum_field\x18\x1d \x01(\x0e2\x1b.tests.example.v1.BenchEnumB\b\xbaH\x05\x82\x01\x02\x10\x01R\tenumField\x12&\n" +
+	"\toneof_str\x18\x1e \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\boneofStr\x12&\n" +
+	"\toneof_i32\x18\x1f \x01(\x05B\a\xbaH\x04\x1a\x02 \x00H\x00R\boneofI32\x12<\n" +
+	"\toneof_msg\x18  \x01(\v2\x1d.tests.example.v1.BenchScalarH\x00R\boneofMsg\x1a<\n" +
+	"\x0eMapStrStrEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\x1a<\n" +
+	"\x0eMapI32I64Entry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x05R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value:\x028\x01\x1a=\n" +
+	"\x0fMapU64BoolEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x04R\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\bR\x05value:\x028\x01\x1a>\n" +
+	"\x10MapStrBytesEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\fR\x05value:\x028\x01\x1a[\n" +
+	"\x0eMapStrMsgEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x123\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.tests.example.v1.BenchScalarR\x05value:\x028\x01\x1a[\n" +
+	"\x0eMapI64MsgEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\x03R\x03key\x123\n" +
+	"\x05value\x18\x02 \x01(\v2\x1d.tests.example.v1.BenchScalarR\x05value:\x028\x01B\b\n" +
+	"\x06choice*O\n" +
+	"\tBenchEnum\x12\x1a\n" +
+	"\x16BENCH_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
+	"\x0eBENCH_ENUM_ONE\x10\x01\x12\x12\n" +
+	"\x0eBENCH_ENUM_TWO\x10\x02B\xc8\x01\n" +
 	"\x14com.tests.example.v1B\n" +
 	"BenchProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
-var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tests_example_v1_bench_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_tests_example_v1_bench_proto_goTypes = []any{
-	(*BenchScalar)(nil),               // 0: tests.example.v1.BenchScalar
-	(*BenchRepeatedScalar)(nil),       // 1: tests.example.v1.BenchRepeatedScalar
-	(*BenchRepeatedMessage)(nil),      // 2: tests.example.v1.BenchRepeatedMessage
-	(*BenchRepeatedScalarUnique)(nil), // 3: tests.example.v1.BenchRepeatedScalarUnique
-	(*BenchRepeatedBytesUnique)(nil),  // 4: tests.example.v1.BenchRepeatedBytesUnique
+	(BenchEnum)(0),                    // 0: tests.example.v1.BenchEnum
+	(*BenchScalar)(nil),               // 1: tests.example.v1.BenchScalar
+	(*BenchRepeatedScalar)(nil),       // 2: tests.example.v1.BenchRepeatedScalar
+	(*BenchRepeatedMessage)(nil),      // 3: tests.example.v1.BenchRepeatedMessage
+	(*BenchRepeatedScalarUnique)(nil), // 4: tests.example.v1.BenchRepeatedScalarUnique
+	(*BenchRepeatedBytesUnique)(nil),  // 5: tests.example.v1.BenchRepeatedBytesUnique
+	(*BenchMap)(nil),                  // 6: tests.example.v1.BenchMap
+	(*BenchComplexSchema)(nil),        // 7: tests.example.v1.BenchComplexSchema
+	nil,                               // 8: tests.example.v1.BenchMap.EntriesEntry
+	nil,                               // 9: tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	nil,                               // 10: tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	nil,                               // 11: tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	nil,                               // 12: tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	nil,                               // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	nil,                               // 14: tests.example.v1.BenchComplexSchema.MapI64MsgEntry
 }
 var file_tests_example_v1_bench_proto_depIdxs = []int32{
-	0, // 0: tests.example.v1.BenchRepeatedMessage.x:type_name -> tests.example.v1.BenchScalar
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1,  // 0: tests.example.v1.BenchRepeatedMessage.x:type_name -> tests.example.v1.BenchScalar
+	8,  // 1: tests.example.v1.BenchMap.entries:type_name -> tests.example.v1.BenchMap.EntriesEntry
+	1,  // 2: tests.example.v1.BenchComplexSchema.nested:type_name -> tests.example.v1.BenchScalar
+	7,  // 3: tests.example.v1.BenchComplexSchema.self_ref:type_name -> tests.example.v1.BenchComplexSchema
+	1,  // 4: tests.example.v1.BenchComplexSchema.rep_msg:type_name -> tests.example.v1.BenchScalar
+	9,  // 5: tests.example.v1.BenchComplexSchema.map_str_str:type_name -> tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	10, // 6: tests.example.v1.BenchComplexSchema.map_i32_i64:type_name -> tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	11, // 7: tests.example.v1.BenchComplexSchema.map_u64_bool:type_name -> tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	12, // 8: tests.example.v1.BenchComplexSchema.map_str_bytes:type_name -> tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	13, // 9: tests.example.v1.BenchComplexSchema.map_str_msg:type_name -> tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	14, // 10: tests.example.v1.BenchComplexSchema.map_i64_msg:type_name -> tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	0,  // 11: tests.example.v1.BenchComplexSchema.enum_field:type_name -> tests.example.v1.BenchEnum
+	1,  // 12: tests.example.v1.BenchComplexSchema.oneof_msg:type_name -> tests.example.v1.BenchScalar
+	1,  // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry.value:type_name -> tests.example.v1.BenchScalar
+	1,  // 14: tests.example.v1.BenchComplexSchema.MapI64MsgEntry.value:type_name -> tests.example.v1.BenchScalar
+	15, // [15:15] is the sub-list for method output_type
+	15, // [15:15] is the sub-list for method input_type
+	15, // [15:15] is the sub-list for extension type_name
+	15, // [15:15] is the sub-list for extension extendee
+	0,  // [0:15] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_bench_proto_init() }
@@ -367,18 +1235,24 @@ func file_tests_example_v1_bench_proto_init() {
 	if File_tests_example_v1_bench_proto != nil {
 		return
 	}
+	file_tests_example_v1_bench_proto_msgTypes[6].OneofWrappers = []any{
+		(*BenchComplexSchema_OneofStr)(nil),
+		(*BenchComplexSchema_OneofI32)(nil),
+		(*BenchComplexSchema_OneofMsg)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_bench_proto_rawDesc), len(file_tests_example_v1_bench_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   5,
+			NumEnums:      1,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_tests_example_v1_bench_proto_goTypes,
 		DependencyIndexes: file_tests_example_v1_bench_proto_depIdxs,
+		EnumInfos:         file_tests_example_v1_bench_proto_enumTypes,
 		MessageInfos:      file_tests_example_v1_bench_proto_msgTypes,
 	}.Build()
 	File_tests_example_v1_bench_proto = out.File

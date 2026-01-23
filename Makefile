@@ -102,7 +102,7 @@ BENCH_COUNT ?= 10
 BENCH_NAME ?= $(shell date +%F:%T)
 .PHONY: bench
 bench: $(BENCH_TMP)
-	go test -bench="$(BENCH)" -benchmem \
+	go test -run ^$$ -bench="$(BENCH)" -benchmem \
 		-memprofile "$(BENCH_TMP)/$(BENCH_NAME).mem.profile" \
 		-cpuprofile "$(BENCH_TMP)/$(BENCH_NAME).cpu.profile" \
 		-count $(BENCH_COUNT) \

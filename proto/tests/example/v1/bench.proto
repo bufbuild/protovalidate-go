@@ -47,3 +47,148 @@ message BenchRepeatedScalarUnique {
 message BenchRepeatedBytesUnique {
   repeated bytes x = 1 [(buf.validate.field).repeated.unique = true];
 }
+
+// Map validation benchmark - tests thisToCel() map copying overhead
+message BenchMap {
+  map<string, string> entries = 1 [
+    (buf.validate.field).map.min_pairs = 1,
+    (gofakeit.generate).map.range.min = 5,
+    (gofakeit.generate).map.range.max = 10
+  ];
+}
+
+// Complex schema benchmark - tests compile-time registry copying overhead
+message BenchComplexSchema {
+  // Scalars with various constraints
+  string s1 = 1 [
+    (buf.validate.field).string.min_len = 1,
+    (gofakeit.generate).tag = "{word}"
+  ];
+  string s2 = 2 [
+    (buf.validate.field).string.max_len = 100,
+    (gofakeit.generate).tag = "{word}"
+  ];
+  int32 i32 = 3 [
+    (buf.validate.field).int32.gt = 0,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int64 i64 = 4 [
+    (buf.validate.field).int64.lt = 1000,
+    (gofakeit.generate).tag = "{intrange:1,999}"
+  ];
+  uint32 u32 = 5 [
+    (buf.validate.field).uint32.gte = 1,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  uint64 u64 = 6 [
+    (buf.validate.field).uint64.lte = 1000,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  sint32 si32 = 7 [
+    (buf.validate.field).sint32.gt = 0,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  sint64 si64 = 8 [
+    (buf.validate.field).sint64.lt = 1000,
+    (gofakeit.generate).tag = "{intrange:1,999}"
+  ];
+  fixed32 f32 = 9 [
+    (buf.validate.field).fixed32.gte = 1,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  fixed64 f64 = 10 [
+    (buf.validate.field).fixed64.lte = 1000,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  sfixed32 sf32 = 11 [
+    (buf.validate.field).sfixed32.gt = 0,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  sfixed64 sf64 = 12 [
+    (buf.validate.field).sfixed64.lt = 1000,
+    (gofakeit.generate).tag = "{intrange:1,999}"
+  ];
+  float fl = 13 [
+    (buf.validate.field).float.finite = true,
+    (gofakeit.generate).tag = "{float32range:1,100}"
+  ];
+  double db = 14 [
+    (buf.validate.field).double.finite = true,
+    (gofakeit.generate).tag = "{float64range:1,100}"
+  ];
+  bool bl = 15;
+  bytes by = 16 [
+    (buf.validate.field).bytes.min_len = 1,
+    (gofakeit.generate).tag = "{sentence:3}"
+  ];
+
+  // Nested message
+  BenchScalar nested = 17;
+
+  // Self-referential
+  BenchComplexSchema self_ref = 18;
+
+  // Repeated scalars
+  repeated string rep_str = 19 [
+    (buf.validate.field).repeated.max_items = 10,
+    (gofakeit.generate).repeated.range.max = 3
+  ];
+  repeated int32 rep_i32 = 20 [
+    (buf.validate.field).repeated.min_items = 1,
+    (gofakeit.generate).repeated.range.min = 1,
+    (gofakeit.generate).repeated.range.max = 3
+  ];
+  repeated bytes rep_bytes = 21 [
+    (buf.validate.field).repeated.unique = true,
+    (gofakeit.generate).repeated.range.max = 3
+  ];
+
+  // Repeated messages
+  repeated BenchScalar rep_msg = 22 [
+    (buf.validate.field).repeated.max_items = 5,
+    (gofakeit.generate).repeated.range.max = 2
+  ];
+
+  // Maps with scalar keys and values
+  map<string, string> map_str_str = 23 [
+    (buf.validate.field).map.min_pairs = 1,
+    (gofakeit.generate).map.range.min = 1,
+    (gofakeit.generate).map.range.max = 3
+  ];
+  map<int32, int64> map_i32_i64 = 24 [
+    (buf.validate.field).map.max_pairs = 10,
+    (gofakeit.generate).map.range.max = 3
+  ];
+  map<uint64, bool> map_u64_bool = 25 [(gofakeit.generate).map.range.max = 3];
+  map<string, bytes> map_str_bytes = 26 [
+    (buf.validate.field).map.keys = {
+      string: {min_len: 1}
+    },
+    (gofakeit.generate).map.range.max = 3
+  ];
+
+  // Maps with message values
+  map<string, BenchScalar> map_str_msg = 27 [
+    (buf.validate.field).map.values = {
+      required: true
+    },
+    (gofakeit.generate).map.range.max = 2
+  ];
+  map<int64, BenchScalar> map_i64_msg = 28 [(gofakeit.generate).map.range.max = 2];
+
+  // Enum field
+  BenchEnum enum_field = 29 [(buf.validate.field).enum.defined_only = true];
+
+  // Oneof
+  oneof choice {
+    string oneof_str = 30 [(buf.validate.field).string.min_len = 1];
+    int32 oneof_i32 = 31 [(buf.validate.field).int32.gt = 0];
+    BenchScalar oneof_msg = 32;
+  }
+}
+
+enum BenchEnum {
+  BENCH_ENUM_UNSPECIFIED = 0;
+  BENCH_ENUM_ONE = 1;
+  BENCH_ENUM_TWO = 2;
+}
