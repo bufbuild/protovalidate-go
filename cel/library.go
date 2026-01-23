@@ -50,7 +50,12 @@ var (
 // Using this function, you can create a CEL environment that is identical to
 // the one used to evaluate protovalidate CEL expressions.
 func NewLibrary() cel.Library {
+	// Create a registry per library. It's wrapped to prevent cel-go from
+	// copying it on every Extend() call within this validator's compilation.
+	// Different validators get their own registries to avoid concurrent access
+	// issues (types.Registry is not thread-safe).
 	return &library{
+		registry: &registry{Registry: types.NewEmptyRegistry()},
 		uniqueScalarPool: sync.Pool{New: func() any {
 			return map[ref.Val]struct{}{}
 		}},
@@ -68,12 +73,16 @@ func NewLibrary() cel.Library {
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
 type library struct {
+	registry         *registry
 	uniqueScalarPool sync.Pool
 	uniqueBytesPool  sync.Pool
 }
 
 func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 	return []cel.EnvOption{
+		// The registry wrapper prevents cel-go from copying it on every Extend() call.
+		cel.CustomTypeProvider(l.registry),
+		cel.CustomTypeAdapter(l.registry),
 		cel.TypeDescs(protoregistry.GlobalFiles),
 		cel.DefaultUTCTimeZone(true),
 		cel.CrossTypeNumericComparisons(true),
