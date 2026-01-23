@@ -169,9 +169,7 @@ message BenchComplexSchema {
 
   // Maps with message values
   map<string, BenchScalar> map_str_msg = 27 [
-    (buf.validate.field).map.values = {
-      required: true
-    },
+    (buf.validate.field).map.values = {required: true},
     (gofakeit.generate).map.range.max = 2
   ];
   map<int64, BenchScalar> map_i64_msg = 28 [(gofakeit.generate).map.range.max = 2];
