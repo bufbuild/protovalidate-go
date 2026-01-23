@@ -45,6 +45,23 @@ func BenchmarkRepeated(b *testing.B) {
 	})
 }
 
+func BenchmarkMap(b *testing.B) {
+	benchSuccess(b, &pb.BenchMap{})
+}
+
+func BenchmarkComplexSchema(b *testing.B) {
+	benchSuccess(b, &pb.BenchComplexSchema{})
+}
+
+func BenchmarkCompile(b *testing.B) {
+	// Measures compile-time allocations for complex schemas
+	msg := &pb.BenchComplexSchema{}
+	b.ReportAllocs()
+	for b.Loop() {
+		_, _ = New(WithMessages(msg), WithDisableLazy())
+	}
+}
+
 func benchSuccess(b *testing.B, msg proto.Message) {
 	b.Helper()
 
