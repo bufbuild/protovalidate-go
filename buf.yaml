@@ -7,11 +7,9 @@ deps:
 lint:
   use:
     - STANDARD
-  ignore_only:
-    PROTOVALIDATE:
-      - proto/tests/example/v1/validations.proto
-      - proto/tests/example/v1/filter.proto
-      - proto/tests/example/v1/compile.proto
+  except:
+    # chicken-and-egg problem as the buf CLI uses this library to perform this lint.
+    - PROTOVALIDATE
 breaking:
   use:
     - FILE
