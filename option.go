@@ -139,6 +139,28 @@ func (o *allowUnknownFieldsOption) applyToValidator(cfg *config) {
 	cfg.allowUnknownFields = true
 }
 
+// WithNativeEvaluators enables native Go evaluators for standard validation
+// rules instead of CEL expressions. This reduces memory allocations but is
+// experimental.
+//
+// When enabled, common validation rules like numeric comparisons (gt, gte, lt,
+// lte, const, in, not_in), string/bytes length checks (min_len, max_len, len),
+// and collection size checks (min_items, max_items, min_pairs, max_pairs) are
+// evaluated using direct Go code instead of the CEL interpreter, avoiding the
+// overhead of value boxing and CEL evaluation.
+//
+// Rules that cannot be handled natively (such as pattern matching with regex
+// or custom cel constraints) automatically fall back to CEL evaluation.
+func WithNativeEvaluators() ValidatorOption {
+	return &nativeEvaluatorsOption{}
+}
+
+type nativeEvaluatorsOption struct{}
+
+func (o *nativeEvaluatorsOption) applyToValidator(cfg *config) {
+	cfg.useNativeEvaluators = true
+}
+
 type filterOption struct{ filter Filter }
 
 func (o *filterOption) applyToValidation(cfg *validationConfig) {

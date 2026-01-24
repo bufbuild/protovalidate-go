@@ -39,7 +39,8 @@ func newCache() cache {
 
 // Build creates the standard rules for the given field. If forItems is
 // true, the rules for repeated list items are built instead of the
-// rules on the list itself.
+// rules on the list itself. If skipRules is non-nil, rules with descriptors
+// in the set will be skipped (used when native evaluators handle those rules).
 func (c *cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
@@ -47,6 +48,7 @@ func (c *cache) Build(
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	forItems bool,
+	skipRules map[protoreflect.FieldDescriptor]struct{},
 ) (set programSet, err error) {
 	rules, setOneof, done, err := c.resolveRules(
 		fieldDesc,
@@ -71,6 +73,12 @@ func (c *cache) Build(
 
 	var asts astSet
 	rules.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+		// Skip rules that are handled by native evaluators.
+		if skipRules != nil {
+			if _, skip := skipRules[desc]; skip {
+				return true
+			}
+		}
 		// Try compiling without the rule variable first. Extending a cel
 		// environment is expensive.
 		precomputedASTs, compileErr := c.loadOrCompileStandardRule(env, setOneof, desc)

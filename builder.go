@@ -23,6 +23,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/internal/native"
 	"github.com/google/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -45,8 +46,10 @@ type builder struct {
 	cache                 atomic.Pointer[messageCache] // copy-on-write cache.
 	env                   *cel.Env
 	rules                 cache
+	nativeBuilder         *native.Builder
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
+	useNativeEvaluators   bool
 	Load                  func(desc protoreflect.MessageDescriptor) messageEvaluator
 }
 
@@ -56,6 +59,7 @@ func newBuilder(
 	disableLazy bool,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
+	useNativeEvaluators bool,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *builder {
 	bldr := &builder{
@@ -63,6 +67,10 @@ func newBuilder(
 		rules:                 newCache(),
 		extensionTypeResolver: extensionTypeResolver,
 		allowUnknownFields:    allowUnknownFields,
+		useNativeEvaluators:   useNativeEvaluators,
+	}
+	if useNativeEvaluators {
+		bldr.nativeBuilder = native.NewBuilder()
 	}
 
 	if disableLazy {
@@ -464,6 +472,23 @@ func (bldr *builder) processStandardRules(
 		}
 	}
 
+	// Try native evaluators first if enabled. Native evaluators handle a subset
+	// of standard rules more efficiently without CEL overhead.
+	var handledRules map[protoreflect.FieldDescriptor]struct{}
+	if bldr.nativeBuilder != nil {
+		nativeEvals := bldr.nativeBuilder.Build(fdesc, rules, valEval.NestedRule != nil)
+		if len(nativeEvals) > 0 {
+			valEval.Append(nativeEval{
+				base:       newBase(valEval),
+				evaluators: nativeEvals,
+			})
+			// Track which rules native evaluators handle so we can skip CEL compilation.
+			handledRules = nativeEvals.HandledRules()
+		}
+	}
+
+	// Build CEL evaluators for rules not handled by native evaluators.
+	// This includes complex rules like regex patterns that require CEL.
 	stdRules, err := bldr.rules.Build(
 		bldr.env,
 		fdesc,
@@ -471,6 +496,7 @@ func (bldr *builder) processStandardRules(
 		bldr.extensionTypeResolver,
 		bldr.allowUnknownFields,
 		valEval.NestedRule != nil,
+		handledRules,
 	)
 	if err != nil {
 		return err

@@ -34,7 +34,7 @@ func TestBuildCache(t *testing.T) {
 	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
 	require.NoError(t, err, "failed to construct CEL environment")
 	bldr := newBuilder(
-		env, false, protoregistry.GlobalTypes, false,
+		env, false, protoregistry.GlobalTypes, false, false,
 	)
 	wg := sync.WaitGroup{}
 	for i := range 100 {

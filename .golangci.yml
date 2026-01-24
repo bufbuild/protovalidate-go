@@ -75,6 +75,12 @@ linters:
           # type analysis is wrong
           - forcetypeassert
         path: cel/library.go
+      - linters:
+          # Native evaluators intentionally use integer conversions that are safe
+          # because the values come from proto fields of the target type.
+          - gosec
+        text: "G115:"
+        path: internal/native/
       # static unexported lookup tables
       - linters:
           - gochecknoglobals

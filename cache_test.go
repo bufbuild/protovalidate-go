@@ -110,7 +110,7 @@ func TestCache_BuildStandardRules(t *testing.T) {
 			require.NoError(t, err)
 			c := newCache()
 
-			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems)
+			set, err := c.Build(env, test.desc, test.cons, protoregistry.GlobalTypes, false, test.forItems, nil)
 			if test.exErr {
 				assert.Error(t, err)
 			} else {

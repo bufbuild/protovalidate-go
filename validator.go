@@ -75,6 +75,7 @@ func New(options ...ValidatorOption) (Validator, error) {
 		cfg.disableLazy,
 		cfg.extensionTypeResolver,
 		cfg.allowUnknownFields,
+		cfg.useNativeEvaluators,
 		cfg.desc...,
 	)
 
@@ -132,6 +133,7 @@ type config struct {
 	desc                  []protoreflect.MessageDescriptor
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
+	useNativeEvaluators   bool
 	nowFn                 func() *timestamppb.Timestamp
 }
 
