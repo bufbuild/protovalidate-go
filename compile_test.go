@@ -35,7 +35,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		var exprs expressions
 		set, err := compile(exprs, baseEnv)
-		assert.Nil(t, set)
+		assert.Empty(t, set)
 		require.NoError(t, err)
 	})
 
@@ -60,7 +60,7 @@ func TestCompile(t *testing.T) {
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Types(true))
-		assert.Nil(t, set)
+		assert.Empty(t, set)
 		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})
@@ -73,7 +73,7 @@ func TestCompile(t *testing.T) {
 			},
 		}
 		set, err := compile(exprs, baseEnv)
-		assert.Nil(t, set)
+		assert.Empty(t, set)
 		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})
@@ -86,7 +86,7 @@ func TestCompile(t *testing.T) {
 			},
 		}
 		set, err := compile(exprs, baseEnv)
-		assert.Nil(t, set)
+		assert.Empty(t, set)
 		var compErr *CompilationError
 		require.ErrorAs(t, err, &compErr)
 	})

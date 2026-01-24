@@ -51,9 +51,6 @@ func compile(
 
 	set = make(programSet, len(expressions.Rules))
 	for i, rule := range expressions.Rules {
-		set[i].Source = rule
-		set[i].Path = expressions.RulePath
-
 		ast, err := compileAST(env, rule, expressions.RulePath)
 		if err != nil {
 			return nil, err
@@ -81,17 +78,17 @@ func compileASTs(
 		return set, nil
 	}
 
+	if len(envOpts) > 0 {
+		env, err = env.Extend(envOpts...)
+		if err != nil {
+			return set, &CompilationError{cause: fmt.Errorf(
+				"failed to extend environment: %w", err)}
+		}
+	}
+
 	set = make([]compiledAST, len(expressions.Rules))
 	for i, rule := range expressions.Rules {
-		set[i].Env = env
-		if len(envOpts) > 0 {
-			set[i].Env, err = env.Extend(envOpts...)
-			if err != nil {
-				return set, &CompilationError{cause: fmt.Errorf(
-					"failed to extend environment: %w", err)}
-			}
-		}
-		set[i], err = compileAST(set[i].Env, rule, expressions.RulePath)
+		set[i], err = compileAST(env, rule, expressions.RulePath)
 		if err != nil {
 			return set, err
 		}
