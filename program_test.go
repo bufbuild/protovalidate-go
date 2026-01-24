@@ -111,11 +111,11 @@ func TestSet(t *testing.T) {
 		{
 			name: "success",
 			set: programSet{
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.True},
 					Source:  &validate.Rule{},
 				},
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.String("")},
 					Source:  &validate.Rule{},
 				},
@@ -124,11 +124,11 @@ func TestSet(t *testing.T) {
 		{
 			name: "runtime error",
 			set: programSet{
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.False},
 					Source:  &validate.Rule{},
 				},
-				compiledProgram{
+				{
 					Program: mockProgram{Err: errors.New("some error")},
 					Source:  &validate.Rule{},
 				},
@@ -138,11 +138,11 @@ func TestSet(t *testing.T) {
 		{
 			name: "invalid",
 			set: programSet{
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.False},
 					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
 				},
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.String("buzz")},
 					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
 				},
@@ -158,11 +158,11 @@ func TestSet(t *testing.T) {
 			name:     "invalid fail fast",
 			failFast: true,
 			set: programSet{
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.False},
 					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
 				},
-				compiledProgram{
+				{
 					Program: mockProgram{Val: types.String("buzz")},
 					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
 				},
@@ -180,7 +180,7 @@ func TestSet(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := test.set.Eval(protoreflect.ValueOfBool(false), &validationConfig{
+			err := test.set.Eval(protoreflect.ValueOfBool(false), nil, types.DefaultTypeAdapter, &validationConfig{
 				failFast: test.failFast,
 			})
 			switch {
@@ -202,9 +202,8 @@ func TestSet_BindThis(t *testing.T) {
 	structMsg := &structpb.Struct{Fields: map[string]*structpb.Value{
 		"foo": {Kind: &structpb.Value_BoolValue{BoolValue: true}},
 	}}
-	mapVal := structMsg.ProtoReflect().
-		Get(structMsg.ProtoReflect().Descriptor().Fields().ByName("fields")).
-		Map()
+	mapFieldDesc := structMsg.ProtoReflect().Descriptor().Fields().ByName("fields")
+	mapVal := structMsg.ProtoReflect().Get(mapFieldDesc).Map()
 	listMsg := &structpb.ListValue{
 		Values: []*structpb.Value{
 			{Kind: &structpb.Value_BoolValue{BoolValue: true}},
@@ -216,10 +215,11 @@ func TestSet_BindThis(t *testing.T) {
 		List()
 
 	tests := []struct {
-		name   string
-		val    any
-		expr   string
-		exType *cel.Type
+		name      string
+		val       any
+		fieldDesc protoreflect.FieldDescriptor
+		expr      string
+		exType    *cel.Type
 	}{
 		{
 			name:   "reflect message",
@@ -234,10 +234,11 @@ func TestSet_BindThis(t *testing.T) {
 			exType: cel.TimestampType,
 		},
 		{
-			name:   "proto map",
-			val:    mapVal,
-			expr:   "this['foo']",
-			exType: cel.BoolType,
+			name:      "proto map",
+			val:       mapVal,
+			fieldDesc: mapFieldDesc,
+			expr:      "this['foo']",
+			exType:    cel.BoolType,
 		},
 		{
 			name:   "proto list",
@@ -264,7 +265,7 @@ func TestSet_BindThis(t *testing.T) {
 			require.NoError(t, issues.Err())
 			prog, err := env.Program(ast)
 			require.NoError(t, err)
-			res, _, err := prog.Eval(&bindings{This: newOptional(thisToCel(test.val))})
+			res, _, err := prog.Eval(&bindings{This: newOptional(thisToCel(test.val, test.fieldDesc, env.CELTypeAdapter()))})
 			require.NoError(t, err)
 			assert.Equal(t, test.exType.String(), res.Type().TypeName())
 		})

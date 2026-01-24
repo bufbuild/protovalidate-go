@@ -19,6 +19,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/google/cel-go/cel"
+	"github.com/google/cel-go/common/types"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -31,11 +32,19 @@ type programSet []compiledProgram
 // Eval applies the contained expressions to the provided `this` val, returning
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
-// the first failed expression.
-func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
+// the first failed expression. The adapter is used for map value conversion.
+func (s programSet) Eval(
+	val protoreflect.Value,
+	fieldDesc protoreflect.FieldDescriptor,
+	adapter types.Adapter,
+	cfg *validationConfig,
+) error {
+	if len(s) == 0 {
+		return nil
+	}
 	activation := getBindings()
 	defer putBindings(activation)
-	activation.This = newOptional(thisToCel(val.Interface()))
+	activation.This = newOptional(thisToCel(val.Interface(), fieldDesc, adapter))
 	var violations []*Violation
 	for _, expr := range s {
 		violation, err := expr.eval(activation, cfg)
@@ -57,29 +66,12 @@ func (s programSet) Eval(val protoreflect.Value, cfg *validationConfig) error {
 	return nil
 }
 
-func thisToCel(val any) any {
+func thisToCel(val any, fieldDesc protoreflect.FieldDescriptor, adapter types.Adapter) any {
 	switch value := val.(type) {
 	case protoreflect.Message:
 		return value.Interface()
 	case protoreflect.Map:
-		// TODO: expensive to create this copy, but getting this into a ref.Val with
-		//  traits.Mapper is not terribly feasible from this type.
-		bindingVal := make(map[any]any, value.Len())
-		value.Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
-			// Cel operates on 64-bit integers, so if our map type is 32-bit, we
-			// need to widen to a 64-bit type in the binding due to our usage of
-			// a map[any]any.
-			switch key.Interface().(type) {
-			case int32:
-				bindingVal[key.Int()] = value.Interface()
-			case uint32:
-				bindingVal[key.Uint()] = value.Interface()
-			default:
-				bindingVal[key.Interface()] = value.Interface()
-			}
-			return true
-		})
-		return bindingVal
+		return newProtoMap(adapter, value, fieldDesc.MapKey(), fieldDesc.MapValue())
 	default:
 		return value
 	}

@@ -166,6 +166,7 @@ func (bldr *builder) processMessageExpressions(
 
 	msgEval.Append(celPrograms{
 		programSet: compiledExprs,
+		adapter:    bldr.env.CELTypeAdapter(),
 	})
 }
 
@@ -374,6 +375,7 @@ func (bldr *builder) processFieldExpressions(
 			celPrograms{
 				base:       newBase(eval),
 				programSet: compiledExpressions,
+				adapter:    bldr.env.CELTypeAdapter(),
 			},
 		)
 	}
@@ -476,6 +478,7 @@ func (bldr *builder) processStandardRules(
 	valEval.Append(celPrograms{
 		base:       newBase(valEval),
 		programSet: stdRules,
+		adapter:    bldr.env.CELTypeAdapter(),
 	})
 	return nil
 }
