@@ -44,6 +44,11 @@ var (
 )
 
 // kvPairs performs validation on a map field's KV Pairs.
+//
+// This type uses pointer receivers to avoid a heap allocation on every
+// Evaluate call. The closure passed to Map().Range() captures the receiver,
+// and with a value receiver the entire struct would escape to the heap.
+// With a pointer receiver, only the pointer is captured.
 type kvPairs struct {
 	base
 
@@ -53,15 +58,15 @@ type kvPairs struct {
 	ValueRules value
 }
 
-func newKVPairs(valEval *value) kvPairs {
-	return kvPairs{
+func newKVPairs(valEval *value) *kvPairs {
+	return &kvPairs{
 		base:       newBase(valEval),
 		KeyRules:   value{NestedRule: mapKeysRulePath},
 		ValueRules: value{NestedRule: mapValuesRulePath},
 	}
 }
 
-func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
+func (m *kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
 		evalErr := m.evalPairs(msg, key, value, cfg)
@@ -102,7 +107,7 @@ func (m kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg 
 	return err
 }
 
-func (m kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
+func (m *kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
 	evalErr := m.KeyRules.EvaluateField(msg, key.Value(), cfg, true)
 	markViolationForKey(evalErr)
 	ok, err := mergeViolations(err, evalErr, cfg)
@@ -115,12 +120,12 @@ func (m kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, va
 	return err
 }
 
-func (m kvPairs) Tautology() bool {
+func (m *kvPairs) Tautology() bool {
 	return m.KeyRules.Tautology() &&
 		m.ValueRules.Tautology()
 }
 
-func (m kvPairs) formatKey(key any) string {
+func (m *kvPairs) formatKey(key any) string {
 	switch k := key.(type) {
 	case string:
 		return strconv.Quote(k)
@@ -129,4 +134,4 @@ func (m kvPairs) formatKey(key any) string {
 	}
 }
 
-var _ evaluator = kvPairs{}
+var _ evaluator = (*kvPairs)(nil)

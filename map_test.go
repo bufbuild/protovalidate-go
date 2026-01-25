@@ -56,7 +56,7 @@ func TestFormatKey(t *testing.T) {
 		},
 	}
 
-	kv := kvPairs{}
+	kv := &kvPairs{}
 	for _, tc := range tests {
 		test := tc
 		t.Run(test.expected, func(t *testing.T) {
