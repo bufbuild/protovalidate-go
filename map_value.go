@@ -79,7 +79,7 @@ func (m *protoMap) ConvertToNative(typeDesc reflect.Type) (any, error) {
 		}
 		return nativeMap.Interface(), nil
 	case reflect.Interface:
-		if reflect.TypeOf(m).Implements(typeDesc) {
+		if reflect.TypeFor[*protoMap]().Implements(typeDesc) {
 			return m, nil
 		}
 		if reflect.TypeOf(m.m).Implements(typeDesc) {

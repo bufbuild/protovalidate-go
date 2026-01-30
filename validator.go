@@ -64,7 +64,12 @@ func New(options ...ValidatorOption) (Validator, error) {
 		opt.applyToValidator(&cfg)
 	}
 
-	env, err := cel.NewEnv(cel.Lib(pvcel.NewLibrary()))
+	reg := newRegistry()
+	env, err := cel.NewEnv(
+		cel.CustomTypeProvider(reg),
+		cel.CustomTypeAdapter(reg),
+		cel.Lib(pvcel.NewLibrary()),
+	)
 	if err != nil {
 		return nil, fmt.Errorf(
 			"failed to construct CEL environment: %w", err)

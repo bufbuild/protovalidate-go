@@ -115,7 +115,7 @@ func TestCache_BuildStandardRules(t *testing.T) {
 				assert.Error(t, err)
 			} else {
 				require.NoError(t, err)
-				assert.Len(t, set, test.exCt)
+				assert.Len(t, set.programs, test.exCt)
 			}
 		})
 	}

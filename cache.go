@@ -48,34 +48,35 @@ func (c *cache) Build(
 	allowUnknownFields bool,
 	forItems bool,
 ) (set programSet, err error) {
+	set.env = env
 	rules, setOneof, done, err := c.resolveRules(
 		fieldDesc,
 		fieldRules,
 		forItems,
 	)
 	if done {
-		return nil, err
+		return set, err
 	}
 
 	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
-		return nil, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
+		return set, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
 	}
 	if !allowUnknownFields && len(rules.GetUnknown()) > 0 {
-		return nil, &CompilationError{cause: fmt.Errorf("unknown rules in %s; see protovalidate.WithExtensionTypeResolver", rules.Descriptor().FullName())}
+		return set, &CompilationError{cause: fmt.Errorf("unknown rules in %s; see protovalidate.WithExtensionTypeResolver", rules.Descriptor().FullName())}
 	}
 
-	env, err = c.prepareEnvironment(env, fieldDesc, rules, forItems)
+	set.env, err = c.prepareEnvironment(env, fieldDesc, rules, forItems)
 	if err != nil {
-		return nil, err
+		return set, err
 	}
 
 	var asts astSet
 	rules.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
 		// Try compiling without the rule variable first. Extending a cel
 		// environment is expensive.
-		precomputedASTs, compileErr := c.loadOrCompileStandardRule(env, setOneof, desc)
+		precomputedASTs, compileErr := c.loadOrCompileStandardRule(set.env, setOneof, desc)
 		if compileErr != nil {
-			fieldEnv, compileErr := env.Extend(
+			fieldEnv, compileErr := extendEnv(set.env,
 				cel.Variable("rule", pvcel.ProtoFieldToType(desc, true, false)),
 			)
 			if compileErr != nil {
@@ -97,11 +98,10 @@ func (c *cache) Build(
 		return true
 	})
 	if err != nil {
-		return nil, err
+		return set, err
 	}
 
-	set, err = asts.ReduceResiduals(rules)
-	return set, err
+	return asts.ReduceResiduals(rules)
 }
 
 // resolveRules extracts the standard rules for the specified field. An
@@ -155,7 +155,7 @@ func (c *cache) prepareEnvironment(
 	rules protoreflect.Message,
 	forItems bool,
 ) (*cel.Env, error) {
-	env, err := env.Extend(
+	env, err := extendEnv(env,
 		cel.Types(rules.Interface()),
 		cel.Variable("this", pvcel.ProtoFieldToType(fieldDesc, true, forItems)),
 		cel.Variable("rules",

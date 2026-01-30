@@ -98,6 +98,9 @@ func TestCompiled(t *testing.T) {
 func TestSet(t *testing.T) {
 	t.Parallel()
 
+	env, err := cel.NewEnv()
+	require.NoError(t, err)
+
 	tests := []struct {
 		name     string
 		set      programSet
@@ -111,41 +114,50 @@ func TestSet(t *testing.T) {
 		{
 			name: "success",
 			set: programSet{
-				{
-					Program: mockProgram{Val: types.True},
-					Source:  &validate.Rule{},
+				programs: []compiledProgram{
+					{
+						Program: mockProgram{Val: types.True},
+						Source:  &validate.Rule{},
+					},
+					{
+						Program: mockProgram{Val: types.String("")},
+						Source:  &validate.Rule{},
+					},
 				},
-				{
-					Program: mockProgram{Val: types.String("")},
-					Source:  &validate.Rule{},
-				},
+				env: env,
 			},
 		},
 		{
 			name: "runtime error",
 			set: programSet{
-				{
-					Program: mockProgram{Val: types.False},
-					Source:  &validate.Rule{},
+				programs: []compiledProgram{
+					{
+						Program: mockProgram{Val: types.False},
+						Source:  &validate.Rule{},
+					},
+					{
+						Program: mockProgram{Err: errors.New("some error")},
+						Source:  &validate.Rule{},
+					},
 				},
-				{
-					Program: mockProgram{Err: errors.New("some error")},
-					Source:  &validate.Rule{},
-				},
+				env: env,
 			},
 			exErr: true,
 		},
 		{
 			name: "invalid",
 			set: programSet{
-				{
-					Program: mockProgram{Val: types.False},
-					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+				programs: []compiledProgram{
+					{
+						Program: mockProgram{Val: types.False},
+						Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+					},
+					{
+						Program: mockProgram{Val: types.String("buzz")},
+						Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
+					},
 				},
-				{
-					Program: mockProgram{Val: types.String("buzz")},
-					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
-				},
+				env: env,
 			},
 			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
@@ -158,14 +170,17 @@ func TestSet(t *testing.T) {
 			name:     "invalid fail fast",
 			failFast: true,
 			set: programSet{
-				{
-					Program: mockProgram{Val: types.False},
-					Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+				programs: []compiledProgram{
+					{
+						Program: mockProgram{Val: types.False},
+						Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+					},
+					{
+						Program: mockProgram{Val: types.String("buzz")},
+						Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
+					},
 				},
-				{
-					Program: mockProgram{Val: types.String("buzz")},
-					Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
-				},
+				env: env,
 			},
 			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
@@ -180,7 +195,7 @@ func TestSet(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			err := test.set.Eval(protoreflect.ValueOfBool(false), nil, types.DefaultTypeAdapter, &validationConfig{
+			err := test.set.Eval(protoreflect.ValueOfBool(false), nil, &validationConfig{
 				failFast: test.failFast,
 			})
 			switch {

@@ -65,12 +65,12 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	assert.Len(t, asts, 1)
 	set, err := asts.ToProgramSet()
 	require.NoError(t, err)
-	assert.Len(t, set, 1)
-	assert.Equal(t, asts[0].Source, set[0].Source)
+	assert.Len(t, set.programs, 1)
+	assert.Equal(t, asts[0].Source, set.programs[0].Source)
 
 	empty := astSet{}
 	set, err = empty.ToProgramSet()
-	assert.Empty(t, set)
+	assert.Empty(t, set.programs)
 	require.NoError(t, err)
 }
 
@@ -96,5 +96,5 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 		cel.Globals(map[string]any{"foo": true}),
 	)
 	require.NoError(t, err)
-	assert.Empty(t, set)
+	assert.Empty(t, set.programs)
 }
