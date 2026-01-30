@@ -38,29 +38,32 @@ func compile(
 	envOpts ...cel.EnvOption,
 ) (set programSet, err error) {
 	if len(expressions.Rules) == 0 {
-		return nil, nil
+		return set, nil
 	}
 
+	set.env = env
 	if len(envOpts) > 0 {
-		env, err = env.Extend(envOpts...)
+		set.env, err = extendEnv(env, envOpts...)
 		if err != nil {
-			return nil, &CompilationError{cause: fmt.Errorf(
+			return set, &CompilationError{cause: fmt.Errorf(
 				"failed to extend environment: %w", err)}
 		}
 	}
 
-	set = make(programSet, len(expressions.Rules))
+	programs := make([]compiledProgram, len(expressions.Rules))
 	for i, rule := range expressions.Rules {
-		ast, err := compileAST(env, rule, expressions.RulePath)
+		var ast compiledAST
+		ast, err = compileAST(set.env, rule, expressions.RulePath)
 		if err != nil {
-			return nil, err
+			return set, err
 		}
 
-		set[i], err = ast.toProgram(env)
+		programs[i], err = ast.toProgram(set.env)
 		if err != nil {
-			return nil, err
+			return set, err
 		}
 	}
+	set.programs = programs
 	return set, nil
 }
 
@@ -79,7 +82,7 @@ func compileASTs(
 	}
 
 	if len(envOpts) > 0 {
-		env, err = env.Extend(envOpts...)
+		env, err = extendEnv(env, envOpts...)
 		if err != nil {
 			return set, &CompilationError{cause: fmt.Errorf(
 				"failed to extend environment: %w", err)}

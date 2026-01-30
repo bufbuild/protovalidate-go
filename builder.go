@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"cmp"
 	"fmt"
 	"maps"
 	"slices"
@@ -164,10 +165,7 @@ func (bldr *builder) processMessageExpressions(
 		return
 	}
 
-	msgEval.Append(celPrograms{
-		programSet: compiledExprs,
-		adapter:    bldr.env.CELTypeAdapter(),
-	})
+	msgEval.Append(celPrograms{programSet: compiledExprs})
 }
 
 func (bldr *builder) processMessageOneofRules(
@@ -331,13 +329,13 @@ func (bldr *builder) processFieldExpressions(
 		pvcel.RequiredEnvOptions(fieldDesc),
 		cel.Variable("this", celTyp),
 	)
-	compileWithPath := func(exprs expressions, fieldPathElement *validate.FieldPathElement, descriptor protoreflect.FieldDescriptor) (programSet, error) {
-		compiledExpressions, err := compile(exprs, bldr.env, opts...)
+	compileWithPath := func(exprs expressions, fieldPathElement *validate.FieldPathElement, descriptor protoreflect.FieldDescriptor) (set programSet, err error) {
+		set, err = compile(exprs, bldr.env, opts...)
 		if err != nil {
-			return nil, err
+			return set, err
 		}
-		for i := range compiledExpressions {
-			compiledExpressions[i].Path = []*validate.FieldPathElement{
+		for i := range set.programs {
+			set.programs[i].Path = []*validate.FieldPathElement{
 				validate.FieldPathElement_builder{
 					FieldNumber: proto.Int32(fieldPathElement.GetFieldNumber()),
 					FieldType:   fieldPathElement.GetFieldType().Enum(),
@@ -345,9 +343,9 @@ func (bldr *builder) processFieldExpressions(
 					Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
 				}.Build(),
 			}
-			compiledExpressions[i].Descriptor = descriptor
+			set.programs[i].Descriptor = descriptor
 		}
-		return compiledExpressions, nil
+		return set, nil
 	}
 	compiledExpressions, err := compileWithPath(
 		expressions{
@@ -369,13 +367,15 @@ func (bldr *builder) processFieldExpressions(
 	if err != nil {
 		return err
 	}
-	compiledExpressions = append(compiledExpressions, celRuleCompiledExpressions...)
-	if len(compiledExpressions) > 0 {
+	// Merge the two program sets. If cel rules were compiled, use their env
+	// since it has all the types registered.
+	compiledExpressions.programs = append(compiledExpressions.programs, celRuleCompiledExpressions.programs...)
+	if len(compiledExpressions.programs) > 0 {
+		compiledExpressions.env = cmp.Or(compiledExpressions.env, celRuleCompiledExpressions.env, bldr.env)
 		eval.Rules = append(eval.Rules,
 			celPrograms{
 				base:       newBase(eval),
 				programSet: compiledExpressions,
-				adapter:    bldr.env.CELTypeAdapter(),
 			},
 		)
 	}
@@ -478,7 +478,6 @@ func (bldr *builder) processStandardRules(
 	valEval.Append(celPrograms{
 		base:       newBase(valEval),
 		programSet: stdRules,
-		adapter:    bldr.env.CELTypeAdapter(),
 	})
 	return nil
 }
