@@ -36,8 +36,9 @@ func extendEnv(env *cel.Env, opts ...cel.EnvOption) (*cel.Env, error) {
 	return env.Extend(opts...)
 }
 
-// registry implements the prototype pattern for CEL type registries.
-// It maintains a parent pointer for delegation and stores new registrations locally.
+// registry implements a tree of registries, where a registry can be extended cheaply
+// be creating a new child, which delegates to its parent instead of copying the
+// parent's content.
 type registry struct {
 	parent     *registry
 	local      *types.Registry
