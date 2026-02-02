@@ -24,29 +24,32 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
-// programSet is a list of compiledProgram expressions that are evaluated
+// programSet is a collection of compiledProgram expressions that are evaluated
 // together with the same input value. All expressions in a programSet may refer
-// to a `this` variable.
-type programSet []compiledProgram
+// to a `this` variable. It also holds the CEL environment used for compilation,
+// which provides the correct type adapter for evaluation.
+type programSet struct {
+	programs []compiledProgram
+	env      *cel.Env
+}
 
 // Eval applies the contained expressions to the provided `this` val, returning
 // either *errors.ValidationError if the input is invalid or errors.RuntimeError
 // if there is a type or range error. If failFast is true, execution stops at
-// the first failed expression. The adapter is used for map value conversion.
+// the first failed expression.
 func (s programSet) Eval(
 	val protoreflect.Value,
 	fieldDesc protoreflect.FieldDescriptor,
-	adapter types.Adapter,
 	cfg *validationConfig,
 ) error {
-	if len(s) == 0 {
+	if len(s.programs) == 0 {
 		return nil
 	}
 	activation := getBindings()
 	defer putBindings(activation)
-	activation.This = newOptional(thisToCel(val.Interface(), fieldDesc, adapter))
+	activation.This = newOptional(thisToCel(val.Interface(), fieldDesc, s.env.CELTypeAdapter()))
 	var violations []*Violation
-	for _, expr := range s {
+	for _, expr := range s.programs {
 		violation, err := expr.eval(activation, cfg)
 		if err != nil {
 			return err
