@@ -45,12 +45,18 @@ type registry struct {
 	knownFiles map[protoreflect.FileDescriptor]struct{}
 }
 
-// newRegistry creates a new root registry with an empty local store.
-func newRegistry() *registry {
+// newRegistry creates a new root registry seeded with the core CEL types
+// (string, int, bool, etc.). Copy should be used to create child registries,
+// which use an empty local store and delegate to the parent.
+func newRegistry() (*registry, error) {
+	local, err := types.NewRegistry()
+	if err != nil {
+		return nil, err
+	}
 	return &registry{
 		parent: nil,
-		local:  types.NewEmptyRegistry(),
-	}
+		local:  local,
+	}, nil
 }
 
 // Copy creates a child registry that delegates to this registry.

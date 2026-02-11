@@ -35,7 +35,8 @@ import (
 // and registry attached, similar to how the validator creates its env.
 func newTestEnv(t testing.TB) *cel.Env {
 	t.Helper()
-	reg := newRegistry()
+	reg, err := newRegistry()
+	require.NoError(t, err)
 	env, err := cel.NewEnv(
 		cel.CustomTypeProvider(reg),
 		cel.CustomTypeAdapter(reg),
@@ -176,11 +177,28 @@ func TestRegistryConcurrentAccess(t *testing.T) {
 	wg.Wait()
 }
 
+func TestRegistryCoreTypeIdents(t *testing.T) {
+	t.Parallel()
+
+	// Verify that a root registry exposes core CEL type identifiers
+	// (string, int, bool, etc.) so that expressions like
+	// type(x) == string can compile. See #304.
+	env := newTestEnv(t)
+	ast, issues := env.Compile(`type("hello") == string`)
+	require.NoError(t, issues.Err())
+	prog, err := env.Program(ast)
+	require.NoError(t, err)
+	out, _, err := prog.Eval(cel.NoVars())
+	require.NoError(t, err)
+	require.Equal(t, true, out.Value())
+}
+
 func TestRegistryNativeToValueDelegation(t *testing.T) {
 	t.Parallel()
 
 	// Create a chain: root -> child -> grandchild
-	root := newRegistry()
+	root, err := newRegistry()
+	require.NoError(t, err)
 	child := root.Copy()
 	grandchild := child.Copy()
 
@@ -205,7 +223,8 @@ func TestRegistryNativeToValueDelegation(t *testing.T) {
 func TestRegistryMessageFirstRegistrationWins(t *testing.T) {
 	t.Parallel()
 
-	root := newRegistry()
+	root, err := newRegistry()
+	require.NoError(t, err)
 	child := root.Copy()
 
 	// Register a message with certain fields in root
