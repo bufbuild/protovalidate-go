@@ -64,7 +64,11 @@ func New(options ...ValidatorOption) (Validator, error) {
 		opt.applyToValidator(&cfg)
 	}
 
-	reg := newRegistry()
+	reg, err := newRegistry()
+	if err != nil {
+		return nil, fmt.Errorf(
+			"failed to construct CEL type registry: %w", err)
+	}
 	env, err := cel.NewEnv(
 		cel.CustomTypeProvider(reg),
 		cel.CustomTypeAdapter(reg),
