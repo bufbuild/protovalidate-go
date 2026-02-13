@@ -24,11 +24,11 @@ import (
 // base is a common struct used by all field evaluators. It holds
 // some common information used across all field evaluators.
 type base struct {
-	// Descriptor is the FieldDescriptor targeted by this evaluator, nor nil if
+	// Descriptor is the FieldDescriptor targeted by this evaluator, or nil if
 	// there is none.
 	Descriptor protoreflect.FieldDescriptor
 
-	// FieldPatht is the field path element that pertains to this evaluator, or
+	// FieldPathElement is the field path element that pertains to this evaluator, or
 	// nil if there is none.
 	FieldPathElement *validate.FieldPathElement
 
