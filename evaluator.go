@@ -30,9 +30,9 @@ type evaluator interface {
 	// returning an error on the first violation. The returned error will be one
 	// of the following expected types:
 	//
-	//   - errors.ValidationError: val is invalid.
-	//   - errors.RuntimeError: error evaluating val determined at runtime.
-	//   - errors.CompilationError: this evaluator (or child evaluator) failed to
+	//   - *ValidationError: val is invalid.
+	//   - *RuntimeError: error evaluating val determined at runtime.
+	//   - *CompilationError: this evaluator (or child evaluator) failed to
 	//       build. This error is not recoverable.
 	//
 	Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error
