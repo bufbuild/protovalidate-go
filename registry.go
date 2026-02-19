@@ -17,6 +17,7 @@ package protovalidate
 import (
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/pb"
 	"github.com/google/cel-go/common/types/ref"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -143,6 +144,11 @@ func (r *registry) NativeToValue(value any) ref.Val {
 		// we need to use this registry as the adapter, not the local
 		// types.Registry for cascading to work.
 		return types.NewProtoList(r, val)
+	case *pb.Map:
+		// Same as protoreflect.List above: use the full registry chain
+		// as adapter so map value lookups can resolve types registered
+		// in ancestor registries.
+		return types.NewProtoMap(r, val)
 	default:
 		result := r.local.NativeToValue(value)
 		if r.parent != nil && types.IsError(result) {
