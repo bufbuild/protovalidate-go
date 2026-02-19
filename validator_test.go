@@ -556,6 +556,70 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestValidator_Validate_Issue307(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+
+	t.Run("map/valid", func(t *testing.T) {
+		t.Parallel()
+		name := "child"
+		msg := pb.SelfReferentialMap_builder{
+			Name: &name,
+			Children: map[string]*pb.SelfReferentialMap{
+				"a": pb.SelfReferentialMap_builder{Name: &name}.Build(),
+				"b": pb.SelfReferentialMap_builder{Name: &name}.Build(),
+			},
+		}.Build()
+		err := val.Validate(msg)
+		require.NoError(t, err)
+	})
+
+	t.Run("map/invalid", func(t *testing.T) {
+		t.Parallel()
+		name := "parent"
+		msg := pb.SelfReferentialMap_builder{
+			Name: &name,
+			Children: map[string]*pb.SelfReferentialMap{
+				"a": pb.SelfReferentialMap_builder{Name: &name}.Build(),
+				"b": pb.SelfReferentialMap_builder{}.Build(), // no name
+			},
+		}.Build()
+		err := val.Validate(msg)
+		var valErr *ValidationError
+		require.ErrorAs(t, err, &valErr)
+	})
+
+	t.Run("repeated/valid", func(t *testing.T) {
+		t.Parallel()
+		name := "child"
+		msg := pb.SelfReferentialRepeated_builder{
+			Name: &name,
+			Children: []*pb.SelfReferentialRepeated{
+				pb.SelfReferentialRepeated_builder{Name: &name}.Build(),
+				pb.SelfReferentialRepeated_builder{Name: &name}.Build(),
+			},
+		}.Build()
+		err := val.Validate(msg)
+		require.NoError(t, err)
+	})
+
+	t.Run("repeated/invalid", func(t *testing.T) {
+		t.Parallel()
+		name := "parent"
+		msg := pb.SelfReferentialRepeated_builder{
+			Name: &name,
+			Children: []*pb.SelfReferentialRepeated{
+				pb.SelfReferentialRepeated_builder{Name: &name}.Build(),
+				pb.SelfReferentialRepeated_builder{}.Build(), // no name
+			},
+		}.Build()
+		err := val.Validate(msg)
+		var valErr *ValidationError
+		require.ErrorAs(t, err, &valErr)
+	})
+}
+
 func TestValidator_Validate_Issue296(t *testing.T) {
 	t.Parallel()
 	val, err := New()

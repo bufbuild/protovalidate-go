@@ -203,3 +203,27 @@ message FieldWithIssue {
 message Issue211 {
   google.protobuf.Timestamp value = 1 [(buf.validate.field).timestamp.gt_now = true];
 }
+
+// https://github.com/bufbuild/protovalidate-go/issues/307
+message SelfReferentialRepeated {
+  repeated SelfReferentialRepeated children = 1;
+  optional string name = 2;
+
+  option (buf.validate.message).cel = {
+    id: "children_must_have_name"
+    message: "All children must have a name"
+    expression: "size(this.children) == 0 || this.children.all(c, has(c.name))"
+  };
+}
+
+// https://github.com/bufbuild/protovalidate-go/issues/307
+message SelfReferentialMap {
+  map<string, SelfReferentialMap> children = 1;
+  optional string name = 2;
+
+  option (buf.validate.message).cel = {
+    id: "children_must_have_name"
+    message: "All children must have a name"
+    expression: "size(this.children) == 0 || this.children.all(k, has(this.children[k].name))"
+  };
+}
