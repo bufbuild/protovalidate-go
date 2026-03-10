@@ -15,17 +15,19 @@ LICENSE_IGNORE := -e internal/testdata/
 GO ?= go
 ARGS ?= --strict_message --strict_error
 GOLANGCI_LINT_VERSION ?= v2.9.0
-# Set to use a different version of protovalidate-conformance.
-# Should be kept in sync with the version referenced in buf.yaml and
-# 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v1.1.0
+# Set the protovalidate version, can be a commit, branch, or tag
+PROTOVALIDATE_VERSION ?= 8b6fa0a9cbff5b0e600f1d2a3024e135b5594db7
+PROTOVALIDATE_PROTO_VERSION := $(shell PATH="$(abspath $(BIN)):$(PATH)" ./make/scripts/resolve_bsr_commit.sh buf.build/bufbuild/protovalidate $(PROTOVALIDATE_VERSION))
+PROTOVALIDATE_TESTING_PROTO_VERSION := $(shell PATH="$(abspath $(BIN)):$(PATH)" ./make/scripts/resolve_bsr_commit.sh buf.build/bufbuild/protovalidate-testing $(PROTOVALIDATE_VERSION))
+PROTOBUF_GO_VERSION := $(shell go list -json -m google.golang.org/protobuf  | jq -r '.Version')
+PROTOVALIDATE_GEN_SDK_VERSION := $(shell buf registry sdk version --module=buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_PROTO_VERSION) --plugin=buf.build/protocolbuffers/go:$(PROTOBUF_GO_VERSION)) 
 
 .PHONY: help
 help: ## Describe useful make targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "%-15s %s\n", $$1, $$2}'
 
 .PHONY: all
-all: generate test conformance lint ## Generate and run all tests and lint (default)
+all: sync-upstream generate test conformance lint ## Generate and run all tests and lint (default)
 
 .PHONY: clean
 clean: ## Delete intermediate build artifacts
@@ -72,8 +74,14 @@ generate: generate-proto generate-license ## Regenerate code and license headers
 .PHONY: generate-proto
 generate-proto: $(BIN)/buf
 	rm -rf internal/gen/*/
-	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(CONFORMANCE_VERSION)
+	$(BIN)/buf generate buf.build/bufbuild/protovalidate-testing:$(PROTOVALIDATE_TESTING_PROTO_VERSION)
 	$(BIN)/buf generate
+
+.PHONY: sync-upstream
+sync-upstream:
+	yq -i '(.deps[] | select(. == "buf.build/bufbuild/protovalidate:*")) = "buf.build/bufbuild/protovalidate:$(PROTOVALIDATE_PROTO_VERSION)"' buf.yaml
+	buf dep update
+	go get buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go@$(PROTOVALIDATE_GEN_SDK_VERSION)
 
 .PHONY: generate-license
 generate-license: $(BIN)/license-header
@@ -132,7 +140,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
 	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(PROTOVALIDATE_VERSION)
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)

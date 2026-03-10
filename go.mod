@@ -3,7 +3,7 @@ module buf.build/go/protovalidate
 go 1.24.0
 
 require (
-	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-20260209202127-80ab13bee0bf.1
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.36.11-00000000000000-5dcec42a7ef9.1
 	buf.build/go/hyperpb v0.1.3
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/google/cel-go v0.27.0

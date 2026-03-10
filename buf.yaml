@@ -2,7 +2,8 @@ version: v2
 modules:
   - path: proto
 deps:
-  - buf.build/bufbuild/protovalidate:v1.1.0
+  # DO NOT EDIT. This is set via make.
+  - buf.build/bufbuild/protovalidate:5dcec42a7ef94f16ac710abcd02271f7
   - buf.build/rodaine/protogofakeit
 lint:
   use:

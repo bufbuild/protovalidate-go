@@ -3704,6 +3704,120 @@ func (b0 StringHostAndOptionalPort_builder) Build() *StringHostAndOptionalPort {
 	return m0
 }
 
+type StringProtobufFQN struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           string                 `protobuf:"bytes,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StringProtobufFQN) Reset() {
+	*x = StringProtobufFQN{}
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StringProtobufFQN) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StringProtobufFQN) ProtoMessage() {}
+
+func (x *StringProtobufFQN) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *StringProtobufFQN) GetVal() string {
+	if x != nil {
+		return x.Val
+	}
+	return ""
+}
+
+func (x *StringProtobufFQN) SetVal(v string) {
+	x.Val = v
+}
+
+type StringProtobufFQN_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 StringProtobufFQN_builder) Build() *StringProtobufFQN {
+	m0 := &StringProtobufFQN{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type StringProtobufDotFQN struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           string                 `protobuf:"bytes,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StringProtobufDotFQN) Reset() {
+	*x = StringProtobufDotFQN{}
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[64]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StringProtobufDotFQN) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StringProtobufDotFQN) ProtoMessage() {}
+
+func (x *StringProtobufDotFQN) ProtoReflect() protoreflect.Message {
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[64]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *StringProtobufDotFQN) GetVal() string {
+	if x != nil {
+		return x.Val
+	}
+	return ""
+}
+
+func (x *StringProtobufDotFQN) SetVal(v string) {
+	x.Val = v
+}
+
+type StringProtobufDotFQN_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 StringProtobufDotFQN_builder) Build() *StringProtobufDotFQN {
+	m0 := &StringProtobufDotFQN{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 type StringExample struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Val           string                 `protobuf:"bytes,1,opt,name=val,proto3" json:"val,omitempty"`
@@ -3713,7 +3827,7 @@ type StringExample struct {
 
 func (x *StringExample) Reset() {
 	*x = StringExample{}
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[65]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3725,7 +3839,7 @@ func (x *StringExample) String() string {
 func (*StringExample) ProtoMessage() {}
 
 func (x *StringExample) ProtoReflect() protoreflect.Message {
-	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[63]
+	mi := &file_buf_validate_conformance_cases_strings_proto_msgTypes[65]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3905,12 +4019,16 @@ const file_buf_validate_conformance_cases_strings_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\x80\x02\x01R\x03val\"\xa4\x01\n" +
 	"\x19StringHostAndOptionalPort\x12\x86\x01\n" +
 	"\x03val\x18\x01 \x01(\tBt\xbaHq\xba\x01n\n" +
-	"\"string.host_and_port.optional_port\x12-value must be a host and (optional) port pair\x1a\x19this.isHostAndPort(false)R\x03val\".\n" +
+	"\"string.host_and_port.optional_port\x12-value must be a host and (optional) port pair\x1a\x19this.isHostAndPort(false)R\x03val\"/\n" +
+	"\x11StringProtobufFQN\x12\x1a\n" +
+	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xa8\x02\x01R\x03val\"2\n" +
+	"\x14StringProtobufDotFQN\x12\x1a\n" +
+	"\x03val\x18\x01 \x01(\tB\b\xbaH\x05r\x03\xb0\x02\x01R\x03val\".\n" +
 	"\rStringExample\x12\x1d\n" +
 	"\x03val\x18\x01 \x01(\tB\v\xbaH\br\x06\x92\x02\x03fooR\x03valB\x96\x02\n" +
 	"\"com.buf.validate.conformance.casesB\fStringsProtoP\x01ZFbuf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases\xa2\x02\x04BVCC\xaa\x02\x1eBuf.Validate.Conformance.Cases\xca\x02\x1eBuf\\Validate\\Conformance\\Cases\xe2\x02*Buf\\Validate\\Conformance\\Cases\\GPBMetadata\xea\x02!Buf::Validate::Conformance::Casesb\x06proto3"
 
-var file_buf_validate_conformance_cases_strings_proto_msgTypes = make([]protoimpl.MessageInfo, 64)
+var file_buf_validate_conformance_cases_strings_proto_msgTypes = make([]protoimpl.MessageInfo, 66)
 var file_buf_validate_conformance_cases_strings_proto_goTypes = []any{
 	(*StringNone)(nil),                 // 0: buf.validate.conformance.cases.StringNone
 	(*StringConst)(nil),                // 1: buf.validate.conformance.cases.StringConst
@@ -3975,7 +4093,9 @@ var file_buf_validate_conformance_cases_strings_proto_goTypes = []any{
 	(*StringInOneof)(nil),              // 60: buf.validate.conformance.cases.StringInOneof
 	(*StringHostAndPort)(nil),          // 61: buf.validate.conformance.cases.StringHostAndPort
 	(*StringHostAndOptionalPort)(nil),  // 62: buf.validate.conformance.cases.StringHostAndOptionalPort
-	(*StringExample)(nil),              // 63: buf.validate.conformance.cases.StringExample
+	(*StringProtobufFQN)(nil),          // 63: buf.validate.conformance.cases.StringProtobufFQN
+	(*StringProtobufDotFQN)(nil),       // 64: buf.validate.conformance.cases.StringProtobufDotFQN
+	(*StringExample)(nil),              // 65: buf.validate.conformance.cases.StringExample
 }
 var file_buf_validate_conformance_cases_strings_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -3999,7 +4119,7 @@ func file_buf_validate_conformance_cases_strings_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_buf_validate_conformance_cases_strings_proto_rawDesc), len(file_buf_validate_conformance_cases_strings_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   64,
+			NumMessages:   66,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
