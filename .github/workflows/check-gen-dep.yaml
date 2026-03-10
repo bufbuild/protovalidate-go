@@ -1,0 +1,25 @@
+name: Check generated SDK dependency
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check gen dependency version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - name: Check for zeroed-out version
+        run: |
+          if grep -q 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go.*00000000000000' go.mod; then
+            echo "::error::buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go has a zeroed-out pseudo-version in go.mod. This happens when depending on a non-main version of protovalidate. Update PROTOVALIDATE_VERSION in the Makefile to a release or commit on the main branch of protovalidate and run 'make sync-upstream'."
+            exit 1
+          fi
