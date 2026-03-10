@@ -45,7 +45,7 @@ func Example() {
 
 	// output:
 	// valid: <nil>
-	// invalid: validation error: email: value must be a valid email address
+	// invalid: validation error: email: must be a valid email address
 }
 
 func ExampleWithFailFast() {
@@ -67,9 +67,9 @@ func ExampleWithFailFast() {
 
 	// output:
 	// default: validation errors:
-	//  - lat: value must be greater than or equal to -90 and less than or equal to 90
-	//  - lng: value must be greater than or equal to -180 and less than or equal to 180
-	// fail fast: validation error: lat: value must be greater than or equal to -90 and less than or equal to 90
+	//  - lat: must be greater than or equal to -90 and less than or equal to 90
+	//  - lng: must be greater than or equal to -180 and less than or equal to 180
+	// fail fast: validation error: lat: must be greater than or equal to -90 and less than or equal to 90
 }
 
 func ExampleWithMessages() {
