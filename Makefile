@@ -58,7 +58,7 @@ lint-fix:
 
 .PHONY: conformance
 conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
-	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
+	$(GO) tool protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
 
 .PHONY: conformance-hyperpb
 conformance-hyperpb: ## Run conformance tests against hyperpb
@@ -121,8 +121,7 @@ $(BIN)/golangci-lint: $(BIN) Makefile
 		github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
 
 $(BIN)/protovalidate-conformance: $(BIN) Makefile
-	GOBIN=$(abspath $(BIN)) $(GO) install \
-    	github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
+	$(GO) get -tool github.com/bufbuild/protovalidate/tools/protovalidate-conformance@$(CONFORMANCE_VERSION)
 
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)
