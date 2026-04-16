@@ -17,7 +17,7 @@ GOLANGCI_LINT_VERSION ?= v2.9.0
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
-CONFORMANCE_VERSION ?= v1.1.0
+CONFORMANCE_VERSION ?= v1.2.0
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -114,7 +114,7 @@ $(BIN)/buf: $(BIN) Makefile
 
 $(BIN)/license-header: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
-		  github.com/bufbuild/buf/private/pkg/licenseheader/cmd/license-header@latest
+		  github.com/bufbuild/buf/private/pkg/licenseheader/cmd/license-header@v1.67.0
 
 $(BIN)/golangci-lint: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
