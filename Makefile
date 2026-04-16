@@ -110,7 +110,7 @@ $(BIN):
 	@mkdir -p $(BIN)
 
 $(BIN)/buf: $(BIN) Makefile
-	GOBIN=$(abspath $(@D)) $(GO) install github.com/bufbuild/buf/cmd/buf@latest
+	GOBIN=$(abspath $(@D)) $(GO) install github.com/bufbuild/buf/cmd/buf@v1.67.0
 
 $(BIN)/license-header: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
