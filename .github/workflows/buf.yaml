@@ -31,5 +31,6 @@ jobs:
           push: false
           archive: false
           breaking: false
+          version: "1.67.0"
       - name: Check Generate
         run: make checkgenerate
