@@ -161,7 +161,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isHostname(host))
+					return types.Bool(IsHostname(host))
 				}),
 			),
 		),
@@ -175,7 +175,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isEmail(addr))
+					return types.Bool(IsEmail(addr))
 				}),
 			),
 		),
@@ -189,7 +189,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIP(addr, 0))
+					return types.Bool(IsIP(addr, 0))
 				}),
 			),
 			cel.MemberOverload(
@@ -202,7 +202,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !aok || !vok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIP(addr, vers))
+					return types.Bool(IsIP(addr, vers))
 				})),
 		),
 		cel.Function("isIpPrefix",
@@ -215,7 +215,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIPPrefix(prefix, 0, false))
+					return types.Bool(IsIPPrefix(prefix, 0, false))
 				})),
 			cel.MemberOverload(
 				"string_int_is_ip_prefix_bool",
@@ -227,7 +227,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !pok || !vok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIPPrefix(prefix, vers, false))
+					return types.Bool(IsIPPrefix(prefix, vers, false))
 				})),
 			cel.MemberOverload(
 				"string_bool_is_ip_prefix_bool",
@@ -239,7 +239,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !pok || !sok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIPPrefix(prefix, 0, strict))
+					return types.Bool(IsIPPrefix(prefix, 0, strict))
 				})),
 			cel.MemberOverload(
 				"string_int_bool_is_ip_prefix_bool",
@@ -252,7 +252,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !pok || !vok || !sok {
 						return types.Bool(false)
 					}
-					return types.Bool(isIPPrefix(prefix, vers, strict))
+					return types.Bool(IsIPPrefix(prefix, vers, strict))
 				})),
 		),
 		cel.Function("isUri",
@@ -265,7 +265,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isURI(s))
+					return types.Bool(IsURI(s))
 				}),
 			),
 		),
@@ -279,7 +279,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !ok {
 						return types.Bool(false)
 					}
-					return types.Bool(isURIRef(s))
+					return types.Bool(IsURIRef(s))
 				}),
 			),
 		),
@@ -379,7 +379,7 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 					if !vok || !pok {
 						return types.Bool(false)
 					}
-					return types.Bool(isHostAndPort(val, portReq))
+					return types.Bool(IsHostAndPort(val, portReq))
 				}),
 			),
 		),
@@ -464,35 +464,35 @@ func (l *library) uniqueBytes(list traits.Lister) ref.Val {
 	return types.Bool(true)
 }
 
-// isEmail reports whether val is an email address, for example "foo@example.com".
+// IsEmail reports whether val is an email address, for example "foo@example.com".
 //
 // Conforms to the definition for a valid email address from the HTML standard.
 // Note that this standard willfully deviates from RFC 5322, which allows many
 // unexpected forms of email addresses and will easily match a typographical
 // error.
-func isEmail(val string) bool {
+func IsEmail(val string) bool {
 	return emailRegex.MatchString(val)
 }
 
-// isURI reports whether val is a URI, for example "https://example.com/foo/bar?baz=quux#frag".
+// IsURI reports whether val is a URI, for example "https://example.com/foo/bar?baz=quux#frag".
 //
 // URI is defined in the internet standard RFC 3986.
 // Zone Identifiers in IPv6 address literals are supported (RFC 6874).
-func isURI(val string) bool {
+func IsURI(val string) bool {
 	uri := &uri{
 		str: val,
 	}
 	return uri.uri()
 }
 
-// isURIRef reports whether val is a URI Reference - a URI such as
+// IsURIRef reports whether val is a URI Reference - a URI such as
 // "https://example.com/foo/bar?baz=quux#frag", or a Relative Reference such as
 // "./foo/bar?query".
 //
 // URI, URI Reference, and Relative Reference are defined in the internet
 // standard RFC 3986. Zone Identifiers in IPv6 address literals are supported
 // (RFC 6874).
-func isURIRef(val string) bool {
+func IsURIRef(val string) bool {
 	uri := &uri{
 		str: val,
 	}
@@ -950,7 +950,7 @@ func newIpv6(str string) *ipv6 {
 	}
 }
 
-// isIP returns true if the string is an IPv4 or IPv6 address, optionally limited to
+// IsIP returns true if the string is an IPv4 or IPv6 address, optionally limited to
 // a specific version.
 //
 // Version 0 means either 4 or 6. Passing a version other than 0, 4, or 6 always
@@ -962,7 +962,7 @@ func newIpv6(str string) *ipv6 {
 //
 // Both formats are well-defined in the internet standard RFC 3986. Zone
 // identifiers for IPv6 addresses (for example "fe80::a%en1") are supported.
-func isIP(str string, version int64) bool {
+func IsIP(str string, version int64) bool {
 	if version == 6 {
 		return newIpv6(str).address()
 	}
@@ -975,7 +975,7 @@ func isIP(str string, version int64) bool {
 	return false
 }
 
-// isIPPrefix returns true if the string is a valid IP with prefix length, optionally
+// IsIPPrefix returns true if the string is a valid IP with prefix length, optionally
 // limited to a specific version (v4 or v6), and optionally requiring the host
 // portion to be all zeros.
 //
@@ -991,7 +991,7 @@ func isIP(str string, version int64) bool {
 //
 // The same principle applies to IPv4 addresses. "192.168.1.0/24" designates
 // the first 24 bits of the 32-bit IPv4 as the network prefix.
-func isIPPrefix(
+func IsIPPrefix(
 	str string,
 	version int64,
 	strict bool,
@@ -1005,12 +1005,12 @@ func isIPPrefix(
 		return ip.addressPrefix() && (!strict || ip.isPrefixOnly())
 	}
 	if version == 0 {
-		return isIPPrefix(str, 6, strict) || isIPPrefix(str, 4, strict)
+		return IsIPPrefix(str, 6, strict) || IsIPPrefix(str, 4, strict)
 	}
 	return false
 }
 
-// isHostname returns true if the string is a valid hostname, for example "foo.example.com".
+// IsHostname returns true if the string is a valid hostname, for example "foo.example.com".
 //
 // A valid hostname follows the rules below:
 //   - The name consists of one or more labels, separated by a dot (".").
@@ -1019,7 +1019,7 @@ func isIPPrefix(
 //   - The right-most label must not be digits only.
 //   - The name can have a trailing dot, for example "foo.example.com.".
 //   - The name can be 253 characters at most, excluding the optional trailing dot.
-func isHostname(val string) bool {
+func IsHostname(val string) bool {
 	if len(val) > 253 {
 		return false
 	}
@@ -1054,7 +1054,7 @@ func isHostname(val string) bool {
 	return !allDigits
 }
 
-// isHostAndPort returns true if the string is a valid host/port pair, for example
+// IsHostAndPort returns true if the string is a valid host/port pair, for example
 // "example.com:8080".
 //
 // If the argument portRequired is true, the port is required. If the argument
@@ -1067,7 +1067,7 @@ func isHostname(val string) bool {
 //
 // The port is separated by a colon. It must be non-empty, with a decimal number
 // in the range of 0-65535, inclusive.
-func isHostAndPort(str string, portRequired bool) bool {
+func IsHostAndPort(str string, portRequired bool) bool {
 	if len(str) == 0 {
 		return false
 	}
@@ -1076,22 +1076,22 @@ func isHostAndPort(str string, portRequired bool) bool {
 		end := strings.LastIndex(str, "]")
 		switch end + 1 {
 		case len(str): // no port
-			return !portRequired && isIP(str[1:end], 6)
+			return !portRequired && IsIP(str[1:end], 6)
 		case splitIdx: // port
-			return isIP(str[1:end], 6) && isPort(str[splitIdx+1:])
+			return IsIP(str[1:end], 6) && isPort(str[splitIdx+1:])
 		default: // malformed
 			return false
 		}
 	}
 	if splitIdx < 0 {
-		return !portRequired && (isHostname(str) || isIP(str, 4))
+		return !portRequired && (IsHostname(str) || IsIP(str, 4))
 	}
 	host := str[0:splitIdx]
 	port := str[splitIdx+1:]
-	return (isHostname(host) || isIP(host, 4)) && isPort(port)
+	return (IsHostname(host) || IsIP(host, 4)) && isPort(port)
 }
 
-// isPort returns true if the string is a valid port for isHostAndPort.
+// isPort returns true if the string is a valid port for IsHostAndPort.
 func isPort(str string) bool {
 	if len(str) == 0 {
 		return false
@@ -1382,13 +1382,13 @@ func (u *uri) ipLiteral() bool {
 
 // ipv6Address parses the rule "IPv6address".
 //
-// Relies on the implementation of isIP.
+// Relies on the implementation of IsIP.
 func (u *uri) ipv6Address() bool {
 	start := u.index
 	for u.hexdig() || u.take(':') {
 		// Consume '*( HEXDIG / ":" )'
 	}
-	if isIP(u.str[start:u.index], 6) {
+	if IsIP(u.str[start:u.index], 6) {
 		return true
 	}
 	u.index = start

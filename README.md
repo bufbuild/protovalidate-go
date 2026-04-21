@@ -65,6 +65,70 @@ Highlights for Go developers include:
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
+### Experimental native support release
+This release provides experimental native support for standard validation rule processing. It is disabled by default 
+and enabled by setting the environment variable `PV_NATIVE_RULES` to `true` at runtime.
+
+Performance improvements on the included benchmarks:
+
+```
+$ benchstat 2026-04-21:17:17:52.bench.txt 2026-04-21:17:20:31.bench.txt
+goos: darwin
+goarch: arm64
+pkg: buf.build/go/protovalidate
+cpu: Apple M1 Max
+                          │ 2026-04-21:17:17:52.bench.txt │    2026-04-21:17:20:31.bench.txt    │
+                          │            sec/op             │   sec/op     vs base                │
+Scalar-10                                    167.35n ± 1%   70.97n ± 0%  -57.59% (p=0.000 n=10)
+Repeated/Scalar-10                           285.60n ± 1%   99.10n ± 1%  -65.30% (p=0.000 n=10)
+Repeated/Message-10                           691.3n ± 1%   296.7n ± 0%  -57.09% (p=0.000 n=10)
+Repeated/Unique/Scalar-10                    1249.0n ± 0%   556.8n ± 0%  -55.42% (p=0.000 n=10)
+Repeated/Unique/Bytes-10                     2514.5n ± 0%   967.0n ± 1%  -61.54% (p=0.000 n=10)
+Map-10                                        289.9n ± 1%   103.2n ± 1%  -64.39% (p=0.000 n=10)
+ComplexSchema-10                              40.93µ ± 0%   14.27µ ± 1%  -65.14% (p=0.000 n=10)
+Int32GT-10                                   2748.0n ± 0%   845.6n ± 0%  -69.23% (p=0.000 n=10)
+TestByteMatching-10                          1348.0n ± 0%   206.2n ± 0%  -84.70% (p=0.000 n=10)
+Compile-10                                    8.262m ± 0%   1.357m ± 1%  -83.58% (p=0.000 n=10)
+CompileInt32GT-10                             5.887m ± 1%   1.241m ± 0%  -78.91% (p=0.000 n=10)
+geomean                                       5.738µ        1.755µ       -69.42%
+
+                          │ 2026-04-21:17:17:52.bench.txt │       2026-04-21:17:20:31.bench.txt       │
+                          │             B/op              │     B/op      vs base                     │
+Scalar-10                                    0.000 ± 0%       0.000 ± 0%         ~ (p=1.000 n=10) ¹
+Repeated/Scalar-10                          120.00 ± 0%       48.00 ± 0%   -60.00% (p=0.000 n=10)
+Repeated/Message-10                         120.00 ± 0%       48.00 ± 0%   -60.00% (p=0.000 n=10)
+Repeated/Unique/Scalar-10                    536.0 ± 0%       272.0 ± 0%   -49.25% (p=0.000 n=10)
+Repeated/Unique/Bytes-10                    1784.0 ± 0%       832.0 ± 0%   -53.36% (p=0.000 n=10)
+Map-10                                      128.00 ± 0%       64.00 ± 0%   -50.00% (p=0.000 n=10)
+ComplexSchema-10                          10.552Ki ± 0%     4.383Ki ± 0%   -58.46% (p=0.000 n=10)
+Int32GT-10                                   0.000 ± 0%       0.000 ± 0%         ~ (p=1.000 n=10) ¹
+TestByteMatching-10                          408.0 ± 0%         0.0 ± 0%  -100.00% (p=0.000 n=10)
+Compile-10                                 6.811Mi ± 0%     1.671Mi ± 0%   -75.47% (p=0.000 n=10)
+CompileInt32GT-10                          5.199Mi ± 0%     1.606Mi ± 0%   -69.11% (p=0.000 n=10)
+geomean                                                 ²                 ?                       ² ³
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+³ ratios must be >0 to compute geomean
+
+                          │ 2026-04-21:17:17:52.bench.txt │      2026-04-21:17:20:31.bench.txt       │
+                          │           allocs/op           │  allocs/op   vs base                     │
+Scalar-10                                    0.000 ± 0%      0.000 ± 0%         ~ (p=1.000 n=10) ¹
+Repeated/Scalar-10                           3.000 ± 0%      1.000 ± 0%   -66.67% (p=0.000 n=10)
+Repeated/Message-10                          3.000 ± 0%      1.000 ± 0%   -66.67% (p=0.000 n=10)
+Repeated/Unique/Scalar-10                    34.00 ± 0%      14.00 ± 0%   -58.82% (p=0.000 n=10)
+Repeated/Unique/Bytes-10                     73.00 ± 0%      24.00 ± 0%   -67.12% (p=0.000 n=10)
+Map-10                                       2.000 ± 0%      1.000 ± 0%   -50.00% (p=0.000 n=10)
+ComplexSchema-10                             419.0 ± 0%      131.0 ± 0%   -68.74% (p=0.000 n=10)
+Int32GT-10                                   0.000 ± 0%      0.000 ± 0%         ~ (p=1.000 n=10) ¹
+TestByteMatching-10                          17.00 ± 0%       0.00 ± 0%  -100.00% (p=0.000 n=10)
+Compile-10                                  96.14k ± 0%     18.35k ± 0%   -80.91% (p=0.000 n=10)
+CompileInt32GT-10                           64.56k ± 0%     17.53k ± 0%   -72.84% (p=0.000 n=10)
+geomean                                                 ²                ?                       ² ³
+¹ all samples are equal
+² summaries must be >0 to compute geomean
+³ ratios must be >0 to compute geomean
+```
+
 ## Additional languages and repositories
 
 Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 

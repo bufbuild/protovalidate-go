@@ -260,18 +260,18 @@ func buildTestProgram(t *testing.T, env *cel.Env, expr string) cel.Program {
 
 func TestIsUri(t *testing.T) {
 	t.Parallel()
-	require.True(t, isURI("A://"))
+	require.True(t, IsURI("A://"))
 }
 
 func TestIsHostname(t *testing.T) {
 	t.Parallel()
-	require.True(t, isHostname("foo.example.com"))
-	require.True(t, isHostname("A.ISI.EDU"))
-	require.False(t, isHostname("İ"))
+	require.True(t, IsHostname("foo.example.com"))
+	require.True(t, IsHostname("A.ISI.EDU"))
+	require.False(t, IsHostname("İ"))
 }
 
 func TestIsHostAndPort(t *testing.T) {
 	t.Parallel()
-	require.False(t, isHostAndPort("example.com:080", false))
-	require.False(t, isHostAndPort("example.com:00", false))
+	require.False(t, IsHostAndPort("example.com:080", false))
+	require.False(t, IsHostAndPort("example.com:00", false))
 }

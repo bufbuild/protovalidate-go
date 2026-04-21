@@ -18,6 +18,7 @@ import (
 	"slices"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -58,6 +59,36 @@ func (b *base) fieldPath() *validate.FieldPath {
 
 func (b *base) rulePath(suffix *validate.FieldPath) *validate.FieldPath {
 	return prefixRulePath(b.RulePrefix, suffix)
+}
+
+// newViolation constructs a ValidationError with a single violation.
+// ruleDesc is the top-level rule descriptor (e.g., FieldRules.int32),
+// desc is the specific constraint descriptor (e.g., Int32Rules.gt).
+func (b *base) newViolation(
+	ruleDesc protoreflect.FieldDescriptor,
+	desc protoreflect.FieldDescriptor,
+	ruleID string,
+	message string,
+	fieldValue protoreflect.Value,
+	ruleValue protoreflect.Value,
+) error {
+	return &ValidationError{Violations: []*Violation{{
+		Proto: validate.Violation_builder{
+			Field: b.fieldPath(),
+			Rule: b.rulePath(validate.FieldPath_builder{
+				Elements: []*validate.FieldPathElement{
+					fieldPathElement(ruleDesc),
+					fieldPathElement(desc),
+				},
+			}.Build()),
+			RuleId:  proto.String(ruleID),
+			Message: proto.String(message),
+		}.Build(),
+		FieldValue:      fieldValue,
+		FieldDescriptor: b.Descriptor,
+		RuleValue:       ruleValue,
+		RuleDescriptor:  desc,
+	}}}
 }
 
 func prefixRulePath(prefix *validate.FieldPath, suffix *validate.FieldPath) *validate.FieldPath {
