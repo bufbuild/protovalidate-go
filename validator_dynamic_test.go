@@ -116,10 +116,7 @@ func TestValidator_ParallelDynamicMessageRegistration(t *testing.T) {
 
 	var wg sync.WaitGroup
 	for i, msgType := range types {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
+		wg.Go(func() {
 			msg := msgType.New()
 			fieldDesc := msgType.Descriptor().Fields().ByName("value")
 			if fieldDesc.Kind() == protoreflect.StringKind {
@@ -131,7 +128,7 @@ func TestValidator_ParallelDynamicMessageRegistration(t *testing.T) {
 			for range 10 {
 				assert.NoError(t, val.Validate(msg.Interface()), "type %d", i)
 			}
-		}()
+		})
 	}
 	wg.Wait()
 }
