@@ -65,9 +65,17 @@ Highlights for Go developers include:
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
-### Experimental native support release
-This release provides experimental native support for standard validation rule processing. It is disabled by default 
-and enabled by setting the environment variable `PV_NATIVE_RULES` to `true` at runtime.
+### Native standard validation rules
+This release provides native support for standard validation rule processing. They are enabled by default 
+and can be disabled by compiling with the build tag `cel_rules`:
+
+```
+go build -tags="cel_rules" ...
+```
+
+We continue to validate that the native rules and the CEL rules produce identical results. 
+The `compliance`, `test`, and `test-opaque` Makefile targets have been updated to run twice, 
+once with the native rules enabled, and once with the CEL rules enabled.
 
 Performance improvements on the included benchmarks:
 
@@ -128,6 +136,8 @@ geomean                                                 ²                ?     
 ² summaries must be >0 to compute geomean
 ³ ratios must be >0 to compute geomean
 ```
+
+Use `make bench` to generate benchmarks with native rules and `make bench-cel` to generate benchmarks with CEL rules.
 
 ## Additional languages and repositories
 

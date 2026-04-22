@@ -18,9 +18,7 @@ import (
 	"cmp"
 	"fmt"
 	"maps"
-	"os"
 	"slices"
-	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -452,6 +450,12 @@ func (bldr *builder) processWrapperRules(
 	return nil
 }
 
+// this flag will only be flipped by tests or by the init() function in disable_native_rules.go
+// when the build tag cel_rules is set.
+//
+//nolint:gochecknoglobals // see the above comment
+var useNativeRules = true
+
 func (bldr *builder) processStandardRules(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldRules,
@@ -469,7 +473,7 @@ func (bldr *builder) processStandardRules(
 	// put behind a feature flag to allow for testing.
 	// it's easier to follow like this, don't break it up
 	//nolint:nestif
-	if f, _ := os.LookupEnv("PV_NATIVE_RULES"); strings.EqualFold(f, "true") {
+	if useNativeRules {
 		// Try native Go evaluators for repeated list-level rules (min_items, max_items, unique).
 		if fdesc.IsList() && valEval.NestedRule == nil {
 			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {

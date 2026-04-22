@@ -28,13 +28,14 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
+//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeBytes(t *testing.T) {
 	msg := examplev1.BenchTestBytes_builder{
 		B1: []byte{'\x32', '\x33'},
 		B:  []byte{'\x03', '\x04'},
 	}.Build()
-	// with PV off
-	t.Setenv("PV_NATIVE_RULES", "false")
+	// with native rules off
+	useNativeRules = false
 	val, err := New(WithMessages(msg), WithDisableLazy())
 	if err != nil {
 		t.Fatalf("native off: expected no error, got %v", err)
@@ -51,8 +52,8 @@ func TestNativeBytes(t *testing.T) {
 		}
 	}
 
-	// with PV on
-	t.Setenv("PV_NATIVE_RULES", "true")
+	// with native rules on
+	useNativeRules = true
 	val, err = New(WithMessages(msg), WithDisableLazy())
 	if err != nil {
 		t.Fatalf("native on: expected no error, got %v", err)
@@ -254,8 +255,9 @@ func TestTryBuildNativeBytesRules_ReturnsNil(t *testing.T) {
 	}
 }
 
+//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeBytes_EndToEnd(t *testing.T) {
-	t.Setenv("PV_NATIVE_RULES", "true")
+	useNativeRules = true
 
 	msgType := newDynamicMessageType(t, "test.native", "BytesMsg", &descriptorpb.FieldDescriptorProto{
 		Name:   proto.String("value"),

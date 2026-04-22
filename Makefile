@@ -32,12 +32,14 @@ clean: ## Delete intermediate build artifacts
 	git clean -Xdf
 
 .PHONY: test
-test: ## Run all unit tests
+test: ## Run all unit tests with and without native rules
 	$(GO) test -race -cover ./...
+	$(GO) test -race -cover -tags="cel_rules" ./...
 
 .PHONY: test-opaque
 test-opaque: ## Test proto opaque API support
 	$(GO) test --tags=protoopaque ./...
+	$(GO) test -tags="protoopaque cel_rules" ./...
 
 .PHONY: lint
 lint: lint-proto lint-go  ## Lint code and protos
@@ -57,8 +59,9 @@ lint-fix:
 	$(BIN)/golangci-lint fmt
 
 .PHONY: conformance
-conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
+conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go protovalidate-conformance-go-cel ## Run conformance tests
 	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
+	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go-cel --expected_failures=conformance/expected_failures.yaml
 
 .PHONY: conformance-hyperpb
 conformance-hyperpb: ## Run conformance tests against hyperpb
@@ -98,6 +101,14 @@ bench: $(BENCH_TMP)
 		-count $(BENCH_COUNT) \
 		| tee "$(BENCH_TMP)/$(BENCH_NAME).bench.txt"
 
+.PHONY: bench-cel
+bench-cel: $(BENCH_TMP)
+	go test -tags "cel_rules" -run ^$$ -bench="$(BENCH)" -benchmem \
+		-memprofile "$(BENCH_TMP)/$(BENCH_NAME).mem.profile" \
+		-cpuprofile "$(BENCH_TMP)/$(BENCH_NAME).cpu.profile" \
+		-count $(BENCH_COUNT) \
+		| tee "$(BENCH_TMP)/$(BENCH_NAME).bench.txt"
+
 
 .PHONY: upgrade-go
 upgrade-go:
@@ -127,3 +138,7 @@ $(BIN)/protovalidate-conformance: $(BIN) Makefile
 .PHONY: protovalidate-conformance-go
 protovalidate-conformance-go: $(BIN)
 	GOBIN=$(abspath $(BIN)) $(GO) install ./internal/cmd/protovalidate-conformance-go
+
+.PHONY: protovalidate-conformance-go-cel
+protovalidate-conformance-go-cel: $(BIN)
+	GOBIN=$(abspath $(BIN)) $(GO) build -o $(BIN)/protovalidate-conformance-go-cel -tags "cel_rules" ./internal/cmd/protovalidate-conformance-go

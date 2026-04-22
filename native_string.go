@@ -23,7 +23,7 @@ import (
 	"unicode/utf8"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"buf.build/go/protovalidate/cel"
+	"buf.build/go/protovalidate/internal/rules"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -139,7 +139,7 @@ var (
 		emptyRuleID: "string.email_empty",
 		mainMsg:     "must be a valid email address",
 		emptyMsg:    "value is empty, which is not a valid email address",
-		validate:    cel.IsEmail,
+		validate:    rules.IsEmail,
 	}
 	stringRuleHostname = stringWellKnownRule{
 		desc:        strDescs.hostNameDesc,
@@ -147,7 +147,7 @@ var (
 		emptyRuleID: "string.hostname_empty",
 		mainMsg:     "must be a valid hostname",
 		emptyMsg:    "value is empty, which is not a valid hostname",
-		validate:    cel.IsHostname,
+		validate:    rules.IsHostname,
 	}
 	stringRuleIP = stringWellKnownRule{
 		desc:        strDescs.ipDesc,
@@ -155,7 +155,7 @@ var (
 		emptyRuleID: "string.ip_empty",
 		mainMsg:     "must be a valid IP address",
 		emptyMsg:    "value is empty, which is not a valid IP address",
-		validate:    func(s string) bool { return cel.IsIP(s, 0) },
+		validate:    func(s string) bool { return rules.IsIP(s, 0) },
 	}
 	stringRuleIPv4 = stringWellKnownRule{
 		desc:        strDescs.ipv4Desc,
@@ -163,7 +163,7 @@ var (
 		emptyRuleID: "string.ipv4_empty",
 		mainMsg:     "must be a valid IPv4 address",
 		emptyMsg:    "value is empty, which is not a valid IPv4 address",
-		validate:    func(s string) bool { return cel.IsIP(s, 4) },
+		validate:    func(s string) bool { return rules.IsIP(s, 4) },
 	}
 	stringRuleIPv6 = stringWellKnownRule{
 		desc:        strDescs.ipv6Desc,
@@ -171,7 +171,7 @@ var (
 		emptyRuleID: "string.ipv6_empty",
 		mainMsg:     "must be a valid IPv6 address",
 		emptyMsg:    "value is empty, which is not a valid IPv6 address",
-		validate:    func(s string) bool { return cel.IsIP(s, 6) },
+		validate:    func(s string) bool { return rules.IsIP(s, 6) },
 	}
 	stringRuleURI = stringWellKnownRule{
 		desc:        strDescs.uriDesc,
@@ -179,13 +179,13 @@ var (
 		emptyRuleID: "string.uri_empty",
 		mainMsg:     "must be a valid URI",
 		emptyMsg:    "value is empty, which is not a valid URI",
-		validate:    cel.IsURI,
+		validate:    rules.IsURI,
 	}
 	stringRuleURIRef = stringWellKnownRule{
 		desc:     strDescs.uriRefDesc,
 		ruleID:   "string.uri_ref",
 		mainMsg:  "must be a valid URI Reference",
-		validate: cel.IsURIRef,
+		validate: rules.IsURIRef,
 	}
 	stringRuleAddress = stringWellKnownRule{
 		desc:        strDescs.addressDesc,
@@ -193,7 +193,7 @@ var (
 		emptyRuleID: "string.address_empty",
 		mainMsg:     "must be a valid hostname, or ip address",
 		emptyMsg:    "value is empty, which is not a valid hostname, or ip address",
-		validate:    func(s string) bool { return cel.IsHostname(s) || cel.IsIP(s, 0) },
+		validate:    func(s string) bool { return rules.IsHostname(s) || rules.IsIP(s, 0) },
 	}
 	stringRuleUUID = stringWellKnownRule{
 		desc:        strDescs.uuidDesc,
@@ -217,7 +217,7 @@ var (
 		emptyRuleID: "string.ip_with_prefixlen_empty",
 		mainMsg:     "must be a valid IP prefix",
 		emptyMsg:    "value is empty, which is not a valid IP prefix",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 0, false) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, false) },
 	}
 	stringRuleIPv4PrefixLen = stringWellKnownRule{
 		desc:        strDescs.ipv4PrefixLenDesc,
@@ -225,7 +225,7 @@ var (
 		emptyRuleID: "string.ipv4_with_prefixlen_empty",
 		mainMsg:     "must be a valid IPv4 address with prefix length",
 		emptyMsg:    "value is empty, which is not a valid IPv4 address with prefix length",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 4, false) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, false) },
 	}
 	stringRuleIPv6PrefixLen = stringWellKnownRule{
 		desc:        strDescs.ipv6PrefixLenDesc,
@@ -233,7 +233,7 @@ var (
 		emptyRuleID: "string.ipv6_with_prefixlen_empty",
 		mainMsg:     "must be a valid IPv6 address with prefix length",
 		emptyMsg:    "value is empty, which is not a valid IPv6 address with prefix length",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 6, false) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, false) },
 	}
 	stringRuleIPPrefix = stringWellKnownRule{
 		desc:        strDescs.ipPrefixDesc,
@@ -241,7 +241,7 @@ var (
 		emptyRuleID: "string.ip_prefix_empty",
 		mainMsg:     "must be a valid IP prefix",
 		emptyMsg:    "value is empty, which is not a valid IP prefix",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 0, true) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, true) },
 	}
 	stringRuleIPv4Prefix = stringWellKnownRule{
 		desc:        strDescs.ipv4PrefixDesc,
@@ -249,7 +249,7 @@ var (
 		emptyRuleID: "string.ipv4_prefix_empty",
 		mainMsg:     "must be a valid IPv4 prefix",
 		emptyMsg:    "value is empty, which is not a valid IPv4 prefix",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 4, true) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, true) },
 	}
 	stringRuleIPv6Prefix = stringWellKnownRule{
 		desc:        strDescs.ipv6PrefixDesc,
@@ -257,7 +257,7 @@ var (
 		emptyRuleID: "string.ipv6_prefix_empty",
 		mainMsg:     "must be a valid IPv6 prefix",
 		emptyMsg:    "value is empty, which is not a valid IPv6 prefix",
-		validate:    func(s string) bool { return cel.IsIPPrefix(s, 6, true) },
+		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, true) },
 	}
 	stringRuleHostAndPort = stringWellKnownRule{
 		desc:        strDescs.hostAndPortDesc,
@@ -265,7 +265,7 @@ var (
 		emptyRuleID: "string.host_and_port_empty",
 		mainMsg:     "must be a valid host (hostname or IP address) and port pair",
 		emptyMsg:    "value is empty, which is not a valid host and port pair",
-		validate:    func(s string) bool { return cel.IsHostAndPort(s, true) },
+		validate:    func(s string) bool { return rules.IsHostAndPort(s, true) },
 	}
 	stringRuleULID = stringWellKnownRule{
 		desc:        strDescs.ulidDesc,
