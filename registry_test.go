@@ -22,7 +22,6 @@ import (
 	pvcel "buf.build/go/protovalidate/cel"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
@@ -150,29 +149,26 @@ func TestRegistryConcurrentAccess(t *testing.T) {
 
 	var wg sync.WaitGroup
 	for i := range numGoroutines {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-
+		wg.Go(func() {
 			env := envs[i]
 
 			// Repeatedly compile and evaluate expressions
 			for range numOpsPerGoroutine {
 				expr := fmt.Sprintf(`test.Concurrent%d.Message{value: "test"}`, i)
 				ast, issues := env.Compile(expr)
-				assert.NoError(t, issues.Err())
+				require.NoError(t, issues.Err())
 				if issues.Err() != nil {
 					continue
 				}
 				prog, err := env.Program(ast)
-				assert.NoError(t, err)
+				require.NoError(t, err)
 				if err != nil {
 					continue
 				}
 				_, _, err = prog.Eval(cel.NoVars())
-				assert.NoError(t, err)
+				require.NoError(t, err)
 			}
-		}()
+		})
 	}
 	wg.Wait()
 }
