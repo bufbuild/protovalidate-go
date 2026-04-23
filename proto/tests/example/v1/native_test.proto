@@ -177,4 +177,12 @@ message StringMatching {
     (buf.validate.field).string.host_and_port = true,
     (gofakeit.generate).tag = "{domainname}:8080"
   ];
+  string email = 3 [
+    (buf.validate.field).string.email = true,
+    (gofakeit.generate).tag = "{email}"
+  ];
+  string uuid = 4 [
+    (buf.validate.field).string.uuid = true,
+    (gofakeit.generate).tag = "{uuid}"
+  ];
 }

@@ -689,6 +689,8 @@ type StringMatching struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Hostname      string                 `protobuf:"bytes,1,opt,name=hostname,proto3" json:"hostname,omitempty"`
 	HostAndPort   string                 `protobuf:"bytes,2,opt,name=host_and_port,json=hostAndPort,proto3" json:"host_and_port,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Uuid          string                 `protobuf:"bytes,4,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -732,6 +734,20 @@ func (x *StringMatching) GetHostAndPort() string {
 	return ""
 }
 
+func (x *StringMatching) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *StringMatching) GetUuid() string {
+	if x != nil {
+		return x.Uuid
+	}
+	return ""
+}
+
 func (x *StringMatching) SetHostname(v string) {
 	x.Hostname = v
 }
@@ -740,11 +756,21 @@ func (x *StringMatching) SetHostAndPort(v string) {
 	x.HostAndPort = v
 }
 
+func (x *StringMatching) SetEmail(v string) {
+	x.Email = v
+}
+
+func (x *StringMatching) SetUuid(v string) {
+	x.Uuid = v
+}
+
 type StringMatching_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
 	Hostname    string
 	HostAndPort string
+	Email       string
+	Uuid        string
 }
 
 func (b0 StringMatching_builder) Build() *StringMatching {
@@ -753,6 +779,8 @@ func (b0 StringMatching_builder) Build() *StringMatching {
 	_, _ = b, x
 	x.Hostname = b.Hostname
 	x.HostAndPort = b.HostAndPort
+	x.Email = b.Email
+	x.Uuid = b.Uuid
 	return m0
 }
 
@@ -796,10 +824,12 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\aip_addr\x18\x01 \x01(\fB\x1d\xbaH\x04z\x02P\x01\xca\xe66\x12\x12\x101234567890123456R\x06ipAddr\x12.\n" +
 	"\tipv4_addr\x18\x02 \x01(\fB\x11\xbaH\x04z\x02X\x01\xca\xe66\x06\x12\x041234R\bipv4Addr\x12:\n" +
 	"\tipv6_addr\x18\x03 \x01(\fB\x1d\xbaH\x04z\x02`\x01\xca\xe66\x12\x12\x101234567890123456R\bipv6Addr\x121\n" +
-	"\x04uuid\x18\x04 \x01(\fB\x1d\xbaH\x04z\x02x\x01\xca\xe66\x12\x12\x101234567890123456R\x04uuid\"\x8c\x01\n" +
+	"\x04uuid\x18\x04 \x01(\fB\x1d\xbaH\x04z\x02x\x01\xca\xe66\x12\x12\x101234567890123456R\x04uuid\"\xe2\x01\n" +
 	"\x0eStringMatching\x125\n" +
 	"\bhostname\x18\x01 \x01(\tB\x19\xbaH\x04r\x02h\x01\xca\xe66\x0e\x12\f{domainname}R\bhostname\x12C\n" +
-	"\rhost_and_port\x18\x02 \x01(\tB\x1f\xbaH\x05r\x03\x80\x02\x01\xca\xe66\x13\x12\x11{domainname}:8080R\vhostAndPort*a\n" +
+	"\rhost_and_port\x18\x02 \x01(\tB\x1f\xbaH\x05r\x03\x80\x02\x01\xca\xe66\x13\x12\x11{domainname}:8080R\vhostAndPort\x12*\n" +
+	"\x05email\x18\x03 \x01(\tB\x14\xbaH\x04r\x02`\x01\xca\xe66\t\x12\a{email}R\x05email\x12(\n" +
+	"\x04uuid\x18\x04 \x01(\tB\x14\xbaH\x05r\x03\xb0\x01\x01\xca\xe66\b\x12\x06{uuid}R\x04uuid*a\n" +
 	"\bTestEnum\x12\x19\n" +
 	"\x15TEST_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTEST_ENUM_VAL1\x10\x01\x12\x12\n" +

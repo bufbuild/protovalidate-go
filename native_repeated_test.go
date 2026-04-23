@@ -257,3 +257,78 @@ func newInt32List(t testing.TB, vals ...int32) protoreflect.List {
 	}
 	return list.List()
 }
+
+type testList[T any] struct {
+	protoreflect.List
+	vals []T
+}
+
+// These are the only methods we care about.
+func (l testList[T]) Len() int {
+	return len(l.vals)
+}
+
+func (l testList[T]) Get(i int) protoreflect.Value {
+	return protoreflect.ValueOf(l.vals[i])
+}
+
+func Test_isUniqueList(t *testing.T) {
+	t.Parallel()
+	// try lengths of 0, 1, 10, 16, and 20
+	// don't care about type, so just use int
+	// need both positive and negative tests
+	data := []struct {
+		name   string
+		vals   []int64
+		result bool
+	}{
+		{"empty", []int64{}, true},
+		{"single", []int64{1}, true},
+		{"10", []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, true},
+		{"16", []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16}, true},
+		{"20", []int64{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, true},
+		{"10_dup", []int64{1, 2, 3, 4, 10, 6, 7, 8, 9, 10}, false},
+		{"16", []int64{1, 2, 3, 4, 5, 6, 16, 8, 9, 10, 11, 12, 13, 14, 15, 16}, false},
+		{"20", []int64{1, 2, 3, 4, 5, 6, 7, 20, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, false},
+	}
+	for _, d := range data {
+		t.Run(d.name, func(t *testing.T) {
+			t.Parallel()
+			l := testList[int64]{
+				vals: d.vals,
+			}
+			result := isUniqueList[int64](l)
+			assert.Equal(t, d.result, result)
+		})
+	}
+}
+
+func Test_isUniqueBytes(t *testing.T) {
+	t.Parallel()
+	// try lengths of 0, 1, 3, 16, and 20
+	// need both positive and negative tests
+	data := []struct {
+		name   string
+		vals   [][]byte
+		result bool
+	}{
+		{"empty", [][]byte{}, true},
+		{"single", [][]byte{[]byte("1")}, true},
+		{"3", [][]byte{[]byte("1"), []byte("2"), []byte("3")}, true},
+		{"16", [][]byte{[]byte("1"), []byte("2"), []byte("3"), []byte("4"), []byte("5"), []byte("6"), []byte("7"), []byte("8"), []byte("9"), []byte("10"), []byte("11"), []byte("12"), []byte("13"), []byte("14"), []byte("15"), []byte("16")}, true},
+		{"20_dup", [][]byte{[]byte("1"), []byte("2"), []byte("3"), []byte("4"), []byte("5"), []byte("6"), []byte("7"), []byte("8"), []byte("9"), []byte("10"), []byte("11"), []byte("12"), []byte("13"), []byte("14"), []byte("15"), []byte("16"), []byte("17"), []byte("18"), []byte("19"), []byte("20")}, true},
+		{"3_dup", [][]byte{[]byte("1"), []byte("2"), []byte("1")}, false},
+		{"16_dup", [][]byte{[]byte("1"), []byte("2"), []byte("3"), []byte("4"), []byte("5"), []byte("6"), []byte("16"), []byte("8"), []byte("9"), []byte("10"), []byte("11"), []byte("12"), []byte("13"), []byte("14"), []byte("15"), []byte("16")}, false},
+		{"20_dup", [][]byte{[]byte("1"), []byte("2"), []byte("3"), []byte("4"), []byte("5"), []byte("6"), []byte("20"), []byte("8"), []byte("9"), []byte("10"), []byte("11"), []byte("12"), []byte("13"), []byte("14"), []byte("15"), []byte("16"), []byte("17"), []byte("18"), []byte("19"), []byte("20")}, false},
+	}
+	for _, d := range data {
+		t.Run(d.name, func(t *testing.T) {
+			t.Parallel()
+			l := testList[[]byte]{
+				vals: d.vals,
+			}
+			result := isUniqueBytes(l)
+			assert.Equal(t, d.result, result)
+		})
+	}
+}

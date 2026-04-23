@@ -63,6 +63,10 @@ func BenchmarkTestByteMatching(b *testing.B) {
 	benchSuccess(b, &pb.TestByteMatching{})
 }
 
+func BenchmarkStringMatching(b *testing.B) {
+	benchSuccess(b, &pb.StringMatching{})
+}
+
 func TestInt32GT(t *testing.T) {
 	t.Parallel()
 	testSuccess(t, &pb.BenchGT{})

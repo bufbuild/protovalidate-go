@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 
@@ -54,9 +55,14 @@ func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator 
 		hasRule = true
 	}
 
-	unique := false
+	var uniqueFn uniqueChecker
 	if rules.GetUnique() {
-		unique = true
+		uniqueFn = uniqueCheckerForKind(base.Descriptor)
+		if uniqueFn == nil {
+			// message/list/map elements can't be checked for uniqueness
+			// natively; fall through to CEL.
+			return nil
+		}
 		hasRule = true
 	}
 
@@ -68,7 +74,47 @@ func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator 
 		base:     base,
 		minItems: minItems,
 		maxItems: maxItems,
-		unique:   unique,
+		uniqueFn: uniqueFn,
+	}
+}
+
+// uniqueChecker tests whether all elements in a repeated list are distinct.
+// A nil uniqueChecker means the `unique` rule is not active for this field.
+type uniqueChecker func(protoreflect.List) bool
+
+// uniqueCheckerForKind returns the concrete uniqueness check for the element
+// kind of a repeated field, or nil if the kind isn't supported (message, list,
+// map — none of which are valid element kinds for a repeated scalar field
+// with `unique`).
+func uniqueCheckerForKind(desc protoreflect.FieldDescriptor) uniqueChecker {
+	if desc == nil {
+		return nil
+	}
+	switch desc.Kind() {
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+		return isUniqueList[int32]
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
+		return isUniqueList[int64]
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+		return isUniqueList[uint32]
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+		return isUniqueList[uint64]
+	case protoreflect.FloatKind:
+		return isUniqueList[float32]
+	case protoreflect.DoubleKind:
+		return isUniqueList[float64]
+	case protoreflect.StringKind:
+		return isUniqueList[string]
+	case protoreflect.BoolKind:
+		return isUniqueList[bool]
+	case protoreflect.EnumKind:
+		return isUniqueList[protoreflect.EnumNumber]
+	case protoreflect.BytesKind:
+		return isUniqueBytes
+	case protoreflect.MessageKind, protoreflect.GroupKind:
+		return nil
+	default:
+		return nil
 	}
 }
 
@@ -81,43 +127,9 @@ type nativeRepeatedEval struct {
 	base
 	minItems uint64
 	maxItems uint64
-	unique   bool
-}
-
-type repeatedProcessor func(n nativeRepeatedEval, val protoreflect.Value, list protoreflect.List, size uint64) *Violation
-
-//nolint:gochecknoglobals // slice of all the processors that are used, value never modified, effectively immutable
-var repeatedProcessors = []repeatedProcessor{
-	// min_items
-	func(n nativeRepeatedEval, val protoreflect.Value, _ protoreflect.List, size uint64) *Violation {
-		if size < n.minItems {
-			return n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
-				"repeated.min_items",
-				fmt.Sprintf("must contain at least %d item(s)", n.minItems),
-				val, protoreflect.ValueOfUint64(n.minItems))
-		}
-		return nil
-	},
-	// max_items
-	func(n nativeRepeatedEval, val protoreflect.Value, _ protoreflect.List, size uint64) *Violation {
-		if size > n.maxItems {
-			return n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
-				"repeated.max_items",
-				fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
-				val, protoreflect.ValueOfUint64(n.maxItems))
-		}
-		return nil
-	},
-	// unique
-	func(n nativeRepeatedEval, val protoreflect.Value, list protoreflect.List, _ uint64) *Violation {
-		if n.unique && !isUnique(list) {
-			return n.newViolation(repeatedFieldRulesDesc, repeatedUniqueDesc,
-				"repeated.unique",
-				"repeated value must contain unique items",
-				val, protoreflect.ValueOfBool(true))
-		}
-		return nil
-	},
+	// uniqueFn is nil when the `unique` rule is not active. When set, it is
+	// specialized for the field's element kind at compile time.
+	uniqueFn uniqueChecker
 }
 
 func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
@@ -125,13 +137,33 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 	size := uint64(list.Len()) //nolint:gosec // len can't be < 0 and is always within uint64 range
 	var violations []*Violation
 
-	for _, repeatedProcessor := range repeatedProcessors {
-		violation := repeatedProcessor(n, val, list, size)
-		if violation != nil {
-			violations = append(violations, violation)
-			if cfg.failFast {
-				break
-			}
+	if size < n.minItems {
+		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
+			"repeated.min_items",
+			fmt.Sprintf("must contain at least %d item(s)", n.minItems),
+			val, protoreflect.ValueOfUint64(n.minItems)))
+		if cfg.failFast {
+			return &ValidationError{Violations: violations}
+		}
+	}
+
+	if size > n.maxItems {
+		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
+			"repeated.max_items",
+			fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
+			val, protoreflect.ValueOfUint64(n.maxItems)))
+		if cfg.failFast {
+			return &ValidationError{Violations: violations}
+		}
+	}
+
+	if n.uniqueFn != nil && !n.uniqueFn(list) {
+		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedUniqueDesc,
+			"repeated.unique",
+			"repeated value must contain unique items",
+			val, protoreflect.ValueOfBool(true)))
+		if cfg.failFast {
+			return &ValidationError{Violations: violations}
 		}
 	}
 
@@ -143,40 +175,37 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 	return nil
 }
 
-// isUnique checks whether all elements in the list are distinct.
-func isUnique(list protoreflect.List) bool {
+// uniqueLinearThreshold is the list length at and below which uniqueness is
+// checked with an O(n²) scan over a stack-allocated array instead of a map.
+// For small lists the linear scan is faster and avoids the map allocation;
+// at larger sizes the map's O(n) lookup wins.
+const uniqueLinearThreshold = 16
+
+// isUniqueList is the generic uniqueness check used for all comparable scalar
+// element kinds (the concrete T is bound at compile time via
+// uniqueCheckerForKind).
+func isUniqueList[T comparable](list protoreflect.List) bool {
 	length := list.Len()
 	if length <= 1 {
 		return true
 	}
-	// type-specific maps avoid any-boxing allocations
-	switch list.Get(0).Interface().(type) {
-	case int32:
-		return isUniqueTyped[int32](list, length)
-	case int64:
-		return isUniqueTyped[int64](list, length)
-	case uint32:
-		return isUniqueTyped[uint32](list, length)
-	case uint64:
-		return isUniqueTyped[uint64](list, length)
-	case float32:
-		return isUniqueTyped[float32](list, length)
-	case float64:
-		return isUniqueTyped[float64](list, length)
-	case string:
-		return isUniqueTyped[string](list, length)
-	case bool:
-		return isUniqueTyped[bool](list, length)
-	case protoreflect.EnumNumber:
-		return isUniqueTyped[protoreflect.EnumNumber](list, length)
-	case []byte:
-		return isUniqueBytes(list, length)
-	default:
-		return false // message, list, and map types are not supported, only enum and scalars
+	if length <= uniqueLinearThreshold {
+		var seen = make([]T, length)
+		for i := range length {
+			key, ok := list.Get(i).Interface().(T)
+			if !ok {
+				return false
+			}
+			for j := range i {
+				if seen[j] == key {
+					return false
+				}
+			}
+			seen[i] = key
+		}
+		return true
 	}
-}
 
-func isUniqueTyped[T comparable](list protoreflect.List, length int) bool {
 	seen := make(map[T]struct{}, length)
 	for i := range length {
 		key, ok := list.Get(i).Interface().(T)
@@ -192,7 +221,27 @@ func isUniqueTyped[T comparable](list protoreflect.List, length int) bool {
 	return true
 }
 
-func isUniqueBytes(list protoreflect.List, length int) bool {
+func isUniqueBytes(list protoreflect.List) bool {
+	length := list.Len()
+	if length <= 1 {
+		return true
+	}
+	if length <= uniqueLinearThreshold {
+		// storing []byte directly avoids the []byte→string allocation the
+		// map path needs for a hashable key.
+		var seen = make([][]byte, uniqueLinearThreshold)
+		for i := range length {
+			byteVal := list.Get(i).Bytes()
+			for j := range i {
+				if bytes.Equal(seen[j], byteVal) {
+					return false
+				}
+			}
+			seen[i] = byteVal
+		}
+		return true
+	}
+
 	seen := make(map[string]struct{}, length)
 	for i := range length {
 		byteVal := list.Get(i).Bytes()
