@@ -142,7 +142,7 @@ message TestUnique {
 }
 
 message TestByteBroken {
-   bytes broken = 1 [
+  bytes broken = 1 [
     (buf.validate.field).bytes.min_len = 5,
     (buf.validate.field).bytes.max_len = 10,
     (buf.validate.field).bytes.uuid = true
