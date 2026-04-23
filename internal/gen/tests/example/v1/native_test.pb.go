@@ -432,6 +432,8 @@ func (b0 BenchTestBytes_builder) Build() *BenchTestBytes {
 type TestUnique struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	Enums         []TestEnum             `protobuf:"varint,1,rep,packed,name=enums,proto3,enum=tests.example.v1.TestEnum" json:"enums,omitempty"`
+	Bytes         [][]byte               `protobuf:"bytes,2,rep,name=bytes,proto3" json:"bytes,omitempty"`
+	Strings       []string               `protobuf:"bytes,3,rep,name=strings,proto3" json:"strings,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -468,14 +470,38 @@ func (x *TestUnique) GetEnums() []TestEnum {
 	return nil
 }
 
+func (x *TestUnique) GetBytes() [][]byte {
+	if x != nil {
+		return x.Bytes
+	}
+	return nil
+}
+
+func (x *TestUnique) GetStrings() []string {
+	if x != nil {
+		return x.Strings
+	}
+	return nil
+}
+
 func (x *TestUnique) SetEnums(v []TestEnum) {
 	x.Enums = v
+}
+
+func (x *TestUnique) SetBytes(v [][]byte) {
+	x.Bytes = v
+}
+
+func (x *TestUnique) SetStrings(v []string) {
+	x.Strings = v
 }
 
 type TestUnique_builder struct {
 	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
 
-	Enums []TestEnum
+	Enums   []TestEnum
+	Bytes   [][]byte
+	Strings []string
 }
 
 func (b0 TestUnique_builder) Build() *TestUnique {
@@ -483,6 +509,8 @@ func (b0 TestUnique_builder) Build() *TestUnique {
 	b, x := &b0, m0
 	_, _ = b, x
 	x.Enums = b.Enums
+	x.Bytes = b.Bytes
+	x.Strings = b.Strings
 	return m0
 }
 
@@ -695,10 +723,12 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\vnot_in_test\x18\x10 \x01(\x05B\x1f\xbaH\b\x1a\x068\x018\x038\x05\xca\xe66\x10\x12\x0e{intrange:4,4}R\tnotInTest\"\\\n" +
 	"\x0eBenchTestBytes\x12%\n" +
 	"\x02b1\x18\x01 \x01(\fB\x15\xbaH\x12z\x10\x10\x01\x18\x04J\x0223J\x0245J\x0267R\x02b1\x12#\n" +
-	"\x01b\x18\x04 \x01(\fB\x15\xbaH\x12z\x10\x10\x02\x18\x02B\x0223B\x0245B\x0267R\x01b\"H\n" +
+	"\x01b\x18\x04 \x01(\fB\x15\xbaH\x12z\x10\x10\x02\x18\x02B\x0223B\x0245B\x0267R\x01b\"\x8c\x01\n" +
 	"\n" +
 	"TestUnique\x12:\n" +
-	"\x05enums\x18\x01 \x03(\x0e2\x1a.tests.example.v1.TestEnumB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05enums\"\xe9\x01\n" +
+	"\x05enums\x18\x01 \x03(\x0e2\x1a.tests.example.v1.TestEnumB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05enums\x12\x1e\n" +
+	"\x05bytes\x18\x02 \x03(\fB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05bytes\x12\"\n" +
+	"\astrings\x18\x03 \x03(\tB\b\xbaH\x05\x92\x01\x02\x18\x01R\astrings\"\xe9\x01\n" +
 	"\x10TestByteMatching\x126\n" +
 	"\aip_addr\x18\x01 \x01(\fB\x1d\xbaH\x04z\x02P\x01\xca\xe66\x12\x12\x101234567890123456R\x06ipAddr\x12.\n" +
 	"\tipv4_addr\x18\x02 \x01(\fB\x11\xbaH\x04z\x02X\x01\xca\xe66\x06\x12\x041234R\bipv4Addr\x12:\n" +

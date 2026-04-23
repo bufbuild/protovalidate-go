@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"math"
 	"regexp"
 	"slices"
 	"strings"
@@ -26,6 +27,133 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
+
+// tryBuildNativeBytesRules attempts to build a native Go evaluator for
+// bytes rules. Returns nil if the rules can't be handled natively.
+func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+		return nil
+	}
+
+	hasRule := false
+
+	// Detect well-known format constraint (ip, ipv4, ipv6, uuid).
+	// Check both presence and value — setting ip=false means no check.
+	var wellKnown *bytesWellKnown
+	switch {
+	case rules.GetIp():
+		wellKnown = &bytesWellKnownIP
+		hasRule = true
+	case rules.GetIpv4():
+		wellKnown = &bytesWellKnownIPv4
+		hasRule = true
+	case rules.GetIpv6():
+		wellKnown = &bytesWellKnownIPv6
+		hasRule = true
+	case rules.GetUuid():
+		wellKnown = &bytesWellKnownUUID
+		hasRule = true
+	}
+
+	var constVal []byte
+	var hasConst bool
+	if rules.HasConst() {
+		constVal = rules.GetConst()
+		hasConst = true
+		hasRule = true
+	}
+
+	var exactLen *uint64
+	if rules.HasLen() {
+		exactLen = ptr(rules.GetLen())
+		hasRule = true
+	}
+
+	var minLen uint64
+	if rules.HasMinLen() {
+		minLen = rules.GetMinLen()
+		hasRule = true
+	}
+
+	var maxLen uint64 = math.MaxUint64
+	if rules.HasMaxLen() {
+		maxLen = rules.GetMaxLen()
+		hasRule = true
+	}
+
+	var compiledPattern *regexp.Regexp
+	var patternStr string
+	if rules.HasPattern() {
+		patternStr = rules.GetPattern()
+		var err error
+		compiledPattern, err = regexp.Compile(patternStr)
+		if err != nil {
+			return nil // bail to CEL
+		}
+		hasRule = true
+	}
+
+	var prefix []byte
+	var hasPrefix bool
+	if rules.HasPrefix() {
+		prefix = rules.GetPrefix()
+		hasPrefix = true
+		hasRule = true
+	}
+
+	var suffix []byte
+	var hasSuffix bool
+	if rules.HasSuffix() {
+		suffix = rules.GetSuffix()
+		hasSuffix = true
+		hasRule = true
+	}
+
+	var contains []byte
+	var hasContains bool
+	if rules.HasContains() {
+		contains = rules.GetContains()
+		hasContains = true
+		hasRule = true
+	}
+
+	var inVals [][]byte
+	if inVals = rules.GetIn(); len(inVals) > 0 {
+		hasRule = true
+	}
+
+	var notInVals [][]byte
+	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		hasRule = true
+	}
+
+	if !hasRule {
+		return nil
+	}
+
+	return nativeBytesEval{
+		base:        base,
+		constVal:    constVal,
+		hasConst:    hasConst,
+		exactLen:    exactLen,
+		minLen:      minLen,
+		maxLen:      maxLen,
+		pattern:     compiledPattern,
+		patternStr:  patternStr,
+		prefix:      prefix,
+		hasPrefix:   hasPrefix,
+		suffix:      suffix,
+		hasSuffix:   hasSuffix,
+		contains:    contains,
+		hasContains: hasContains,
+		inVals:      inVals,
+		notInVals:   notInVals,
+		wellKnown:   wellKnown,
+	}
+}
 
 // bytesWellKnown identifies which well-known bytes format constraint is active.
 type bytesWellKnown struct {
@@ -117,14 +245,16 @@ func makeBytesDescriptors() bytesDescriptors {
 //nolint:gochecknoglobals
 var bytesDescs = makeBytesDescriptors()
 
+var _ evaluator = nativeBytesEval{}
+
 // nativeBytesEval is a native Go evaluator for bytes rules.
 type nativeBytesEval struct {
 	base
 	constVal    []byte
 	hasConst    bool
 	exactLen    *uint64
-	minLen      *uint64
-	maxLen      *uint64
+	minLen      uint64
+	maxLen      uint64
 	pattern     *regexp.Regexp
 	patternStr  string
 	prefix      []byte
@@ -160,17 +290,17 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	// min_len
-	if n.minLen != nil && byteLen < *n.minLen {
+	if byteLen < n.minLen {
 		return n.newViolation(bytesDescs.ruleDesc, bytesDescs.minLenDesc,
-			"bytes.min_len", fmt.Sprintf("must be at least %d bytes", *n.minLen),
-			val, protoreflect.ValueOfUint64(*n.minLen))
+			"bytes.min_len", fmt.Sprintf("must be at least %d bytes", n.minLen),
+			val, protoreflect.ValueOfUint64(n.minLen))
 	}
 
 	// max_len
-	if n.maxLen != nil && byteLen > *n.maxLen {
+	if byteLen > n.maxLen {
 		return n.newViolation(bytesDescs.ruleDesc, bytesDescs.maxLenDesc,
-			"bytes.max_len", fmt.Sprintf("must be at most %d bytes", *n.maxLen),
-			val, protoreflect.ValueOfUint64(*n.maxLen))
+			"bytes.max_len", fmt.Sprintf("must be at most %d bytes", n.maxLen),
+			val, protoreflect.ValueOfUint64(n.maxLen))
 	}
 
 	// pattern (matches against string conversion of bytes)
@@ -249,135 +379,6 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 
 func (n nativeBytesEval) Tautology() bool {
 	return false
-}
-
-var _ evaluator = nativeBytesEval{}
-
-// tryBuildNativeBytesRules attempts to build a native Go evaluator for
-// bytes rules. Returns nil if the rules can't be handled natively.
-func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
-		return nil
-	}
-
-	hasRule := false
-
-	// Detect well-known format constraint (ip, ipv4, ipv6, uuid).
-	// Check both presence and value — setting ip=false means no check.
-	var wellKnown *bytesWellKnown
-	switch {
-	case rules.GetIp():
-		wellKnown = &bytesWellKnownIP
-		hasRule = true
-	case rules.GetIpv4():
-		wellKnown = &bytesWellKnownIPv4
-		hasRule = true
-	case rules.GetIpv6():
-		wellKnown = &bytesWellKnownIPv6
-		hasRule = true
-	case rules.GetUuid():
-		wellKnown = &bytesWellKnownUUID
-		hasRule = true
-	}
-
-	var constVal []byte
-	var hasConst bool
-	if rules.HasConst() {
-		constVal = rules.GetConst()
-		hasConst = true
-		hasRule = true
-	}
-
-	var exactLen *uint64
-	if rules.HasLen() {
-		exactLen = ptr(rules.GetLen())
-		hasRule = true
-	}
-
-	var minLen *uint64
-	if rules.HasMinLen() {
-		minLen = ptr(rules.GetMinLen())
-		hasRule = true
-	}
-
-	var maxLen *uint64
-	if rules.HasMaxLen() {
-		maxLen = ptr(rules.GetMaxLen())
-		hasRule = true
-	}
-
-	var compiledPattern *regexp.Regexp
-	var patternStr string
-	if rules.HasPattern() {
-		patternStr = rules.GetPattern()
-		var err error
-		compiledPattern, err = regexp.Compile(patternStr)
-		if err != nil {
-			return nil // bail to CEL
-		}
-		hasRule = true
-	}
-
-	var prefix []byte
-	var hasPrefix bool
-	if rules.HasPrefix() {
-		prefix = rules.GetPrefix()
-		hasPrefix = true
-		hasRule = true
-	}
-
-	var suffix []byte
-	var hasSuffix bool
-	if rules.HasSuffix() {
-		suffix = rules.GetSuffix()
-		hasSuffix = true
-		hasRule = true
-	}
-
-	var contains []byte
-	var hasContains bool
-	if rules.HasContains() {
-		contains = rules.GetContains()
-		hasContains = true
-		hasRule = true
-	}
-
-	var inVals [][]byte
-	if inVals = rules.GetIn(); len(inVals) > 0 {
-		hasRule = true
-	}
-
-	var notInVals [][]byte
-	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		hasRule = true
-	}
-
-	if !hasRule {
-		return nil
-	}
-
-	return nativeBytesEval{
-		base:        base,
-		constVal:    constVal,
-		hasConst:    hasConst,
-		exactLen:    exactLen,
-		minLen:      minLen,
-		maxLen:      maxLen,
-		pattern:     compiledPattern,
-		patternStr:  patternStr,
-		prefix:      prefix,
-		hasPrefix:   hasPrefix,
-		suffix:      suffix,
-		hasSuffix:   hasSuffix,
-		contains:    contains,
-		hasContains: hasContains,
-		inVals:      inVals,
-		notInVals:   notInVals,
-		wellKnown:   wellKnown,
-	}
 }
 
 // formatBytesList formats a [][]byte to match CEL's list formatting.

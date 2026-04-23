@@ -137,6 +137,8 @@ enum TestEnum {
 
 message TestUnique {
   repeated TestEnum enums = 1 [(buf.validate.field).repeated.unique = true];
+  repeated bytes bytes = 2 [(buf.validate.field).repeated.unique = true];
+  repeated string strings = 3 [(buf.validate.field).repeated.unique = true];
 }
 
 message TestByteMatching {

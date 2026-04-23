@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"fmt"
+	"math"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -28,34 +29,79 @@ var (
 	repeatedUniqueDesc   = (*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("unique")
 )
 
+// tryNativeRepeatedRules attempts to build a native Go evaluator for
+// repeated list-level rules (min_items, max_items, unique).
+// Returns nil if the rules can't be handled natively.
+func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+		return nil
+	}
+
+	hasRule := false
+
+	var minItems uint64
+	if rules.HasMinItems() {
+		minItems = rules.GetMinItems()
+		hasRule = true
+	}
+
+	var maxItems uint64 = math.MaxUint64
+	if rules.HasMaxItems() {
+		maxItems = rules.GetMaxItems()
+		hasRule = true
+	}
+
+	unique := false
+	if rules.GetUnique() {
+		unique = true
+		hasRule = true
+	}
+
+	if !hasRule {
+		return nil
+	}
+
+	return nativeRepeatedEval{
+		base:     base,
+		minItems: minItems,
+		maxItems: maxItems,
+		unique:   unique,
+	}
+}
+
+var _ evaluator = nativeRepeatedEval{}
+
 // nativeRepeatedEval is a native Go evaluator for repeated list-level rules
 // (min_items, max_items, unique). Item-level rules are handled separately
 // by the listItems evaluator in repeated.go.
 type nativeRepeatedEval struct {
 	base
-	minItems *uint64
-	maxItems *uint64
+	minItems uint64
+	maxItems uint64
 	unique   bool
 }
 
 func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	list := val.List()
-	size := uint64(list.Len()) //nolint:gosec
+	size := uint64(list.Len()) //nolint:gosec // len can't be < 0 and is always within uint64 range
 
 	// min_items
-	if n.minItems != nil && size < *n.minItems {
+	if size < n.minItems {
 		return n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
 			"repeated.min_items",
-			fmt.Sprintf("must contain at least %d item(s)", *n.minItems),
-			val, protoreflect.ValueOfUint64(*n.minItems))
+			fmt.Sprintf("must contain at least %d item(s)", n.minItems),
+			val, protoreflect.ValueOfUint64(n.minItems))
 	}
 
 	// max_items
-	if n.maxItems != nil && size > *n.maxItems {
+	if size > n.maxItems {
 		return n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
 			"repeated.max_items",
-			fmt.Sprintf("must contain no more than %d item(s)", *n.maxItems),
-			val, protoreflect.ValueOfUint64(*n.maxItems))
+			fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
+			val, protoreflect.ValueOfUint64(n.maxItems))
 	}
 
 	// unique
@@ -135,49 +181,4 @@ func isUniqueBytes(list protoreflect.List, length int) bool {
 
 func (n nativeRepeatedEval) Tautology() bool {
 	return false
-}
-
-var _ evaluator = nativeRepeatedEval{}
-
-// tryNativeRepeatedRules attempts to build a native Go evaluator for
-// repeated list-level rules (min_items, max_items, unique).
-// Returns nil if the rules can't be handled natively.
-func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
-		return nil
-	}
-
-	hasRule := false
-
-	var minItems *uint64
-	if rules.HasMinItems() {
-		minItems = ptr(rules.GetMinItems())
-		hasRule = true
-	}
-
-	var maxItems *uint64
-	if rules.HasMaxItems() {
-		maxItems = ptr(rules.GetMaxItems())
-		hasRule = true
-	}
-
-	unique := false
-	if rules.GetUnique() {
-		unique = true
-		hasRule = true
-	}
-
-	if !hasRule {
-		return nil
-	}
-
-	return nativeRepeatedEval{
-		base:     base,
-		minItems: minItems,
-		maxItems: maxItems,
-		unique:   unique,
-	}
 }

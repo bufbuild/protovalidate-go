@@ -27,6 +27,26 @@ var (
 	boolConstDesc = (*validate.BoolRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const")
 )
 
+// tryBuildNativeBoolRules attempts to build a native Go evaluator for
+// bool rules. Returns nil if the rules can't be handled natively.
+func tryBuildNativeBoolRules(base base, rules *validate.BoolRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+		return nil
+	}
+	if !rules.HasConst() {
+		return nil
+	}
+	return nativeBoolEval{
+		base:     base,
+		constVal: rules.GetConst(),
+	}
+}
+
+var _ evaluator = nativeBoolEval{}
+
 // nativeBoolEval is a native Go evaluator for bool const rules.
 type nativeBoolEval struct {
 	base
@@ -44,24 +64,4 @@ func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value,
 
 func (n nativeBoolEval) Tautology() bool {
 	return false
-}
-
-var _ evaluator = nativeBoolEval{}
-
-// tryBuildNativeBoolRules attempts to build a native Go evaluator for
-// bool rules. Returns nil if the rules can't be handled natively.
-func tryBuildNativeBoolRules(base base, rules *validate.BoolRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
-		return nil
-	}
-	if !rules.HasConst() {
-		return nil
-	}
-	return nativeBoolEval{
-		base:     base,
-		constVal: rules.GetConst(),
-	}
 }

@@ -29,6 +29,93 @@ type numericValue interface {
 	~int32 | ~int64 | ~uint32 | ~uint64 | ~float32 | ~float64
 }
 
+// Per-kind builder wrappers. Each handles nil check and type-specific
+// concerns before delegating to the generic builder.
+
+func tryBuildNativeInt32Rules(base base, rules *validate.Int32Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, int32Config)
+}
+
+func tryBuildNativeSint32Rules(base base, rules *validate.SInt32Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, sint32Config)
+}
+
+func tryBuildNativeSfixed32Rules(base base, rules *validate.SFixed32Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, sfixed32Config)
+}
+
+func tryBuildNativeInt64Rules(base base, rules *validate.Int64Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, int64Config)
+}
+
+func tryBuildNativeSint64Rules(base base, rules *validate.SInt64Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, sint64Config)
+}
+
+func tryBuildNativeSfixed64Rules(base base, rules *validate.SFixed64Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, sfixed64Config)
+}
+
+func tryBuildNativeUint32Rules(base base, rules *validate.UInt32Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, uint32Config)
+}
+
+func tryBuildNativeFixed32Rules(base base, rules *validate.Fixed32Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, fixed32Config)
+}
+
+func tryBuildNativeUint64Rules(base base, rules *validate.UInt64Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, uint64Config)
+}
+
+func tryBuildNativeFixed64Rules(base base, rules *validate.Fixed64Rules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, fixed64Config)
+}
+
+func tryBuildNativeFloatRules(base base, rules *validate.FloatRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, floatConfig)
+}
+
+func tryBuildNativeDoubleRules(base base, rules *validate.DoubleRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+	return tryBuildNativeNumericRules(base, rules, doubleConfig)
+}
+
 // numericRules is satisfied by all generated numeric rules types
 // (Int32Rules, Int64Rules, UInt32Rules, etc.).
 //
@@ -475,93 +562,6 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 		notInVals: notInVals,
 		finite:    finite,
 	}
-}
-
-// Per-kind builder wrappers. Each handles nil check and type-specific
-// concerns before delegating to the generic builder.
-
-func tryBuildNativeInt32Rules(base base, rules *validate.Int32Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, int32Config)
-}
-
-func tryBuildNativeSint32Rules(base base, rules *validate.SInt32Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, sint32Config)
-}
-
-func tryBuildNativeSfixed32Rules(base base, rules *validate.SFixed32Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, sfixed32Config)
-}
-
-func tryBuildNativeInt64Rules(base base, rules *validate.Int64Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, int64Config)
-}
-
-func tryBuildNativeSint64Rules(base base, rules *validate.SInt64Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, sint64Config)
-}
-
-func tryBuildNativeSfixed64Rules(base base, rules *validate.SFixed64Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, sfixed64Config)
-}
-
-func tryBuildNativeUint32Rules(base base, rules *validate.UInt32Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, uint32Config)
-}
-
-func tryBuildNativeFixed32Rules(base base, rules *validate.Fixed32Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, fixed32Config)
-}
-
-func tryBuildNativeUint64Rules(base base, rules *validate.UInt64Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, uint64Config)
-}
-
-func tryBuildNativeFixed64Rules(base base, rules *validate.Fixed64Rules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, fixed64Config)
-}
-
-func tryBuildNativeFloatRules(base base, rules *validate.FloatRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, floatConfig)
-}
-
-func tryBuildNativeDoubleRules(base base, rules *validate.DoubleRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	return tryBuildNativeNumericRules(base, rules, doubleConfig)
 }
 
 func ptr[T any](v T) *T { return &v }

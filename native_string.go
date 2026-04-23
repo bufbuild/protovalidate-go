@@ -27,6 +27,149 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
+// tryBuildNativeStringRules attempts to build a native Go evaluator for
+// string rules. Returns nil if the rules can't be handled natively.
+func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator {
+	if rules == nil {
+		return nil
+	}
+
+	// Bail out for custom predefined extensions.
+	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+		return nil
+	}
+
+	hasRule := false
+
+	var wellKnownRule *stringWellKnownRule
+	var knownRegex validate.KnownRegex
+	var strict bool
+
+	if rules.HasWellKnown() {
+		var err error
+		wellKnownRule, knownRegex, strict, err = parseStringWellKnown(rules)
+		if err != nil {
+			return nil
+		}
+		hasRule = true
+	}
+
+	var constVal *string
+	if rules.HasConst() {
+		constVal = ptr(rules.GetConst())
+		hasRule = true
+	}
+
+	var exactLen *uint64
+	if rules.HasLen() {
+		exactLen = ptr(rules.GetLen())
+		hasRule = true
+	}
+
+	var minLen *uint64
+	if rules.HasMinLen() {
+		minLen = ptr(rules.GetMinLen())
+		hasRule = true
+	}
+
+	var maxLen *uint64
+	if rules.HasMaxLen() {
+		maxLen = ptr(rules.GetMaxLen())
+		hasRule = true
+	}
+
+	var exactBytes *uint64
+	if rules.HasLenBytes() {
+		exactBytes = ptr(rules.GetLenBytes())
+		hasRule = true
+	}
+
+	var minBytes *uint64
+	if rules.HasMinBytes() {
+		minBytes = ptr(rules.GetMinBytes())
+		hasRule = true
+	}
+
+	var maxBytes *uint64
+	if rules.HasMaxBytes() {
+		maxBytes = ptr(rules.GetMaxBytes())
+		hasRule = true
+	}
+
+	var compiledPattern *regexp.Regexp
+	var patternStr string
+	if rules.HasPattern() {
+		patternStr = rules.GetPattern()
+		var err error
+		compiledPattern, err = regexp.Compile(patternStr)
+		if err != nil {
+			// Invalid regex — bail to CEL which will also report a CompilationError.
+			return nil
+		}
+		hasRule = true
+	}
+
+	var prefix *string
+	if rules.HasPrefix() {
+		prefix = ptr(rules.GetPrefix())
+		hasRule = true
+	}
+
+	var suffix *string
+	if rules.HasSuffix() {
+		suffix = ptr(rules.GetSuffix())
+		hasRule = true
+	}
+
+	var containsVal *string
+	if rules.HasContains() {
+		containsVal = ptr(rules.GetContains())
+		hasRule = true
+	}
+
+	var notContains *string
+	if rules.HasNotContains() {
+		notContains = ptr(rules.GetNotContains())
+		hasRule = true
+	}
+
+	var inVals []string
+	if inVals = rules.GetIn(); len(inVals) > 0 {
+		hasRule = true
+	}
+
+	var notInVals []string
+	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		hasRule = true
+	}
+
+	if !hasRule {
+		return nil
+	}
+
+	return nativeStringEval{
+		base:          base,
+		constVal:      constVal,
+		inVals:        inVals,
+		notInVals:     notInVals,
+		exactLen:      exactLen,
+		minLen:        minLen,
+		maxLen:        maxLen,
+		exactBytes:    exactBytes,
+		minBytes:      minBytes,
+		maxBytes:      maxBytes,
+		pattern:       compiledPattern,
+		patternStr:    patternStr,
+		prefix:        prefix,
+		suffix:        suffix,
+		contains:      containsVal,
+		notContains:   notContains,
+		wellKnownRule: wellKnownRule,
+		knownRegex:    knownRegex,
+		strict:        strict,
+	}
+}
+
 // stringDescriptors bundles the field descriptors for StringRules.
 type stringDescriptors struct {
 	ruleDesc           protoreflect.FieldDescriptor // FieldRules.string
@@ -550,149 +693,6 @@ func parseStringWellKnown(rules *validate.StringRules) (
 		return nil, knownRegex, strict, nil
 	default:
 		return nil, 0, false, errUnsupportedWellKnown
-	}
-}
-
-// tryBuildNativeStringRules attempts to build a native Go evaluator for
-// string rules. Returns nil if the rules can't be handled natively.
-func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-
-	// Bail out for custom predefined extensions.
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
-		return nil
-	}
-
-	hasRule := false
-
-	var wellKnownRule *stringWellKnownRule
-	var knownRegex validate.KnownRegex
-	var strict bool
-
-	if rules.HasWellKnown() {
-		var err error
-		wellKnownRule, knownRegex, strict, err = parseStringWellKnown(rules)
-		if err != nil {
-			return nil
-		}
-		hasRule = true
-	}
-
-	var constVal *string
-	if rules.HasConst() {
-		constVal = ptr(rules.GetConst())
-		hasRule = true
-	}
-
-	var exactLen *uint64
-	if rules.HasLen() {
-		exactLen = ptr(rules.GetLen())
-		hasRule = true
-	}
-
-	var minLen *uint64
-	if rules.HasMinLen() {
-		minLen = ptr(rules.GetMinLen())
-		hasRule = true
-	}
-
-	var maxLen *uint64
-	if rules.HasMaxLen() {
-		maxLen = ptr(rules.GetMaxLen())
-		hasRule = true
-	}
-
-	var exactBytes *uint64
-	if rules.HasLenBytes() {
-		exactBytes = ptr(rules.GetLenBytes())
-		hasRule = true
-	}
-
-	var minBytes *uint64
-	if rules.HasMinBytes() {
-		minBytes = ptr(rules.GetMinBytes())
-		hasRule = true
-	}
-
-	var maxBytes *uint64
-	if rules.HasMaxBytes() {
-		maxBytes = ptr(rules.GetMaxBytes())
-		hasRule = true
-	}
-
-	var compiledPattern *regexp.Regexp
-	var patternStr string
-	if rules.HasPattern() {
-		patternStr = rules.GetPattern()
-		var err error
-		compiledPattern, err = regexp.Compile(patternStr)
-		if err != nil {
-			// Invalid regex — bail to CEL which will also report a CompilationError.
-			return nil
-		}
-		hasRule = true
-	}
-
-	var prefix *string
-	if rules.HasPrefix() {
-		prefix = ptr(rules.GetPrefix())
-		hasRule = true
-	}
-
-	var suffix *string
-	if rules.HasSuffix() {
-		suffix = ptr(rules.GetSuffix())
-		hasRule = true
-	}
-
-	var containsVal *string
-	if rules.HasContains() {
-		containsVal = ptr(rules.GetContains())
-		hasRule = true
-	}
-
-	var notContains *string
-	if rules.HasNotContains() {
-		notContains = ptr(rules.GetNotContains())
-		hasRule = true
-	}
-
-	var inVals []string
-	if inVals = rules.GetIn(); len(inVals) > 0 {
-		hasRule = true
-	}
-
-	var notInVals []string
-	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		hasRule = true
-	}
-
-	if !hasRule {
-		return nil
-	}
-
-	return nativeStringEval{
-		base:          base,
-		constVal:      constVal,
-		inVals:        inVals,
-		notInVals:     notInVals,
-		exactLen:      exactLen,
-		minLen:        minLen,
-		maxLen:        maxLen,
-		exactBytes:    exactBytes,
-		minBytes:      minBytes,
-		maxBytes:      maxBytes,
-		pattern:       compiledPattern,
-		patternStr:    patternStr,
-		prefix:        prefix,
-		suffix:        suffix,
-		contains:      containsVal,
-		notContains:   notContains,
-		wellKnownRule: wellKnownRule,
-		knownRegex:    knownRegex,
-		strict:        strict,
 	}
 }
 

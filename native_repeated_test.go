@@ -157,6 +157,68 @@ func TestNativeUniqueEnums(t *testing.T) {
 	}
 }
 
+func TestNativeUniqueStrings(t *testing.T) {
+	t.Parallel()
+	// should fail
+	{
+		msg := examplev1.TestUnique_builder{
+			Strings: []string{
+				"a",
+				"b",
+				"a",
+			},
+		}.Build()
+		validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+		require.NoError(t, err)
+		require.Error(t, validator.Validate(msg))
+	}
+
+	// should pass
+	{
+		msg := examplev1.TestUnique_builder{
+			Strings: []string{
+				"a",
+				"b",
+				"c",
+			},
+		}.Build()
+		validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+		require.NoError(t, err)
+		require.NoError(t, validator.Validate(msg))
+	}
+}
+
+func TestNativeUniqueBytes(t *testing.T) {
+	t.Parallel()
+	// should fail
+	{
+		msg := examplev1.TestUnique_builder{
+			Bytes: [][]byte{
+				[]byte("a"),
+				[]byte("b"),
+				[]byte("a"),
+			},
+		}.Build()
+		validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+		require.NoError(t, err)
+		require.Error(t, validator.Validate(msg))
+	}
+
+	// should pass
+	{
+		msg := examplev1.TestUnique_builder{
+			Bytes: [][]byte{
+				[]byte("a"),
+				[]byte("b"),
+				[]byte("c"),
+			},
+		}.Build()
+		validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+		require.NoError(t, err)
+		require.NoError(t, validator.Validate(msg))
+	}
+}
+
 func TestNativeRepeatedTautology(t *testing.T) {
 	t.Parallel()
 	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{MinItems: proto.Uint64(1)}.Build())
