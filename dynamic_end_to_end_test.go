@@ -29,8 +29,8 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestDynamicRulesEndToEnd(t *testing.T) {
+	t.Parallel()
 	data := []struct {
 		name string
 		typ  *descriptorpb.FieldDescriptorProto_Type
@@ -131,7 +131,7 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 	}
 	for _, d := range data {
 		t.Run(d.name, func(t *testing.T) {
-			// we are setting an environment variable to enable native rules, so we can't use parallel tests
+			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.native", "TestMessage", &descriptorpb.FieldDescriptorProto{
 				Name:    proto.String("value"),
 				Number:  proto.Int32(1),
@@ -141,17 +141,15 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 			})
 			d.info.msgType = msgType
 			// first with CEL rules
-			useNativeRules = false
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", false)
 			// now with native rules to validate they produce identical results
-			useNativeRules = true
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", true)
 		})
 	}
 }
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
+	t.Parallel()
 	data := []struct {
 		name      string
 		typ       *descriptorpb.FieldDescriptorProto_Type
@@ -227,9 +225,8 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 		},
 	}
 	for _, d := range data {
-		//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 		t.Run(d.name, func(t *testing.T) {
-			// we are setting an environment variable to enable native rules, so we can't use parallel tests
+			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.native", "TestMessage", &descriptorpb.FieldDescriptorProto{
 				Name:    proto.String("value"),
 				Number:  proto.Int32(1),
@@ -252,17 +249,15 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 			d.info.badValue = badList
 
 			// first with CEL rules
-			useNativeRules = false
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", false)
 			// now with native rules to validate they produce identical results
-			useNativeRules = true
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", true)
 		})
 	}
 }
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeEnum_EndToEnd(t *testing.T) {
+	t.Parallel()
 	// Build a proto with an enum field and const rule.
 	enumDesc := &descriptorpb.EnumDescriptorProto{
 		Name: proto.String("TestEnum"),
@@ -304,6 +299,7 @@ func TestNativeEnum_EndToEnd(t *testing.T) {
 	}
 	for _, d := range data {
 		t.Run(d.name, func(t *testing.T) {
+			t.Parallel()
 			msgType := newDynamicMessageTypeWithEnum(t, "test.native", "EnumMsg", enumDesc, &descriptorpb.FieldDescriptorProto{
 				Name:     proto.String("value"),
 				Number:   proto.Int32(1),
@@ -314,17 +310,15 @@ func TestNativeEnum_EndToEnd(t *testing.T) {
 			})
 			d.info.msgType = msgType
 			// first with CEL rules
-			useNativeRules = false
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", false)
 			// now with native rules to validate they produce identical results
-			useNativeRules = true
-			dynamicMessageTester(t, d.info, "value")
+			dynamicMessageTester(t, d.info, "value", true)
 		})
 	}
 }
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeMap_EndToEnd(t *testing.T) {
+	t.Parallel()
 	data := []struct {
 		name    string
 		rule    *validate.FieldRules
@@ -358,8 +352,8 @@ func TestNativeMap_EndToEnd(t *testing.T) {
 		},
 	}
 	for _, d := range data {
-		//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 		t.Run(d.name, func(t *testing.T) {
+			t.Parallel()
 			msgType := newDynamicMapMessageType(t, "test.native", "MapMsg",
 				descriptorpb.FieldDescriptorProto_TYPE_STRING,
 				descriptorpb.FieldDescriptorProto_TYPE_STRING,
@@ -386,11 +380,9 @@ func TestNativeMap_EndToEnd(t *testing.T) {
 			d.info.badValue = maker(d.badMap)
 
 			// first with CEL rules
-			useNativeRules = false
-			dynamicMessageTester(t, d.info, "entries")
+			dynamicMessageTester(t, d.info, "entries", true)
 			// now with native rules to validate they produce identical results
-			useNativeRules = true
-			dynamicMessageTester(t, d.info, "entries")
+			dynamicMessageTester(t, d.info, "entries", false)
 		})
 	}
 }
@@ -403,9 +395,13 @@ type dynamicMessageTesterInfo struct {
 	failedRuleMessage string
 }
 
-func dynamicMessageTester(t *testing.T, info dynamicMessageTesterInfo, fieldName protoreflect.Name) {
+func dynamicMessageTester(t *testing.T, info dynamicMessageTesterInfo, fieldName protoreflect.Name, disableNativeRules bool) {
 	t.Helper()
-	validator, err := New(WithDisableLazy(), WithMessageDescriptors(info.msgType.Descriptor()))
+	options := []ValidatorOption{WithDisableLazy(), WithMessageDescriptors(info.msgType.Descriptor())}
+	if disableNativeRules {
+		options = append(options, WithDisableNativeRules())
+	}
+	validator, err := New(options...)
 	require.NoError(t, err)
 
 	passing := dynamicpb.NewMessage(info.msgType.Descriptor())
@@ -426,9 +422,8 @@ func dynamicMessageTester(t *testing.T, info dynamicMessageTesterInfo, fieldName
 // TestEnumCombinedRules validates that enum fields work correctly when
 // multiple rules are active: native const/in/not_in (via processStandardRules)
 // combined with native defined_only (via processEnumRules).
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestEnumCombinedRules(t *testing.T) {
+	t.Parallel()
 	enumDesc := &descriptorpb.EnumDescriptorProto{
 		Name: proto.String("Status"),
 		Value: []*descriptorpb.EnumValueDescriptorProto{
@@ -520,8 +515,8 @@ func TestEnumCombinedRules(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			msgType := newDynamicMessageTypeWithEnum(t, "test.combined", "EnumCombined", enumDesc, &descriptorpb.FieldDescriptorProto{
 				Name:     proto.String("status"),
 				Number:   proto.Int32(1),
@@ -533,10 +528,13 @@ func TestEnumCombinedRules(t *testing.T) {
 
 			// Run with both CEL and native to verify identical results.
 			for _, mode := range []bool{false, true} {
-				t.Run(fmt.Sprintf("native=%v", mode), func(t *testing.T) {
-					useNativeRules = mode
+				t.Run(fmt.Sprintf("native=%v", !mode), func(t *testing.T) {
+					options := []ValidatorOption{WithDisableLazy(), WithMessageDescriptors(msgType.Descriptor())}
+					if mode {
+						options = append(options, WithDisableNativeRules())
+					}
 
-					validator, err := New(WithDisableLazy(), WithMessageDescriptors(msgType.Descriptor()))
+					validator, err := New(options...)
 					require.NoError(t, err)
 
 					msg := dynamicpb.NewMessage(msgType.Descriptor())

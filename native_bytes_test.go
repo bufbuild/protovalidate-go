@@ -30,15 +30,14 @@ import (
 	"google.golang.org/protobuf/types/dynamicpb"
 )
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeBytes(t *testing.T) {
+	t.Parallel()
 	msg := examplev1.BenchTestBytes_builder{
 		B1: []byte{'\x32', '\x33'},
 		B:  []byte{'\x03', '\x04'},
 	}.Build()
 	// with native rules off
-	useNativeRules = false
-	val, err := New(WithMessages(msg), WithDisableLazy())
+	val, err := New(WithMessages(msg), WithDisableLazy(), WithDisableNativeRules())
 	if err != nil {
 		t.Fatalf("native off: expected no error, got %v", err)
 	}
@@ -55,7 +54,6 @@ func TestNativeBytes(t *testing.T) {
 	}
 
 	// with native rules on
-	useNativeRules = true
 	val, err = New(WithMessages(msg), WithDisableLazy())
 	if err != nil {
 		t.Fatalf("native on: expected no error, got %v", err)
@@ -240,17 +238,20 @@ func TestNativeBytesUUID(t *testing.T) {
 
 // TestNativeBytesBroken runs a test twice, once with CEL, once with native, making sure that when
 // we have two rules broken, we get two violations.
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeBytesBroken(t *testing.T) {
+	t.Parallel()
 	// should fail, want same message from both native and CEL
 	msg := examplev1.TestByteBroken_builder{
 		Broken: []byte("greetings and salutations"),
 	}.Build()
 	for _, d := range []bool{false, true} {
-		t.Run(fmt.Sprintf("useNativeRules=%t", d), func(t *testing.T) {
-			useNativeRules = d
-			validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+		t.Run(fmt.Sprintf("disableNativeRules=%t", d), func(t *testing.T) {
+			t.Parallel()
+			options := []ValidatorOption{WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor())}
+			if d {
+				options = append(options, WithDisableNativeRules())
+			}
+			validator, err := New(options...)
 			require.NoError(t, err)
 			err = validator.Validate(msg)
 			require.Error(t, err)
@@ -285,10 +286,8 @@ func TestTryBuildNativeBytesRules_ReturnsNil(t *testing.T) {
 	}
 }
 
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeBytes_EndToEnd(t *testing.T) {
-	useNativeRules = true
-
+	t.Parallel()
 	msgType := newDynamicMessageType(t, "test.native", "BytesMsg", &descriptorpb.FieldDescriptorProto{
 		Name:   proto.String("value"),
 		Number: proto.Int32(1),

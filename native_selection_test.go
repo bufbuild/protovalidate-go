@@ -26,11 +26,9 @@ import (
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
-// TestNativeEvaluatorSelection verifies that when useNativeRules=true,
-// the builder selects native Go evaluators instead of CEL programs.
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
+// TestNativeEvaluatorSelection verifies native rules.
 func TestNativeEvaluatorSelection(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name       string
 		fieldType  descriptorpb.FieldDescriptorProto_Type
@@ -131,10 +129,8 @@ func TestNativeEvaluatorSelection(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 		t.Run(tt.name, func(t *testing.T) {
-			// With useNativeRules=true, should use native evaluator.
-			useNativeRules = true
+			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.sel", "Msg", &descriptorpb.FieldDescriptorProto{
 				Name:    proto.String("value"),
 				Number:  proto.Int32(1),
@@ -155,11 +151,8 @@ func TestNativeEvaluatorSelection(t *testing.T) {
 
 // TestNativeEvaluatorSelection_Enum tests enum separately since it needs
 // an enum descriptor in the file.
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeEvaluatorSelection_Enum(t *testing.T) {
-	useNativeRules = true
-
+	t.Parallel()
 	enumDesc := &descriptorpb.EnumDescriptorProto{
 		Name: proto.String("TestEnum"),
 		Value: []*descriptorpb.EnumValueDescriptorProto{
@@ -189,11 +182,8 @@ func TestNativeEvaluatorSelection_Enum(t *testing.T) {
 
 // TestNativeEvaluatorSelection_Map tests map separately since it needs
 // a map field descriptor.
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestNativeEvaluatorSelection_Map(t *testing.T) {
-	useNativeRules = true
-
+	t.Parallel()
 	msgType := newDynamicMapMessageType(t, "test.sel", "MapMsg",
 		descriptorpb.FieldDescriptorProto_TYPE_STRING,
 		descriptorpb.FieldDescriptorProto_TYPE_STRING,
@@ -211,13 +201,10 @@ func TestNativeEvaluatorSelection_Map(t *testing.T) {
 	assertNoCELPrograms(t, evals)
 }
 
-// TestCELFallbackWithoutNativeFlag verifies that without useNativeRules,
+// TestCELFallbackWithoutNativeFlag verifies that without native rules,
 // the builder uses CEL programs.
-//
-//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
 func TestCELFallbackWithoutNativeFlag(t *testing.T) {
-	useNativeRules = false
-
+	t.Parallel()
 	msgType := newDynamicMessageType(t, "test.sel", "CELMsg", &descriptorpb.FieldDescriptorProto{
 		Name:   proto.String("value"),
 		Number: proto.Int32(1),
@@ -228,7 +215,7 @@ func TestCELFallbackWithoutNativeFlag(t *testing.T) {
 		}.Build()),
 	})
 
-	v, err := New(WithDisableLazy(), WithMessageDescriptors(msgType.Descriptor()))
+	v, err := New(WithDisableLazy(), WithMessageDescriptors(msgType.Descriptor()), WithDisableNativeRules())
 	require.NoError(t, err)
 
 	evals := findFieldEvaluators(t, v, msgType.Descriptor(), "value")

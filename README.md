@@ -67,14 +67,10 @@ API documentation for Go is available on [pkg.go.dev][pkg-go].
 
 ### Native standard validation rules
 This release provides native support for standard validation rule processing. They are enabled by default 
-and can be disabled by compiling with the build tag `cel_rules`:
-
-```
-go build -tags="cel_rules" ...
-```
+and can be disabled by setting the ValidatorOption `WithDisableNativeRules`.
 
 We continue to validate that the native rules and the CEL rules produce identical results. 
-The `compliance`, `test`, and `test-opaque` Makefile targets have been updated to run twice, 
+The `compliance` Makefile target has been updated to run twice, 
 once with the native rules enabled, and once with the CEL rules enabled.
 
 Performance improvements on the included benchmarks:

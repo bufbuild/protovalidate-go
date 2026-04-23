@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"os"
+	"strings"
 	"testing"
 
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
@@ -118,8 +120,12 @@ func BenchmarkCompile(b *testing.B) {
 	// Measures compile-time allocations for complex schemas
 	msg := &pb.BenchComplexSchema{}
 	b.ReportAllocs()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
 	for b.Loop() {
-		_, _ = New(WithMessages(msg), WithDisableLazy())
+		_, _ = New(options...)
 	}
 }
 
@@ -127,8 +133,12 @@ func BenchmarkCompileInt32GT(b *testing.B) {
 	// Measures compile-time allocations for complex schemas
 	msg := &pb.BenchGT{}
 	b.ReportAllocs()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
 	for b.Loop() {
-		_, _ = New(WithMessages(msg), WithDisableLazy())
+		_, _ = New(options...)
 	}
 }
 
@@ -144,7 +154,11 @@ func testSuccess(t *testing.T, msg proto.Message) {
 func benchSuccess(b *testing.B, msg proto.Message) {
 	faker := protogofakeit.New(gofakeit.New(1))
 	require.NoError(b, faker.FakeProto(msg))
-	val, err := New(WithMessages(msg), WithDisableLazy())
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
 	require.NoError(b, err)
 
 	b.ReportAllocs()

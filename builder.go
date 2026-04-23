@@ -49,6 +49,7 @@ type builder struct {
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 	Load                  func(desc protoreflect.MessageDescriptor) messageEvaluator
+	disableNativeRules    bool
 }
 
 // newBuilder initializes a new Builder.
@@ -57,6 +58,7 @@ func newBuilder(
 	disableLazy bool,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
+	disableNativeRules bool,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *builder {
 	bldr := &builder{
@@ -64,6 +66,7 @@ func newBuilder(
 		rules:                 newCache(),
 		extensionTypeResolver: extensionTypeResolver,
 		allowUnknownFields:    allowUnknownFields,
+		disableNativeRules:    disableNativeRules,
 	}
 
 	if disableLazy {
@@ -450,12 +453,6 @@ func (bldr *builder) processWrapperRules(
 	return nil
 }
 
-// this flag will only be flipped by tests or by the init() function in disable_native_rules.go
-// when the build tag cel_rules is set.
-//
-//nolint:gochecknoglobals // see the above comment
-var useNativeRules = true
-
 func (bldr *builder) processStandardRules(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldRules,
@@ -473,7 +470,7 @@ func (bldr *builder) processStandardRules(
 	// put behind a feature flag to allow for testing.
 	// it's easier to follow like this, don't break it up
 	//nolint:nestif
-	if useNativeRules {
+	if !bldr.disableNativeRules {
 		// Try native Go evaluators for repeated list-level rules (min_items, max_items, unique).
 		if fdesc.IsList() && valEval.NestedRule == nil {
 			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
