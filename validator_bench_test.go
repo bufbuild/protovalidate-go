@@ -24,6 +24,7 @@ import (
 	"github.com/rodaine/protogofakeit"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 func BenchmarkScalar(b *testing.B) {
@@ -67,6 +68,32 @@ func BenchmarkStringMatching(b *testing.B) {
 	benchSuccess(b, &pb.StringMatching{})
 }
 
+func BenchmarkWrapperTesting(b *testing.B) {
+	msg := pb.WrapperTesting_builder{
+		I32: &wrapperspb.Int32Value{Value: 11},
+		D:   &wrapperspb.DoubleValue{Value: 11},
+		F:   &wrapperspb.FloatValue{Value: 11},
+		I64: &wrapperspb.Int64Value{Value: 11},
+		U64: &wrapperspb.UInt64Value{Value: 11},
+		U32: &wrapperspb.UInt32Value{Value: 11},
+		B:   &wrapperspb.BoolValue{Value: true},
+		S:   &wrapperspb.StringValue{Value: "hello"},
+		Bs:  &wrapperspb.BytesValue{Value: []byte("hello")},
+	}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
 func TestInt32GT(t *testing.T) {
 	t.Parallel()
 	testSuccess(t, &pb.BenchGT{})
@@ -95,6 +122,25 @@ func TestByteMatching(t *testing.T) {
 func TestStringMatching(t *testing.T) {
 	t.Parallel()
 	testSuccess(t, &pb.StringMatching{})
+}
+
+func TestWrapperTesting(t *testing.T) {
+	t.Parallel()
+	msg := pb.WrapperTesting_builder{
+		I32: &wrapperspb.Int32Value{Value: 11},
+		D:   &wrapperspb.DoubleValue{Value: 11},
+		F:   &wrapperspb.FloatValue{Value: 11},
+		I64: &wrapperspb.Int64Value{Value: 11},
+		U64: &wrapperspb.UInt64Value{Value: 11},
+		U32: &wrapperspb.UInt32Value{Value: 11},
+		B:   &wrapperspb.BoolValue{Value: true},
+		S:   &wrapperspb.StringValue{Value: "hello"},
+		Bs:  &wrapperspb.BytesValue{Value: []byte("hello")},
+	}.Build()
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	require.NoError(t, err)
 }
 
 func TestRepeated(t *testing.T) {

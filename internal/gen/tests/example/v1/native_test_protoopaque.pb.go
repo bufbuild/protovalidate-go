@@ -27,6 +27,7 @@ import (
 	_ "github.com/rodaine/protogofakeit/gen/gofakeit"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	unsafe "unsafe"
 )
@@ -784,11 +785,279 @@ func (b0 StringMatching_builder) Build() *StringMatching {
 	return m0
 }
 
+type WrapperTesting struct {
+	state          protoimpl.MessageState  `protogen:"opaque.v1"`
+	xxx_hidden_I32 *wrapperspb.Int32Value  `protobuf:"bytes,1,opt,name=i32,proto3"`
+	xxx_hidden_D   *wrapperspb.DoubleValue `protobuf:"bytes,2,opt,name=d,proto3"`
+	xxx_hidden_F   *wrapperspb.FloatValue  `protobuf:"bytes,3,opt,name=f,proto3"`
+	xxx_hidden_I64 *wrapperspb.Int64Value  `protobuf:"bytes,4,opt,name=i64,proto3"`
+	xxx_hidden_U64 *wrapperspb.UInt64Value `protobuf:"bytes,5,opt,name=u64,proto3"`
+	xxx_hidden_U32 *wrapperspb.UInt32Value `protobuf:"bytes,6,opt,name=u32,proto3"`
+	xxx_hidden_B   *wrapperspb.BoolValue   `protobuf:"bytes,7,opt,name=b,proto3"`
+	xxx_hidden_S   *wrapperspb.StringValue `protobuf:"bytes,8,opt,name=s,proto3"`
+	xxx_hidden_Bs  *wrapperspb.BytesValue  `protobuf:"bytes,9,opt,name=bs,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *WrapperTesting) Reset() {
+	*x = WrapperTesting{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WrapperTesting) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WrapperTesting) ProtoMessage() {}
+
+func (x *WrapperTesting) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *WrapperTesting) GetI32() *wrapperspb.Int32Value {
+	if x != nil {
+		return x.xxx_hidden_I32
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetD() *wrapperspb.DoubleValue {
+	if x != nil {
+		return x.xxx_hidden_D
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetF() *wrapperspb.FloatValue {
+	if x != nil {
+		return x.xxx_hidden_F
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetI64() *wrapperspb.Int64Value {
+	if x != nil {
+		return x.xxx_hidden_I64
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetU64() *wrapperspb.UInt64Value {
+	if x != nil {
+		return x.xxx_hidden_U64
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetU32() *wrapperspb.UInt32Value {
+	if x != nil {
+		return x.xxx_hidden_U32
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetB() *wrapperspb.BoolValue {
+	if x != nil {
+		return x.xxx_hidden_B
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetS() *wrapperspb.StringValue {
+	if x != nil {
+		return x.xxx_hidden_S
+	}
+	return nil
+}
+
+func (x *WrapperTesting) GetBs() *wrapperspb.BytesValue {
+	if x != nil {
+		return x.xxx_hidden_Bs
+	}
+	return nil
+}
+
+func (x *WrapperTesting) SetI32(v *wrapperspb.Int32Value) {
+	x.xxx_hidden_I32 = v
+}
+
+func (x *WrapperTesting) SetD(v *wrapperspb.DoubleValue) {
+	x.xxx_hidden_D = v
+}
+
+func (x *WrapperTesting) SetF(v *wrapperspb.FloatValue) {
+	x.xxx_hidden_F = v
+}
+
+func (x *WrapperTesting) SetI64(v *wrapperspb.Int64Value) {
+	x.xxx_hidden_I64 = v
+}
+
+func (x *WrapperTesting) SetU64(v *wrapperspb.UInt64Value) {
+	x.xxx_hidden_U64 = v
+}
+
+func (x *WrapperTesting) SetU32(v *wrapperspb.UInt32Value) {
+	x.xxx_hidden_U32 = v
+}
+
+func (x *WrapperTesting) SetB(v *wrapperspb.BoolValue) {
+	x.xxx_hidden_B = v
+}
+
+func (x *WrapperTesting) SetS(v *wrapperspb.StringValue) {
+	x.xxx_hidden_S = v
+}
+
+func (x *WrapperTesting) SetBs(v *wrapperspb.BytesValue) {
+	x.xxx_hidden_Bs = v
+}
+
+func (x *WrapperTesting) HasI32() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_I32 != nil
+}
+
+func (x *WrapperTesting) HasD() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_D != nil
+}
+
+func (x *WrapperTesting) HasF() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_F != nil
+}
+
+func (x *WrapperTesting) HasI64() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_I64 != nil
+}
+
+func (x *WrapperTesting) HasU64() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_U64 != nil
+}
+
+func (x *WrapperTesting) HasU32() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_U32 != nil
+}
+
+func (x *WrapperTesting) HasB() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_B != nil
+}
+
+func (x *WrapperTesting) HasS() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_S != nil
+}
+
+func (x *WrapperTesting) HasBs() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Bs != nil
+}
+
+func (x *WrapperTesting) ClearI32() {
+	x.xxx_hidden_I32 = nil
+}
+
+func (x *WrapperTesting) ClearD() {
+	x.xxx_hidden_D = nil
+}
+
+func (x *WrapperTesting) ClearF() {
+	x.xxx_hidden_F = nil
+}
+
+func (x *WrapperTesting) ClearI64() {
+	x.xxx_hidden_I64 = nil
+}
+
+func (x *WrapperTesting) ClearU64() {
+	x.xxx_hidden_U64 = nil
+}
+
+func (x *WrapperTesting) ClearU32() {
+	x.xxx_hidden_U32 = nil
+}
+
+func (x *WrapperTesting) ClearB() {
+	x.xxx_hidden_B = nil
+}
+
+func (x *WrapperTesting) ClearS() {
+	x.xxx_hidden_S = nil
+}
+
+func (x *WrapperTesting) ClearBs() {
+	x.xxx_hidden_Bs = nil
+}
+
+type WrapperTesting_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	I32 *wrapperspb.Int32Value
+	D   *wrapperspb.DoubleValue
+	F   *wrapperspb.FloatValue
+	I64 *wrapperspb.Int64Value
+	U64 *wrapperspb.UInt64Value
+	U32 *wrapperspb.UInt32Value
+	B   *wrapperspb.BoolValue
+	S   *wrapperspb.StringValue
+	Bs  *wrapperspb.BytesValue
+}
+
+func (b0 WrapperTesting_builder) Build() *WrapperTesting {
+	m0 := &WrapperTesting{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_I32 = b.I32
+	x.xxx_hidden_D = b.D
+	x.xxx_hidden_F = b.F
+	x.xxx_hidden_I64 = b.I64
+	x.xxx_hidden_U64 = b.U64
+	x.xxx_hidden_U32 = b.U32
+	x.xxx_hidden_B = b.B
+	x.xxx_hidden_S = b.S
+	x.xxx_hidden_Bs = b.Bs
+	return m0
+}
+
 var File_tests_example_v1_native_test_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\n" +
-	"\"tests/example/v1/native_test.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\x1a\x17gofakeit/gofakeit.proto\"\xb0\a\n" +
+	"\"tests/example/v1/native_test.proto\x12\x10tests.example.v1\x1a\x1bbuf/validate/validate.proto\x1a\x17gofakeit/gofakeit.proto\x1a\x1egoogle/protobuf/wrappers.proto\"\xb0\a\n" +
 	"\aBenchGT\x12-\n" +
 	"\x02gt\x18\x01 \x01(\x05B\x1d\xbaH\x04\x1a\x02 \x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x02gt\x12/\n" +
 	"\x03gte\x18\x02 \x01(\x05B\x1d\xbaH\x04\x1a\x02(\x00\xca\xe66\x12\x12\x10{intrange:1,100}R\x03gte\x12-\n" +
@@ -829,7 +1098,24 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\bhostname\x18\x01 \x01(\tB\x19\xbaH\x04r\x02h\x01\xca\xe66\x0e\x12\f{domainname}R\bhostname\x12C\n" +
 	"\rhost_and_port\x18\x02 \x01(\tB\x1f\xbaH\x05r\x03\x80\x02\x01\xca\xe66\x13\x12\x11{domainname}:8080R\vhostAndPort\x12*\n" +
 	"\x05email\x18\x03 \x01(\tB\x14\xbaH\x04r\x02`\x01\xca\xe66\t\x12\a{email}R\x05email\x12(\n" +
-	"\x04uuid\x18\x04 \x01(\tB\x14\xbaH\x05r\x03\xb0\x01\x01\xca\xe66\b\x12\x06{uuid}R\x04uuid*a\n" +
+	"\x04uuid\x18\x04 \x01(\tB\x14\xbaH\x05r\x03\xb0\x01\x01\xca\xe66\b\x12\x06{uuid}R\x04uuid\"\x88\x04\n" +
+	"\x0eWrapperTesting\x126\n" +
+	"\x03i32\x18\x01 \x01(\v2\x1b.google.protobuf.Int32ValueB\a\xbaH\x04\x1a\x02 \n" +
+	"R\x03i32\x12:\n" +
+	"\x01d\x18\x02 \x01(\v2\x1c.google.protobuf.DoubleValueB\x0e\xbaH\v\x12\t!\x00\x00\x00\x00\x00\x00$@R\x01d\x125\n" +
+	"\x01f\x18\x03 \x01(\v2\x1b.google.protobuf.FloatValueB\n" +
+	"\xbaH\a\n" +
+	"\x05%\x00\x00 AR\x01f\x126\n" +
+	"\x03i64\x18\x04 \x01(\v2\x1b.google.protobuf.Int64ValueB\a\xbaH\x04\"\x02 \n" +
+	"R\x03i64\x127\n" +
+	"\x03u64\x18\x05 \x01(\v2\x1c.google.protobuf.UInt64ValueB\a\xbaH\x042\x02 \n" +
+	"R\x03u64\x127\n" +
+	"\x03u32\x18\x06 \x01(\v2\x1c.google.protobuf.UInt32ValueB\a\xbaH\x04*\x02 \n" +
+	"R\x03u32\x121\n" +
+	"\x01b\x18\a \x01(\v2\x1a.google.protobuf.BoolValueB\a\xbaH\x04j\x02\b\x01R\x01b\x128\n" +
+	"\x01s\x18\b \x01(\v2\x1c.google.protobuf.StringValueB\f\xbaH\tr\a\n" +
+	"\x05helloR\x01s\x124\n" +
+	"\x02bs\x18\t \x01(\v2\x1b.google.protobuf.BytesValueB\a\xbaH\x04z\x02h\x05R\x02bs*a\n" +
 	"\bTestEnum\x12\x19\n" +
 	"\x15TEST_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTEST_ENUM_VAL1\x10\x01\x12\x12\n" +
@@ -838,23 +1124,42 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x14com.tests.example.v1B\x0fNativeTestProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_native_test_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_tests_example_v1_native_test_proto_goTypes = []any{
-	(TestEnum)(0),            // 0: tests.example.v1.TestEnum
-	(*BenchGT)(nil),          // 1: tests.example.v1.BenchGT
-	(*BenchTestBytes)(nil),   // 2: tests.example.v1.BenchTestBytes
-	(*TestUnique)(nil),       // 3: tests.example.v1.TestUnique
-	(*TestByteBroken)(nil),   // 4: tests.example.v1.TestByteBroken
-	(*TestByteMatching)(nil), // 5: tests.example.v1.TestByteMatching
-	(*StringMatching)(nil),   // 6: tests.example.v1.StringMatching
+	(TestEnum)(0),                  // 0: tests.example.v1.TestEnum
+	(*BenchGT)(nil),                // 1: tests.example.v1.BenchGT
+	(*BenchTestBytes)(nil),         // 2: tests.example.v1.BenchTestBytes
+	(*TestUnique)(nil),             // 3: tests.example.v1.TestUnique
+	(*TestByteBroken)(nil),         // 4: tests.example.v1.TestByteBroken
+	(*TestByteMatching)(nil),       // 5: tests.example.v1.TestByteMatching
+	(*StringMatching)(nil),         // 6: tests.example.v1.StringMatching
+	(*WrapperTesting)(nil),         // 7: tests.example.v1.WrapperTesting
+	(*wrapperspb.Int32Value)(nil),  // 8: google.protobuf.Int32Value
+	(*wrapperspb.DoubleValue)(nil), // 9: google.protobuf.DoubleValue
+	(*wrapperspb.FloatValue)(nil),  // 10: google.protobuf.FloatValue
+	(*wrapperspb.Int64Value)(nil),  // 11: google.protobuf.Int64Value
+	(*wrapperspb.UInt64Value)(nil), // 12: google.protobuf.UInt64Value
+	(*wrapperspb.UInt32Value)(nil), // 13: google.protobuf.UInt32Value
+	(*wrapperspb.BoolValue)(nil),   // 14: google.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil), // 15: google.protobuf.StringValue
+	(*wrapperspb.BytesValue)(nil),  // 16: google.protobuf.BytesValue
 }
 var file_tests_example_v1_native_test_proto_depIdxs = []int32{
-	0, // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0,  // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
+	8,  // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
+	9,  // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
+	10, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
+	11, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
+	12, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
+	13, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
+	14, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
+	15, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
+	16, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
+	10, // [10:10] is the sub-list for method output_type
+	10, // [10:10] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_native_test_proto_init() }
@@ -868,7 +1173,7 @@ func file_tests_example_v1_native_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_native_test_proto_rawDesc), len(file_tests_example_v1_native_test_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

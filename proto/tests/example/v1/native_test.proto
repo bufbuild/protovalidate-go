@@ -18,6 +18,7 @@ package tests.example.v1;
 
 import "buf/validate/validate.proto";
 import "gofakeit/gofakeit.proto";
+import "google/protobuf/wrappers.proto";
 
 message BenchGT {
   int32 gt = 1 [
@@ -184,5 +185,35 @@ message StringMatching {
   string uuid = 4 [
     (buf.validate.field).string.uuid = true,
     (gofakeit.generate).tag = "{uuid}"
+  ];
+}
+
+message WrapperTesting {
+  google.protobuf.Int32Value i32 = 1 [
+    (buf.validate.field).int32.gt = 10
+  ];
+  google.protobuf.DoubleValue d = 2 [
+    (buf.validate.field).double.gt = 10
+  ];
+  google.protobuf.FloatValue f = 3 [
+    (buf.validate.field).float.gt = 10
+  ];
+  google.protobuf.Int64Value i64 = 4 [
+    (buf.validate.field).int64.gt = 10
+  ];
+  google.protobuf.UInt64Value u64 = 5 [
+    (buf.validate.field).uint64.gt = 10
+  ];
+  google.protobuf.UInt32Value u32 = 6 [
+    (buf.validate.field).uint32.gt = 10
+  ];
+  google.protobuf.BoolValue b = 7 [
+    (buf.validate.field).bool.const = true
+  ];
+  google.protobuf.StringValue s = 8 [
+    (buf.validate.field).string.const = "hello"
+  ];
+  google.protobuf.BytesValue bs = 9 [
+    (buf.validate.field).bytes.len = 5
   ];
 }
