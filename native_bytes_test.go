@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"errors"
+	"fmt"
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -234,6 +236,34 @@ func TestNativeBytesUUID(t *testing.T) {
 	require.Error(t, err)
 	require.ErrorAs(t, err, &valErr)
 	assert.Equal(t, "bytes.uuid", valErr.Violations[0].Proto.GetRuleId())
+}
+
+// TestNativeBytesBroken runs a test twice, once with CEL, once with native, making sure that when
+// we have two rules broken, we get two violations.
+//
+//nolint:paralleltest // this test flips the useNativeRules global variable to test both native and cel rules
+func TestNativeBytesBroken(t *testing.T) {
+	// should fail, want same message from both native and CEL
+	msg := examplev1.TestByteBroken_builder{
+		Broken: []byte("greetings and salutations"),
+	}.Build()
+	for _, d := range []bool{false, true} {
+		t.Run(fmt.Sprintf("useNativeRules=%t", d), func(t *testing.T) {
+			useNativeRules = d
+			validator, err := New(WithDisableLazy(), WithMessageDescriptors(msg.ProtoReflect().Descriptor()))
+			require.NoError(t, err)
+			err = validator.Validate(msg)
+			require.Error(t, err)
+			var valErr *ValidationError
+			if errors.As(err, &valErr) {
+				if len(valErr.Violations) != 2 {
+					t.Errorf("expected 2 violations, got %d: %v", len(valErr.Violations), valErr)
+				}
+			} else {
+				t.Error("expected a validation error")
+			}
+		})
+	}
 }
 
 func TestTryBuildNativeBytesRules_ReturnsNil(t *testing.T) {

@@ -80,18 +80,20 @@ func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, 
 
 	// min_pairs
 	if size < n.minPairs {
-		return n.newViolation(mapFieldRulesDesc, mapMinPairsDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(mapFieldRulesDesc, mapMinPairsDesc,
 			"map.min_pairs",
 			fmt.Sprintf("map must be at least %d entries", n.minPairs),
-			val, protoreflect.ValueOfUint64(n.minPairs))
+			val, protoreflect.ValueOfUint64(n.minPairs)),
+		}}
 	}
 
 	// max_pairs
 	if size > n.maxPairs {
-		return n.newViolation(mapFieldRulesDesc, mapMaxPairsDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(mapFieldRulesDesc, mapMaxPairsDesc,
 			"map.max_pairs",
 			fmt.Sprintf("map must be at most %d entries", n.maxPairs),
-			val, protoreflect.ValueOfUint64(n.maxPairs))
+			val, protoreflect.ValueOfUint64(n.maxPairs)),
+		}}
 	}
 
 	return nil

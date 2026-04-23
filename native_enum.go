@@ -80,29 +80,59 @@ type nativeEnumEval struct {
 	notInVals []int32
 }
 
-func (n nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
-	enumVal := int32(val.Enum())
+type enumProcessor func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation
+
+//nolint:gochecknoglobals // slice of all the processors that are used, value never modified, effectively immutable
+var enumProcessors = []enumProcessor{
 	// const
-	if n.constVal != nil && enumVal != *n.constVal {
-		return n.newViolation(enumRuleDescriptor, enumConstDesc,
-			"enum.const", fmt.Sprintf("must equal %d", *n.constVal),
-			val, protoreflect.ValueOfInt32(*n.constVal))
-	}
-
+	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+		if n.constVal != nil && enumVal != *n.constVal {
+			return n.newViolation(enumRuleDescriptor, enumConstDesc,
+				"enum.const", fmt.Sprintf("must equal %d", *n.constVal),
+				val, protoreflect.ValueOfInt32(*n.constVal))
+		}
+		return nil
+	},
 	// in
-	if len(n.inVals) > 0 && !slices.Contains(n.inVals, enumVal) {
-		return n.newViolation(enumRuleDescriptor, enumInDesc,
-			"enum.in", "must be in list "+formatList(n.inVals),
-			val, protoreflect.ValueOfInt32(enumVal))
-	}
-
+	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+		if len(n.inVals) > 0 && !slices.Contains(n.inVals, enumVal) {
+			return n.newViolation(enumRuleDescriptor, enumInDesc,
+				"enum.in", "must be in list "+formatList(n.inVals),
+				val, protoreflect.ValueOfInt32(enumVal))
+		}
+		return nil
+	},
 	// not_in
-	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, enumVal) {
-		return n.newViolation(enumRuleDescriptor, enumNotInDesc,
-			"enum.not_in", "must not be in list "+formatList(n.notInVals),
-			val, protoreflect.ValueOfInt32(enumVal))
+	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+		if len(n.notInVals) > 0 && slices.Contains(n.notInVals, enumVal) {
+			return n.newViolation(enumRuleDescriptor, enumNotInDesc,
+				"enum.not_in", "must not be in list "+formatList(n.notInVals),
+				val, protoreflect.ValueOfInt32(enumVal))
+		}
+		return nil
+	},
+}
+
+func (n nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	enumVal := int32(val.Enum())
+
+	var violations []*Violation
+
+	for _, enumProcessor := range enumProcessors {
+		violation := enumProcessor(n, val, enumVal)
+		if violation != nil {
+			violations = append(violations, violation)
+			if cfg.failFast {
+				break
+			}
+		}
 	}
 
+	if len(violations) > 0 {
+		return &ValidationError{
+			Violations: violations,
+		}
+	}
 	return nil
 }
 

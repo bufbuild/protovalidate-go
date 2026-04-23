@@ -514,6 +514,66 @@ func (b0 TestUnique_builder) Build() *TestUnique {
 	return m0
 }
 
+type TestByteBroken struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Broken        []byte                 `protobuf:"bytes,1,opt,name=broken,proto3" json:"broken,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TestByteBroken) Reset() {
+	*x = TestByteBroken{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TestByteBroken) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestByteBroken) ProtoMessage() {}
+
+func (x *TestByteBroken) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *TestByteBroken) GetBroken() []byte {
+	if x != nil {
+		return x.Broken
+	}
+	return nil
+}
+
+func (x *TestByteBroken) SetBroken(v []byte) {
+	if v == nil {
+		v = []byte{}
+	}
+	x.Broken = v
+}
+
+type TestByteBroken_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Broken []byte
+}
+
+func (b0 TestByteBroken_builder) Build() *TestByteBroken {
+	m0 := &TestByteBroken{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Broken = b.Broken
+	return m0
+}
+
 type TestByteMatching struct {
 	state         protoimpl.MessageState `protogen:"hybrid.v1"`
 	IpAddr        []byte                 `protobuf:"bytes,1,opt,name=ip_addr,json=ipAddr,proto3" json:"ip_addr,omitempty"`
@@ -526,7 +586,7 @@ type TestByteMatching struct {
 
 func (x *TestByteMatching) Reset() {
 	*x = TestByteMatching{}
-	mi := &file_tests_example_v1_native_test_proto_msgTypes[3]
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -538,7 +598,7 @@ func (x *TestByteMatching) String() string {
 func (*TestByteMatching) ProtoMessage() {}
 
 func (x *TestByteMatching) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_native_test_proto_msgTypes[3]
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -635,7 +695,7 @@ type StringMatching struct {
 
 func (x *StringMatching) Reset() {
 	*x = StringMatching{}
-	mi := &file_tests_example_v1_native_test_proto_msgTypes[4]
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -647,7 +707,7 @@ func (x *StringMatching) String() string {
 func (*StringMatching) ProtoMessage() {}
 
 func (x *StringMatching) ProtoReflect() protoreflect.Message {
-	mi := &file_tests_example_v1_native_test_proto_msgTypes[4]
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -728,7 +788,10 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"TestUnique\x12:\n" +
 	"\x05enums\x18\x01 \x03(\x0e2\x1a.tests.example.v1.TestEnumB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05enums\x12\x1e\n" +
 	"\x05bytes\x18\x02 \x03(\fB\b\xbaH\x05\x92\x01\x02\x18\x01R\x05bytes\x12\"\n" +
-	"\astrings\x18\x03 \x03(\tB\b\xbaH\x05\x92\x01\x02\x18\x01R\astrings\"\xe9\x01\n" +
+	"\astrings\x18\x03 \x03(\tB\b\xbaH\x05\x92\x01\x02\x18\x01R\astrings\"5\n" +
+	"\x0eTestByteBroken\x12#\n" +
+	"\x06broken\x18\x01 \x01(\fB\v\xbaH\bz\x06\x10\x05\x18\n" +
+	"x\x01R\x06broken\"\xe9\x01\n" +
 	"\x10TestByteMatching\x126\n" +
 	"\aip_addr\x18\x01 \x01(\fB\x1d\xbaH\x04z\x02P\x01\xca\xe66\x12\x12\x101234567890123456R\x06ipAddr\x12.\n" +
 	"\tipv4_addr\x18\x02 \x01(\fB\x11\xbaH\x04z\x02X\x01\xca\xe66\x06\x12\x041234R\bipv4Addr\x12:\n" +
@@ -745,14 +808,15 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x14com.tests.example.v1B\x0fNativeTestProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_native_test_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_tests_example_v1_native_test_proto_goTypes = []any{
 	(TestEnum)(0),            // 0: tests.example.v1.TestEnum
 	(*BenchGT)(nil),          // 1: tests.example.v1.BenchGT
 	(*BenchTestBytes)(nil),   // 2: tests.example.v1.BenchTestBytes
 	(*TestUnique)(nil),       // 3: tests.example.v1.TestUnique
-	(*TestByteMatching)(nil), // 4: tests.example.v1.TestByteMatching
-	(*StringMatching)(nil),   // 5: tests.example.v1.StringMatching
+	(*TestByteBroken)(nil),   // 4: tests.example.v1.TestByteBroken
+	(*TestByteMatching)(nil), // 5: tests.example.v1.TestByteMatching
+	(*StringMatching)(nil),   // 6: tests.example.v1.StringMatching
 }
 var file_tests_example_v1_native_test_proto_depIdxs = []int32{
 	0, // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
@@ -774,7 +838,7 @@ func file_tests_example_v1_native_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_native_test_proto_rawDesc), len(file_tests_example_v1_native_test_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

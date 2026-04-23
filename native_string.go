@@ -446,112 +446,151 @@ type nativeStringEval struct {
 	strict        bool
 }
 
-func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
-	strVal := val.String()
+type stringProcessor func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation
 
-	var runeCount uint64
-	if n.exactLen != nil || n.minLen != nil || n.maxLen != nil {
-		runeCount = uint64(utf8.RuneCountInString(strVal)) //nolint:gosec
-		err := n.evaluateLength(runeCount, val)
-		if err != nil {
-			return err
+//nolint:gochecknoglobals // slice of all the processors that are used, value never modified, effectively immutable
+var stringProcessors = []stringProcessor{
+	// rune length
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		var runeCount uint64
+		if n.exactLen != nil || n.minLen != nil || n.maxLen != nil {
+			runeCount = uint64(utf8.RuneCountInString(strVal))
+			return n.evaluateLength(runeCount, val)
 		}
-	}
-
-	var byteCount uint64
-	if n.exactBytes != nil || n.minBytes != nil || n.maxBytes != nil {
-		byteCount = uint64(len(strVal))
-		err := n.evaluateByteLength(byteCount, val)
-		if err != nil {
-			return err
+		return nil
+	},
+	// byte length
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		var byteCount uint64
+		if n.exactBytes != nil || n.minBytes != nil || n.maxBytes != nil {
+			byteCount = uint64(len(strVal))
+			return n.evaluateByteLength(byteCount, val)
 		}
-	}
-
+		return nil
+	},
 	// const
-	if n.constVal != nil && strVal != *n.constVal {
-		return n.newViolation(strDescs.ruleDesc, strDescs.constDesc,
-			"string.const", fmt.Sprintf("must equal `%s`", *n.constVal),
-			val, protoreflect.ValueOfString(*n.constVal))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.constVal != nil && strVal != *n.constVal {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.constDesc,
+				"string.const", fmt.Sprintf("must equal `%s`", *n.constVal),
+				val, protoreflect.ValueOfString(*n.constVal))}
+		}
+		return nil
+	},
 	// pattern
-	if n.pattern != nil && !n.pattern.MatchString(strVal) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.patternDesc,
-			"string.pattern", fmt.Sprintf("does not match regex pattern `%s`", n.patternStr),
-			val, protoreflect.ValueOfString(n.patternStr))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.pattern != nil && !n.pattern.MatchString(strVal) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.patternDesc,
+				"string.pattern", fmt.Sprintf("does not match regex pattern `%s`", n.patternStr),
+				val, protoreflect.ValueOfString(n.patternStr))}
+		}
+		return nil
+	},
 	// prefix
-	if n.prefix != nil && !strings.HasPrefix(strVal, *n.prefix) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.prefixDesc,
-			"string.prefix", fmt.Sprintf("does not have prefix `%s`", *n.prefix),
-			val, protoreflect.ValueOfString(*n.prefix))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.prefix != nil && !strings.HasPrefix(strVal, *n.prefix) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.prefixDesc,
+				"string.prefix", fmt.Sprintf("does not have prefix `%s`", *n.prefix),
+				val, protoreflect.ValueOfString(*n.prefix))}
+		}
+		return nil
+	},
 	// suffix
-	if n.suffix != nil && !strings.HasSuffix(strVal, *n.suffix) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.suffixDesc,
-			"string.suffix", fmt.Sprintf("does not have suffix `%s`", *n.suffix),
-			val, protoreflect.ValueOfString(*n.suffix))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.suffix != nil && !strings.HasSuffix(strVal, *n.suffix) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.suffixDesc,
+				"string.suffix", fmt.Sprintf("does not have suffix `%s`", *n.suffix),
+				val, protoreflect.ValueOfString(*n.suffix))}
+		}
+		return nil
+	},
 	// contains
-	if n.contains != nil && !strings.Contains(strVal, *n.contains) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.containsDesc,
-			"string.contains", fmt.Sprintf("does not contain substring `%s`", *n.contains),
-			val, protoreflect.ValueOfString(*n.contains))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.contains != nil && !strings.Contains(strVal, *n.contains) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.containsDesc,
+				"string.contains", fmt.Sprintf("does not contain substring `%s`", *n.contains),
+				val, protoreflect.ValueOfString(*n.contains))}
+		}
+		return nil
+	},
 	// not_contains
-	if n.notContains != nil && strings.Contains(strVal, *n.notContains) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.notContainsDesc,
-			"string.not_contains", fmt.Sprintf("value contains substring `%s`", *n.notContains),
-			val, protoreflect.ValueOfString(*n.notContains))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.notContains != nil && strings.Contains(strVal, *n.notContains) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.notContainsDesc,
+				"string.not_contains", fmt.Sprintf("value contains substring `%s`", *n.notContains),
+				val, protoreflect.ValueOfString(*n.notContains))}
+		}
+		return nil
+	},
 	// in
-	if len(n.inVals) > 0 && !slices.Contains(n.inVals, strVal) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.inDesc,
-			"string.in", "must be in list "+formatStringList(n.inVals),
-			val, protoreflect.ValueOfString(strVal))
-	}
-
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if len(n.inVals) > 0 && !slices.Contains(n.inVals, strVal) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.inDesc,
+				"string.in", "must be in list "+formatStringList(n.inVals),
+				val, protoreflect.ValueOfString(strVal))}
+		}
+		return nil
+	},
 	// not_in
-	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, strVal) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.notInDesc,
-			"string.not_in", "must not be in list "+formatStringList(n.notInVals),
-			val, protoreflect.ValueOfString(strVal))
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if len(n.notInVals) > 0 && slices.Contains(n.notInVals, strVal) {
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.notInDesc,
+				"string.not_in", "must not be in list "+formatStringList(n.notInVals),
+				val, protoreflect.ValueOfString(strVal))}
+		}
+		return nil
+	},
+	// well known rules
+	func(n nativeStringEval, val protoreflect.Value, strVal string) []*Violation {
+		if n.wellKnownRule != nil {
+			return n.checkWellKnown(strVal, val)
+		} else if n.knownRegex != 0 {
+			return n.checkKnownRegex(strVal, val)
+		}
+		return nil
+	},
+}
+
+func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	strVal := val.String()
+	var violations []*Violation
+
+	for _, stringProcessor := range stringProcessors {
+		violation := stringProcessor(n, val, strVal)
+		if len(violation) != 0 {
+			violations = append(violations, violation...)
+			if cfg.failFast {
+				// only return the first violation
+				violations = violations[:1]
+				break
+			}
+		}
 	}
 
-	if n.wellKnownRule != nil {
-		if err := n.checkWellKnown(strVal, val); err != nil {
-			return err
-		}
-	} else if n.knownRegex != 0 {
-		if err := n.checkKnownRegex(strVal, val); err != nil {
-			return err
+	if len(violations) > 0 {
+		return &ValidationError{
+			Violations: violations,
 		}
 	}
-
 	return nil
 }
 
-func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) error {
+func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) []*Violation {
 	rule := n.wellKnownRule
 	if rule.emptyRuleID != "" && strVal == "" {
-		return n.newViolation(strDescs.ruleDesc, rule.desc,
+		return []*Violation{n.newViolation(strDescs.ruleDesc, rule.desc,
 			rule.emptyRuleID, rule.emptyMsg,
-			val, protoreflect.ValueOfString(strVal))
+			val, protoreflect.ValueOfString(strVal))}
 	}
 	if !rule.validate(strVal) {
-		return n.newViolation(strDescs.ruleDesc, rule.desc,
+		return []*Violation{n.newViolation(strDescs.ruleDesc, rule.desc,
 			rule.ruleID, rule.mainMsg,
-			val, protoreflect.ValueOfString(strVal))
+			val, protoreflect.ValueOfString(strVal))}
 	}
 	return nil
 }
 
-func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value) error {
+func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value) []*Violation {
 	// check if strict is set (it is on by default)
 	// if not, just validate against the loose rule (^[^\u0000\u000A\u000D]+$)
 	// if yes, check whether this is a name or value and use the correct strict rule
@@ -563,9 +602,9 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 	switch n.knownRegex {
 	case validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME:
 		if strVal == "" {
-			return n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
+			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
 				"string.well_known_regex.header_name_empty", "value is empty, which is not a valid HTTP header name",
-				val, protoreflect.ValueOfString(strVal))
+				val, protoreflect.ValueOfString(strVal))}
 		}
 		matcher = headerNameRegexp
 		rule = "string.well_known_regex.header_name"
@@ -581,9 +620,9 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 		matcher = looseRegexp
 	}
 	if !matcher.MatchString(strVal) {
-		return n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
+		return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
 			rule, msg,
-			val, protoreflect.ValueOfString(strVal))
+			val, protoreflect.ValueOfString(strVal))}
 	}
 	return nil
 }
@@ -592,46 +631,49 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 // very similar bits of code
 //
 //nolint:dupl
-func (n nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.Value) error {
+func (n nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.Value) []*Violation {
+	var out []*Violation
 	if n.exactBytes != nil && byteCount != *n.exactBytes {
-		return n.newViolation(strDescs.ruleDesc, strDescs.lenBytesDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.lenBytesDesc,
 			"string.len_bytes", fmt.Sprintf("must be %d bytes", *n.exactBytes),
-			val, protoreflect.ValueOfUint64(*n.exactBytes))
+			val, protoreflect.ValueOfUint64(*n.exactBytes)))
 	}
 	if n.minBytes != nil && byteCount < *n.minBytes {
-		return n.newViolation(strDescs.ruleDesc, strDescs.minBytesDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.minBytesDesc,
 			"string.min_bytes", fmt.Sprintf("must be at least %d bytes", *n.minBytes),
-			val, protoreflect.ValueOfUint64(*n.minBytes))
+			val, protoreflect.ValueOfUint64(*n.minBytes)))
 	}
 	if n.maxBytes != nil && byteCount > *n.maxBytes {
-		return n.newViolation(strDescs.ruleDesc, strDescs.maxBytesDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.maxBytesDesc,
 			"string.max_bytes", fmt.Sprintf("must be at most %d bytes", *n.maxBytes),
-			val, protoreflect.ValueOfUint64(*n.maxBytes))
+			val, protoreflect.ValueOfUint64(*n.maxBytes)))
 	}
-	return nil
+	return out
 }
 
 // it would be worse to unify this and evaluateByteLength than it is to leave them as
 // very similar bits of code
 //
 //nolint:dupl
-func (n nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Value) error {
+func (n nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Value) []*Violation {
+	var out []*Violation
+
 	if n.exactLen != nil && runeCount != *n.exactLen {
-		return n.newViolation(strDescs.ruleDesc, strDescs.lenDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.lenDesc,
 			"string.len", fmt.Sprintf("must be %d characters", *n.exactLen),
-			val, protoreflect.ValueOfUint64(*n.exactLen))
+			val, protoreflect.ValueOfUint64(*n.exactLen)))
 	}
 	if n.minLen != nil && runeCount < *n.minLen {
-		return n.newViolation(strDescs.ruleDesc, strDescs.minLenDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.minLenDesc,
 			"string.min_len", fmt.Sprintf("must be at least %d characters", *n.minLen),
-			val, protoreflect.ValueOfUint64(*n.minLen))
+			val, protoreflect.ValueOfUint64(*n.minLen)))
 	}
 	if n.maxLen != nil && runeCount > *n.maxLen {
-		return n.newViolation(strDescs.ruleDesc, strDescs.maxLenDesc,
+		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.maxLenDesc,
 			"string.max_len", fmt.Sprintf("must be at most %d characters", *n.maxLen),
-			val, protoreflect.ValueOfUint64(*n.maxLen))
+			val, protoreflect.ValueOfUint64(*n.maxLen)))
 	}
-	return nil
+	return out
 }
 
 func (n nativeStringEval) Tautology() bool {

@@ -195,7 +195,7 @@ func TestNativeInt32Compare(t *testing.T) {
 			name:  "const_with_gte",
 			rules: validate.Int32Rules_builder{Const: proto.Int32(5), Gte: proto.Int32(4)}.Build(),
 			cases: []numericTestCase[int32]{
-				{"pass_fail", []int32{5}, []int32{3, 4, 6}, "int32.const"},
+				{"pass_fail", []int32{5}, []int32{7, 4, 6}, "int32.const"},
 			},
 		},
 		{

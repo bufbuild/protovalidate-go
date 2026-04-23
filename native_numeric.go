@@ -116,6 +116,93 @@ func tryBuildNativeDoubleRules(base base, rules *validate.DoubleRules) evaluator
 	return tryBuildNativeNumericRules(base, rules, doubleConfig)
 }
 
+// tryBuildNativeNumericRules attempts to build a native Go evaluator for
+// numeric rules. Returns nil if the rules can't be handled natively,
+// including cases with unknown fields (custom predefined extensions).
+func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
+	base base,
+	rules R,
+	config numericTypeConfig[T],
+) evaluator {
+	// Bail out if the rules message has unknown fields, which indicate
+	// custom predefined extensions that we can't handle natively.
+	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+		return nil
+	}
+
+	hasRule := false
+
+	var lowerValue T
+	lower := lowerBoundNone
+	switch {
+	case rules.HasGt():
+		lower = lowerBoundGt
+		lowerValue = rules.GetGt()
+		hasRule = true
+	case rules.HasGte():
+		lower = lowerBoundGte
+		lowerValue = rules.GetGte()
+		hasRule = true
+	}
+
+	var upperValue T
+	upper := upperBoundNone
+	switch {
+	case rules.HasLt():
+		upper = upperBoundLt
+		upperValue = rules.GetLt()
+		hasRule = true
+	case rules.HasLte():
+		upper = upperBoundLte
+		upperValue = rules.GetLte()
+		hasRule = true
+	}
+
+	var constVal *T
+	if rules.HasConst() {
+		constVal = ptr(rules.GetConst())
+		hasRule = true
+	}
+
+	var inVals []T
+	if inVals = rules.GetIn(); len(inVals) > 0 {
+		hasRule = true
+	}
+
+	var notInVals []T
+	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		hasRule = true
+	}
+
+	type finiteInterface interface {
+		HasFinite() bool
+		GetFinite() bool
+	}
+
+	finite := false
+	if fi, ok := (any)(rules).(finiteInterface); ok && fi.HasFinite() {
+		finite = fi.GetFinite()
+		hasRule = true
+	}
+
+	if !hasRule {
+		return nil
+	}
+
+	return nativeNumericCompare[T]{
+		base:      base,
+		config:    config,
+		lo:        lowerValue,
+		lower:     lower,
+		hi:        upperValue,
+		upper:     upper,
+		constVal:  constVal,
+		inVals:    inVals,
+		notInVals: notInVals,
+		finite:    finite,
+	}
+}
+
 // numericRules is satisfied by all generated numeric rules types
 // (Int32Rules, Int64Rules, UInt32Rules, etc.).
 //
@@ -401,71 +488,109 @@ func (n nativeNumericCompare[T]) conjunction() string {
 	return "or"
 }
 
-func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	valT := n.config.extractVal(val)
-	// const support
-	if n.constVal != nil && valT != *n.constVal {
-		return n.newViolation(n.config.descs.ruleDesc, n.config.descs.constDesc,
-			n.config.typeName+".const",
-			fmt.Sprintf("must equal %v", *n.constVal),
-			val, n.config.makeRuleVal(*n.constVal))
+	var violations []*Violation
+
+	// for numerics, since it is using generics, we need to instantiate inside the method. We can't have a slice of
+	// uninstantiated generic functions in Go. Because it's inside the method, we'll just capture the parameters instead
+	// of passing them in.
+	type numericProcessor[T numericValue] func() *Violation
+
+	var numericProcessors = []numericProcessor[T]{
+		// const support
+		func() *Violation {
+			if n.constVal != nil && valT != *n.constVal {
+				return n.newViolation(n.config.descs.ruleDesc, n.config.descs.constDesc,
+					n.config.typeName+".const",
+					fmt.Sprintf("must equal %v", *n.constVal),
+					val, n.config.makeRuleVal(*n.constVal))
+			}
+			return nil
+		},
+		// in support
+		func() *Violation {
+			if len(n.inVals) > 0 && !slices.Contains(n.inVals, valT) {
+				return n.newViolation(n.config.descs.ruleDesc, n.config.descs.inDesc,
+					n.config.typeName+".in",
+					"must be in list "+formatList(n.inVals),
+					val, n.config.makeRuleVal(valT))
+			}
+			return nil
+		},
+		// not in support
+		func() *Violation {
+			if len(n.notInVals) > 0 && slices.Contains(n.notInVals, valT) {
+				return n.newViolation(n.config.descs.ruleDesc, n.config.descs.notInDesc,
+					n.config.typeName+".not_in",
+					"must not be in list "+formatList(n.notInVals),
+					val, n.config.makeRuleVal(valT))
+			}
+			return nil
+		},
+		// finite support
+		func() *Violation {
+			if n.finite && (math.IsNaN(float64(valT)) || math.IsInf(float64(valT), 0)) {
+				return n.newViolation(n.config.descs.ruleDesc, n.config.descs.finiteDesc,
+					n.config.typeName+".finite",
+					"must be finite",
+					val, n.config.makeRuleVal(valT))
+			}
+			return nil
+		},
+		// range support
+		func() *Violation {
+			if n.lower == lowerBoundNone && n.upper == upperBoundNone {
+				return nil
+			}
+
+			// For float/double, NaN fails all range checks (matches CEL behavior).
+			isNaN := n.config.nanFailsRange && math.IsNaN(float64(valT))
+
+			switch {
+			case n.lower == lowerBoundNone:
+				if isNaN || n.aboveHi(valT) {
+					return n.newViolation(n.config.descs.ruleDesc, n.hiDesc(),
+						n.gtltRule(), "must be "+n.hiMessage(),
+						val, n.config.makeRuleVal(n.hi))
+				}
+			case n.upper == upperBoundNone:
+				if isNaN || n.belowLo(valT) {
+					return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
+						n.gtltRule(), "must be "+n.loMessage(),
+						val, n.config.makeRuleVal(n.lo))
+				}
+			default:
+				var failure bool
+				if n.isNormalRange() {
+					failure = isNaN || n.aboveHi(valT) || n.belowLo(valT)
+				} else {
+					failure = isNaN || (n.aboveHi(valT) && n.belowLo(valT))
+				}
+				if failure {
+					return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
+						n.gtltRule(),
+						fmt.Sprintf("must be %s %s %s", n.loMessage(), n.conjunction(), n.hiMessage()),
+						val, n.config.makeRuleVal(n.lo))
+				}
+			}
+			return nil
+		},
 	}
 
-	// in support
-	if len(n.inVals) > 0 && !slices.Contains(n.inVals, valT) {
-		return n.newViolation(n.config.descs.ruleDesc, n.config.descs.inDesc,
-			n.config.typeName+".in",
-			"must be in list "+formatList(n.inVals),
-			val, n.config.makeRuleVal(valT))
-	}
-
-	// not in support
-	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, valT) {
-		return n.newViolation(n.config.descs.ruleDesc, n.config.descs.notInDesc,
-			n.config.typeName+".not_in",
-			"must not be in list "+formatList(n.notInVals),
-			val, n.config.makeRuleVal(valT))
-	}
-
-	// finite support
-	if n.finite && (math.IsNaN(float64(valT)) || math.IsInf(float64(valT), 0)) {
-		return n.newViolation(n.config.descs.ruleDesc, n.config.descs.finiteDesc,
-			n.config.typeName+".finite",
-			"must be finite",
-			val, n.config.makeRuleVal(valT))
-	}
-
-	if n.lower == lowerBoundNone && n.upper == upperBoundNone {
-		return nil
-	}
-	// For float/double, NaN fails all range checks (matches CEL behavior).
-	isNaN := n.config.nanFailsRange && math.IsNaN(float64(valT))
-
-	switch {
-	case n.lower == lowerBoundNone:
-		if isNaN || n.aboveHi(valT) {
-			return n.newViolation(n.config.descs.ruleDesc, n.hiDesc(),
-				n.gtltRule(), "must be "+n.hiMessage(),
-				val, n.config.makeRuleVal(n.hi))
+	for _, numericProcessor := range numericProcessors {
+		violation := numericProcessor()
+		if violation != nil {
+			violations = append(violations, violation)
+			if cfg.failFast {
+				break
+			}
 		}
-	case n.upper == upperBoundNone:
-		if isNaN || n.belowLo(valT) {
-			return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
-				n.gtltRule(), "must be "+n.loMessage(),
-				val, n.config.makeRuleVal(n.lo))
-		}
-	default:
-		var failure bool
-		if n.isNormalRange() {
-			failure = isNaN || n.aboveHi(valT) || n.belowLo(valT)
-		} else {
-			failure = isNaN || (n.aboveHi(valT) && n.belowLo(valT))
-		}
-		if failure {
-			return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
-				n.gtltRule(),
-				fmt.Sprintf("must be %s %s %s", n.loMessage(), n.conjunction(), n.hiMessage()),
-				val, n.config.makeRuleVal(n.lo))
+	}
+
+	if len(violations) > 0 {
+		return &ValidationError{
+			Violations: violations,
 		}
 	}
 	return nil
@@ -476,93 +601,6 @@ func (n nativeNumericCompare[T]) Tautology() bool {
 }
 
 var _ evaluator = nativeNumericCompare[int32]{}
-
-// tryBuildNativeNumericRules attempts to build a native Go evaluator for
-// numeric rules. Returns nil if the rules can't be handled natively,
-// including cases with unknown fields (custom predefined extensions).
-func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
-	base base,
-	rules R,
-	config numericTypeConfig[T],
-) evaluator {
-	// Bail out if the rules message has unknown fields, which indicate
-	// custom predefined extensions that we can't handle natively.
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
-		return nil
-	}
-
-	hasRule := false
-
-	var lowerValue T
-	lower := lowerBoundNone
-	switch {
-	case rules.HasGt():
-		lower = lowerBoundGt
-		lowerValue = rules.GetGt()
-		hasRule = true
-	case rules.HasGte():
-		lower = lowerBoundGte
-		lowerValue = rules.GetGte()
-		hasRule = true
-	}
-
-	var upperValue T
-	upper := upperBoundNone
-	switch {
-	case rules.HasLt():
-		upper = upperBoundLt
-		upperValue = rules.GetLt()
-		hasRule = true
-	case rules.HasLte():
-		upper = upperBoundLte
-		upperValue = rules.GetLte()
-		hasRule = true
-	}
-
-	var constVal *T
-	if rules.HasConst() {
-		constVal = ptr(rules.GetConst())
-		hasRule = true
-	}
-
-	var inVals []T
-	if inVals = rules.GetIn(); len(inVals) > 0 {
-		hasRule = true
-	}
-
-	var notInVals []T
-	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		hasRule = true
-	}
-
-	type finiteInterface interface {
-		HasFinite() bool
-		GetFinite() bool
-	}
-
-	finite := false
-	if fi, ok := (any)(rules).(finiteInterface); ok && fi.HasFinite() {
-		finite = fi.GetFinite()
-		hasRule = true
-	}
-
-	if !hasRule {
-		return nil
-	}
-
-	return nativeNumericCompare[T]{
-		base:      base,
-		config:    config,
-		lo:        lowerValue,
-		lower:     lower,
-		hi:        upperValue,
-		upper:     upper,
-		constVal:  constVal,
-		inVals:    inVals,
-		notInVals: notInVals,
-		finite:    finite,
-	}
-}
 
 func ptr[T any](v T) *T { return &v }
 

@@ -61,7 +61,7 @@ func (b *base) rulePath(suffix *validate.FieldPath) *validate.FieldPath {
 	return prefixRulePath(b.RulePrefix, suffix)
 }
 
-// newViolation constructs a ValidationError with a single violation.
+// newViolation constructs a Violation.
 // ruleDesc is the top-level rule descriptor (e.g., FieldRules.int32),
 // desc is the specific constraint descriptor (e.g., Int32Rules.gt).
 func (b *base) newViolation(
@@ -71,8 +71,8 @@ func (b *base) newViolation(
 	message string,
 	fieldValue protoreflect.Value,
 	ruleValue protoreflect.Value,
-) error {
-	return &ValidationError{Violations: []*Violation{{
+) *Violation {
+	return &Violation{
 		Proto: validate.Violation_builder{
 			Field: b.fieldPath(),
 			Rule: b.rulePath(validate.FieldPath_builder{
@@ -88,7 +88,7 @@ func (b *base) newViolation(
 		FieldDescriptor: b.Descriptor,
 		RuleValue:       ruleValue,
 		RuleDescriptor:  desc,
-	}}}
+	}
 }
 
 func prefixRulePath(prefix *validate.FieldPath, suffix *validate.FieldPath) *validate.FieldPath {

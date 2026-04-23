@@ -84,34 +84,62 @@ type nativeRepeatedEval struct {
 	unique   bool
 }
 
-func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+type repeatedProcessor func(n nativeRepeatedEval, val protoreflect.Value, list protoreflect.List, size uint64) *Violation
+
+//nolint:gochecknoglobals // slice of all the processors that are used, value never modified, effectively immutable
+var repeatedProcessors = []repeatedProcessor{
+	// min_items
+	func(n nativeRepeatedEval, val protoreflect.Value, _ protoreflect.List, size uint64) *Violation {
+		if size < n.minItems {
+			return n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
+				"repeated.min_items",
+				fmt.Sprintf("must contain at least %d item(s)", n.minItems),
+				val, protoreflect.ValueOfUint64(n.minItems))
+		}
+		return nil
+	},
+	// max_items
+	func(n nativeRepeatedEval, val protoreflect.Value, _ protoreflect.List, size uint64) *Violation {
+		if size > n.maxItems {
+			return n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
+				"repeated.max_items",
+				fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
+				val, protoreflect.ValueOfUint64(n.maxItems))
+		}
+		return nil
+	},
+	// unique
+	func(n nativeRepeatedEval, val protoreflect.Value, list protoreflect.List, _ uint64) *Violation {
+		if n.unique && !isUnique(list) {
+			return n.newViolation(repeatedFieldRulesDesc, repeatedUniqueDesc,
+				"repeated.unique",
+				"repeated value must contain unique items",
+				val, protoreflect.ValueOfBool(true))
+		}
+		return nil
+	},
+}
+
+func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	list := val.List()
 	size := uint64(list.Len()) //nolint:gosec // len can't be < 0 and is always within uint64 range
+	var violations []*Violation
 
-	// min_items
-	if size < n.minItems {
-		return n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
-			"repeated.min_items",
-			fmt.Sprintf("must contain at least %d item(s)", n.minItems),
-			val, protoreflect.ValueOfUint64(n.minItems))
+	for _, repeatedProcessor := range repeatedProcessors {
+		violation := repeatedProcessor(n, val, list, size)
+		if violation != nil {
+			violations = append(violations, violation)
+			if cfg.failFast {
+				break
+			}
+		}
 	}
 
-	// max_items
-	if size > n.maxItems {
-		return n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
-			"repeated.max_items",
-			fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
-			val, protoreflect.ValueOfUint64(n.maxItems))
+	if len(violations) > 0 {
+		return &ValidationError{
+			Violations: violations,
+		}
 	}
-
-	// unique
-	if n.unique && !isUnique(list) {
-		return n.newViolation(repeatedFieldRulesDesc, repeatedUniqueDesc,
-			"repeated.unique",
-			"repeated value must contain unique items",
-			val, protoreflect.ValueOfBool(true))
-	}
-
 	return nil
 }
 

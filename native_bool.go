@@ -55,9 +55,10 @@ type nativeBoolEval struct {
 
 func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if val.Bool() != n.constVal {
-		return n.newViolation(boolRuleDesc, boolConstDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(boolRuleDesc, boolConstDesc,
 			"bool.const", fmt.Sprintf("must equal %t", n.constVal),
-			val, protoreflect.ValueOfBool(n.constVal))
+			val, protoreflect.ValueOfBool(n.constVal)),
+		}}
 	}
 	return nil
 }
