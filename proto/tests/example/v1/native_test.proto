@@ -199,3 +199,10 @@ message WrapperTesting {
   google.protobuf.StringValue s = 8 [(buf.validate.field).string.const = "hello"];
   google.protobuf.BytesValue bs = 9 [(buf.validate.field).bytes.len = 5];
 }
+
+message MultiRule {
+  int64 many = 1 [
+    (buf.validate.field).int64.const = 10,
+    (buf.validate.field).int64.gt = 5
+  ];
+}

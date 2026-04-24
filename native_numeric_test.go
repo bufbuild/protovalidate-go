@@ -19,6 +19,7 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	examplev1 "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -217,7 +218,7 @@ func TestNativeInt32Compare(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			eval := buildNativeNumeric(t, tt.rules, int32Config, descriptorpb.FieldDescriptorProto_TYPE_INT32)
+			eval := buildNativeNumeric(t, tt.rules, &int32Config, descriptorpb.FieldDescriptorProto_TYPE_INT32)
 			require.NotNil(t, eval)
 			runNumericCases(t, eval, protoreflect.ValueOfInt32, tt.cases)
 		})
@@ -230,7 +231,7 @@ func TestNativeInt64Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.Int64Rules_builder{Gt: proto.Int64(0), Lt: proto.Int64(100)}.Build()
-	eval := buildNativeNumeric(t, rules, int64Config, descriptorpb.FieldDescriptorProto_TYPE_INT64)
+	eval := buildNativeNumeric(t, rules, &int64Config, descriptorpb.FieldDescriptorProto_TYPE_INT64)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfInt64, []numericTestCase[int64]{
@@ -244,7 +245,7 @@ func TestNativeUint32Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.UInt32Rules_builder{Gte: proto.Uint32(5), Lte: proto.Uint32(10)}.Build()
-	eval := buildNativeNumeric(t, rules, uint32Config, descriptorpb.FieldDescriptorProto_TYPE_UINT32)
+	eval := buildNativeNumeric(t, rules, &uint32Config, descriptorpb.FieldDescriptorProto_TYPE_UINT32)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfUint32, []numericTestCase[uint32]{
@@ -258,7 +259,7 @@ func TestNativeUint64Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.UInt64Rules_builder{Gt: proto.Uint64(0)}.Build()
-	eval := buildNativeNumeric(t, rules, uint64Config, descriptorpb.FieldDescriptorProto_TYPE_UINT64)
+	eval := buildNativeNumeric(t, rules, &uint64Config, descriptorpb.FieldDescriptorProto_TYPE_UINT64)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfUint64, []numericTestCase[uint64]{
@@ -272,7 +273,7 @@ func TestNativeSint32Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.SInt32Rules_builder{Gt: proto.Int32(-10), Lt: proto.Int32(10)}.Build()
-	eval := buildNativeNumeric(t, rules, sint32Config, descriptorpb.FieldDescriptorProto_TYPE_SINT32)
+	eval := buildNativeNumeric(t, rules, &sint32Config, descriptorpb.FieldDescriptorProto_TYPE_SINT32)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfInt32, []numericTestCase[int32]{
@@ -286,7 +287,7 @@ func TestNativeSint64Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.SInt64Rules_builder{Gte: proto.Int64(0)}.Build()
-	eval := buildNativeNumeric(t, rules, sint64Config, descriptorpb.FieldDescriptorProto_TYPE_SINT64)
+	eval := buildNativeNumeric(t, rules, &sint64Config, descriptorpb.FieldDescriptorProto_TYPE_SINT64)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfInt64, []numericTestCase[int64]{
@@ -300,7 +301,7 @@ func TestNativeFixed32Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.Fixed32Rules_builder{Lt: proto.Uint32(100)}.Build()
-	eval := buildNativeNumeric(t, rules, fixed32Config, descriptorpb.FieldDescriptorProto_TYPE_FIXED32)
+	eval := buildNativeNumeric(t, rules, &fixed32Config, descriptorpb.FieldDescriptorProto_TYPE_FIXED32)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfUint32, []numericTestCase[uint32]{
@@ -314,7 +315,7 @@ func TestNativeFixed64Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.Fixed64Rules_builder{Lte: proto.Uint64(50)}.Build()
-	eval := buildNativeNumeric(t, rules, fixed64Config, descriptorpb.FieldDescriptorProto_TYPE_FIXED64)
+	eval := buildNativeNumeric(t, rules, &fixed64Config, descriptorpb.FieldDescriptorProto_TYPE_FIXED64)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfUint64, []numericTestCase[uint64]{
@@ -328,7 +329,7 @@ func TestNativeSfixed32Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.SFixed32Rules_builder{Const: proto.Int32(42)}.Build()
-	eval := buildNativeNumeric(t, rules, sfixed32Config, descriptorpb.FieldDescriptorProto_TYPE_SFIXED32)
+	eval := buildNativeNumeric(t, rules, &sfixed32Config, descriptorpb.FieldDescriptorProto_TYPE_SFIXED32)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfInt32, []numericTestCase[int32]{
@@ -342,7 +343,7 @@ func TestNativeSfixed64Compare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.SFixed64Rules_builder{In: []int64{1, 2, 3}}.Build()
-	eval := buildNativeNumeric(t, rules, sfixed64Config, descriptorpb.FieldDescriptorProto_TYPE_SFIXED64)
+	eval := buildNativeNumeric(t, rules, &sfixed64Config, descriptorpb.FieldDescriptorProto_TYPE_SFIXED64)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfInt64, []numericTestCase[int64]{
@@ -356,7 +357,7 @@ func TestNativeFloatCompare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.FloatRules_builder{Gt: proto.Float32(0), Lt: proto.Float32(10)}.Build()
-	eval := buildNativeNumeric(t, rules, floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
+	eval := buildNativeNumeric(t, rules, &floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfFloat32, []numericTestCase[float32]{
@@ -368,7 +369,7 @@ func TestNativeFloatFinite(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.FloatRules_builder{Finite: proto.Bool(true)}.Build()
-	eval := buildNativeNumeric(t, rules, floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
+	eval := buildNativeNumeric(t, rules, &floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfFloat32, []numericTestCase[float32]{
@@ -380,7 +381,7 @@ func TestNativeDoubleFinite(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.DoubleRules_builder{Finite: proto.Bool(true)}.Build()
-	eval := buildNativeNumeric(t, rules, doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
+	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfFloat64, []numericTestCase[float64]{
@@ -402,7 +403,7 @@ func TestNativeFloat_NaN(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			eval := buildNativeNumeric(t, tt.rules, floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
+			eval := buildNativeNumeric(t, tt.rules, &floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
 			require.NotNil(t, eval)
 			nan := float32(math.NaN())
 			err := eval.Evaluate(nil, protoreflect.ValueOfFloat32(nan), &validationConfig{})
@@ -426,7 +427,7 @@ func TestNativeDoubleCompare(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.DoubleRules_builder{Gte: proto.Float64(-1.5), Lte: proto.Float64(1.5)}.Build()
-	eval := buildNativeNumeric(t, rules, doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
+	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
 	require.NotNil(t, eval)
 
 	runNumericCases(t, eval, protoreflect.ValueOfFloat64, []numericTestCase[float64]{
@@ -438,7 +439,7 @@ func TestNativeDouble_NaN(t *testing.T) {
 	t.Parallel()
 
 	rules := validate.DoubleRules_builder{Gt: proto.Float64(0)}.Build()
-	eval := buildNativeNumeric(t, rules, doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
+	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
 	require.NotNil(t, eval)
 
 	err := eval.Evaluate(nil, protoreflect.ValueOfFloat64(math.NaN()), &validationConfig{})
@@ -451,7 +452,7 @@ func TestNativeNumericCompare_FieldValue(t *testing.T) {
 	t.Parallel()
 	eval := buildNativeNumeric(t,
 		validate.Int32Rules_builder{Gt: proto.Int32(5)}.Build(),
-		int32Config,
+		&int32Config,
 		descriptorpb.FieldDescriptorProto_TYPE_INT32,
 	)
 	require.NotNil(t, eval)
@@ -468,7 +469,7 @@ func TestNativeNumericCompare_Tautology(t *testing.T) {
 	t.Parallel()
 	eval := buildNativeNumeric(t,
 		validate.Int32Rules_builder{Gt: proto.Int32(0)}.Build(),
-		int32Config,
+		&int32Config,
 		descriptorpb.FieldDescriptorProto_TYPE_INT32,
 	)
 	require.NotNil(t, eval)
@@ -498,13 +499,25 @@ func TestTryBuildNativeNumericRules_ReturnsNil(t *testing.T) {
 	}
 }
 
+func TestMultiRule(t *testing.T) {
+	t.Parallel()
+	msg := examplev1.MultiRule_builder{Many: 1}.Build()
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	var valErr *ValidationError
+	require.ErrorAs(t, err, &valErr)
+	require.Len(t, valErr.Violations, 2)
+	assert.Equal(t, int64(1), valErr.Violations[0].FieldValue.Int())
+}
+
 // --- Helpers ---
 
 // buildNativeNumeric constructs a nativeNumericCompare evaluator for testing.
 func buildNativeNumeric[T numericValue, R numericRules[T]](
 	t testing.TB,
 	rules R,
-	config numericTypeConfig[T],
+	config *numericTypeConfig[T],
 	fieldType descriptorpb.FieldDescriptorProto_Type,
 ) evaluator {
 	t.Helper()

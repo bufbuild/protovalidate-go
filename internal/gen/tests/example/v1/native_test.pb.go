@@ -1053,6 +1053,63 @@ func (b0 WrapperTesting_builder) Build() *WrapperTesting {
 	return m0
 }
 
+type MultiRule struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Many          int64                  `protobuf:"varint,1,opt,name=many,proto3" json:"many,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MultiRule) Reset() {
+	*x = MultiRule{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MultiRule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MultiRule) ProtoMessage() {}
+
+func (x *MultiRule) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MultiRule) GetMany() int64 {
+	if x != nil {
+		return x.Many
+	}
+	return 0
+}
+
+func (x *MultiRule) SetMany(v int64) {
+	x.Many = v
+}
+
+type MultiRule_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Many int64
+}
+
+func (b0 MultiRule_builder) Build() *MultiRule {
+	m0 := &MultiRule{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Many = b.Many
+	return m0
+}
+
 var File_tests_example_v1_native_test_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_native_test_proto_rawDesc = "" +
@@ -1115,7 +1172,10 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x01b\x18\a \x01(\v2\x1a.google.protobuf.BoolValueB\a\xbaH\x04j\x02\b\x01R\x01b\x128\n" +
 	"\x01s\x18\b \x01(\v2\x1c.google.protobuf.StringValueB\f\xbaH\tr\a\n" +
 	"\x05helloR\x01s\x124\n" +
-	"\x02bs\x18\t \x01(\v2\x1b.google.protobuf.BytesValueB\a\xbaH\x04z\x02h\x05R\x02bs*a\n" +
+	"\x02bs\x18\t \x01(\v2\x1b.google.protobuf.BytesValueB\a\xbaH\x04z\x02h\x05R\x02bs\"*\n" +
+	"\tMultiRule\x12\x1d\n" +
+	"\x04many\x18\x01 \x01(\x03B\t\xbaH\x06\"\x04\b\n" +
+	" \x05R\x04many*a\n" +
 	"\bTestEnum\x12\x19\n" +
 	"\x15TEST_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTEST_ENUM_VAL1\x10\x01\x12\x12\n" +
@@ -1124,7 +1184,7 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x14com.tests.example.v1B\x0fNativeTestProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_native_test_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_tests_example_v1_native_test_proto_goTypes = []any{
 	(TestEnum)(0),                  // 0: tests.example.v1.TestEnum
 	(*BenchGT)(nil),                // 1: tests.example.v1.BenchGT
@@ -1134,27 +1194,28 @@ var file_tests_example_v1_native_test_proto_goTypes = []any{
 	(*TestByteMatching)(nil),       // 5: tests.example.v1.TestByteMatching
 	(*StringMatching)(nil),         // 6: tests.example.v1.StringMatching
 	(*WrapperTesting)(nil),         // 7: tests.example.v1.WrapperTesting
-	(*wrapperspb.Int32Value)(nil),  // 8: google.protobuf.Int32Value
-	(*wrapperspb.DoubleValue)(nil), // 9: google.protobuf.DoubleValue
-	(*wrapperspb.FloatValue)(nil),  // 10: google.protobuf.FloatValue
-	(*wrapperspb.Int64Value)(nil),  // 11: google.protobuf.Int64Value
-	(*wrapperspb.UInt64Value)(nil), // 12: google.protobuf.UInt64Value
-	(*wrapperspb.UInt32Value)(nil), // 13: google.protobuf.UInt32Value
-	(*wrapperspb.BoolValue)(nil),   // 14: google.protobuf.BoolValue
-	(*wrapperspb.StringValue)(nil), // 15: google.protobuf.StringValue
-	(*wrapperspb.BytesValue)(nil),  // 16: google.protobuf.BytesValue
+	(*MultiRule)(nil),              // 8: tests.example.v1.MultiRule
+	(*wrapperspb.Int32Value)(nil),  // 9: google.protobuf.Int32Value
+	(*wrapperspb.DoubleValue)(nil), // 10: google.protobuf.DoubleValue
+	(*wrapperspb.FloatValue)(nil),  // 11: google.protobuf.FloatValue
+	(*wrapperspb.Int64Value)(nil),  // 12: google.protobuf.Int64Value
+	(*wrapperspb.UInt64Value)(nil), // 13: google.protobuf.UInt64Value
+	(*wrapperspb.UInt32Value)(nil), // 14: google.protobuf.UInt32Value
+	(*wrapperspb.BoolValue)(nil),   // 15: google.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil), // 16: google.protobuf.StringValue
+	(*wrapperspb.BytesValue)(nil),  // 17: google.protobuf.BytesValue
 }
 var file_tests_example_v1_native_test_proto_depIdxs = []int32{
 	0,  // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
-	8,  // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
-	9,  // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
-	10, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
-	11, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
-	12, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
-	13, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
-	14, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
-	15, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
-	16, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
+	9,  // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
+	10, // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
+	11, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
+	12, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
+	13, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
+	14, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
+	15, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
+	16, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
+	17, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
 	10, // [10:10] is the sub-list for method output_type
 	10, // [10:10] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
@@ -1173,7 +1234,7 @@ func file_tests_example_v1_native_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_native_test_proto_rawDesc), len(file_tests_example_v1_native_test_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   7,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

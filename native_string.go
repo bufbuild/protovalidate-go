@@ -51,48 +51,61 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 		if err != nil {
 			return nil
 		}
+		if wellKnownRule != nil {
+			rules.ProtoReflect().Clear(wellKnownRule.site.desc)
+		}
+		if knownRegex != validate.KnownRegex_KNOWN_REGEX_UNSPECIFIED {
+			rules.ProtoReflect().Clear(strDescs.wellKnownRegexSite.desc)
+		}
 		hasRule = true
 	}
 
 	var constVal *string
 	if rules.HasConst() {
 		constVal = ptr(rules.GetConst())
+		rules.ProtoReflect().Clear(strDescs.constSite.desc)
 		hasRule = true
 	}
 
 	var exactLen *uint64
 	if rules.HasLen() {
 		exactLen = ptr(rules.GetLen())
+		rules.ProtoReflect().Clear(strDescs.lenSite.desc)
 		hasRule = true
 	}
 
 	var minLen *uint64
 	if rules.HasMinLen() {
 		minLen = ptr(rules.GetMinLen())
+		rules.ProtoReflect().Clear(strDescs.minLenSite.desc)
 		hasRule = true
 	}
 
 	var maxLen *uint64
 	if rules.HasMaxLen() {
 		maxLen = ptr(rules.GetMaxLen())
+		rules.ProtoReflect().Clear(strDescs.maxLenSite.desc)
 		hasRule = true
 	}
 
 	var exactBytes *uint64
 	if rules.HasLenBytes() {
 		exactBytes = ptr(rules.GetLenBytes())
+		rules.ProtoReflect().Clear(strDescs.lenBytesSite.desc)
 		hasRule = true
 	}
 
 	var minBytes *uint64
 	if rules.HasMinBytes() {
 		minBytes = ptr(rules.GetMinBytes())
+		rules.ProtoReflect().Clear(strDescs.minBytesSite.desc)
 		hasRule = true
 	}
 
 	var maxBytes *uint64
 	if rules.HasMaxBytes() {
 		maxBytes = ptr(rules.GetMaxBytes())
+		rules.ProtoReflect().Clear(strDescs.maxBytesSite.desc)
 		hasRule = true
 	}
 
@@ -106,40 +119,47 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 			// Invalid regex — bail to CEL which will also report a CompilationError.
 			return nil
 		}
+		rules.ProtoReflect().Clear(strDescs.patternSite.desc)
 		hasRule = true
 	}
 
 	var prefix *string
 	if rules.HasPrefix() {
 		prefix = ptr(rules.GetPrefix())
+		rules.ProtoReflect().Clear(strDescs.prefixSite.desc)
 		hasRule = true
 	}
 
 	var suffix *string
 	if rules.HasSuffix() {
 		suffix = ptr(rules.GetSuffix())
+		rules.ProtoReflect().Clear(strDescs.suffixSite.desc)
 		hasRule = true
 	}
 
 	var containsVal *string
 	if rules.HasContains() {
 		containsVal = ptr(rules.GetContains())
+		rules.ProtoReflect().Clear(strDescs.containsSite.desc)
 		hasRule = true
 	}
 
 	var notContains *string
 	if rules.HasNotContains() {
 		notContains = ptr(rules.GetNotContains())
+		rules.ProtoReflect().Clear(strDescs.notContainsSite.desc)
 		hasRule = true
 	}
 
 	var inVals []string
 	if inVals = rules.GetIn(); len(inVals) > 0 {
+		rules.ProtoReflect().Clear(strDescs.inSite.desc)
 		hasRule = true
 	}
 
 	var notInVals []string
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		rules.ProtoReflect().Clear(strDescs.notInSite.desc)
 		hasRule = true
 	}
 
@@ -172,82 +192,47 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 
 // stringDescriptors bundles the field descriptors for StringRules.
 type stringDescriptors struct {
-	ruleDesc           protoreflect.FieldDescriptor // FieldRules.string
-	constDesc          protoreflect.FieldDescriptor
-	lenDesc            protoreflect.FieldDescriptor
-	minLenDesc         protoreflect.FieldDescriptor
-	maxLenDesc         protoreflect.FieldDescriptor
-	lenBytesDesc       protoreflect.FieldDescriptor
-	minBytesDesc       protoreflect.FieldDescriptor
-	maxBytesDesc       protoreflect.FieldDescriptor
-	patternDesc        protoreflect.FieldDescriptor
-	prefixDesc         protoreflect.FieldDescriptor
-	suffixDesc         protoreflect.FieldDescriptor
-	containsDesc       protoreflect.FieldDescriptor
-	notContainsDesc    protoreflect.FieldDescriptor
-	inDesc             protoreflect.FieldDescriptor
-	notInDesc          protoreflect.FieldDescriptor
-	hostNameDesc       protoreflect.FieldDescriptor
-	hostAndPortDesc    protoreflect.FieldDescriptor
-	emailDesc          protoreflect.FieldDescriptor
-	ipDesc             protoreflect.FieldDescriptor
-	ipv4Desc           protoreflect.FieldDescriptor
-	ipv6Desc           protoreflect.FieldDescriptor
-	uriDesc            protoreflect.FieldDescriptor
-	uriRefDesc         protoreflect.FieldDescriptor
-	addressDesc        protoreflect.FieldDescriptor
-	uuidDesc           protoreflect.FieldDescriptor
-	tuuidDesc          protoreflect.FieldDescriptor
-	ipPrefixLenDesc    protoreflect.FieldDescriptor
-	ipv4PrefixLenDesc  protoreflect.FieldDescriptor
-	ipv6PrefixLenDesc  protoreflect.FieldDescriptor
-	ipPrefixDesc       protoreflect.FieldDescriptor
-	ipv4PrefixDesc     protoreflect.FieldDescriptor
-	ipv6PrefixDesc     protoreflect.FieldDescriptor
-	ulidDesc           protoreflect.FieldDescriptor
-	wellKnownRegexDesc protoreflect.FieldDescriptor
-	strictDesc         protoreflect.FieldDescriptor
+	ruleDesc protoreflect.FieldDescriptor // FieldRules.string
+
+	// Pre-built rule sites for the error path. Each pairs ruleDesc with the
+	// corresponding leaf descriptor, built once at init.
+	constSite          ruleSite
+	lenSite            ruleSite
+	minLenSite         ruleSite
+	maxLenSite         ruleSite
+	lenBytesSite       ruleSite
+	minBytesSite       ruleSite
+	maxBytesSite       ruleSite
+	patternSite        ruleSite
+	prefixSite         ruleSite
+	suffixSite         ruleSite
+	containsSite       ruleSite
+	notContainsSite    ruleSite
+	inSite             ruleSite
+	notInSite          ruleSite
+	wellKnownRegexSite ruleSite
 }
 
 func makeStringDescriptors() stringDescriptors {
-	rulesDesc := (*validate.StringRules)(nil).ProtoReflect().Descriptor()
-	return stringDescriptors{
-		ruleDesc:           fieldRulesDesc.Fields().ByName("string"),
-		constDesc:          rulesDesc.Fields().ByName("const"),
-		lenDesc:            rulesDesc.Fields().ByName("len"),
-		minLenDesc:         rulesDesc.Fields().ByName("min_len"),
-		maxLenDesc:         rulesDesc.Fields().ByName("max_len"),
-		lenBytesDesc:       rulesDesc.Fields().ByName("len_bytes"),
-		minBytesDesc:       rulesDesc.Fields().ByName("min_bytes"),
-		maxBytesDesc:       rulesDesc.Fields().ByName("max_bytes"),
-		patternDesc:        rulesDesc.Fields().ByName("pattern"),
-		prefixDesc:         rulesDesc.Fields().ByName("prefix"),
-		suffixDesc:         rulesDesc.Fields().ByName("suffix"),
-		containsDesc:       rulesDesc.Fields().ByName("contains"),
-		notContainsDesc:    rulesDesc.Fields().ByName("not_contains"),
-		inDesc:             rulesDesc.Fields().ByName("in"),
-		notInDesc:          rulesDesc.Fields().ByName("not_in"),
-		emailDesc:          rulesDesc.Fields().ByName("email"),
-		hostNameDesc:       rulesDesc.Fields().ByName("hostname"),
-		ipDesc:             rulesDesc.Fields().ByName("ip"),
-		ipv4Desc:           rulesDesc.Fields().ByName("ipv4"),
-		ipv6Desc:           rulesDesc.Fields().ByName("ipv6"),
-		uriDesc:            rulesDesc.Fields().ByName("uri"),
-		uriRefDesc:         rulesDesc.Fields().ByName("uri_ref"),
-		addressDesc:        rulesDesc.Fields().ByName("address"),
-		uuidDesc:           rulesDesc.Fields().ByName("uuid"),
-		tuuidDesc:          rulesDesc.Fields().ByName("tuuid"),
-		ipPrefixLenDesc:    rulesDesc.Fields().ByName("ip_with_prefixlen"),
-		ipv4PrefixLenDesc:  rulesDesc.Fields().ByName("ipv4_with_prefixlen"),
-		ipv6PrefixLenDesc:  rulesDesc.Fields().ByName("ipv6_with_prefixlen"),
-		ipPrefixDesc:       rulesDesc.Fields().ByName("ip_prefix"),
-		ipv4PrefixDesc:     rulesDesc.Fields().ByName("ipv4_prefix"),
-		ipv6PrefixDesc:     rulesDesc.Fields().ByName("ipv6_prefix"),
-		hostAndPortDesc:    rulesDesc.Fields().ByName("host_and_port"),
-		ulidDesc:           rulesDesc.Fields().ByName("ulid"),
-		wellKnownRegexDesc: rulesDesc.Fields().ByName("well_known_regex"),
-		strictDesc:         rulesDesc.Fields().ByName("strict"),
+	descriptors := stringDescriptors{
+		ruleDesc: fieldRulesDesc.Fields().ByName("string"),
 	}
+	descriptors.constSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "string.const")
+	descriptors.lenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "string.len")
+	descriptors.minLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "string.min_len")
+	descriptors.maxLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "string.max_len")
+	descriptors.lenBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len_bytes"), "string.len_bytes")
+	descriptors.minBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_bytes"), "string.min_bytes")
+	descriptors.maxBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_bytes"), "string.max_bytes")
+	descriptors.patternSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "string.pattern")
+	descriptors.prefixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "string.prefix")
+	descriptors.suffixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "string.suffix")
+	descriptors.containsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "string.contains")
+	descriptors.notContainsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_contains"), "string.not_contains")
+	descriptors.inSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "string.in")
+	descriptors.notInSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "string.not_in")
+	descriptors.wellKnownRegexSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("well_known_regex"))
+	return descriptors
 }
 
 //nolint:gochecknoglobals
@@ -266,18 +251,20 @@ var (
 // It bundles the field descriptor, rule IDs, messages, and validation
 // function so that all well-known checks share a single generic method.
 type stringWellKnownRule struct {
-	desc        protoreflect.FieldDescriptor
-	ruleID      string // e.g. "string.ip"
-	emptyRuleID string // e.g. "string.ip_empty"; empty means skip the empty check
-	mainMsg     string // e.g. "must be a valid IP address"
-	emptyMsg    string // e.g. "value is empty, which is not a valid IP address"
+	site        ruleSite // pre-built rule path site for the error path
+	ruleID      string   // e.g. "string.ip"
+	emptyRuleID string   // e.g. "string.ip_empty"; empty means skip the empty check
+	mainMsg     string   // e.g. "must be a valid IP address"
+	emptyMsg    string   // e.g. "value is empty, which is not a valid IP address"
 	validate    func(string) bool
 }
 
 //nolint:gochecknoglobals
 var (
+	rulesDesc = (*validate.StringRules)(nil).ProtoReflect().Descriptor()
+
 	stringRuleEmail = stringWellKnownRule{
-		desc:        strDescs.emailDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("email")),
 		ruleID:      "string.email",
 		emptyRuleID: "string.email_empty",
 		mainMsg:     "must be a valid email address",
@@ -285,7 +272,7 @@ var (
 		validate:    rules.IsEmail,
 	}
 	stringRuleHostname = stringWellKnownRule{
-		desc:        strDescs.hostNameDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("hostname")),
 		ruleID:      "string.hostname",
 		emptyRuleID: "string.hostname_empty",
 		mainMsg:     "must be a valid hostname",
@@ -293,7 +280,7 @@ var (
 		validate:    rules.IsHostname,
 	}
 	stringRuleIP = stringWellKnownRule{
-		desc:        strDescs.ipDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip")),
 		ruleID:      "string.ip",
 		emptyRuleID: "string.ip_empty",
 		mainMsg:     "must be a valid IP address",
@@ -301,7 +288,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIP(s, 0) },
 	}
 	stringRuleIPv4 = stringWellKnownRule{
-		desc:        strDescs.ipv4Desc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4")),
 		ruleID:      "string.ipv4",
 		emptyRuleID: "string.ipv4_empty",
 		mainMsg:     "must be a valid IPv4 address",
@@ -309,7 +296,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIP(s, 4) },
 	}
 	stringRuleIPv6 = stringWellKnownRule{
-		desc:        strDescs.ipv6Desc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6")),
 		ruleID:      "string.ipv6",
 		emptyRuleID: "string.ipv6_empty",
 		mainMsg:     "must be a valid IPv6 address",
@@ -317,7 +304,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIP(s, 6) },
 	}
 	stringRuleURI = stringWellKnownRule{
-		desc:        strDescs.uriDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri")),
 		ruleID:      "string.uri",
 		emptyRuleID: "string.uri_empty",
 		mainMsg:     "must be a valid URI",
@@ -325,13 +312,13 @@ var (
 		validate:    rules.IsURI,
 	}
 	stringRuleURIRef = stringWellKnownRule{
-		desc:     strDescs.uriRefDesc,
+		site:     makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri_ref")),
 		ruleID:   "string.uri_ref",
 		mainMsg:  "must be a valid URI Reference",
 		validate: rules.IsURIRef,
 	}
 	stringRuleAddress = stringWellKnownRule{
-		desc:        strDescs.addressDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("address")),
 		ruleID:      "string.address",
 		emptyRuleID: "string.address_empty",
 		mainMsg:     "must be a valid hostname, or ip address",
@@ -339,7 +326,7 @@ var (
 		validate:    func(s string) bool { return rules.IsHostname(s) || rules.IsIP(s, 0) },
 	}
 	stringRuleUUID = stringWellKnownRule{
-		desc:        strDescs.uuidDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uuid")),
 		ruleID:      "string.uuid",
 		emptyRuleID: "string.uuid_empty",
 		mainMsg:     "must be a valid UUID",
@@ -347,7 +334,7 @@ var (
 		validate:    uuidRegexp.MatchString,
 	}
 	stringRuleTUUID = stringWellKnownRule{
-		desc:        strDescs.tuuidDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("tuuid")),
 		ruleID:      "string.tuuid",
 		emptyRuleID: "string.tuuid_empty",
 		mainMsg:     "must be a valid trimmed UUID",
@@ -355,7 +342,7 @@ var (
 		validate:    tuuidRegexp.MatchString,
 	}
 	stringRuleIPPrefixLen = stringWellKnownRule{
-		desc:        strDescs.ipPrefixLenDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_with_prefixlen")),
 		ruleID:      "string.ip_with_prefixlen",
 		emptyRuleID: "string.ip_with_prefixlen_empty",
 		mainMsg:     "must be a valid IP prefix",
@@ -363,7 +350,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, false) },
 	}
 	stringRuleIPv4PrefixLen = stringWellKnownRule{
-		desc:        strDescs.ipv4PrefixLenDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_with_prefixlen")),
 		ruleID:      "string.ipv4_with_prefixlen",
 		emptyRuleID: "string.ipv4_with_prefixlen_empty",
 		mainMsg:     "must be a valid IPv4 address with prefix length",
@@ -371,7 +358,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, false) },
 	}
 	stringRuleIPv6PrefixLen = stringWellKnownRule{
-		desc:        strDescs.ipv6PrefixLenDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_with_prefixlen")),
 		ruleID:      "string.ipv6_with_prefixlen",
 		emptyRuleID: "string.ipv6_with_prefixlen_empty",
 		mainMsg:     "must be a valid IPv6 address with prefix length",
@@ -379,7 +366,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, false) },
 	}
 	stringRuleIPPrefix = stringWellKnownRule{
-		desc:        strDescs.ipPrefixDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_prefix")),
 		ruleID:      "string.ip_prefix",
 		emptyRuleID: "string.ip_prefix_empty",
 		mainMsg:     "must be a valid IP prefix",
@@ -387,7 +374,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, true) },
 	}
 	stringRuleIPv4Prefix = stringWellKnownRule{
-		desc:        strDescs.ipv4PrefixDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_prefix")),
 		ruleID:      "string.ipv4_prefix",
 		emptyRuleID: "string.ipv4_prefix_empty",
 		mainMsg:     "must be a valid IPv4 prefix",
@@ -395,7 +382,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, true) },
 	}
 	stringRuleIPv6Prefix = stringWellKnownRule{
-		desc:        strDescs.ipv6PrefixDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_prefix")),
 		ruleID:      "string.ipv6_prefix",
 		emptyRuleID: "string.ipv6_prefix_empty",
 		mainMsg:     "must be a valid IPv6 prefix",
@@ -403,7 +390,7 @@ var (
 		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, true) },
 	}
 	stringRuleHostAndPort = stringWellKnownRule{
-		desc:        strDescs.hostAndPortDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("host_and_port")),
 		ruleID:      "string.host_and_port",
 		emptyRuleID: "string.host_and_port_empty",
 		mainMsg:     "must be a valid host (hostname or IP address) and port pair",
@@ -411,7 +398,7 @@ var (
 		validate:    func(s string) bool { return rules.IsHostAndPort(s, true) },
 	}
 	stringRuleULID = stringWellKnownRule{
-		desc:        strDescs.ulidDesc,
+		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ulid")),
 		ruleID:      "string.ulid",
 		emptyRuleID: "string.ulid_empty",
 		mainMsg:     "must be a valid ULID",
@@ -472,7 +459,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.constVal != nil && strVal != *n.constVal {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.constDesc,
+		violations = append(violations, n.newViolation(strDescs.constSite,
 			"string.const", fmt.Sprintf("must equal `%s`", *n.constVal),
 			val, protoreflect.ValueOfString(*n.constVal)))
 		if cfg.failFast {
@@ -481,7 +468,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.pattern != nil && !n.pattern.MatchString(strVal) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.patternDesc,
+		violations = append(violations, n.newViolation(strDescs.patternSite,
 			"string.pattern", fmt.Sprintf("does not match regex pattern `%s`", n.patternStr),
 			val, protoreflect.ValueOfString(n.patternStr)))
 		if cfg.failFast {
@@ -490,7 +477,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.prefix != nil && !strings.HasPrefix(strVal, *n.prefix) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.prefixDesc,
+		violations = append(violations, n.newViolation(strDescs.prefixSite,
 			"string.prefix", fmt.Sprintf("does not have prefix `%s`", *n.prefix),
 			val, protoreflect.ValueOfString(*n.prefix)))
 		if cfg.failFast {
@@ -499,7 +486,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.suffix != nil && !strings.HasSuffix(strVal, *n.suffix) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.suffixDesc,
+		violations = append(violations, n.newViolation(strDescs.suffixSite,
 			"string.suffix", fmt.Sprintf("does not have suffix `%s`", *n.suffix),
 			val, protoreflect.ValueOfString(*n.suffix)))
 		if cfg.failFast {
@@ -508,7 +495,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.contains != nil && !strings.Contains(strVal, *n.contains) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.containsDesc,
+		violations = append(violations, n.newViolation(strDescs.containsSite,
 			"string.contains", fmt.Sprintf("does not contain substring `%s`", *n.contains),
 			val, protoreflect.ValueOfString(*n.contains)))
 		if cfg.failFast {
@@ -517,7 +504,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if n.notContains != nil && strings.Contains(strVal, *n.notContains) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.notContainsDesc,
+		violations = append(violations, n.newViolation(strDescs.notContainsSite,
 			"string.not_contains", fmt.Sprintf("value contains substring `%s`", *n.notContains),
 			val, protoreflect.ValueOfString(*n.notContains)))
 		if cfg.failFast {
@@ -526,7 +513,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if len(n.inVals) > 0 && !slices.Contains(n.inVals, strVal) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.inDesc,
+		violations = append(violations, n.newViolation(strDescs.inSite,
 			"string.in", "must be in list "+formatStringList(n.inVals),
 			val, protoreflect.ValueOfString(strVal)))
 		if cfg.failFast {
@@ -535,7 +522,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	}
 
 	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, strVal) {
-		violations = append(violations, n.newViolation(strDescs.ruleDesc, strDescs.notInDesc,
+		violations = append(violations, n.newViolation(strDescs.notInSite,
 			"string.not_in", "must not be in list "+formatStringList(n.notInVals),
 			val, protoreflect.ValueOfString(strVal)))
 		if cfg.failFast {
@@ -571,12 +558,12 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) []*Violation {
 	rule := n.wellKnownRule
 	if rule.emptyRuleID != "" && strVal == "" {
-		return []*Violation{n.newViolation(strDescs.ruleDesc, rule.desc,
+		return []*Violation{n.newViolation(rule.site,
 			rule.emptyRuleID, rule.emptyMsg,
 			val, protoreflect.ValueOfString(strVal))}
 	}
 	if !rule.validate(strVal) {
-		return []*Violation{n.newViolation(strDescs.ruleDesc, rule.desc,
+		return []*Violation{n.newViolation(rule.site,
 			rule.ruleID, rule.mainMsg,
 			val, protoreflect.ValueOfString(strVal))}
 	}
@@ -595,7 +582,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 	switch n.knownRegex {
 	case validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME:
 		if strVal == "" {
-			return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
+			return []*Violation{n.newViolation(strDescs.wellKnownRegexSite,
 				"string.well_known_regex.header_name_empty", "value is empty, which is not a valid HTTP header name",
 				val, protoreflect.ValueOfString(strVal))}
 		}
@@ -613,7 +600,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 		matcher = looseRegexp
 	}
 	if !matcher.MatchString(strVal) {
-		return []*Violation{n.newViolation(strDescs.ruleDesc, strDescs.wellKnownRegexDesc,
+		return []*Violation{n.newViolation(strDescs.wellKnownRegexSite,
 			rule, msg,
 			val, protoreflect.ValueOfString(strVal))}
 	}
@@ -627,17 +614,17 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 func (n nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.Value) []*Violation {
 	var out []*Violation
 	if n.exactBytes != nil && byteCount != *n.exactBytes {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.lenBytesDesc,
+		out = append(out, n.newViolation(strDescs.lenBytesSite,
 			"string.len_bytes", fmt.Sprintf("must be %d bytes", *n.exactBytes),
 			val, protoreflect.ValueOfUint64(*n.exactBytes)))
 	}
 	if n.minBytes != nil && byteCount < *n.minBytes {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.minBytesDesc,
+		out = append(out, n.newViolation(strDescs.minBytesSite,
 			"string.min_bytes", fmt.Sprintf("must be at least %d bytes", *n.minBytes),
 			val, protoreflect.ValueOfUint64(*n.minBytes)))
 	}
 	if n.maxBytes != nil && byteCount > *n.maxBytes {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.maxBytesDesc,
+		out = append(out, n.newViolation(strDescs.maxBytesSite,
 			"string.max_bytes", fmt.Sprintf("must be at most %d bytes", *n.maxBytes),
 			val, protoreflect.ValueOfUint64(*n.maxBytes)))
 	}
@@ -652,17 +639,17 @@ func (n nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Valu
 	var out []*Violation
 
 	if n.exactLen != nil && runeCount != *n.exactLen {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.lenDesc,
+		out = append(out, n.newViolation(strDescs.lenSite,
 			"string.len", fmt.Sprintf("must be %d characters", *n.exactLen),
 			val, protoreflect.ValueOfUint64(*n.exactLen)))
 	}
 	if n.minLen != nil && runeCount < *n.minLen {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.minLenDesc,
+		out = append(out, n.newViolation(strDescs.minLenSite,
 			"string.min_len", fmt.Sprintf("must be at least %d characters", *n.minLen),
 			val, protoreflect.ValueOfUint64(*n.minLen)))
 	}
 	if n.maxLen != nil && runeCount > *n.maxLen {
-		out = append(out, n.newViolation(strDescs.ruleDesc, strDescs.maxLenDesc,
+		out = append(out, n.newViolation(strDescs.maxLenSite,
 			"string.max_len", fmt.Sprintf("must be at most %d characters", *n.maxLen),
 			val, protoreflect.ValueOfUint64(*n.maxLen)))
 	}

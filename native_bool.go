@@ -23,8 +23,11 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	boolRuleDesc  = fieldRulesDesc.Fields().ByName("bool")
-	boolConstDesc = (*validate.BoolRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const")
+	boolConstSite = makeRuleSiteWithID(
+		fieldRulesDesc.Fields().ByName("bool"),
+		(*validate.BoolRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const"),
+		"bool.const",
+	)
 )
 
 // tryBuildNativeBoolRules attempts to build a native Go evaluator for
@@ -39,9 +42,11 @@ func tryBuildNativeBoolRules(base base, rules *validate.BoolRules) evaluator {
 	if !rules.HasConst() {
 		return nil
 	}
+	constVal := rules.GetConst()
+	rules.ProtoReflect().Clear(boolConstSite.desc)
 	return nativeBoolEval{
 		base:     base,
-		constVal: rules.GetConst(),
+		constVal: constVal,
 	}
 }
 
@@ -55,7 +60,7 @@ type nativeBoolEval struct {
 
 func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if val.Bool() != n.constVal {
-		return &ValidationError{Violations: []*Violation{n.newViolation(boolRuleDesc, boolConstDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(boolConstSite,
 			"bool.const", fmt.Sprintf("must equal %t", n.constVal),
 			val, protoreflect.ValueOfBool(n.constVal)),
 		}}

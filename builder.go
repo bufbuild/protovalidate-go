@@ -467,6 +467,13 @@ func (bldr *builder) processStandardRules(
 		}
 	}
 
+	// make a copy of the rules because we're going to clear anything handled by native rules, leaving
+	// anything else to be handled by CEL rules. this allows us to fall back to CEL rules if there is no
+	// native rule (for example, when a new rule is added to the validate proto, but the native code hasn't
+	// been updated. we are making a copy because we don't want to modify the original rules in case they are
+	// reused (happens in some test cases, could happen in production code with dynamic messages).
+	rules = proto.CloneOf[*validate.FieldRules](rules)
+
 	// put behind a feature flag to allow for testing.
 	// it's easier to follow like this, don't break it up
 	//nolint:nestif
@@ -475,21 +482,18 @@ func (bldr *builder) processStandardRules(
 		if fdesc.IsList() && valEval.NestedRule == nil {
 			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
 				valEval.Append(native)
-				return nil
 			}
 		}
 		// Try native Go evaluators for map-level rules (min_pairs, max_pairs).
 		if fdesc.IsMap() && valEval.NestedRule == nil {
 			if native := tryNativeMapRules(newBase(valEval), rules.GetMap()); native != nil {
 				valEval.Append(native)
-				return nil
 			}
 		}
 		// Try native Go evaluators for known simple rules before falling back to CEL.
 		if !fdesc.IsMap() && !fdesc.IsList() {
 			if native := bldr.tryNativeRules(fdesc, rules, valEval); native != nil {
 				valEval.Append(native)
-				return nil
 			}
 		}
 	}

@@ -24,8 +24,16 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	mapMinPairsDesc = (*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_pairs")
-	mapMaxPairsDesc = (*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_pairs")
+	mapMinPairsSite = makeRuleSiteWithID(
+		mapFieldRulesDesc,
+		(*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_pairs"),
+		"map.min_pairs",
+	)
+	mapMaxPairsSite = makeRuleSiteWithID(
+		mapFieldRulesDesc,
+		(*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_pairs"),
+		"map.max_pairs",
+	)
 )
 
 // tryNativeMapRules attempts to build a native Go evaluator for
@@ -44,12 +52,14 @@ func tryNativeMapRules(base base, rules *validate.MapRules) evaluator {
 	var minPairs uint64
 	if rules.HasMinPairs() {
 		minPairs = rules.GetMinPairs()
+		rules.ProtoReflect().Clear(mapMinPairsSite.desc)
 		hasRule = true
 	}
 
 	var maxPairs uint64 = math.MaxUint64
 	if rules.HasMaxPairs() {
 		maxPairs = rules.GetMaxPairs()
+		rules.ProtoReflect().Clear(mapMaxPairsSite.desc)
 		hasRule = true
 	}
 
@@ -80,7 +90,7 @@ func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, 
 
 	// min_pairs
 	if size < n.minPairs {
-		return &ValidationError{Violations: []*Violation{n.newViolation(mapFieldRulesDesc, mapMinPairsDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(mapMinPairsSite,
 			"map.min_pairs",
 			fmt.Sprintf("map must be at least %d entries", n.minPairs),
 			val, protoreflect.ValueOfUint64(n.minPairs)),
@@ -89,7 +99,7 @@ func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, 
 
 	// max_pairs
 	if size > n.maxPairs {
-		return &ValidationError{Violations: []*Violation{n.newViolation(mapFieldRulesDesc, mapMaxPairsDesc,
+		return &ValidationError{Violations: []*Violation{n.newViolation(mapMaxPairsSite,
 			"map.max_pairs",
 			fmt.Sprintf("map must be at most %d entries", n.maxPairs),
 			val, protoreflect.ValueOfUint64(n.maxPairs)),

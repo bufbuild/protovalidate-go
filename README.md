@@ -80,24 +80,26 @@ goos: darwin
 goarch: arm64
 pkg: buf.build/go/protovalidate
 cpu: Apple M1 Max
-                          │ .tmp/bench/2026-04-23:18:10:09.bench.txt │ .tmp/bench/2026-04-23:18:13:13.bench.txt │
+                          │ .tmp/bench/2026-04-24:17:56:31.bench.txt │ .tmp/bench/2026-04-24:18:00:25.bench.txt │
                           │                  sec/op                  │      sec/op       vs base                │
-Scalar-10                                               174.30n ± 1%        78.03n ± 1%  -55.24% (p=0.000 n=10)
-Repeated/Scalar-10                                      291.70n ± 1%        98.94n ± 0%  -66.08% (p=0.000 n=10)
-Repeated/Message-10                                      711.0n ± 1%        323.9n ± 0%  -54.44% (p=0.000 n=10)
-Repeated/Unique/Scalar-10                               1275.5n ± 0%        322.2n ± 0%  -74.74% (p=0.000 n=10)
-Repeated/Unique/Bytes-10                                2560.5n ± 0%        462.2n ± 0%  -81.95% (p=0.000 n=10)
-Map-10                                                   298.0n ± 1%        104.3n ± 0%  -64.99% (p=0.000 n=10)
-ComplexSchema-10                                         41.19µ ± 1%        14.89µ ± 0%  -63.84% (p=0.000 n=10)
-Int32GT-10                                               2.807µ ± 1%        1.015µ ± 0%  -63.86% (p=0.000 n=10)
-TestByteMatching-10                                     1368.0n ± 0%        213.5n ± 1%  -84.39% (p=0.000 n=10)
-StringMatching-10                                       1937.0n ± 1%        936.3n ± 0%  -51.66% (p=0.000 n=10)
-WrapperTesting-10                                        3.133µ ± 0%        1.293µ ± 0%  -58.73% (p=0.000 n=10)
-Compile-10                                               8.315m ± 2%        1.371m ± 1%  -83.52% (p=0.000 n=10)
-CompileInt32GT-10                                        5.925m ± 1%        1.296m ± 3%  -78.13% (p=0.000 n=10)
-geomean                                                  5.120µ             1.538µ       -69.96%
+Scalar-10                                               165.90n ± 1%        68.80n ± 1%  -58.53% (p=0.000 n=10)
+Repeated/Scalar-10                                      279.80n ± 0%        95.84n ± 1%  -65.75% (p=0.000 n=10)
+Repeated/Message-10                                      685.5n ± 1%        288.8n ± 1%  -57.86% (p=0.000 n=10)
+Repeated/Unique/Scalar-10                               1248.0n ± 1%        311.3n ± 0%  -75.05% (p=0.000 n=10)
+Repeated/Unique/Bytes-10                                2491.0n ± 2%        448.3n ± 1%  -82.00% (p=0.000 n=10)
+Map-10                                                   284.2n ± 1%        100.8n ± 0%  -64.52% (p=0.000 n=10)
+ComplexSchema-10                                         40.50µ ± 1%        13.47µ ± 0%  -66.74% (p=0.000 n=10)
+Int32GT-10                                              2744.5n ± 0%        774.6n ± 0%  -71.78% (p=0.000 n=10)
+TestByteMatching-10                                     1334.0n ± 1%        208.2n ± 1%  -84.39% (p=0.000 n=10)
+StringMatching-10                                       1893.0n ± 1%        906.5n ± 1%  -52.11% (p=0.000 n=10)
+WrapperTesting-10                                        3.044µ ± 1%        1.140µ ± 1%  -62.57% (p=0.000 n=10)
+Compile-10                                               8.137m ± 1%        1.983m ± 1%  -75.63% (p=0.000 n=10)
+CompileInt32GT-10                                        5.775m ± 1%        1.639m ± 2%  -71.61% (p=0.000 n=10)
+MultiRuleError-10                                        783.4n ± 1%        686.8n ± 2%  -12.33% (p=0.000 n=10)
+MultiRuleNoError-10                                     234.80n ± 1%        69.11n ± 0%  -70.57% (p=0.000 n=10)
+geomean                                                  3.585µ             1.160µ       -67.64%
 
-                          │ .tmp/bench/2026-04-23:18:10:09.bench.txt │ .tmp/bench/2026-04-23:18:13:13.bench.txt  │
+                          │ .tmp/bench/2026-04-24:17:56:31.bench.txt │ .tmp/bench/2026-04-24:18:00:25.bench.txt  │
                           │                   B/op                   │     B/op      vs base                     │
 Scalar-10                                               0.000 ± 0%       0.000 ± 0%         ~ (p=1.000 n=10) ¹
 Repeated/Scalar-10                                     120.00 ± 0%       48.00 ± 0%   -60.00% (p=0.000 n=10)
@@ -110,14 +112,16 @@ Int32GT-10                                              0.000 ± 0%       0.000 
 TestByteMatching-10                                     408.0 ± 0%         0.0 ± 0%  -100.00% (p=0.000 n=10)
 StringMatching-10                                       387.0 ± 0%         0.0 ± 0%  -100.00% (p=0.000 n=10)
 WrapperTesting-10                                       192.0 ± 0%         0.0 ± 0%  -100.00% (p=0.000 n=10)
-Compile-10                                            6.816Mi ± 0%     1.675Mi ± 0%   -75.42% (p=0.000 n=10)
-CompileInt32GT-10                                     5.204Mi ± 0%     1.611Mi ± 0%   -69.05% (p=0.000 n=10)
+Compile-10                                            6.826Mi ± 0%     2.039Mi ± 0%   -70.13% (p=0.000 n=10)
+CompileInt32GT-10                                     5.210Mi ± 0%     1.842Mi ± 0%   -64.65% (p=0.000 n=10)
+MultiRuleError-10                                       784.0 ± 0%       808.0 ± 0%    +3.06% (p=0.000 n=10)
+MultiRuleNoError-10                                     0.000 ± 0%       0.000 ± 0%         ~ (p=1.000 n=10) ¹
 geomean                                                            ²                 ?                       ² ³
 ¹ all samples are equal
 ² summaries must be >0 to compute geomean
 ³ ratios must be >0 to compute geomean
 
-                          │ .tmp/bench/2026-04-23:18:10:09.bench.txt │ .tmp/bench/2026-04-23:18:13:13.bench.txt │
+                          │ .tmp/bench/2026-04-24:17:56:31.bench.txt │ .tmp/bench/2026-04-24:18:00:25.bench.txt │
                           │                allocs/op                 │  allocs/op   vs base                     │
 Scalar-10                                               0.000 ± 0%      0.000 ± 0%         ~ (p=1.000 n=10) ¹
 Repeated/Scalar-10                                      3.000 ± 0%      1.000 ± 0%   -66.67% (p=0.000 n=10)
@@ -130,8 +134,10 @@ Int32GT-10                                              0.000 ± 0%      0.000 �
 TestByteMatching-10                                     17.00 ± 0%       0.00 ± 0%  -100.00% (p=0.000 n=10)
 StringMatching-10                                       23.00 ± 0%       0.00 ± 0%  -100.00% (p=0.000 n=10)
 WrapperTesting-10                                       17.00 ± 0%       0.00 ± 0%  -100.00% (p=0.000 n=10)
-Compile-10                                             96.21k ± 0%     18.41k ± 0%   -80.86% (p=0.000 n=10)
-CompileInt32GT-10                                      64.63k ± 0%     17.60k ± 0%   -72.77% (p=0.000 n=10)
+Compile-10                                             96.37k ± 0%     21.58k ± 0%   -77.61% (p=0.000 n=10)
+CompileInt32GT-10                                      64.73k ± 0%     19.62k ± 0%   -69.69% (p=0.000 n=10)
+MultiRuleError-10                                       21.00 ± 0%      22.00 ± 0%    +4.76% (p=0.000 n=10)
+MultiRuleNoError-10                                     0.000 ± 0%      0.000 ± 0%         ~ (p=1.000 n=10) ¹
 geomean                                                            ²                ?                       ² ³
 ¹ all samples are equal
 ² summaries must be >0 to compute geomean

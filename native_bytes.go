@@ -46,15 +46,19 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	switch {
 	case rules.GetIp():
 		wellKnown = &bytesWellKnownIP
+		rules.ProtoReflect().Clear(bytesDescs.ipDesc)
 		hasRule = true
 	case rules.GetIpv4():
 		wellKnown = &bytesWellKnownIPv4
+		rules.ProtoReflect().Clear(bytesDescs.ipv4Desc)
 		hasRule = true
 	case rules.GetIpv6():
 		wellKnown = &bytesWellKnownIPv6
+		rules.ProtoReflect().Clear(bytesDescs.ipv6Desc)
 		hasRule = true
 	case rules.GetUuid():
 		wellKnown = &bytesWellKnownUUID
+		rules.ProtoReflect().Clear(bytesDescs.uuidDesc)
 		hasRule = true
 	}
 
@@ -63,24 +67,28 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	if rules.HasConst() {
 		constVal = rules.GetConst()
 		hasConst = true
+		rules.ProtoReflect().Clear(bytesDescs.constSite.desc)
 		hasRule = true
 	}
 
 	var exactLen *uint64
 	if rules.HasLen() {
 		exactLen = ptr(rules.GetLen())
+		rules.ProtoReflect().Clear(bytesDescs.lenSite.desc)
 		hasRule = true
 	}
 
 	var minLen uint64
 	if rules.HasMinLen() {
 		minLen = rules.GetMinLen()
+		rules.ProtoReflect().Clear(bytesDescs.minLenSite.desc)
 		hasRule = true
 	}
 
 	var maxLen uint64 = math.MaxUint64
 	if rules.HasMaxLen() {
 		maxLen = rules.GetMaxLen()
+		rules.ProtoReflect().Clear(bytesDescs.maxLenSite.desc)
 		hasRule = true
 	}
 
@@ -93,6 +101,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 		if err != nil {
 			return nil // bail to CEL
 		}
+		rules.ProtoReflect().Clear(bytesDescs.patternSite.desc)
 		hasRule = true
 	}
 
@@ -101,6 +110,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	if rules.HasPrefix() {
 		prefix = rules.GetPrefix()
 		hasPrefix = true
+		rules.ProtoReflect().Clear(bytesDescs.prefixSite.desc)
 		hasRule = true
 	}
 
@@ -109,6 +119,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	if rules.HasSuffix() {
 		suffix = rules.GetSuffix()
 		hasSuffix = true
+		rules.ProtoReflect().Clear(bytesDescs.suffixSite.desc)
 		hasRule = true
 	}
 
@@ -117,16 +128,19 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	if rules.HasContains() {
 		contains = rules.GetContains()
 		hasContains = true
+		rules.ProtoReflect().Clear(bytesDescs.containsSite.desc)
 		hasRule = true
 	}
 
 	var inVals [][]byte
 	if inVals = rules.GetIn(); len(inVals) > 0 {
+		rules.ProtoReflect().Clear(bytesDescs.inSite.desc)
 		hasRule = true
 	}
 
 	var notInVals [][]byte
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		rules.ProtoReflect().Clear(bytesDescs.notInSite.desc)
 		hasRule = true
 	}
 
@@ -157,7 +171,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 
 // bytesWellKnown identifies which well-known bytes format constraint is active.
 type bytesWellKnown struct {
-	desc                protoreflect.FieldDescriptor
+	site                ruleSite // pre-built rule path site for the error path
 	ruleID, emptyRuleID string
 	mainMsg, emptyMsg   string
 	validSizes          []int
@@ -166,7 +180,7 @@ type bytesWellKnown struct {
 var (
 	//nolint:gochecknoglobals
 	bytesWellKnownIP = bytesWellKnown{
-		desc:        bytesDescs.ipDesc,
+		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipDesc),
 		ruleID:      "bytes.ip",
 		emptyRuleID: "bytes.ip_empty",
 		mainMsg:     "must be a valid IP address",
@@ -175,7 +189,7 @@ var (
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownIPv4 = bytesWellKnown{
-		desc:        bytesDescs.ipv4Desc,
+		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv4Desc),
 		ruleID:      "bytes.ipv4",
 		emptyRuleID: "bytes.ipv4_empty",
 		mainMsg:     "must be a valid IPv4 address",
@@ -184,7 +198,7 @@ var (
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownIPv6 = bytesWellKnown{
-		desc:        bytesDescs.ipv6Desc,
+		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv6Desc),
 		ruleID:      "bytes.ipv6",
 		emptyRuleID: "bytes.ipv6_empty",
 		mainMsg:     "must be a valid IPv6 address",
@@ -193,7 +207,7 @@ var (
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownUUID = bytesWellKnown{
-		desc:        bytesDescs.uuidDesc,
+		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.uuidDesc),
 		ruleID:      "bytes.uuid",
 		emptyRuleID: "bytes.uuid_empty",
 		mainMsg:     "must be a valid UUID",
@@ -204,42 +218,45 @@ var (
 
 // bytesDescriptors bundles the field descriptors for BytesRules.
 type bytesDescriptors struct {
-	ruleDesc     protoreflect.FieldDescriptor
-	constDesc    protoreflect.FieldDescriptor
-	lenDesc      protoreflect.FieldDescriptor
-	minLenDesc   protoreflect.FieldDescriptor
-	maxLenDesc   protoreflect.FieldDescriptor
-	patternDesc  protoreflect.FieldDescriptor
-	prefixDesc   protoreflect.FieldDescriptor
-	suffixDesc   protoreflect.FieldDescriptor
-	containsDesc protoreflect.FieldDescriptor
-	inDesc       protoreflect.FieldDescriptor
-	notInDesc    protoreflect.FieldDescriptor
-	ipDesc       protoreflect.FieldDescriptor
-	ipv4Desc     protoreflect.FieldDescriptor
-	ipv6Desc     protoreflect.FieldDescriptor
-	uuidDesc     protoreflect.FieldDescriptor
+	ruleDesc protoreflect.FieldDescriptor
+	ipDesc   protoreflect.FieldDescriptor
+	ipv4Desc protoreflect.FieldDescriptor
+	ipv6Desc protoreflect.FieldDescriptor
+	uuidDesc protoreflect.FieldDescriptor
+
+	// Pre-built rule sites for the error path.
+	constSite    ruleSite
+	lenSite      ruleSite
+	minLenSite   ruleSite
+	maxLenSite   ruleSite
+	patternSite  ruleSite
+	prefixSite   ruleSite
+	suffixSite   ruleSite
+	containsSite ruleSite
+	inSite       ruleSite
+	notInSite    ruleSite
 }
 
 func makeBytesDescriptors() bytesDescriptors {
 	rulesDesc := (*validate.BytesRules)(nil).ProtoReflect().Descriptor()
-	return bytesDescriptors{
-		ruleDesc:     fieldRulesDesc.Fields().ByName("bytes"),
-		constDesc:    rulesDesc.Fields().ByName("const"),
-		lenDesc:      rulesDesc.Fields().ByName("len"),
-		minLenDesc:   rulesDesc.Fields().ByName("min_len"),
-		maxLenDesc:   rulesDesc.Fields().ByName("max_len"),
-		patternDesc:  rulesDesc.Fields().ByName("pattern"),
-		prefixDesc:   rulesDesc.Fields().ByName("prefix"),
-		suffixDesc:   rulesDesc.Fields().ByName("suffix"),
-		containsDesc: rulesDesc.Fields().ByName("contains"),
-		inDesc:       rulesDesc.Fields().ByName("in"),
-		notInDesc:    rulesDesc.Fields().ByName("not_in"),
-		ipDesc:       rulesDesc.Fields().ByName("ip"),
-		ipv4Desc:     rulesDesc.Fields().ByName("ipv4"),
-		ipv6Desc:     rulesDesc.Fields().ByName("ipv6"),
-		uuidDesc:     rulesDesc.Fields().ByName("uuid"),
+	descriptors := bytesDescriptors{
+		ruleDesc: fieldRulesDesc.Fields().ByName("bytes"),
+		ipDesc:   rulesDesc.Fields().ByName("ip"),
+		ipv4Desc: rulesDesc.Fields().ByName("ipv4"),
+		ipv6Desc: rulesDesc.Fields().ByName("ipv6"),
+		uuidDesc: rulesDesc.Fields().ByName("uuid"),
 	}
+	descriptors.constSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "bytes.const")
+	descriptors.lenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "bytes.len")
+	descriptors.minLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "bytes.min_len")
+	descriptors.maxLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "bytes.max_len")
+	descriptors.patternSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "bytes.pattern")
+	descriptors.prefixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "bytes.prefix")
+	descriptors.suffixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "bytes.suffix")
+	descriptors.containsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "bytes.contains")
+	descriptors.inSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "bytes.in")
+	descriptors.notInSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "bytes.not_in")
+	return descriptors
 }
 
 //nolint:gochecknoglobals
@@ -277,7 +294,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	var violations []*Violation
 
 	if n.hasConst && !bytes.Equal(bytesVal, n.constVal) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.constDesc,
+		violations = append(violations, n.newViolation(bytesDescs.constSite,
 			"bytes.const", fmt.Sprintf("must be %x", n.constVal),
 			val, protoreflect.ValueOfBytes(n.constVal)))
 		if cfg.failFast {
@@ -286,7 +303,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if n.exactLen != nil && byteLen != *n.exactLen {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.lenDesc,
+		violations = append(violations, n.newViolation(bytesDescs.lenSite,
 			"bytes.len", fmt.Sprintf("must be %d bytes", *n.exactLen),
 			val, protoreflect.ValueOfUint64(*n.exactLen)))
 		if cfg.failFast {
@@ -295,7 +312,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if byteLen < n.minLen {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.minLenDesc,
+		violations = append(violations, n.newViolation(bytesDescs.minLenSite,
 			"bytes.min_len", fmt.Sprintf("must be at least %d bytes", n.minLen),
 			val, protoreflect.ValueOfUint64(n.minLen)))
 		if cfg.failFast {
@@ -304,7 +321,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if byteLen > n.maxLen {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.maxLenDesc,
+		violations = append(violations, n.newViolation(bytesDescs.maxLenSite,
 			"bytes.max_len", fmt.Sprintf("must be at most %d bytes", n.maxLen),
 			val, protoreflect.ValueOfUint64(n.maxLen)))
 		if cfg.failFast {
@@ -319,7 +336,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 			return &RuntimeError{cause: errNotUTF8}
 		}
 		if !n.pattern.MatchString(string(bytesVal)) {
-			violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.patternDesc,
+			violations = append(violations, n.newViolation(bytesDescs.patternSite,
 				"bytes.pattern", fmt.Sprintf("must match regex pattern `%s`", n.patternStr),
 				val, protoreflect.ValueOfString(n.patternStr)))
 			if cfg.failFast {
@@ -329,7 +346,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if n.hasPrefix && !bytes.HasPrefix(bytesVal, n.prefix) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.prefixDesc,
+		violations = append(violations, n.newViolation(bytesDescs.prefixSite,
 			"bytes.prefix", fmt.Sprintf("does not have prefix %x", n.prefix),
 			val, protoreflect.ValueOfBytes(n.prefix)))
 		if cfg.failFast {
@@ -338,7 +355,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if n.hasSuffix && !bytes.HasSuffix(bytesVal, n.suffix) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.suffixDesc,
+		violations = append(violations, n.newViolation(bytesDescs.suffixSite,
 			"bytes.suffix", fmt.Sprintf("does not have suffix %x", n.suffix),
 			val, protoreflect.ValueOfBytes(n.suffix)))
 		if cfg.failFast {
@@ -347,7 +364,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if n.hasContains && !bytes.Contains(bytesVal, n.contains) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.containsDesc,
+		violations = append(violations, n.newViolation(bytesDescs.containsSite,
 			"bytes.contains", fmt.Sprintf("does not contain %x", n.contains),
 			val, protoreflect.ValueOfBytes(n.contains)))
 		if cfg.failFast {
@@ -356,7 +373,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if len(n.inVals) > 0 && !slices.ContainsFunc(n.inVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.inDesc,
+		violations = append(violations, n.newViolation(bytesDescs.inSite,
 			"bytes.in", "must be in list "+formatBytesList(n.inVals),
 			val, protoreflect.ValueOfBytes(bytesVal)))
 		if cfg.failFast {
@@ -365,7 +382,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	}
 
 	if len(n.notInVals) > 0 && slices.ContainsFunc(n.notInVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
-		violations = append(violations, n.newViolation(bytesDescs.ruleDesc, bytesDescs.notInDesc,
+		violations = append(violations, n.newViolation(bytesDescs.notInSite,
 			"bytes.not_in", "must not be in list "+formatBytesList(n.notInVals),
 			val, protoreflect.ValueOfBytes(bytesVal)))
 		if cfg.failFast {
@@ -395,7 +412,7 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 	wellKnown := n.wellKnown
 
 	if size == 0 {
-		return n.newViolation(bytesDescs.ruleDesc, wellKnown.desc,
+		return n.newViolation(wellKnown.site,
 			wellKnown.emptyRuleID, wellKnown.emptyMsg,
 			val, protoreflect.ValueOfBool(true))
 	}
@@ -404,7 +421,7 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 		return nil
 	}
 
-	return n.newViolation(bytesDescs.ruleDesc, wellKnown.desc,
+	return n.newViolation(wellKnown.site,
 		wellKnown.ruleID, wellKnown.mainMsg,
 		val, protoreflect.ValueOfBool(true))
 }

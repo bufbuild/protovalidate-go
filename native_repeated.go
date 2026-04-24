@@ -25,9 +25,22 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	repeatedMinItemsDesc = (*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_items")
-	repeatedMaxItemsDesc = (*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_items")
-	repeatedUniqueDesc   = (*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("unique")
+	repeatedMinItemsSite = makeRuleSiteWithID(
+		repeatedFieldRulesDesc,
+		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_items"),
+		"repeated.min_items",
+	)
+	repeatedMaxItemsSite = makeRuleSiteWithID(
+		repeatedFieldRulesDesc,
+		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_items"),
+		"repeated.max_items",
+	)
+	repeatedUniqueSite = makeRuleSiteWithIDAndMessage(
+		repeatedFieldRulesDesc,
+		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("unique"),
+		"repeated.unique",
+		"repeated value must contain unique items",
+	)
 )
 
 // tryNativeRepeatedRules attempts to build a native Go evaluator for
@@ -46,12 +59,14 @@ func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator 
 	var minItems uint64
 	if rules.HasMinItems() {
 		minItems = rules.GetMinItems()
+		rules.ProtoReflect().Clear(repeatedMinItemsSite.desc)
 		hasRule = true
 	}
 
 	var maxItems uint64 = math.MaxUint64
 	if rules.HasMaxItems() {
 		maxItems = rules.GetMaxItems()
+		rules.ProtoReflect().Clear(repeatedMaxItemsSite.desc)
 		hasRule = true
 	}
 
@@ -63,6 +78,7 @@ func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator 
 			// natively; fall through to CEL.
 			return nil
 		}
+		rules.ProtoReflect().Clear(repeatedUniqueSite.desc)
 		hasRule = true
 	}
 
@@ -138,7 +154,7 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 	var violations []*Violation
 
 	if size < n.minItems {
-		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedMinItemsDesc,
+		violations = append(violations, n.newViolation(repeatedMinItemsSite,
 			"repeated.min_items",
 			fmt.Sprintf("must contain at least %d item(s)", n.minItems),
 			val, protoreflect.ValueOfUint64(n.minItems)))
@@ -148,7 +164,7 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 	}
 
 	if size > n.maxItems {
-		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedMaxItemsDesc,
+		violations = append(violations, n.newViolation(repeatedMaxItemsSite,
 			"repeated.max_items",
 			fmt.Sprintf("must contain no more than %d item(s)", n.maxItems),
 			val, protoreflect.ValueOfUint64(n.maxItems)))
@@ -158,7 +174,7 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 	}
 
 	if n.uniqueFn != nil && !n.uniqueFn(list) {
-		violations = append(violations, n.newViolation(repeatedFieldRulesDesc, repeatedUniqueDesc,
+		violations = append(violations, n.newViolation(repeatedUniqueSite,
 			"repeated.unique",
 			"repeated value must contain unique items",
 			val, protoreflect.ValueOfBool(true)))

@@ -192,6 +192,36 @@ func BenchmarkCompileInt32GT(b *testing.B) {
 	}
 }
 
+func BenchmarkMultiRuleError(b *testing.B) {
+	msg := pb.MultiRule_builder{Many: 1}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
+func BenchmarkMultiRuleNoError(b *testing.B) {
+	msg := pb.MultiRule_builder{Many: 10}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
 func testSuccess(t *testing.T, msg proto.Message) {
 	faker := protogofakeit.New(gofakeit.New(1))
 	require.NoError(t, faker.FakeProto(msg))

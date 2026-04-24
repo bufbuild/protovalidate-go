@@ -36,84 +36,84 @@ func tryBuildNativeInt32Rules(base base, rules *validate.Int32Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, int32Config)
+	return tryBuildNativeNumericRules(base, rules, &int32Config)
 }
 
 func tryBuildNativeSint32Rules(base base, rules *validate.SInt32Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, sint32Config)
+	return tryBuildNativeNumericRules(base, rules, &sint32Config)
 }
 
 func tryBuildNativeSfixed32Rules(base base, rules *validate.SFixed32Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, sfixed32Config)
+	return tryBuildNativeNumericRules(base, rules, &sfixed32Config)
 }
 
 func tryBuildNativeInt64Rules(base base, rules *validate.Int64Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, int64Config)
+	return tryBuildNativeNumericRules(base, rules, &int64Config)
 }
 
 func tryBuildNativeSint64Rules(base base, rules *validate.SInt64Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, sint64Config)
+	return tryBuildNativeNumericRules(base, rules, &sint64Config)
 }
 
 func tryBuildNativeSfixed64Rules(base base, rules *validate.SFixed64Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, sfixed64Config)
+	return tryBuildNativeNumericRules(base, rules, &sfixed64Config)
 }
 
 func tryBuildNativeUint32Rules(base base, rules *validate.UInt32Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, uint32Config)
+	return tryBuildNativeNumericRules(base, rules, &uint32Config)
 }
 
 func tryBuildNativeFixed32Rules(base base, rules *validate.Fixed32Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, fixed32Config)
+	return tryBuildNativeNumericRules(base, rules, &fixed32Config)
 }
 
 func tryBuildNativeUint64Rules(base base, rules *validate.UInt64Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, uint64Config)
+	return tryBuildNativeNumericRules(base, rules, &uint64Config)
 }
 
 func tryBuildNativeFixed64Rules(base base, rules *validate.Fixed64Rules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, fixed64Config)
+	return tryBuildNativeNumericRules(base, rules, &fixed64Config)
 }
 
 func tryBuildNativeFloatRules(base base, rules *validate.FloatRules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, floatConfig)
+	return tryBuildNativeNumericRules(base, rules, &floatConfig)
 }
 
 func tryBuildNativeDoubleRules(base base, rules *validate.DoubleRules) evaluator {
 	if rules == nil {
 		return nil
 	}
-	return tryBuildNativeNumericRules(base, rules, doubleConfig)
+	return tryBuildNativeNumericRules(base, rules, &doubleConfig)
 }
 
 // tryBuildNativeNumericRules attempts to build a native Go evaluator for
@@ -122,7 +122,7 @@ func tryBuildNativeDoubleRules(base base, rules *validate.DoubleRules) evaluator
 func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	base base,
 	rules R,
-	config numericTypeConfig[T],
+	config *numericTypeConfig[T],
 ) evaluator {
 	// Bail out if the rules message has unknown fields, which indicate
 	// custom predefined extensions that we can't handle natively.
@@ -138,10 +138,12 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	case rules.HasGt():
 		lower = lowerBoundGt
 		lowerValue = rules.GetGt()
+		rules.ProtoReflect().Clear(config.descs.gtSite.desc)
 		hasRule = true
 	case rules.HasGte():
 		lower = lowerBoundGte
 		lowerValue = rules.GetGte()
+		rules.ProtoReflect().Clear(config.descs.gteSite.desc)
 		hasRule = true
 	}
 
@@ -151,26 +153,31 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	case rules.HasLt():
 		upper = upperBoundLt
 		upperValue = rules.GetLt()
+		rules.ProtoReflect().Clear(config.descs.ltSite.desc)
 		hasRule = true
 	case rules.HasLte():
 		upper = upperBoundLte
 		upperValue = rules.GetLte()
+		rules.ProtoReflect().Clear(config.descs.lteSite.desc)
 		hasRule = true
 	}
 
 	var constVal *T
 	if rules.HasConst() {
 		constVal = ptr(rules.GetConst())
+		rules.ProtoReflect().Clear(config.descs.constSite.desc)
 		hasRule = true
 	}
 
 	var inVals []T
 	if inVals = rules.GetIn(); len(inVals) > 0 {
+		rules.ProtoReflect().Clear(config.descs.inSite.desc)
 		hasRule = true
 	}
 
 	var notInVals []T
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		rules.ProtoReflect().Clear(config.descs.notInSite.desc)
 		hasRule = true
 	}
 
@@ -182,6 +189,7 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	finite := false
 	if fi, ok := (any)(rules).(finiteInterface); ok && fi.HasFinite() {
 		finite = fi.GetFinite()
+		rules.ProtoReflect().Clear(config.descs.finiteSite.desc)
 		hasRule = true
 	}
 
@@ -223,40 +231,45 @@ type numericRules[T numericValue] interface {
 	ProtoReflect() protoreflect.Message
 }
 
-// numericDescriptors bundles the field descriptors for a single numeric
-// rules type (e.g., Int32Rules). Used to construct violation rule paths.
+// numericDescriptors bundles the pre-built rule sites for a single numeric
+// rules type (e.g., Int32Rules). A ruleSite carries both the rule-path
+// FieldPathElements and the leaf descriptor, so the individual per-rule
+// descriptor fields are not needed.
 type numericDescriptors struct {
-	ruleDesc   protoreflect.FieldDescriptor // FieldRules.{type} (e.g., "int32")
-	gtDesc     protoreflect.FieldDescriptor
-	gteDesc    protoreflect.FieldDescriptor
-	ltDesc     protoreflect.FieldDescriptor
-	lteDesc    protoreflect.FieldDescriptor
-	constDesc  protoreflect.FieldDescriptor
-	inDesc     protoreflect.FieldDescriptor
-	notInDesc  protoreflect.FieldDescriptor
-	finiteDesc protoreflect.FieldDescriptor
+	gtSite     ruleSite
+	gteSite    ruleSite
+	ltSite     ruleSite
+	lteSite    ruleSite
+	constSite  ruleSite
+	inSite     ruleSite
+	notInSite  ruleSite
+	finiteSite ruleSite // zero-valued for non-float kinds
 }
 
 func makeNumericDescriptors(
 	fieldName string,
 	rulesMsg protoreflect.ProtoMessage,
+	typeName string,
 ) numericDescriptors {
 	rulesDesc := rulesMsg.ProtoReflect().Descriptor()
+	ruleDesc := fieldRulesDesc.Fields().ByName(protoreflect.Name(fieldName))
 	var finiteDesc protoreflect.FieldDescriptor
 	if rulesDesc.Name() == "FloatRules" || rulesDesc.Name() == "DoubleRules" {
 		finiteDesc = rulesDesc.Fields().ByName("finite")
 	}
-	return numericDescriptors{
-		ruleDesc:   fieldRulesDesc.Fields().ByName(protoreflect.Name(fieldName)),
-		gtDesc:     rulesDesc.Fields().ByName("gt"),
-		gteDesc:    rulesDesc.Fields().ByName("gte"),
-		ltDesc:     rulesDesc.Fields().ByName("lt"),
-		lteDesc:    rulesDesc.Fields().ByName("lte"),
-		constDesc:  rulesDesc.Fields().ByName("const"),
-		inDesc:     rulesDesc.Fields().ByName("in"),
-		notInDesc:  rulesDesc.Fields().ByName("not_in"),
-		finiteDesc: finiteDesc,
+	descriptors := numericDescriptors{
+		gtSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gt")),
+		gteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gte")),
+		ltSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lt")),
+		lteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lte")),
+		constSite: makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("const"), typeName+".const"),
+		inSite:    makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("in"), typeName+".in"),
+		notInSite: makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("not_in"), typeName+".not_in"),
 	}
+	if finiteDesc != nil {
+		descriptors.finiteSite = makeRuleSiteWithIDAndMessage(ruleDesc, finiteDesc, typeName+".finite", "must be finite")
+	}
+	return descriptors
 }
 
 // numericTypeConfig holds all type-specific operations and metadata
@@ -271,92 +284,76 @@ type numericTypeConfig[T numericValue] struct {
 
 //nolint:gochecknoglobals
 var (
-	int32Descs    = makeNumericDescriptors("int32", (*validate.Int32Rules)(nil))
-	sint32Descs   = makeNumericDescriptors("sint32", (*validate.SInt32Rules)(nil))
-	sfixed32Descs = makeNumericDescriptors("sfixed32", (*validate.SFixed32Rules)(nil))
-	int64Descs    = makeNumericDescriptors("int64", (*validate.Int64Rules)(nil))
-	sint64Descs   = makeNumericDescriptors("sint64", (*validate.SInt64Rules)(nil))
-	sfixed64Descs = makeNumericDescriptors("sfixed64", (*validate.SFixed64Rules)(nil))
-	uint32Descs   = makeNumericDescriptors("uint32", (*validate.UInt32Rules)(nil))
-	fixed32Descs  = makeNumericDescriptors("fixed32", (*validate.Fixed32Rules)(nil))
-	uint64Descs   = makeNumericDescriptors("uint64", (*validate.UInt64Rules)(nil))
-	fixed64Descs  = makeNumericDescriptors("fixed64", (*validate.Fixed64Rules)(nil))
-	floatDescs    = makeNumericDescriptors("float", (*validate.FloatRules)(nil))
-	doubleDescs   = makeNumericDescriptors("double", (*validate.DoubleRules)(nil))
-)
-
-//nolint:gochecknoglobals
-var (
 	int32Config = numericTypeConfig[int32]{
 		typeName:    "int32",
-		descs:       int32Descs,
+		descs:       makeNumericDescriptors("int32", (*validate.Int32Rules)(nil), "int32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
 	}
 	sint32Config = numericTypeConfig[int32]{
 		typeName:    "sint32",
-		descs:       sint32Descs,
+		descs:       makeNumericDescriptors("sint32", (*validate.SInt32Rules)(nil), "sint32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
 	}
 	sfixed32Config = numericTypeConfig[int32]{
 		typeName:    "sfixed32",
-		descs:       sfixed32Descs,
+		descs:       makeNumericDescriptors("sfixed32", (*validate.SFixed32Rules)(nil), "sfixed32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
 	}
 	int64Config = numericTypeConfig[int64]{
 		typeName:    "int64",
-		descs:       int64Descs,
+		descs:       makeNumericDescriptors("int64", (*validate.Int64Rules)(nil), "int64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
 	}
 	sint64Config = numericTypeConfig[int64]{
 		typeName:    "sint64",
-		descs:       sint64Descs,
+		descs:       makeNumericDescriptors("sint64", (*validate.SInt64Rules)(nil), "sint64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
 	}
 	sfixed64Config = numericTypeConfig[int64]{
 		typeName:    "sfixed64",
-		descs:       sfixed64Descs,
+		descs:       makeNumericDescriptors("sfixed64", (*validate.SFixed64Rules)(nil), "sfixed64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
 	}
 	uint32Config = numericTypeConfig[uint32]{
 		typeName:    "uint32",
-		descs:       uint32Descs,
+		descs:       makeNumericDescriptors("uint32", (*validate.UInt32Rules)(nil), "uint32"),
 		extractVal:  func(v protoreflect.Value) uint32 { return uint32(v.Uint()) },
 		makeRuleVal: protoreflect.ValueOfUint32,
 	}
 	fixed32Config = numericTypeConfig[uint32]{
 		typeName:    "fixed32",
-		descs:       fixed32Descs,
+		descs:       makeNumericDescriptors("fixed32", (*validate.Fixed32Rules)(nil), "fixed32"),
 		extractVal:  func(v protoreflect.Value) uint32 { return uint32(v.Uint()) },
 		makeRuleVal: protoreflect.ValueOfUint32,
 	}
 	uint64Config = numericTypeConfig[uint64]{
 		typeName:    "uint64",
-		descs:       uint64Descs,
+		descs:       makeNumericDescriptors("uint64", (*validate.UInt64Rules)(nil), "uint64"),
 		extractVal:  func(v protoreflect.Value) uint64 { return v.Uint() },
 		makeRuleVal: protoreflect.ValueOfUint64,
 	}
 	fixed64Config = numericTypeConfig[uint64]{
 		typeName:    "fixed64",
-		descs:       fixed64Descs,
+		descs:       makeNumericDescriptors("fixed64", (*validate.Fixed64Rules)(nil), "fixed64"),
 		extractVal:  func(v protoreflect.Value) uint64 { return v.Uint() },
 		makeRuleVal: protoreflect.ValueOfUint64,
 	}
 	floatConfig = numericTypeConfig[float32]{
 		typeName:      "float",
-		descs:         floatDescs,
+		descs:         makeNumericDescriptors("float", (*validate.FloatRules)(nil), "float"),
 		extractVal:    func(v protoreflect.Value) float32 { return float32(v.Float()) },
 		makeRuleVal:   protoreflect.ValueOfFloat32,
 		nanFailsRange: true,
 	}
 	doubleConfig = numericTypeConfig[float64]{
 		typeName:      "double",
-		descs:         doubleDescs,
+		descs:         makeNumericDescriptors("double", (*validate.DoubleRules)(nil), "double"),
 		extractVal:    func(v protoreflect.Value) float64 { return v.Float() },
 		makeRuleVal:   protoreflect.ValueOfFloat64,
 		nanFailsRange: true,
@@ -385,9 +382,13 @@ const (
 
 // nativeNumericCompare is a native Go evaluator for numeric gt/gte/lt/lte/
 // const/in/not_in rules. It replaces CEL evaluation with direct Go comparisons.
+//
+// config is stored as a pointer so the (globally shared, read-only) config
+// struct is not copied into every evaluator (and then again onto the stack
+// via the value receiver on Evaluate).
 type nativeNumericCompare[T numericValue] struct {
 	base
-	config    numericTypeConfig[T]
+	config    *numericTypeConfig[T]
 	lo        T          // lower bound value (gt or gte threshold)
 	lower     lowerBound // gt (exclusive) or gte (inclusive)
 	hi        T          // upper bound value (lt or lte threshold)
@@ -419,18 +420,18 @@ func (n nativeNumericCompare[T]) isNormalRange() bool {
 	return n.hi >= n.lo
 }
 
-func (n nativeNumericCompare[T]) loDesc() protoreflect.FieldDescriptor {
+func (n nativeNumericCompare[T]) loSite() ruleSite {
 	if n.lower == lowerBoundGt {
-		return n.config.descs.gtDesc
+		return n.config.descs.gtSite
 	}
-	return n.config.descs.gteDesc
+	return n.config.descs.gteSite
 }
 
-func (n nativeNumericCompare[T]) hiDesc() protoreflect.FieldDescriptor {
+func (n nativeNumericCompare[T]) hiSite() ruleSite {
 	if n.upper == upperBoundLt {
-		return n.config.descs.ltDesc
+		return n.config.descs.ltSite
 	}
-	return n.config.descs.lteDesc
+	return n.config.descs.lteSite
 }
 
 func (n nativeNumericCompare[T]) gtRulePrefix() string {
@@ -493,7 +494,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 	var violations []*Violation
 
 	if n.constVal != nil && valT != *n.constVal {
-		violations = append(violations, n.newViolation(n.config.descs.ruleDesc, n.config.descs.constDesc,
+		violations = append(violations, n.newViolation(n.config.descs.constSite,
 			n.config.typeName+".const",
 			fmt.Sprintf("must equal %v", *n.constVal),
 			val, n.config.makeRuleVal(*n.constVal)))
@@ -503,7 +504,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 	}
 
 	if len(n.inVals) > 0 && !slices.Contains(n.inVals, valT) {
-		violations = append(violations, n.newViolation(n.config.descs.ruleDesc, n.config.descs.inDesc,
+		violations = append(violations, n.newViolation(n.config.descs.inSite,
 			n.config.typeName+".in",
 			"must be in list "+formatList(n.inVals),
 			val, n.config.makeRuleVal(valT)))
@@ -513,7 +514,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 	}
 
 	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, valT) {
-		violations = append(violations, n.newViolation(n.config.descs.ruleDesc, n.config.descs.notInDesc,
+		violations = append(violations, n.newViolation(n.config.descs.notInSite,
 			n.config.typeName+".not_in",
 			"must not be in list "+formatList(n.notInVals),
 			val, n.config.makeRuleVal(valT)))
@@ -523,7 +524,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 	}
 
 	if n.finite && (math.IsNaN(float64(valT)) || math.IsInf(float64(valT), 0)) {
-		violations = append(violations, n.newViolation(n.config.descs.ruleDesc, n.config.descs.finiteDesc,
+		violations = append(violations, n.newViolation(n.config.descs.finiteSite,
 			n.config.typeName+".finite",
 			"must be finite",
 			val, n.config.makeRuleVal(valT)))
@@ -561,13 +562,13 @@ func (n nativeNumericCompare[T]) evaluateRange(valT T, val protoreflect.Value) *
 	switch {
 	case n.lower == lowerBoundNone:
 		if isNaN || n.aboveHi(valT) {
-			return n.newViolation(n.config.descs.ruleDesc, n.hiDesc(),
+			return n.newViolation(n.hiSite(),
 				n.gtltRule(), "must be "+n.hiMessage(),
 				val, n.config.makeRuleVal(n.hi))
 		}
 	case n.upper == upperBoundNone:
 		if isNaN || n.belowLo(valT) {
-			return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
+			return n.newViolation(n.loSite(),
 				n.gtltRule(), "must be "+n.loMessage(),
 				val, n.config.makeRuleVal(n.lo))
 		}
@@ -579,7 +580,7 @@ func (n nativeNumericCompare[T]) evaluateRange(valT T, val protoreflect.Value) *
 			failure = isNaN || (n.aboveHi(valT) && n.belowLo(valT))
 		}
 		if failure {
-			return n.newViolation(n.config.descs.ruleDesc, n.loDesc(),
+			return n.newViolation(n.loSite(),
 				n.gtltRule(),
 				fmt.Sprintf("must be %s %s %s", n.loMessage(), n.conjunction(), n.hiMessage()),
 				val, n.config.makeRuleVal(n.lo))

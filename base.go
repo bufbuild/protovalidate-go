@@ -61,33 +61,95 @@ func (b *base) rulePath(suffix *validate.FieldPath) *validate.FieldPath {
 	return prefixRulePath(b.RulePrefix, suffix)
 }
 
+// ruleSite is a compile-time pre-built bundle for a single rule site: the
+// 2-element rule path suffix and the leaf descriptor. Using ruleSite with
+// newViolationAt avoids re-allocating FieldPathElement proto messages on
+// every violation (each FieldPathElement rebuild allocates ~4 sub-objects).
+type ruleSite struct {
+	// pathElements is the rule path suffix, e.g.
+	// [FieldRules.int32 element, Int32Rules.gt element].
+	//
+	// Safe to share across violations: only the containing *FieldPath is
+	// rebuilt per violation, which is what updateViolationPaths mutates.
+	pathElements []*validate.FieldPathElement
+	// desc is the leaf rule field descriptor (e.g. Int32Rules.gt); it is
+	// stored on the returned *Violation's RuleDescriptor field.
+	desc protoreflect.FieldDescriptor
+
+	// if there are constant values for ruleID or message, specify them once so they can be reused
+	ruleID  *string
+	message *string
+}
+
+// makeRuleSite pre-builds a ruleSite for a rule at compile time.
+func makeRuleSite(ruleDesc, desc protoreflect.FieldDescriptor) ruleSite {
+	return ruleSite{
+		pathElements: []*validate.FieldPathElement{
+			fieldPathElement(ruleDesc),
+			fieldPathElement(desc),
+		},
+		desc: desc,
+	}
+}
+
+// makeRuleSiteWithID pre-builds a ruleSite for a rule at compile time.
+func makeRuleSiteWithID(ruleDesc, desc protoreflect.FieldDescriptor, ruleID string) ruleSite {
+	return ruleSite{
+		pathElements: []*validate.FieldPathElement{
+			fieldPathElement(ruleDesc),
+			fieldPathElement(desc),
+		},
+		desc:   desc,
+		ruleID: proto.String(ruleID),
+	}
+}
+
+// makeRuleSiteWithID pre-builds a ruleSite for a rule at compile time.
+func makeRuleSiteWithIDAndMessage(ruleDesc, desc protoreflect.FieldDescriptor, ruleID string, message string) ruleSite {
+	return ruleSite{
+		pathElements: []*validate.FieldPathElement{
+			fieldPathElement(ruleDesc),
+			fieldPathElement(desc),
+		},
+		desc:    desc,
+		ruleID:  proto.String(ruleID),
+		message: proto.String(message),
+	}
+}
+
 // newViolation constructs a Violation.
 // ruleDesc is the top-level rule descriptor (e.g., FieldRules.int32),
 // desc is the specific constraint descriptor (e.g., Int32Rules.gt).
+//
+// it uses pre-built path elements in site instead of rebuilding them each call.
 func (b *base) newViolation(
-	ruleDesc protoreflect.FieldDescriptor,
-	desc protoreflect.FieldDescriptor,
+	site ruleSite,
 	ruleID string,
 	message string,
 	fieldValue protoreflect.Value,
 	ruleValue protoreflect.Value,
 ) *Violation {
+	ruleIDPtr := site.ruleID
+	if ruleIDPtr == nil {
+		ruleIDPtr = proto.String(ruleID)
+	}
+	messagePtr := site.message
+	if messagePtr == nil {
+		messagePtr = proto.String(message)
+	}
 	return &Violation{
 		Proto: validate.Violation_builder{
 			Field: b.fieldPath(),
 			Rule: b.rulePath(validate.FieldPath_builder{
-				Elements: []*validate.FieldPathElement{
-					fieldPathElement(ruleDesc),
-					fieldPathElement(desc),
-				},
+				Elements: site.pathElements,
 			}.Build()),
-			RuleId:  proto.String(ruleID),
-			Message: proto.String(message),
+			RuleId:  ruleIDPtr,
+			Message: messagePtr,
 		}.Build(),
 		FieldValue:      fieldValue,
 		FieldDescriptor: b.Descriptor,
 		RuleValue:       ruleValue,
-		RuleDescriptor:  desc,
+		RuleDescriptor:  site.desc,
 	}
 }
 
