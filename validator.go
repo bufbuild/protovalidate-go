@@ -84,6 +84,7 @@ func New(options ...ValidatorOption) (Validator, error) {
 		cfg.disableLazy,
 		cfg.extensionTypeResolver,
 		cfg.allowUnknownFields,
+		cfg.disableNativeRules,
 		cfg.desc...,
 	)
 
@@ -142,6 +143,7 @@ type config struct {
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 	nowFn                 func() *timestamppb.Timestamp
+	disableNativeRules    bool
 }
 
 type validationConfig struct {

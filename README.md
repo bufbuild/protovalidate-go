@@ -65,6 +65,12 @@ Highlights for Go developers include:
 
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
+### Native standard validation rules
+protovalidate-go provides native support for standard validation rule processing. They are enabled by default and are disabled by setting the ValidatorOption `WithDisableNativeRules`.
+
+We continue to validate that the native rules and the CEL rules produce identical results. The `compliance` Makefile target has been updated to run twice, 
+once with the native rules enabled, and once with the CEL rules enabled.
+
 ## Additional languages and repositories
 
 Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 

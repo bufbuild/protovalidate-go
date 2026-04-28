@@ -33,7 +33,8 @@ import (
 )
 
 type Config struct {
-	HyperPB bool
+	HyperPB            bool
+	DisableNativeRules bool
 }
 
 func main() {
@@ -41,7 +42,8 @@ func main() {
 	log.SetPrefix("[protovalidate-go] ")
 
 	config := Config{
-		HyperPB: os.Getenv("HYPERPB") != "",
+		HyperPB:            os.Getenv("HYPERPB") != "",
+		DisableNativeRules: strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true"),
 	}
 
 	req := &harness.TestConformanceRequest{}
@@ -81,7 +83,11 @@ func TestConformance(req *harness.TestConformanceRequest, config Config) (*harne
 	if err != nil {
 		return nil, err
 	}
-	val, err := protovalidate.New(protovalidate.WithExtensionTypeResolver(registry))
+	options := []protovalidate.ValidatorOption{protovalidate.WithExtensionTypeResolver(registry)}
+	if config.DisableNativeRules {
+		options = append(options, protovalidate.WithDisableNativeRules())
+	}
+	val, err := protovalidate.New(options...)
 	if err != nil {
 		err = fmt.Errorf("failed to initialize validator: %w", err)
 		return nil, err

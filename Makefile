@@ -32,7 +32,7 @@ clean: ## Delete intermediate build artifacts
 	git clean -Xdf
 
 .PHONY: test
-test: ## Run all unit tests
+test: ## Run all unit tests with and without native rules
 	$(GO) test -race -cover ./...
 
 .PHONY: test-opaque
@@ -59,6 +59,7 @@ lint-fix:
 .PHONY: conformance
 conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Run conformance tests
 	$(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
+	DISABLE_NATIVE_RULES=true $(BIN)/protovalidate-conformance $(ARGS) $(BIN)/protovalidate-conformance-go --expected_failures=conformance/expected_failures.yaml
 
 .PHONY: conformance-hyperpb
 conformance-hyperpb: ## Run conformance tests against hyperpb
@@ -98,6 +99,9 @@ bench: $(BENCH_TMP)
 		-count $(BENCH_COUNT) \
 		| tee "$(BENCH_TMP)/$(BENCH_NAME).bench.txt"
 
+.PHONY: bench-cel
+bench-cel: $(BENCH_TMP)
+	DISABLE_NATIVE_RULES=true $(MAKE) bench
 
 .PHONY: upgrade-go
 upgrade-go:

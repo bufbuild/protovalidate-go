@@ -22,7 +22,7 @@ import (
 )
 
 // A ValidatorOption modifies the default configuration of a Validator. See the
-// individual options for their defaults and affects on the fallibility of
+// individual options for their defaults and effect on the fallibility of
 // configuring a Validator.
 type ValidatorOption interface {
 	applyToValidator(cfg *config)
@@ -105,6 +105,12 @@ func WithFailFast() Option {
 	return &failFastOption{}
 }
 
+// WithDisableNativeRules specifies whether validation should always use CEL rules.
+// By default, native rules are used when they exist.
+func WithDisableNativeRules() ValidatorOption {
+	return &disableNativeRulesOption{}
+}
+
 // WithNowFunc specifies the function used to derive the `now` variable in CEL
 // expressions. By default, [timestamppb.Now] is used.
 func WithNowFunc(fn func() *timestamppb.Timestamp) Option {
@@ -157,6 +163,12 @@ func (o *failFastOption) applyToValidator(cfg *config) {
 
 func (o *failFastOption) applyToValidation(cfg *validationConfig) {
 	cfg.failFast = true
+}
+
+type disableNativeRulesOption struct{}
+
+func (o *disableNativeRulesOption) applyToValidator(cfg *config) {
+	cfg.disableNativeRules = true
 }
 
 type nowFuncOption func() *timestamppb.Timestamp

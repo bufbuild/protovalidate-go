@@ -49,6 +49,7 @@ type builder struct {
 	extensionTypeResolver protoregistry.ExtensionTypeResolver
 	allowUnknownFields    bool
 	Load                  func(desc protoreflect.MessageDescriptor) messageEvaluator
+	disableNativeRules    bool
 }
 
 // newBuilder initializes a new Builder.
@@ -57,6 +58,7 @@ func newBuilder(
 	disableLazy bool,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
+	disableNativeRules bool,
 	seedDesc ...protoreflect.MessageDescriptor,
 ) *builder {
 	bldr := &builder{
@@ -64,6 +66,7 @@ func newBuilder(
 		rules:                 newCache(),
 		extensionTypeResolver: extensionTypeResolver,
 		allowUnknownFields:    allowUnknownFields,
+		disableNativeRules:    disableNativeRules,
 	}
 
 	if disableLazy {
@@ -464,6 +467,37 @@ func (bldr *builder) processStandardRules(
 		}
 	}
 
+	// make a copy of the rules because we're going to clear anything handled by native rules, leaving
+	// anything else to be handled by CEL rules. this allows us to fall back to CEL rules if there is no
+	// native rule (for example, when a new rule is added to the validate proto, but the native code hasn't
+	// been updated. we are making a copy because we don't want to modify the original rules in case they are
+	// reused (happens in some test cases, could happen in production code with dynamic messages).
+	rules = proto.CloneOf[*validate.FieldRules](rules)
+
+	// put behind a feature flag to allow for testing.
+	// it's easier to follow like this, don't break it up
+	//nolint:nestif
+	if !bldr.disableNativeRules {
+		// Try native Go evaluators for repeated list-level rules (min_items, max_items, unique).
+		if fdesc.IsList() && valEval.NestedRule == nil {
+			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
+				valEval.Append(native)
+			}
+		}
+		// Try native Go evaluators for map-level rules (min_pairs, max_pairs).
+		if fdesc.IsMap() && valEval.NestedRule == nil {
+			if native := tryNativeMapRules(newBase(valEval), rules.GetMap()); native != nil {
+				valEval.Append(native)
+			}
+		}
+		// Try native Go evaluators for known simple rules before falling back to CEL.
+		if !fdesc.IsMap() && !fdesc.IsList() {
+			if native := bldr.tryNativeRules(fdesc, rules, valEval); native != nil {
+				valEval.Append(native)
+			}
+		}
+	}
+
 	stdRules, err := bldr.rules.Build(
 		bldr.env,
 		fdesc,
@@ -480,6 +514,71 @@ func (bldr *builder) processStandardRules(
 		programSet: stdRules,
 	})
 	return nil
+}
+
+func (bldr *builder) tryNativeRules(
+	fdesc protoreflect.FieldDescriptor,
+	rules *validate.FieldRules,
+	valEval *value,
+) evaluator {
+	if rules == nil {
+		return nil
+	}
+	base := newBase(valEval)
+	var native evaluator
+	switch fdesc.Kind() {
+	case protoreflect.Int32Kind:
+		native = tryBuildNativeInt32Rules(base, rules.GetInt32())
+	case protoreflect.Sint32Kind:
+		native = tryBuildNativeSint32Rules(base, rules.GetSint32())
+	case protoreflect.Sfixed32Kind:
+		native = tryBuildNativeSfixed32Rules(base, rules.GetSfixed32())
+	case protoreflect.Int64Kind:
+		native = tryBuildNativeInt64Rules(base, rules.GetInt64())
+	case protoreflect.Sint64Kind:
+		native = tryBuildNativeSint64Rules(base, rules.GetSint64())
+	case protoreflect.Sfixed64Kind:
+		native = tryBuildNativeSfixed64Rules(base, rules.GetSfixed64())
+	case protoreflect.Uint32Kind:
+		native = tryBuildNativeUint32Rules(base, rules.GetUint32())
+	case protoreflect.Fixed32Kind:
+		native = tryBuildNativeFixed32Rules(base, rules.GetFixed32())
+	case protoreflect.Uint64Kind:
+		native = tryBuildNativeUint64Rules(base, rules.GetUint64())
+	case protoreflect.Fixed64Kind:
+		native = tryBuildNativeFixed64Rules(base, rules.GetFixed64())
+	case protoreflect.FloatKind:
+		native = tryBuildNativeFloatRules(base, rules.GetFloat())
+	case protoreflect.DoubleKind:
+		native = tryBuildNativeDoubleRules(base, rules.GetDouble())
+	case protoreflect.StringKind:
+		native = tryBuildNativeStringRules(base, rules.GetString())
+	case protoreflect.BoolKind:
+		native = tryBuildNativeBoolRules(base, rules.GetBool())
+	case protoreflect.EnumKind:
+		native = tryBuildNativeEnumRules(base, rules.GetEnum())
+	case protoreflect.BytesKind:
+		native = tryBuildNativeBytesRules(base, rules.GetBytes())
+	default:
+		return nil
+	}
+	if native == nil {
+		return nil
+	}
+	// processWrapperRules swaps in the inner "value" field as fdesc when
+	// building rules for a wrapper WKT (Int32Value, StringValue, ...), but
+	// leaves valEval.Descriptor pointing at the outer wrapper message field.
+	// Detect that here and wrap the native eval so it unwraps the wrapper
+	// message at runtime before calling val.Int()/Bytes()/etc.
+	if valEval.Descriptor != nil &&
+		(valEval.Descriptor.Kind() == protoreflect.MessageKind ||
+			valEval.Descriptor.Kind() == protoreflect.GroupKind) {
+		native = wrappedValueEval{
+			innerField: fdesc,
+			inner:      native,
+		}
+	}
+	return native
 }
 
 func (bldr *builder) processAnyRules(

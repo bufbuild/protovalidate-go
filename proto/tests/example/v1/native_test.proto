@@ -1,0 +1,208 @@
+// Copyright 2023-2026 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package tests.example.v1;
+
+import "buf/validate/validate.proto";
+import "gofakeit/gofakeit.proto";
+import "google/protobuf/wrappers.proto";
+
+message BenchGT {
+  int32 gt = 1 [
+    (buf.validate.field).int32.gt = 0,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gte = 2 [
+    (buf.validate.field).int32.gte = 0,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 lt = 3 [
+    (buf.validate.field).int32.lt = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 lte = 4 [
+    (buf.validate.field).int32.lte = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gtltin = 5 [
+    (buf.validate.field).int32.gt = 0,
+    (buf.validate.field).int32.lt = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gtltein = 6 [
+    (buf.validate.field).int32.gt = 0,
+    (buf.validate.field).int32.lt = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gtltex = 7 [
+    (buf.validate.field).int32.gt = 0,
+    (buf.validate.field).int32.lt = -20,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gtlteex = 8 [
+    (buf.validate.field).int32.gt = 0,
+    (buf.validate.field).int32.lte = -20,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gteltin = 9 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lt = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gteltein = 10 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lt = 101,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gteltex = 11 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lt = -20,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 gtelteex = 12 [
+    (buf.validate.field).int32.gte = 0,
+    (buf.validate.field).int32.lte = -20,
+    (gofakeit.generate).tag = "{intrange:1,100}"
+  ];
+  int32 const = 13 [
+    (buf.validate.field).int32.const = 10,
+    (gofakeit.generate).tag = "{intrange:10,10}"
+  ];
+  int32 constgt = 14 [
+    (buf.validate.field).int32.const = 10,
+    (buf.validate.field).int32.gte = 0,
+    (gofakeit.generate).tag = "{intrange:10,10}"
+  ];
+  int32 in_test = 15 [
+    (buf.validate.field).int32 = {
+      in: [
+        1,
+        3,
+        5
+      ]
+    },
+    (gofakeit.generate).tag = "{intrange:3,3}"
+  ];
+  int32 not_in_test = 16 [
+    (buf.validate.field).int32 = {
+      not_in: [
+        1,
+        3,
+        5
+      ]
+    },
+    (gofakeit.generate).tag = "{intrange:4,4}"
+  ];
+}
+
+message BenchTestBytes {
+  bytes b1 = 1 [(buf.validate.field).bytes = {
+    not_in: [
+      "\x32\x33",
+      "\x34\x35",
+      "\x36\x37"
+    ]
+    min_len: 1
+    max_len: 4
+  }];
+  bytes b = 4 [(buf.validate.field).bytes = {
+    in: [
+      "\x32\x33",
+      "\x34\x35",
+      "\x36\x37"
+    ]
+    min_len: 2
+    max_len: 2
+  }];
+}
+
+enum TestEnum {
+  TEST_ENUM_UNSPECIFIED = 0;
+  TEST_ENUM_VAL1 = 1;
+  TEST_ENUM_VAL2 = 2;
+  TEST_ENUM_VAL3 = 3;
+}
+
+message TestUnique {
+  repeated TestEnum enums = 1 [(buf.validate.field).repeated.unique = true];
+  repeated bytes bytes = 2 [(buf.validate.field).repeated.unique = true];
+  repeated string strings = 3 [(buf.validate.field).repeated.unique = true];
+}
+
+message TestByteBroken {
+  bytes broken = 1 [
+    (buf.validate.field).bytes.min_len = 5,
+    (buf.validate.field).bytes.max_len = 10,
+    (buf.validate.field).bytes.uuid = true
+  ];
+}
+
+message TestByteMatching {
+  bytes ip_addr = 1 [
+    (buf.validate.field).bytes.ip = true,
+    (gofakeit.generate).tag = "1234567890123456"
+  ];
+  bytes ipv4_addr = 2 [
+    (buf.validate.field).bytes.ipv4 = true,
+    (gofakeit.generate).tag = "1234"
+  ];
+  bytes ipv6_addr = 3 [
+    (buf.validate.field).bytes.ipv6 = true,
+    (gofakeit.generate).tag = "1234567890123456"
+  ];
+  bytes uuid = 4 [
+    (buf.validate.field).bytes.uuid = true,
+    (gofakeit.generate).tag = "1234567890123456"
+  ];
+}
+
+message StringMatching {
+  string hostname = 1 [
+    (buf.validate.field).string.hostname = true,
+    (gofakeit.generate).tag = "{domainname}"
+  ];
+  string host_and_port = 2 [
+    (buf.validate.field).string.host_and_port = true,
+    (gofakeit.generate).tag = "{domainname}:8080"
+  ];
+  string email = 3 [
+    (buf.validate.field).string.email = true,
+    (gofakeit.generate).tag = "{email}"
+  ];
+  string uuid = 4 [
+    (buf.validate.field).string.uuid = true,
+    (gofakeit.generate).tag = "{uuid}"
+  ];
+}
+
+message WrapperTesting {
+  google.protobuf.Int32Value i32 = 1 [(buf.validate.field).int32.gt = 10];
+  google.protobuf.DoubleValue d = 2 [(buf.validate.field).double.gt = 10];
+  google.protobuf.FloatValue f = 3 [(buf.validate.field).float.gt = 10];
+  google.protobuf.Int64Value i64 = 4 [(buf.validate.field).int64.gt = 10];
+  google.protobuf.UInt64Value u64 = 5 [(buf.validate.field).uint64.gt = 10];
+  google.protobuf.UInt32Value u32 = 6 [(buf.validate.field).uint32.gt = 10];
+  google.protobuf.BoolValue b = 7 [(buf.validate.field).bool.const = true];
+  google.protobuf.StringValue s = 8 [(buf.validate.field).string.const = "hello"];
+  google.protobuf.BytesValue bs = 9 [(buf.validate.field).bytes.len = 5];
+}
+
+message MultiRule {
+  int64 many = 1 [
+    (buf.validate.field).int64.const = 10,
+    (buf.validate.field).int64.gt = 5
+  ];
+}

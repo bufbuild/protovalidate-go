@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"os"
+	"strings"
 	"testing"
 
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
@@ -22,6 +24,7 @@ import (
 	"github.com/rodaine/protogofakeit"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 func BenchmarkScalar(b *testing.B) {
@@ -53,29 +56,194 @@ func BenchmarkComplexSchema(b *testing.B) {
 	benchSuccess(b, &pb.BenchComplexSchema{})
 }
 
-func BenchmarkCompile(b *testing.B) {
-	// Measures compile-time allocations for complex schemas
-	msg := &pb.BenchComplexSchema{}
-	b.ReportAllocs()
-	for b.Loop() {
-		_, _ = New(WithMessages(msg), WithDisableLazy())
-	}
+func BenchmarkInt32GT(b *testing.B) {
+	benchSuccess(b, &pb.BenchGT{})
 }
 
-func benchSuccess(b *testing.B, msg proto.Message) {
-	b.Helper()
+func BenchmarkTestByteMatching(b *testing.B) {
+	benchSuccess(b, &pb.TestByteMatching{})
+}
 
-	faker := protogofakeit.New(gofakeit.New(1))
-	require.NoError(b, faker.FakeProto(msg))
-	val, err := New(WithMessages(msg), WithDisableLazy())
+func BenchmarkStringMatching(b *testing.B) {
+	benchSuccess(b, &pb.StringMatching{})
+}
+
+func BenchmarkWrapperTesting(b *testing.B) {
+	msg := pb.WrapperTesting_builder{
+		I32: &wrapperspb.Int32Value{Value: 11},
+		D:   &wrapperspb.DoubleValue{Value: 11},
+		F:   &wrapperspb.FloatValue{Value: 11},
+		I64: &wrapperspb.Int64Value{Value: 11},
+		U64: &wrapperspb.UInt64Value{Value: 11},
+		U32: &wrapperspb.UInt32Value{Value: 11},
+		B:   &wrapperspb.BoolValue{Value: true},
+		S:   &wrapperspb.StringValue{Value: "hello"},
+		Bs:  &wrapperspb.BytesValue{Value: []byte("hello")},
+	}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
 	require.NoError(b, err)
 
 	b.ReportAllocs()
 	b.ResetTimer()
-	b.RunParallel(func(pb *testing.PB) {
-		for pb.Next() {
-			err := val.Validate(msg)
-			require.NoError(b, err)
-		}
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
+func TestInt32GT(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.BenchGT{})
+}
+
+func TestComplexSchema(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.BenchComplexSchema{})
+}
+
+func TestMap(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.BenchMap{})
+}
+
+func TestScalar(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.BenchScalar{})
+}
+
+func TestByteMatching(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.TestByteMatching{})
+}
+
+func TestStringMatching(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.StringMatching{})
+}
+
+func TestWrapperTesting(t *testing.T) {
+	t.Parallel()
+	msg := pb.WrapperTesting_builder{
+		I32: &wrapperspb.Int32Value{Value: 11},
+		D:   &wrapperspb.DoubleValue{Value: 11},
+		F:   &wrapperspb.FloatValue{Value: 11},
+		I64: &wrapperspb.Int64Value{Value: 11},
+		U64: &wrapperspb.UInt64Value{Value: 11},
+		U32: &wrapperspb.UInt32Value{Value: 11},
+		B:   &wrapperspb.BoolValue{Value: true},
+		S:   &wrapperspb.StringValue{Value: "hello"},
+		Bs:  &wrapperspb.BytesValue{Value: []byte("hello")},
+	}.Build()
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func TestRepeated(t *testing.T) {
+	t.Parallel()
+	t.Run("Scalar", func(t *testing.T) {
+		t.Parallel()
+		testSuccess(t, &pb.BenchRepeatedScalar{})
 	})
+	t.Run("Message", func(t *testing.T) {
+		t.Parallel()
+		testSuccess(t, &pb.BenchRepeatedMessage{})
+	})
+	t.Run("Unique", func(t *testing.T) {
+		t.Parallel()
+		t.Run("Scalar", func(t *testing.T) {
+			t.Parallel()
+			testSuccess(t, &pb.BenchRepeatedScalarUnique{})
+		})
+		t.Run("Bytes", func(t *testing.T) {
+			t.Parallel()
+			testSuccess(t, &pb.BenchRepeatedBytesUnique{})
+		})
+	})
+}
+
+func BenchmarkCompile(b *testing.B) {
+	// Measures compile-time allocations for complex schemas
+	msg := &pb.BenchComplexSchema{}
+	b.ReportAllocs()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	for b.Loop() {
+		_, _ = New(options...)
+	}
+}
+
+func BenchmarkCompileInt32GT(b *testing.B) {
+	// Measures compile-time allocations for complex schemas
+	msg := &pb.BenchGT{}
+	b.ReportAllocs()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	for b.Loop() {
+		_, _ = New(options...)
+	}
+}
+
+func BenchmarkMultiRuleError(b *testing.B) {
+	msg := pb.MultiRule_builder{Many: 1}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
+func BenchmarkMultiRuleNoError(b *testing.B) {
+	msg := pb.MultiRule_builder{Many: 10}.Build()
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
+}
+
+func testSuccess(t *testing.T, msg proto.Message) {
+	faker := protogofakeit.New(gofakeit.New(1))
+	require.NoError(t, faker.FakeProto(msg))
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(t, err)
+	err = val.Validate(msg)
+	require.NoError(t, err)
+}
+
+func benchSuccess(b *testing.B, msg proto.Message) {
+	faker := protogofakeit.New(gofakeit.New(1))
+	require.NoError(b, faker.FakeProto(msg))
+	options := []ValidatorOption{WithMessages(msg), WithDisableLazy()}
+	if strings.EqualFold(os.Getenv("DISABLE_NATIVE_RULES"), "true") {
+		options = append(options, WithDisableNativeRules())
+	}
+	val, err := New(options...)
+	require.NoError(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for b.Loop() {
+		_ = val.Validate(msg)
+	}
 }
