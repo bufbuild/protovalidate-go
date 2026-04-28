@@ -82,38 +82,24 @@ type ruleSite struct {
 }
 
 // makeRuleSite pre-builds a ruleSite for a rule at compile time.
-func makeRuleSite(ruleDesc, desc protoreflect.FieldDescriptor) ruleSite {
-	return ruleSite{
-		pathElements: []*validate.FieldPathElement{
-			fieldPathElement(ruleDesc),
-			fieldPathElement(desc),
-		},
-		desc: desc,
+// if the ruleID or message are NOT constant, pass in an empty string and supply it when calling newViolation.
+func makeRuleSite(ruleDesc, desc protoreflect.FieldDescriptor, ruleID string, message string) ruleSite {
+	var ruleIDPtr *string
+	if ruleID != "" {
+		ruleIDPtr = proto.String(ruleID)
 	}
-}
-
-// makeRuleSiteWithID pre-builds a ruleSite for a rule at compile time.
-func makeRuleSiteWithID(ruleDesc, desc protoreflect.FieldDescriptor, ruleID string) ruleSite {
-	return ruleSite{
-		pathElements: []*validate.FieldPathElement{
-			fieldPathElement(ruleDesc),
-			fieldPathElement(desc),
-		},
-		desc:   desc,
-		ruleID: proto.String(ruleID),
+	var messagePtr *string
+	if message != "" {
+		messagePtr = proto.String(message)
 	}
-}
-
-// makeRuleSiteWithID pre-builds a ruleSite for a rule at compile time.
-func makeRuleSiteWithIDAndMessage(ruleDesc, desc protoreflect.FieldDescriptor, ruleID string, message string) ruleSite {
 	return ruleSite{
 		pathElements: []*validate.FieldPathElement{
 			fieldPathElement(ruleDesc),
 			fieldPathElement(desc),
 		},
 		desc:    desc,
-		ruleID:  proto.String(ruleID),
-		message: proto.String(message),
+		ruleID:  ruleIDPtr,
+		message: messagePtr,
 	}
 }
 

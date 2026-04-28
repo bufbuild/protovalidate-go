@@ -64,7 +64,6 @@ conformance: $(BIN)/protovalidate-conformance protovalidate-conformance-go ## Ru
 .PHONY: conformance-hyperpb
 conformance-hyperpb: ## Run conformance tests against hyperpb
 	HYPERPB=true $(MAKE) conformance
-	HYPERPB=true DISABLE_NATIVE_RULES=true $(MAKE) conformance
 
 .PHONY: generate
 generate: generate-proto generate-license ## Regenerate code and license headers
@@ -102,12 +101,7 @@ bench: $(BENCH_TMP)
 
 .PHONY: bench-cel
 bench-cel: $(BENCH_TMP)
-	DISABLE_NATIVE_RULES=true go test -run ^$$ -bench="$(BENCH)" -benchmem \
-		-memprofile "$(BENCH_TMP)/$(BENCH_NAME).mem.profile" \
-		-cpuprofile "$(BENCH_TMP)/$(BENCH_NAME).cpu.profile" \
-		-count $(BENCH_COUNT) \
-		| tee "$(BENCH_TMP)/$(BENCH_NAME).bench.txt"
-
+	DISABLE_NATIVE_RULES=true $(MAKE) bench
 
 .PHONY: upgrade-go
 upgrade-go:

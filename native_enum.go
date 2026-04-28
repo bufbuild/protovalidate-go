@@ -24,9 +24,9 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	enumConstSite = makeRuleSiteWithID(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const"), "enum.const")
-	enumInSite    = makeRuleSiteWithID(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("in"), "enum.in")
-	enumNotInSite = makeRuleSiteWithID(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("not_in"), "enum.not_in")
+	enumConstSite = makeRuleSite(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const"), "enum.const", "")
+	enumInSite    = makeRuleSite(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("in"), "enum.in", "")
+	enumNotInSite = makeRuleSite(enumRuleDescriptor, (*validate.EnumRules)(nil).ProtoReflect().Descriptor().Fields().ByName("not_in"), "enum.not_in", "")
 )
 
 // tryBuildNativeEnumRules attempts to build a native Go evaluator for

@@ -25,17 +25,17 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	repeatedMinItemsSite = makeRuleSiteWithID(
+	repeatedMinItemsSite = makeRuleSite(
 		repeatedFieldRulesDesc,
 		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_items"),
-		"repeated.min_items",
+		"repeated.min_items", "",
 	)
-	repeatedMaxItemsSite = makeRuleSiteWithID(
+	repeatedMaxItemsSite = makeRuleSite(
 		repeatedFieldRulesDesc,
 		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_items"),
-		"repeated.max_items",
+		"repeated.max_items", "",
 	)
-	repeatedUniqueSite = makeRuleSiteWithIDAndMessage(
+	repeatedUniqueSite = makeRuleSite(
 		repeatedFieldRulesDesc,
 		(*validate.RepeatedRules)(nil).ProtoReflect().Descriptor().Fields().ByName("unique"),
 		"repeated.unique",

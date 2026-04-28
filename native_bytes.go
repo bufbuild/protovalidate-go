@@ -171,48 +171,35 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 
 // bytesWellKnown identifies which well-known bytes format constraint is active.
 type bytesWellKnown struct {
-	site                ruleSite // pre-built rule path site for the error path
-	ruleID, emptyRuleID string
-	mainMsg, emptyMsg   string
-	validSizes          []int
+	site       ruleSite // pre-built rule path site for the error path
+	emptySite  ruleSite // pre-built rule path site for the empty value
+	validSizes []int
 }
 
 var (
 	//nolint:gochecknoglobals
 	bytesWellKnownIP = bytesWellKnown{
-		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipDesc),
-		ruleID:      "bytes.ip",
-		emptyRuleID: "bytes.ip_empty",
-		mainMsg:     "must be a valid IP address",
-		emptyMsg:    "value is empty, which is not a valid IP address",
-		validSizes:  []int{4, 16},
+		site:       makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipDesc, "bytes.ip", "must be a valid IP address"),
+		emptySite:  makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipDesc, "bytes.ip_empty", "value is empty, which is not a valid IP address"),
+		validSizes: []int{4, 16},
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownIPv4 = bytesWellKnown{
-		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv4Desc),
-		ruleID:      "bytes.ipv4",
-		emptyRuleID: "bytes.ipv4_empty",
-		mainMsg:     "must be a valid IPv4 address",
-		emptyMsg:    "value is empty, which is not a valid IPv4 address",
-		validSizes:  []int{4},
+		site:       makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv4Desc, "bytes.ipv4", "must be a valid IPv4 address"),
+		emptySite:  makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv4Desc, "bytes.ipv4_empty", "value is empty, which is not a valid IPv4 address"),
+		validSizes: []int{4},
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownIPv6 = bytesWellKnown{
-		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv6Desc),
-		ruleID:      "bytes.ipv6",
-		emptyRuleID: "bytes.ipv6_empty",
-		mainMsg:     "must be a valid IPv6 address",
-		emptyMsg:    "value is empty, which is not a valid IPv6 address",
-		validSizes:  []int{16},
+		site:       makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv6Desc, "bytes.ipv6", "must be a valid IPv6 address"),
+		emptySite:  makeRuleSite(bytesDescs.ruleDesc, bytesDescs.ipv6Desc, "bytes.ipv6_empty", "value is empty, which is not a valid IPv6 address"),
+		validSizes: []int{16},
 	}
 	//nolint:gochecknoglobals
 	bytesWellKnownUUID = bytesWellKnown{
-		site:        makeRuleSite(bytesDescs.ruleDesc, bytesDescs.uuidDesc),
-		ruleID:      "bytes.uuid",
-		emptyRuleID: "bytes.uuid_empty",
-		mainMsg:     "must be a valid UUID",
-		emptyMsg:    "value is empty, which is not a valid UUID",
-		validSizes:  []int{16},
+		site:       makeRuleSite(bytesDescs.ruleDesc, bytesDescs.uuidDesc, "bytes.uuid", "must be a valid UUID"),
+		emptySite:  makeRuleSite(bytesDescs.ruleDesc, bytesDescs.uuidDesc, "bytes.uuid_empty", "value is empty, which is not a valid UUID"),
+		validSizes: []int{16},
 	}
 )
 
@@ -246,16 +233,16 @@ func makeBytesDescriptors() bytesDescriptors {
 		ipv6Desc: rulesDesc.Fields().ByName("ipv6"),
 		uuidDesc: rulesDesc.Fields().ByName("uuid"),
 	}
-	descriptors.constSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "bytes.const")
-	descriptors.lenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "bytes.len")
-	descriptors.minLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "bytes.min_len")
-	descriptors.maxLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "bytes.max_len")
-	descriptors.patternSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "bytes.pattern")
-	descriptors.prefixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "bytes.prefix")
-	descriptors.suffixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "bytes.suffix")
-	descriptors.containsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "bytes.contains")
-	descriptors.inSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "bytes.in")
-	descriptors.notInSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "bytes.not_in")
+	descriptors.constSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "bytes.const", "")
+	descriptors.lenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "bytes.len", "")
+	descriptors.minLenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "bytes.min_len", "")
+	descriptors.maxLenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "bytes.max_len", "")
+	descriptors.patternSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "bytes.pattern", "")
+	descriptors.prefixSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "bytes.prefix", "")
+	descriptors.suffixSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "bytes.suffix", "")
+	descriptors.containsSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "bytes.contains", "")
+	descriptors.inSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "bytes.in", "")
+	descriptors.notInSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "bytes.not_in", "")
 	return descriptors
 }
 
@@ -412,8 +399,8 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 	wellKnown := n.wellKnown
 
 	if size == 0 {
-		return n.newViolation(wellKnown.site,
-			wellKnown.emptyRuleID, wellKnown.emptyMsg,
+		return n.newViolation(wellKnown.emptySite,
+			"", "",
 			val, protoreflect.ValueOfBool(true))
 	}
 
@@ -422,7 +409,7 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 	}
 
 	return n.newViolation(wellKnown.site,
-		wellKnown.ruleID, wellKnown.mainMsg,
+		"", "",
 		val, protoreflect.ValueOfBool(true))
 }
 

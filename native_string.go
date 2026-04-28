@@ -217,21 +217,21 @@ func makeStringDescriptors() stringDescriptors {
 	descriptors := stringDescriptors{
 		ruleDesc: fieldRulesDesc.Fields().ByName("string"),
 	}
-	descriptors.constSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "string.const")
-	descriptors.lenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "string.len")
-	descriptors.minLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "string.min_len")
-	descriptors.maxLenSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "string.max_len")
-	descriptors.lenBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("len_bytes"), "string.len_bytes")
-	descriptors.minBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_bytes"), "string.min_bytes")
-	descriptors.maxBytesSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_bytes"), "string.max_bytes")
-	descriptors.patternSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "string.pattern")
-	descriptors.prefixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "string.prefix")
-	descriptors.suffixSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "string.suffix")
-	descriptors.containsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "string.contains")
-	descriptors.notContainsSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_contains"), "string.not_contains")
-	descriptors.inSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "string.in")
-	descriptors.notInSite = makeRuleSiteWithID(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "string.not_in")
-	descriptors.wellKnownRegexSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("well_known_regex"))
+	descriptors.constSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("const"), "string.const", "")
+	descriptors.lenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("len"), "string.len", "")
+	descriptors.minLenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_len"), "string.min_len", "")
+	descriptors.maxLenSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_len"), "string.max_len", "")
+	descriptors.lenBytesSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("len_bytes"), "string.len_bytes", "")
+	descriptors.minBytesSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("min_bytes"), "string.min_bytes", "")
+	descriptors.maxBytesSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("max_bytes"), "string.max_bytes", "")
+	descriptors.patternSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("pattern"), "string.pattern", "")
+	descriptors.prefixSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("prefix"), "string.prefix", "")
+	descriptors.suffixSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("suffix"), "string.suffix", "")
+	descriptors.containsSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("contains"), "string.contains", "")
+	descriptors.notContainsSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_contains"), "string.not_contains", "")
+	descriptors.inSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("in"), "string.in", "")
+	descriptors.notInSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("not_in"), "string.not_in", "")
+	descriptors.wellKnownRegexSite = makeRuleSite(descriptors.ruleDesc, rulesDesc.Fields().ByName("well_known_regex"), "", "")
 	return descriptors
 }
 
@@ -251,12 +251,9 @@ var (
 // It bundles the field descriptor, rule IDs, messages, and validation
 // function so that all well-known checks share a single generic method.
 type stringWellKnownRule struct {
-	site        ruleSite // pre-built rule path site for the error path
-	ruleID      string   // e.g. "string.ip"
-	emptyRuleID string   // e.g. "string.ip_empty"; empty means skip the empty check
-	mainMsg     string   // e.g. "must be a valid IP address"
-	emptyMsg    string   // e.g. "value is empty, which is not a valid IP address"
-	validate    func(string) bool
+	site      ruleSite // pre-built rule path site for the error path
+	emptySite ruleSite // pre-built rule path site for the empty value check
+	validate  func(string) bool
 }
 
 //nolint:gochecknoglobals
@@ -264,146 +261,94 @@ var (
 	rulesDesc = (*validate.StringRules)(nil).ProtoReflect().Descriptor()
 
 	stringRuleEmail = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("email")),
-		ruleID:      "string.email",
-		emptyRuleID: "string.email_empty",
-		mainMsg:     "must be a valid email address",
-		emptyMsg:    "value is empty, which is not a valid email address",
-		validate:    rules.IsEmail,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("email"), "string.email", "must be a valid email address"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("email"), "string.email_empty", "value is empty, which is not a valid email address"),
+		validate:  rules.IsEmail,
 	}
 	stringRuleHostname = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("hostname")),
-		ruleID:      "string.hostname",
-		emptyRuleID: "string.hostname_empty",
-		mainMsg:     "must be a valid hostname",
-		emptyMsg:    "value is empty, which is not a valid hostname",
-		validate:    rules.IsHostname,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("hostname"), "string.hostname", "must be a valid hostname"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("hostname"), "string.hostname_empty", "value is empty, which is not a valid hostname"),
+		validate:  rules.IsHostname,
 	}
 	stringRuleIP = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip")),
-		ruleID:      "string.ip",
-		emptyRuleID: "string.ip_empty",
-		mainMsg:     "must be a valid IP address",
-		emptyMsg:    "value is empty, which is not a valid IP address",
-		validate:    func(s string) bool { return rules.IsIP(s, 0) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip"), "string.ip", "must be a valid IP address"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip"), "string.ip_empty", "value is empty, which is not a valid IP address"),
+		validate:  func(s string) bool { return rules.IsIP(s, 0) },
 	}
 	stringRuleIPv4 = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4")),
-		ruleID:      "string.ipv4",
-		emptyRuleID: "string.ipv4_empty",
-		mainMsg:     "must be a valid IPv4 address",
-		emptyMsg:    "value is empty, which is not a valid IPv4 address",
-		validate:    func(s string) bool { return rules.IsIP(s, 4) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4"), "string.ipv4", "must be a valid IPv4 address"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4"), "string.ipv4_empty", "value is empty, which is not a valid IPv4 address"),
+		validate:  func(s string) bool { return rules.IsIP(s, 4) },
 	}
 	stringRuleIPv6 = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6")),
-		ruleID:      "string.ipv6",
-		emptyRuleID: "string.ipv6_empty",
-		mainMsg:     "must be a valid IPv6 address",
-		emptyMsg:    "value is empty, which is not a valid IPv6 address",
-		validate:    func(s string) bool { return rules.IsIP(s, 6) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6"), "string.ipv6", "must be a valid IPv6 address"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6"), "string.ipv6_empty", "value is empty, which is not a valid IPv6 address"),
+		validate:  func(s string) bool { return rules.IsIP(s, 6) },
 	}
 	stringRuleURI = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri")),
-		ruleID:      "string.uri",
-		emptyRuleID: "string.uri_empty",
-		mainMsg:     "must be a valid URI",
-		emptyMsg:    "value is empty, which is not a valid URI",
-		validate:    rules.IsURI,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri"), "string.uri", "must be a valid URI"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri"), "string.uri_empty", "value is empty, which is not a valid URI"),
+		validate:  rules.IsURI,
 	}
 	stringRuleURIRef = stringWellKnownRule{
-		site:     makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri_ref")),
-		ruleID:   "string.uri_ref",
-		mainMsg:  "must be a valid URI Reference",
+		site: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uri_ref"), "string.uri_ref", "must be a valid URI Reference"),
+		// emptySite is unused
 		validate: rules.IsURIRef,
 	}
 	stringRuleAddress = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("address")),
-		ruleID:      "string.address",
-		emptyRuleID: "string.address_empty",
-		mainMsg:     "must be a valid hostname, or ip address",
-		emptyMsg:    "value is empty, which is not a valid hostname, or ip address",
-		validate:    func(s string) bool { return rules.IsHostname(s) || rules.IsIP(s, 0) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("address"), "string.address", "must be a valid hostname, or ip address"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("address"), "string.address_empty", "value is empty, which is not a valid hostname, or ip address"),
+		validate:  func(s string) bool { return rules.IsHostname(s) || rules.IsIP(s, 0) },
 	}
 	stringRuleUUID = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uuid")),
-		ruleID:      "string.uuid",
-		emptyRuleID: "string.uuid_empty",
-		mainMsg:     "must be a valid UUID",
-		emptyMsg:    "value is empty, which is not a valid UUID",
-		validate:    uuidRegexp.MatchString,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uuid"), "string.uuid", "must be a valid UUID"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("uuid"), "string.uuid_empty", "value is empty, which is not a valid UUID"),
+		validate:  uuidRegexp.MatchString,
 	}
 	stringRuleTUUID = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("tuuid")),
-		ruleID:      "string.tuuid",
-		emptyRuleID: "string.tuuid_empty",
-		mainMsg:     "must be a valid trimmed UUID",
-		emptyMsg:    "value is empty, which is not a valid trimmed UUID",
-		validate:    tuuidRegexp.MatchString,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("tuuid"), "string.tuuid", "must be a valid trimmed UUID"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("tuuid"), "string.tuuid_empty", "value is empty, which is not a valid trimmed UUID"),
+		validate:  tuuidRegexp.MatchString,
 	}
 	stringRuleIPPrefixLen = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_with_prefixlen")),
-		ruleID:      "string.ip_with_prefixlen",
-		emptyRuleID: "string.ip_with_prefixlen_empty",
-		mainMsg:     "must be a valid IP prefix",
-		emptyMsg:    "value is empty, which is not a valid IP prefix",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, false) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_with_prefixlen"), "string.ip_with_prefixlen", "must be a valid IP prefix"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_with_prefixlen"), "string.ip_with_prefixlen_empty", "value is empty, which is not a valid IP prefix"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 0, false) },
 	}
 	stringRuleIPv4PrefixLen = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_with_prefixlen")),
-		ruleID:      "string.ipv4_with_prefixlen",
-		emptyRuleID: "string.ipv4_with_prefixlen_empty",
-		mainMsg:     "must be a valid IPv4 address with prefix length",
-		emptyMsg:    "value is empty, which is not a valid IPv4 address with prefix length",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, false) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_with_prefixlen"), "string.ipv4_with_prefixlen", "must be a valid IPv4 address with prefix length"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_with_prefixlen"), "string.ipv4_with_prefixlen_empty", "value is empty, which is not a valid IPv4 address with prefix length"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 4, false) },
 	}
 	stringRuleIPv6PrefixLen = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_with_prefixlen")),
-		ruleID:      "string.ipv6_with_prefixlen",
-		emptyRuleID: "string.ipv6_with_prefixlen_empty",
-		mainMsg:     "must be a valid IPv6 address with prefix length",
-		emptyMsg:    "value is empty, which is not a valid IPv6 address with prefix length",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, false) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_with_prefixlen"), "string.ipv6_with_prefixlen", "must be a valid IPv6 address with prefix length"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_with_prefixlen"), "string.ipv6_with_prefixlen_empty", "value is empty, which is not a valid IPv6 address with prefix length"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 6, false) },
 	}
 	stringRuleIPPrefix = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_prefix")),
-		ruleID:      "string.ip_prefix",
-		emptyRuleID: "string.ip_prefix_empty",
-		mainMsg:     "must be a valid IP prefix",
-		emptyMsg:    "value is empty, which is not a valid IP prefix",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 0, true) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_prefix"), "string.ip_prefix", "must be a valid IP prefix"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ip_prefix"), "string.ip_prefix_empty", "value is empty, which is not a valid IP prefix"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 0, true) },
 	}
 	stringRuleIPv4Prefix = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_prefix")),
-		ruleID:      "string.ipv4_prefix",
-		emptyRuleID: "string.ipv4_prefix_empty",
-		mainMsg:     "must be a valid IPv4 prefix",
-		emptyMsg:    "value is empty, which is not a valid IPv4 prefix",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 4, true) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_prefix"), "string.ipv4_prefix", "must be a valid IPv4 prefix"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv4_prefix"), "string.ipv4_prefix_empty", "value is empty, which is not a valid IPv4 prefix"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 4, true) },
 	}
 	stringRuleIPv6Prefix = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_prefix")),
-		ruleID:      "string.ipv6_prefix",
-		emptyRuleID: "string.ipv6_prefix_empty",
-		mainMsg:     "must be a valid IPv6 prefix",
-		emptyMsg:    "value is empty, which is not a valid IPv6 prefix",
-		validate:    func(s string) bool { return rules.IsIPPrefix(s, 6, true) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_prefix"), "string.ipv6_prefix", "must be a valid IPv6 prefix"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ipv6_prefix"), "string.ipv6_prefix_empty", "value is empty, which is not a valid IPv6 prefix"),
+		validate:  func(s string) bool { return rules.IsIPPrefix(s, 6, true) },
 	}
 	stringRuleHostAndPort = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("host_and_port")),
-		ruleID:      "string.host_and_port",
-		emptyRuleID: "string.host_and_port_empty",
-		mainMsg:     "must be a valid host (hostname or IP address) and port pair",
-		emptyMsg:    "value is empty, which is not a valid host and port pair",
-		validate:    func(s string) bool { return rules.IsHostAndPort(s, true) },
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("host_and_port"), "string.host_and_port", "must be a valid host (hostname or IP address) and port pair"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("host_and_port"), "string.host_and_port_empty", "value is empty, which is not a valid host and port pair"),
+		validate:  func(s string) bool { return rules.IsHostAndPort(s, true) },
 	}
 	stringRuleULID = stringWellKnownRule{
-		site:        makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ulid")),
-		ruleID:      "string.ulid",
-		emptyRuleID: "string.ulid_empty",
-		mainMsg:     "must be a valid ULID",
-		emptyMsg:    "value is empty, which is not a valid ULID",
-		validate:    ulidRegexp.MatchString,
+		site:      makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ulid"), "string.ulid", "must be a valid ULID"),
+		emptySite: makeRuleSite(strDescs.ruleDesc, rulesDesc.Fields().ByName("ulid"), "string.ulid_empty", "value is empty, which is not a valid ULID"),
+		validate:  ulidRegexp.MatchString,
 	}
 )
 
@@ -557,14 +502,14 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 
 func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) []*Violation {
 	rule := n.wellKnownRule
-	if rule.emptyRuleID != "" && strVal == "" {
-		return []*Violation{n.newViolation(rule.site,
-			rule.emptyRuleID, rule.emptyMsg,
+	if rule.emptySite.ruleID != nil && strVal == "" {
+		return []*Violation{n.newViolation(rule.emptySite,
+			"", "",
 			val, protoreflect.ValueOfString(strVal))}
 	}
 	if !rule.validate(strVal) {
 		return []*Violation{n.newViolation(rule.site,
-			rule.ruleID, rule.mainMsg,
+			"", "",
 			val, protoreflect.ValueOfString(strVal))}
 	}
 	return nil

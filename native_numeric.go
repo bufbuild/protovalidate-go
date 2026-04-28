@@ -258,16 +258,16 @@ func makeNumericDescriptors(
 		finiteDesc = rulesDesc.Fields().ByName("finite")
 	}
 	descriptors := numericDescriptors{
-		gtSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gt")),
-		gteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gte")),
-		ltSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lt")),
-		lteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lte")),
-		constSite: makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("const"), typeName+".const"),
-		inSite:    makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("in"), typeName+".in"),
-		notInSite: makeRuleSiteWithID(ruleDesc, rulesDesc.Fields().ByName("not_in"), typeName+".not_in"),
+		gtSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gt"), "", ""),
+		gteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("gte"), "", ""),
+		ltSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lt"), "", ""),
+		lteSite:   makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("lte"), "", ""),
+		constSite: makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("const"), typeName+".const", ""),
+		inSite:    makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("in"), typeName+".in", ""),
+		notInSite: makeRuleSite(ruleDesc, rulesDesc.Fields().ByName("not_in"), typeName+".not_in", ""),
 	}
 	if finiteDesc != nil {
-		descriptors.finiteSite = makeRuleSiteWithIDAndMessage(ruleDesc, finiteDesc, typeName+".finite", "must be finite")
+		descriptors.finiteSite = makeRuleSite(ruleDesc, finiteDesc, typeName+".finite", "must be finite")
 	}
 	return descriptors
 }

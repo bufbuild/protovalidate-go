@@ -24,15 +24,15 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	mapMinPairsSite = makeRuleSiteWithID(
+	mapMinPairsSite = makeRuleSite(
 		mapFieldRulesDesc,
 		(*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("min_pairs"),
-		"map.min_pairs",
+		"map.min_pairs", "",
 	)
-	mapMaxPairsSite = makeRuleSiteWithID(
+	mapMaxPairsSite = makeRuleSite(
 		mapFieldRulesDesc,
 		(*validate.MapRules)(nil).ProtoReflect().Descriptor().Fields().ByName("max_pairs"),
-		"map.max_pairs",
+		"map.max_pairs", "",
 	)
 )
 

@@ -23,10 +23,10 @@ import (
 
 //nolint:gochecknoglobals
 var (
-	boolConstSite = makeRuleSiteWithID(
+	boolConstSite = makeRuleSite(
 		fieldRulesDesc.Fields().ByName("bool"),
 		(*validate.BoolRules)(nil).ProtoReflect().Descriptor().Fields().ByName("const"),
-		"bool.const",
+		"bool.const", "",
 	)
 )
 
