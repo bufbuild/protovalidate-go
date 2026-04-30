@@ -80,10 +80,10 @@ generate-proto: $(BIN)/buf
 .PHONY: generate-license
 generate-license: $(BIN)/license-header
 	$(BIN)/license-header \
-			--license-type apache \
-			--copyright-holder "Buf Technologies, Inc." \
-			--year-range "$(COPYRIGHT_YEARS)" \
-			$(LICENSE_IGNORE)
+		--license-type apache \
+		--copyright-holder "Buf Technologies, Inc." \
+		--year-range "$(COPYRIGHT_YEARS)" \
+		$(LICENSE_IGNORE)
 
 .PHONY: checkgenerate
 checkgenerate: generate
