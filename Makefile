@@ -19,7 +19,7 @@ GOLANGCI_LINT_VERSION ?= v2.9.0
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
 CONFORMANCE_VERSION ?= v1.2.0
 LICENSE_IGNORE := -e .github/ -e .golangci.yml -e buf.gen.yaml -e buf.yaml -e conformance/expected_failures.yaml
-LICENSE_HEADER_VERSION := 1.69.0
+BUF_VERSION := 1.69.0
 
 .PHONY: help
 help: ## Describe useful make targets
@@ -79,13 +79,11 @@ generate-proto: $(BIN)/buf
 
 .PHONY: generate-license
 generate-license: $(BIN)/license-header
-	comm -23 \
-		<(git ls-files --cached --modified --others --no-empty-directory --exclude-standard | sort -u | grep -v $(LICENSE_IGNORE) ) \
-		<(git ls-files --deleted | sort -u) | \
-		xargs $(BIN)/license-header \
+	$(BIN)/license-header \
 			--license-type apache \
 			--copyright-holder "Buf Technologies, Inc." \
-			--year-range "$(COPYRIGHT_YEARS)"
+			--year-range "$(COPYRIGHT_YEARS)" \
+			$(LICENSE_IGNORE)
 
 .PHONY: checkgenerate
 checkgenerate: generate
@@ -119,11 +117,11 @@ $(BIN):
 	@mkdir -p $(BIN)
 
 $(BIN)/buf: $(BIN) Makefile
-	GOBIN=$(abspath $(@D)) $(GO) install github.com/bufbuild/buf/cmd/buf@v1.67.0
+	GOBIN=$(abspath $(@D)) $(GO) install github.com/bufbuild/buf/cmd/buf@v$(BUF_VERSION)
 
 $(BIN)/license-header: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
-		  github.com/bufbuild/buf/private/pkg/licenseheader/cmd/license-header@v$(LICENSE_HEADER_VERSION)
+		  github.com/bufbuild/buf/private/pkg/licenseheader/cmd/license-header@v$(BUF_VERSION)
 
 $(BIN)/golangci-lint: $(BIN) Makefile
 	GOBIN=$(abspath $(@D)) $(GO) install \
