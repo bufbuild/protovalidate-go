@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"math"
 	"slices"
+	"strconv"
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -470,16 +471,16 @@ func (n nativeNumericCompare[T]) gtltRule() string {
 
 func (n nativeNumericCompare[T]) loMessage() string {
 	if n.lower == lowerBoundGt {
-		return fmt.Sprintf("greater than %v", n.lo)
+		return "greater than " + format(n.lo)
 	}
-	return fmt.Sprintf("greater than or equal to %v", n.lo)
+	return "greater than or equal to " + format(n.lo)
 }
 
 func (n nativeNumericCompare[T]) hiMessage() string {
 	if n.upper == upperBoundLt {
-		return fmt.Sprintf("less than %v", n.hi)
+		return "less than " + format(n.hi)
 	}
-	return fmt.Sprintf("less than or equal to %v", n.hi)
+	return "less than or equal to " + format(n.hi)
 }
 
 func (n nativeNumericCompare[T]) conjunction() string {
@@ -496,7 +497,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 	if n.constVal != nil && valT != *n.constVal {
 		violations = append(violations, n.newViolation(n.config.descs.constSite,
 			n.config.typeName+".const",
-			fmt.Sprintf("must equal %v", *n.constVal),
+			"must equal "+format(*n.constVal),
 			val, n.config.makeRuleVal(*n.constVal)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
@@ -601,7 +602,31 @@ func ptr[T any](v T) *T { return &v }
 func formatList[T any](vals []T) string {
 	parts := make([]string, len(vals))
 	for i, v := range vals {
-		parts[i] = fmt.Sprintf("%v", v)
+		parts[i] = format(v)
 	}
 	return "[" + strings.Join(parts, ", ") + "]"
+}
+
+func format(v any) string {
+	switch val := v.(type) {
+	case float32:
+		return printFloat(float64(val))
+	case float64:
+		return printFloat(val)
+	default:
+		return fmt.Sprintf("%v", val)
+	}
+}
+
+func printFloat(argDbl float64) string {
+	if math.IsNaN(argDbl) {
+		return "NaN"
+	}
+	if math.IsInf(argDbl, -1) {
+		return "-Infinity"
+	}
+	if math.IsInf(argDbl, 1) {
+		return "Infinity"
+	}
+	return strconv.FormatFloat(argDbl, 'f', -1, 64)
 }
