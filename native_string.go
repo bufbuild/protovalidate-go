@@ -450,7 +450,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 
 	if n.notContains != nil && strings.Contains(strVal, *n.notContains) {
 		violations = append(violations, n.newViolation(strDescs.notContainsSite,
-			"string.not_contains", fmt.Sprintf("value contains substring `%s`", *n.notContains),
+			"string.not_contains", fmt.Sprintf("contains substring `%s`", *n.notContains),
 			val, protoreflect.ValueOfString(*n.notContains)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations[:1]}
