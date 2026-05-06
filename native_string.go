@@ -243,7 +243,7 @@ var (
 	tuuidRegexp       = regexp.MustCompile(`^[0-9a-fA-F]{32}$`)
 	ulidRegexp        = regexp.MustCompile(`^[0-7][0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{25}$`)
 	looseRegexp       = regexp.MustCompile(`^[^\x00\x0A\x0D]+$`)
-	headerNameRegexp  = regexp.MustCompile(`^:?[0-9a-zA-Z!#$%&\\'*+-.^_|~\x60]+$`)
+	headerNameRegexp  = regexp.MustCompile(`^:?[0-9a-zA-Z!#$%&'*+.\-^_|~\x60]+$`)
 	headerValueRegexp = regexp.MustCompile(`^[^\x00-\x08\x0A-\x1F\x7F]*$`)
 )
 

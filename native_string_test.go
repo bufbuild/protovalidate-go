@@ -485,3 +485,90 @@ func TestNativeStringTautology(t *testing.T) {
 	require.NotNil(t, eval)
 	assert.False(t, eval.Tautology())
 }
+
+func TestHeaderNameRegex(t *testing.T) {
+	t.Parallel()
+	data := []struct {
+		HeaderName string
+		Valid      bool
+	}{
+		// true
+		{"Content-Type", true},
+		{"Content-Length", true},
+		{"Accept", true},
+		{"User-Agent", true},
+		{"X-Forwarded-For", true},
+		{"WWW-Authenticate", true},
+		{"If-None-Match", true},
+		{"Cache-Control", true},
+		{"Set-Cookie", true},
+		{"ETag", true},
+		{":method", true},
+		{":path", true},
+		{":status", true},
+		{":authority", true},
+		{":scheme", true},
+		{"!", true},
+		{"#", true},
+		{"$", true},
+		{"%", true},
+		{"&", true},
+		{"'", true},
+		{"*", true},
+		{"+", true},
+		{"-", true},
+		{".", true},
+		{"^", true},
+		{"_", true},
+		{"`", true},
+		{"|", true},
+		{"~", true},
+		{"a", true},
+		{"0", true},
+		{":a", true},
+		{"A1!#$%&'*+-.^_|~`", true},
+		{"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", true},
+		{"MiXeDcAsE", true},
+		// false
+		{"Content-Type: application/json", false},
+		{"", false},
+		{":", false},
+		{" ", false},
+		{"Content-Type ", false},
+		{" Content-Type", false},
+		{"Content Type", false},
+		{"\tContent-Type", false},
+		{"Content:Type", false},
+		{"Content/Type", false},
+		{"Content\\Type", false},
+		{"Content,Type", false},
+		{"Content;Type", false},
+		{"Content=Type", false},
+		{"Content(Type)", false},
+		{"Content[Type]", false},
+		{"Content{Type}", false},
+		{"Content<Type>", false},
+		{"Content\"Type", false},
+		{"Content?Type", false},
+		{"Content@Type", false},
+		{"::method", false},
+		{"method:", false},
+		{":method:extra", false},
+		{"Conténg", false},
+		{"内容类型", false},
+		{"Header™", false},
+		{"naïve", false},
+		{"Content\x00Type", false},
+		{"Content\x7FType", false},
+		{"Content\nType", false},
+		{"Content\rType", false},
+		{"Valid-Name\nAnother-Name", false},
+	}
+	for _, d := range data {
+		t.Run(d.HeaderName, func(t *testing.T) {
+			t.Parallel()
+			valid := headerNameRegexp.MatchString(d.HeaderName)
+			assert.Equal(t, d.Valid, valid)
+		})
+	}
+}
