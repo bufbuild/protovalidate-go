@@ -412,6 +412,28 @@ func TestNativeFloat_NaN(t *testing.T) {
 	}
 }
 
+func TestNativeFloatNaNGT(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		rules *validate.FloatRules
+	}{
+		{"gt", validate.FloatRules_builder{Gt: proto.Float32(float32(math.NaN()))}.Build()},
+		{"lt", validate.FloatRules_builder{Lt: proto.Float32(float32(math.NaN()))}.Build()},
+		{"lte", validate.FloatRules_builder{Lte: proto.Float32(float32(math.NaN()))}.Build()},
+		{"gte", validate.FloatRules_builder{Gte: proto.Float32(float32(math.NaN()))}.Build()},
+		{"gte_lte", validate.FloatRules_builder{Gte: proto.Float32(float32(math.NaN())), Lte: proto.Float32(float32(math.NaN()))}.Build()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			eval := buildNativeNumeric(t, tt.rules, &floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
+			require.Nil(t, eval)
+		})
+	}
+}
+
 func TestNativeFloat_FiniteDoesNotBailToCEL(t *testing.T) {
 	t.Parallel()
 	rules := validate.FloatRules_builder{Finite: proto.Bool(true), Gt: proto.Float32(0)}.Build()

@@ -133,17 +133,25 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 
 	hasRule := false
 
+	// bail out if there's a gt/lt and the value is NaN
+	// (it's an invalid protovalidate rule; let CEL return the error)
 	var lowerValue T
 	lower := lowerBoundNone
 	switch {
 	case rules.HasGt():
 		lower = lowerBoundGt
 		lowerValue = rules.GetGt()
+		if math.IsNaN(float64(lowerValue)) {
+			return nil
+		}
 		rules.ProtoReflect().Clear(config.descs.gtSite.desc)
 		hasRule = true
 	case rules.HasGte():
 		lower = lowerBoundGte
 		lowerValue = rules.GetGte()
+		if math.IsNaN(float64(lowerValue)) {
+			return nil
+		}
 		rules.ProtoReflect().Clear(config.descs.gteSite.desc)
 		hasRule = true
 	}
@@ -154,11 +162,17 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	case rules.HasLt():
 		upper = upperBoundLt
 		upperValue = rules.GetLt()
+		if math.IsNaN(float64(upperValue)) {
+			return nil
+		}
 		rules.ProtoReflect().Clear(config.descs.ltSite.desc)
 		hasRule = true
 	case rules.HasLte():
 		upper = upperBoundLte
 		upperValue = rules.GetLte()
+		if math.IsNaN(float64(upperValue)) {
+			return nil
+		}
 		rules.ProtoReflect().Clear(config.descs.lteSite.desc)
 		hasRule = true
 	}
