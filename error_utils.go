@@ -166,16 +166,22 @@ func FieldPathString(path *validate.FieldPath) string {
 	return result.String()
 }
 
-// markViolationForKey marks the provided error as being for a map key, by
-// setting the `for_key` flag on each violation within the validation error.
-func markViolationForKey(err error) {
+// markViolationForMapEntry marks the provided error as being for a map entry,
+// by setting the `for_key` flag on each violation within the validation error
+// as well as the field descriptor.
+func markViolationForMapEntry(err error, forKey bool, fieldDescriptor protoreflect.FieldDescriptor) {
 	if err == nil {
 		return
 	}
 	var valErr *ValidationError
 	if errors.As(err, &valErr) {
 		for _, violation := range valErr.Violations {
-			violation.Proto.SetForKey(true)
+			violation.Proto.SetForKey(forKey)
+			if forKey {
+				violation.FieldDescriptor = fieldDescriptor.MapKey()
+			} else {
+				violation.FieldDescriptor = fieldDescriptor.MapValue()
+			}
 		}
 	}
 }
