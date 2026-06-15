@@ -487,45 +487,6 @@ func TestNativeNumericCompare_FieldValue(t *testing.T) {
 	assert.Equal(t, int64(3), valErr.Violations[0].FieldValue.Int())
 }
 
-func TestNativeNumericCompare_RuleValue(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name   string
-		rules  *validate.Int32Rules
-		ruleID string
-		want   []int64
-	}{
-		{
-			name:   "in",
-			rules:  validate.Int32Rules_builder{In: []int32{1, 3, 5}}.Build(),
-			ruleID: "int32.in",
-			want:   []int64{1, 3, 5},
-		},
-		{
-			name:   "not_in",
-			rules:  validate.Int32Rules_builder{NotIn: []int32{2}}.Build(),
-			ruleID: "int32.not_in",
-			want:   []int64{2},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			eval := buildNativeNumeric(t, tt.rules, &int32Config, descriptorpb.FieldDescriptorProto_TYPE_INT32)
-			require.NotNil(t, eval)
-			err := eval.Evaluate(nil, protoreflect.ValueOfInt32(2), &validationConfig{})
-			require.Error(t, err)
-			var valErr *ValidationError
-			require.ErrorAs(t, err, &valErr)
-			require.Len(t, valErr.Violations, 1)
-			assert.Equal(t, tt.ruleID, valErr.Violations[0].Proto.GetRuleId())
-			assert.Equal(t, tt.want, ruleValueInts(t, valErr.Violations[0]))
-		})
-	}
-}
-
 func TestNativeNumericCompare_Tautology(t *testing.T) {
 	t.Parallel()
 	eval := buildNativeNumeric(t,

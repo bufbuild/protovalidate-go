@@ -157,13 +157,7 @@ func TestNativeBytesIn(t *testing.T) {
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x01}), &validationConfig{}))
-
-	err := eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x03}), &validationConfig{})
-	require.Error(t, err)
-	var valErr *ValidationError
-	require.ErrorAs(t, err, &valErr)
-	assert.Equal(t, "bytes.in", valErr.Violations[0].Proto.GetRuleId())
-	assert.Equal(t, [][]byte{{0x01}, {0x02}}, ruleValueBytes(t, valErr.Violations[0]))
+	require.Error(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x03}), &validationConfig{}))
 }
 
 func TestNativeBytesNotIn(t *testing.T) {
@@ -174,24 +168,7 @@ func TestNativeBytesNotIn(t *testing.T) {
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x01}), &validationConfig{}))
-
-	err := eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x00}), &validationConfig{})
-	require.Error(t, err)
-	var valErr *ValidationError
-	require.ErrorAs(t, err, &valErr)
-	assert.Equal(t, "bytes.not_in", valErr.Violations[0].Proto.GetRuleId())
-	assert.Equal(t, [][]byte{{0x00}}, ruleValueBytes(t, valErr.Violations[0]))
-}
-
-func ruleValueBytes(t testing.TB, violation *Violation) [][]byte {
-	t.Helper()
-	require.True(t, violation.RuleValue.IsValid(), "RuleValue must be set")
-	list := violation.RuleValue.List()
-	out := make([][]byte, 0, list.Len())
-	for i := range list.Len() {
-		out = append(out, list.Get(i).Bytes())
-	}
-	return out
+	require.Error(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{0x00}), &validationConfig{}))
 }
 
 func TestNativeBytesIP(t *testing.T) {

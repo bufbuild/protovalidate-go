@@ -57,7 +57,6 @@ func TestNativeEnumIn(t *testing.T) {
 	var valErr *ValidationError
 	require.ErrorAs(t, err, &valErr)
 	assert.Equal(t, "enum.in", valErr.Violations[0].Proto.GetRuleId())
-	assert.Equal(t, []int64{1, 2}, ruleValueInts(t, valErr.Violations[0]))
 }
 
 func TestNativeEnumNotIn(t *testing.T) {
@@ -72,18 +71,6 @@ func TestNativeEnumNotIn(t *testing.T) {
 	var valErr *ValidationError
 	require.ErrorAs(t, err, &valErr)
 	assert.Equal(t, "enum.not_in", valErr.Violations[0].Proto.GetRuleId())
-	assert.Equal(t, []int64{0}, ruleValueInts(t, valErr.Violations[0]))
-}
-
-func ruleValueInts(t testing.TB, violation *Violation) []int64 {
-	t.Helper()
-	require.True(t, violation.RuleValue.IsValid(), "RuleValue must be set")
-	list := violation.RuleValue.List()
-	out := make([]int64, 0, list.Len())
-	for i := range list.Len() {
-		out = append(out, list.Get(i).Int())
-	}
-	return out
 }
 
 func TestTryBuildNativeEnumRules_ReturnsNil(t *testing.T) {

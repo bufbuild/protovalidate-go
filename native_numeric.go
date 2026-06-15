@@ -555,7 +555,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		violations = append(violations, n.newViolation(n.config.descs.finiteSite,
 			n.config.typeName+".finite",
 			"must be finite",
-			val, n.config.makeRuleVal(valT)))
+			val, protoreflect.ValueOfBool(true)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}

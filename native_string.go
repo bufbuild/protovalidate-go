@@ -517,12 +517,12 @@ func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) 
 	if rule.emptySite.ruleID != nil && strVal == "" {
 		return []*Violation{n.newViolation(rule.emptySite,
 			"", "",
-			val, protoreflect.ValueOfString(strVal))}
+			val, protoreflect.ValueOfBool(true))}
 	}
 	if !rule.validate(strVal) {
 		return []*Violation{n.newViolation(rule.site,
 			"", "",
-			val, protoreflect.ValueOfString(strVal))}
+			val, protoreflect.ValueOfBool(true))}
 	}
 	return nil
 }
@@ -533,6 +533,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 	// if yes, check whether this is a name or value and use the correct strict rule
 	// ^:?[0-9a-zA-Z!#$%&\\'*+-.^_|~\\x60]+$ for name
 	// ^[^\u0000-\u0008\u000A-\u001F\u007F]*$ for value
+	ruleValue := protoreflect.ValueOfEnum(protoreflect.EnumNumber(n.knownRegex))
 	var matcher *regexp.Regexp
 	var rule string
 	var msg string
@@ -541,7 +542,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 		if strVal == "" {
 			return []*Violation{n.newViolation(strDescs.wellKnownRegexSite,
 				"string.well_known_regex.header_name_empty", "value is empty, which is not a valid HTTP header name",
-				val, protoreflect.ValueOfString(strVal))}
+				val, ruleValue)}
 		}
 		matcher = headerNameRegexp
 		rule = "string.well_known_regex.header_name"
@@ -559,7 +560,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 	if !matcher.MatchString(strVal) {
 		return []*Violation{n.newViolation(strDescs.wellKnownRegexSite,
 			rule, msg,
-			val, protoreflect.ValueOfString(strVal))}
+			val, ruleValue)}
 	}
 	return nil
 }
