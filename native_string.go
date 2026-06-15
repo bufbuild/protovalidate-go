@@ -151,14 +151,22 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 		hasRule = true
 	}
 
-	var inVals []string
+	var (
+		inVals      []string
+		inRuleValue protoreflect.Value
+	)
 	if inVals = rules.GetIn(); len(inVals) > 0 {
+		inRuleValue = newListRuleValue(rules.ProtoReflect(), strDescs.inSite.desc, inVals, protoreflect.ValueOfString)
 		rules.ProtoReflect().Clear(strDescs.inSite.desc)
 		hasRule = true
 	}
 
-	var notInVals []string
+	var (
+		notInVals      []string
+		notInRuleValue protoreflect.Value
+	)
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		notInRuleValue = newListRuleValue(rules.ProtoReflect(), strDescs.notInSite.desc, notInVals, protoreflect.ValueOfString)
 		rules.ProtoReflect().Clear(strDescs.notInSite.desc)
 		hasRule = true
 	}
@@ -168,25 +176,27 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 	}
 
 	return nativeStringEval{
-		base:          base,
-		constVal:      constVal,
-		inVals:        inVals,
-		notInVals:     notInVals,
-		exactLen:      exactLen,
-		minLen:        minLen,
-		maxLen:        maxLen,
-		exactBytes:    exactBytes,
-		minBytes:      minBytes,
-		maxBytes:      maxBytes,
-		pattern:       compiledPattern,
-		patternStr:    patternStr,
-		prefix:        prefix,
-		suffix:        suffix,
-		contains:      containsVal,
-		notContains:   notContains,
-		wellKnownRule: wellKnownRule,
-		knownRegex:    knownRegex,
-		strict:        strict,
+		base:           base,
+		constVal:       constVal,
+		inVals:         inVals,
+		inRuleValue:    inRuleValue,
+		notInVals:      notInVals,
+		notInRuleValue: notInRuleValue,
+		exactLen:       exactLen,
+		minLen:         minLen,
+		maxLen:         maxLen,
+		exactBytes:     exactBytes,
+		minBytes:       minBytes,
+		maxBytes:       maxBytes,
+		pattern:        compiledPattern,
+		patternStr:     patternStr,
+		prefix:         prefix,
+		suffix:         suffix,
+		contains:       containsVal,
+		notContains:    notContains,
+		wellKnownRule:  wellKnownRule,
+		knownRegex:     knownRegex,
+		strict:         strict,
 	}
 }
 
@@ -358,24 +368,26 @@ var (
 // max_bytes, pattern, prefix, suffix, contains, and not_contains.
 type nativeStringEval struct {
 	base
-	constVal      *string
-	inVals        []string
-	notInVals     []string
-	exactLen      *uint64
-	minLen        *uint64
-	maxLen        *uint64
-	exactBytes    *uint64
-	minBytes      *uint64
-	maxBytes      *uint64
-	pattern       *regexp.Regexp
-	patternStr    string
-	prefix        *string
-	suffix        *string
-	contains      *string
-	notContains   *string
-	wellKnownRule *stringWellKnownRule
-	knownRegex    validate.KnownRegex
-	strict        bool
+	constVal       *string
+	inVals         []string
+	inRuleValue    protoreflect.Value
+	notInVals      []string
+	notInRuleValue protoreflect.Value
+	exactLen       *uint64
+	minLen         *uint64
+	maxLen         *uint64
+	exactBytes     *uint64
+	minBytes       *uint64
+	maxBytes       *uint64
+	pattern        *regexp.Regexp
+	patternStr     string
+	prefix         *string
+	suffix         *string
+	contains       *string
+	notContains    *string
+	wellKnownRule  *stringWellKnownRule
+	knownRegex     validate.KnownRegex
+	strict         bool
 }
 
 //nolint:gocyclo // this code has nested ifs but it's not hard to follow.
@@ -460,7 +472,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	if len(n.inVals) > 0 && !slices.Contains(n.inVals, strVal) {
 		violations = append(violations, n.newViolation(strDescs.inSite,
 			"string.in", "must be in list "+formatStringList(n.inVals),
-			val, protoreflect.ValueOfString(strVal)))
+			val, n.inRuleValue))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations[:1]}
 		}
@@ -469,7 +481,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	if len(n.notInVals) > 0 && slices.Contains(n.notInVals, strVal) {
 		violations = append(violations, n.newViolation(strDescs.notInSite,
 			"string.not_in", "must not be in list "+formatStringList(n.notInVals),
-			val, protoreflect.ValueOfString(strVal)))
+			val, n.notInRuleValue))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations[:1]}
 		}

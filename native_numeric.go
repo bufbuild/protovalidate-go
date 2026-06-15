@@ -184,14 +184,22 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 		hasRule = true
 	}
 
-	var inVals []T
+	var (
+		inVals      []T
+		inRuleValue protoreflect.Value
+	)
 	if inVals = rules.GetIn(); len(inVals) > 0 {
+		inRuleValue = newListRuleValue(rules.ProtoReflect(), config.descs.inSite.desc, inVals, config.makeRuleVal)
 		rules.ProtoReflect().Clear(config.descs.inSite.desc)
 		hasRule = true
 	}
 
-	var notInVals []T
+	var (
+		notInVals      []T
+		notInRuleValue protoreflect.Value
+	)
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
+		notInRuleValue = newListRuleValue(rules.ProtoReflect(), config.descs.notInSite.desc, notInVals, config.makeRuleVal)
 		rules.ProtoReflect().Clear(config.descs.notInSite.desc)
 		hasRule = true
 	}
@@ -213,16 +221,18 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	}
 
 	return nativeNumericCompare[T]{
-		base:      base,
-		config:    config,
-		lo:        lowerValue,
-		lower:     lower,
-		hi:        upperValue,
-		upper:     upper,
-		constVal:  constVal,
-		inVals:    inVals,
-		notInVals: notInVals,
-		finite:    finite,
+		base:           base,
+		config:         config,
+		lo:             lowerValue,
+		lower:          lower,
+		hi:             upperValue,
+		upper:          upper,
+		constVal:       constVal,
+		inVals:         inVals,
+		inRuleValue:    inRuleValue,
+		notInVals:      notInVals,
+		notInRuleValue: notInRuleValue,
+		finite:         finite,
 	}
 }
 
@@ -412,6 +422,9 @@ type nativeNumericCompare[T numericValue] struct {
 	inVals    []T        // slice of values for IN comparison
 	notInVals []T        // slice of values for NOT_IN comparison
 	finite    bool       // true if the value is finite (not NaN or Infinity)
+	// inRuleValue and notInRuleValue are used as the Violation.RuleValue for in/not_in.
+	inRuleValue    protoreflect.Value
+	notInRuleValue protoreflect.Value
 }
 
 // belowLo reports whether v violates the lower bound.
@@ -522,7 +535,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		violations = append(violations, n.newViolation(n.config.descs.inSite,
 			n.config.typeName+".in",
 			"must be in list "+formatList(n.inVals),
-			val, n.config.makeRuleVal(valT)))
+			val, n.inRuleValue))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}
@@ -532,7 +545,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		violations = append(violations, n.newViolation(n.config.descs.notInSite,
 			n.config.typeName+".not_in",
 			"must not be in list "+formatList(n.notInVals),
-			val, n.config.makeRuleVal(valT)))
+			val, n.notInRuleValue))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}

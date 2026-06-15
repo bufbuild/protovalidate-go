@@ -139,6 +139,19 @@ func (b *base) newViolation(
 	}
 }
 
+func newListRuleValue[T any](
+	msg protoreflect.Message,
+	desc protoreflect.FieldDescriptor,
+	vals []T,
+	conv func(T) protoreflect.Value,
+) protoreflect.Value {
+	list := msg.NewField(desc).List()
+	for _, val := range vals {
+		list.Append(conv(val))
+	}
+	return protoreflect.ValueOfList(list)
+}
+
 func prefixRulePath(prefix *validate.FieldPath, suffix *validate.FieldPath) *validate.FieldPath {
 	if len(prefix.GetElements()) > 0 {
 		return validate.FieldPath_builder{
