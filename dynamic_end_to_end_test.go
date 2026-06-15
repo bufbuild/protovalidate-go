@@ -593,3 +593,253 @@ func newDynamicMessageTypeWithEnum(
 
 	return dynamicpb.NewMessageType(desc)
 }
+
+// TestNativeRuleValueMatchesCEL is a differential test that validates the same
+// failing message through the native evaluators and through CEL
+// (WithDisableNativeRules), then asserts that every violation's RuleValue is
+// identical between the two. The CEL path is the source of truth for the
+// RuleValue contract, so any native evaluator that reports the wrong RuleValue
+// (e.g. the field value instead of the rule value) is caught here.
+func TestNativeRuleValueMatchesCEL(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name  string
+		setup func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message)
+	}{
+		// numeric: const, in, not_in, comparison thresholds, finite.
+		{"int32_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_INT32,
+			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Const: proto.Int32(5)}.Build()}.Build(),
+			protoreflect.ValueOfInt32(4))},
+		{"int32_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_INT32,
+			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{In: []int32{1, 2, 3}}.Build()}.Build(),
+			protoreflect.ValueOfInt32(9))},
+		{"int32_not_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_INT32,
+			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{NotIn: []int32{7}}.Build()}.Build(),
+			protoreflect.ValueOfInt32(7))},
+		{"int32_gt", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_INT32,
+			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gt: proto.Int32(0)}.Build()}.Build(),
+			protoreflect.ValueOfInt32(-1))},
+		{"int32_gt_lt", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_INT32,
+			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gt: proto.Int32(0), Lt: proto.Int32(10)}.Build()}.Build(),
+			protoreflect.ValueOfInt32(20))},
+		{"double_finite", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_DOUBLE,
+			validate.FieldRules_builder{Double: validate.DoubleRules_builder{Finite: proto.Bool(true)}.Build()}.Build(),
+			protoreflect.ValueOfFloat64(math.Inf(1)))},
+
+		// string: const, in, not_in, prefix/suffix/contains/not_contains,
+		// pattern, length (rune + byte), well-known format, well_known_regex.
+		{"string_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Const: proto.String("a")}.Build()}.Build(),
+			protoreflect.ValueOfString("b"))},
+		{"string_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{In: []string{"a", "b"}}.Build()}.Build(),
+			protoreflect.ValueOfString("z"))},
+		{"string_not_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{NotIn: []string{"z"}}.Build()}.Build(),
+			protoreflect.ValueOfString("z"))},
+		{"string_prefix", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Prefix: proto.String("foo")}.Build()}.Build(),
+			protoreflect.ValueOfString("bar"))},
+		{"string_suffix", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Suffix: proto.String("bar")}.Build()}.Build(),
+			protoreflect.ValueOfString("foo"))},
+		{"string_contains", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Contains: proto.String("mid")}.Build()}.Build(),
+			protoreflect.ValueOfString("absent"))},
+		{"string_not_contains", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{NotContains: proto.String("bad")}.Build()}.Build(),
+			protoreflect.ValueOfString("badger"))},
+		{"string_pattern", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Pattern: proto.String("^[a-z]+$")}.Build()}.Build(),
+			protoreflect.ValueOfString("123"))},
+		{"string_min_len", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{MinLen: proto.Uint64(5)}.Build()}.Build(),
+			protoreflect.ValueOfString("ab"))},
+		{"string_min_bytes", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{MinBytes: proto.Uint64(5)}.Build()}.Build(),
+			protoreflect.ValueOfString("ab"))},
+		{"string_email", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Email: proto.Bool(true)}.Build()}.Build(),
+			protoreflect.ValueOfString("not-an-email"))},
+		{"string_uuid", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{Uuid: proto.Bool(true)}.Build()}.Build(),
+			protoreflect.ValueOfString("not-a-uuid"))},
+		{"string_well_known_regex", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+			validate.FieldRules_builder{String: validate.StringRules_builder{
+				WellKnownRegex: validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME.Enum(),
+				Strict:         proto.Bool(true),
+			}.Build()}.Build(),
+			protoreflect.ValueOfString("bad header"))},
+
+		// bytes: const, in, not_in, length, prefix, well-known format.
+		{"bytes_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Const: []byte{0x01}}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x02}))},
+		{"bytes_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{In: [][]byte{{0x01}, {0x02}}}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x09}))},
+		{"bytes_not_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{NotIn: [][]byte{{0x07}}}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x07}))},
+		{"bytes_min_len", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{MinLen: proto.Uint64(4)}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x01}))},
+		{"bytes_prefix", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Prefix: []byte{0x0a}}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x0b}))},
+		{"bytes_ip", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Ip: proto.Bool(true)}.Build()}.Build(),
+			protoreflect.ValueOfBytes([]byte{0x01, 0x02, 0x03}))},
+
+		// bool: const.
+		{"bool_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BOOL,
+			validate.FieldRules_builder{Bool: validate.BoolRules_builder{Const: proto.Bool(true)}.Build()}.Build(),
+			protoreflect.ValueOfBool(false))},
+
+		// repeated: min_items/max_items (uint64) and unique (bool).
+		{"repeated_min_items", repeatedRuleValueCase(
+			validate.FieldRules_builder{Repeated: validate.RepeatedRules_builder{MinItems: proto.Uint64(3)}.Build()}.Build(),
+			[]int32{1})},
+		{"repeated_unique", repeatedRuleValueCase(
+			validate.FieldRules_builder{Repeated: validate.RepeatedRules_builder{Unique: proto.Bool(true)}.Build()}.Build(),
+			[]int32{1, 1})},
+
+		// enum: const, in, not_in.
+		{"enum_const", enumRuleValueCase(
+			validate.EnumRules_builder{Const: proto.Int32(1)}.Build(), 2)},
+		{"enum_in", enumRuleValueCase(
+			validate.EnumRules_builder{In: []int32{1, 2}}.Build(), 0)},
+		{"enum_not_in", enumRuleValueCase(
+			validate.EnumRules_builder{NotIn: []int32{0}}.Build(), 0)},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			msgType, msg := tt.setup(t)
+			native := violationsFor(t, msgType, msg, false)
+			cel := violationsFor(t, msgType, msg, true)
+
+			require.Len(t, native, len(cel), "violation count differs between CEL and native")
+			for i := range native {
+				assert.Equal(t, cel[i].Proto.GetRuleId(), native[i].Proto.GetRuleId(),
+					"violation[%d] rule ID differs", i)
+				assert.Equal(t, canonicalRuleValue(cel[i].RuleValue), canonicalRuleValue(native[i].RuleValue),
+					"violation[%d] (%s) RuleValue differs between CEL and native",
+					i, native[i].Proto.GetRuleId())
+			}
+		})
+	}
+}
+
+func scalarRuleValueCase(
+	typ descriptorpb.FieldDescriptorProto_Type,
+	rule *validate.FieldRules,
+	bad protoreflect.Value,
+) func(testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+		t.Helper()
+		msgType := newDynamicMessageType(t, "test.rulevalue", "Msg", &descriptorpb.FieldDescriptorProto{
+			Name:    proto.String("value"),
+			Number:  proto.Int32(1),
+			Type:    typ.Enum(),
+			Label:   descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+			Options: fieldOpts(rule),
+		})
+		msg := dynamicpb.NewMessage(msgType.Descriptor())
+		msg.Set(msgType.Descriptor().Fields().ByName("value"), bad)
+		return msgType, msg
+	}
+}
+
+func repeatedRuleValueCase(
+	rule *validate.FieldRules,
+	bad []int32,
+) func(testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+		t.Helper()
+		msgType := newDynamicMessageType(t, "test.rulevalue", "Msg", &descriptorpb.FieldDescriptorProto{
+			Name:    proto.String("value"),
+			Number:  proto.Int32(1),
+			Type:    descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
+			Label:   descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
+			Options: fieldOpts(rule),
+		})
+		msg := dynamicpb.NewMessage(msgType.Descriptor())
+		list := msg.Mutable(msgType.Descriptor().Fields().ByName("value")).List()
+		for _, v := range bad {
+			list.Append(protoreflect.ValueOfInt32(v))
+		}
+		return msgType, msg
+	}
+}
+
+func enumRuleValueCase(
+	rule *validate.EnumRules,
+	bad protoreflect.EnumNumber,
+) func(testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
+		t.Helper()
+		enumDesc := &descriptorpb.EnumDescriptorProto{
+			Name: proto.String("Enum"),
+			Value: []*descriptorpb.EnumValueDescriptorProto{
+				{Name: proto.String("ENUM_UNSPECIFIED"), Number: proto.Int32(0)},
+				{Name: proto.String("ENUM_A"), Number: proto.Int32(1)},
+				{Name: proto.String("ENUM_B"), Number: proto.Int32(2)},
+			},
+		}
+		msgType := newDynamicMessageTypeWithEnum(t, "test.rulevalue", "Msg", enumDesc, &descriptorpb.FieldDescriptorProto{
+			Name:     proto.String("value"),
+			Number:   proto.Int32(1),
+			Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
+			TypeName: proto.String(".test.rulevalue.Enum"),
+			Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+			Options:  fieldOpts(validate.FieldRules_builder{Enum: rule}.Build()),
+		})
+		msg := dynamicpb.NewMessage(msgType.Descriptor())
+		msg.Set(msgType.Descriptor().Fields().ByName("value"), protoreflect.ValueOfEnum(bad))
+		return msgType, msg
+	}
+}
+
+func violationsFor(
+	t testing.TB,
+	msgType protoreflect.MessageType,
+	msg *dynamicpb.Message,
+	disableNativeRules bool,
+) []*Violation {
+	t.Helper()
+	options := []ValidatorOption{WithDisableLazy(), WithMessageDescriptors(msgType.Descriptor())}
+	if disableNativeRules {
+		options = append(options, WithDisableNativeRules())
+	}
+	validator, err := New(options...)
+	require.NoError(t, err)
+
+	err = validator.Validate(msg)
+	require.Error(t, err)
+	var valErr *ValidationError
+	require.ErrorAs(t, err, &valErr)
+	return valErr.Violations
+}
+
+func canonicalRuleValue(v protoreflect.Value) any {
+	if !v.IsValid() {
+		return nil
+	}
+	switch val := v.Interface().(type) {
+	case protoreflect.List:
+		out := make([]any, val.Len())
+		for i := range val.Len() {
+			out[i] = canonicalRuleValue(val.Get(i))
+		}
+		return out
+	case []byte:
+		return string(val)
+	case protoreflect.EnumNumber:
+		return int64(val)
+	default:
+		return val
+	}
+}

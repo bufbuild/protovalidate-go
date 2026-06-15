@@ -101,7 +101,7 @@ var enumProcessors = []enumProcessor{
 		if len(n.inVals) > 0 && !slices.Contains(n.inVals, enumVal) {
 			return n.newViolation(enumInSite,
 				"enum.in", "must be in list "+formatList(n.inVals),
-				val, protoreflect.ValueOfInt32(enumVal))
+				val, sliceToListValue(&validate.EnumRules{}, enumInSite.desc, n.inVals, protoreflect.ValueOfInt32))
 		}
 		return nil
 	},
@@ -110,7 +110,7 @@ var enumProcessors = []enumProcessor{
 		if len(n.notInVals) > 0 && slices.Contains(n.notInVals, enumVal) {
 			return n.newViolation(enumNotInSite,
 				"enum.not_in", "must not be in list "+formatList(n.notInVals),
-				val, protoreflect.ValueOfInt32(enumVal))
+				val, sliceToListValue(&validate.EnumRules{}, enumNotInSite.desc, n.notInVals, protoreflect.ValueOfInt32))
 		}
 		return nil
 	},

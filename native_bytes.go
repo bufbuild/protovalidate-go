@@ -362,7 +362,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	if len(n.inVals) > 0 && !slices.ContainsFunc(n.inVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
 		violations = append(violations, n.newViolation(bytesDescs.inSite,
 			"bytes.in", "must be in list "+formatBytesList(n.inVals),
-			val, protoreflect.ValueOfBytes(bytesVal)))
+			val, sliceToListValue(&validate.BytesRules{}, bytesDescs.inSite.desc, n.inVals, protoreflect.ValueOfBytes)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}
@@ -371,7 +371,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	if len(n.notInVals) > 0 && slices.ContainsFunc(n.notInVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
 		violations = append(violations, n.newViolation(bytesDescs.notInSite,
 			"bytes.not_in", "must not be in list "+formatBytesList(n.notInVals),
-			val, protoreflect.ValueOfBytes(bytesVal)))
+			val, sliceToListValue(&validate.BytesRules{}, bytesDescs.notInSite.desc, n.notInVals, protoreflect.ValueOfBytes)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}
