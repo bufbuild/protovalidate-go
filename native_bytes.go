@@ -132,22 +132,14 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 		hasRule = true
 	}
 
-	var (
-		inVals      [][]byte
-		inRuleValue protoreflect.Value
-	)
+	var inVals [][]byte
 	if inVals = rules.GetIn(); len(inVals) > 0 {
-		inRuleValue = newListRuleValue(rules.ProtoReflect(), bytesDescs.inSite.desc, inVals, protoreflect.ValueOfBytes)
 		rules.ProtoReflect().Clear(bytesDescs.inSite.desc)
 		hasRule = true
 	}
 
-	var (
-		notInVals      [][]byte
-		notInRuleValue protoreflect.Value
-	)
+	var notInVals [][]byte
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		notInRuleValue = newListRuleValue(rules.ProtoReflect(), bytesDescs.notInSite.desc, notInVals, protoreflect.ValueOfBytes)
 		rules.ProtoReflect().Clear(bytesDescs.notInSite.desc)
 		hasRule = true
 	}
@@ -157,25 +149,23 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 	}
 
 	return nativeBytesEval{
-		base:           base,
-		constVal:       constVal,
-		hasConst:       hasConst,
-		exactLen:       exactLen,
-		minLen:         minLen,
-		maxLen:         maxLen,
-		pattern:        compiledPattern,
-		patternStr:     patternStr,
-		prefix:         prefix,
-		hasPrefix:      hasPrefix,
-		suffix:         suffix,
-		hasSuffix:      hasSuffix,
-		contains:       contains,
-		hasContains:    hasContains,
-		inVals:         inVals,
-		inRuleValue:    inRuleValue,
-		notInVals:      notInVals,
-		notInRuleValue: notInRuleValue,
-		wellKnown:      wellKnown,
+		base:        base,
+		constVal:    constVal,
+		hasConst:    hasConst,
+		exactLen:    exactLen,
+		minLen:      minLen,
+		maxLen:      maxLen,
+		pattern:     compiledPattern,
+		patternStr:  patternStr,
+		prefix:      prefix,
+		hasPrefix:   hasPrefix,
+		suffix:      suffix,
+		hasSuffix:   hasSuffix,
+		contains:    contains,
+		hasContains: hasContains,
+		inVals:      inVals,
+		notInVals:   notInVals,
+		wellKnown:   wellKnown,
 	}
 }
 
@@ -264,24 +254,22 @@ var _ evaluator = nativeBytesEval{}
 // nativeBytesEval is a native Go evaluator for bytes rules.
 type nativeBytesEval struct {
 	base
-	constVal       []byte
-	hasConst       bool
-	exactLen       *uint64
-	minLen         uint64
-	maxLen         uint64
-	pattern        *regexp.Regexp
-	patternStr     string
-	prefix         []byte
-	hasPrefix      bool
-	suffix         []byte
-	hasSuffix      bool
-	contains       []byte
-	hasContains    bool
-	inVals         [][]byte
-	inRuleValue    protoreflect.Value
-	notInVals      [][]byte
-	notInRuleValue protoreflect.Value
-	wellKnown      *bytesWellKnown
+	constVal    []byte
+	hasConst    bool
+	exactLen    *uint64
+	minLen      uint64
+	maxLen      uint64
+	pattern     *regexp.Regexp
+	patternStr  string
+	prefix      []byte
+	hasPrefix   bool
+	suffix      []byte
+	hasSuffix   bool
+	contains    []byte
+	hasContains bool
+	inVals      [][]byte
+	notInVals   [][]byte
+	wellKnown   *bytesWellKnown
 }
 
 var errNotUTF8 = errors.New("must be valid UTF-8 to apply regexp")
@@ -374,7 +362,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	if len(n.inVals) > 0 && !slices.ContainsFunc(n.inVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
 		violations = append(violations, n.newViolation(bytesDescs.inSite,
 			"bytes.in", "must be in list "+formatBytesList(n.inVals),
-			val, n.inRuleValue))
+			val, sliceToListValue(&validate.BytesRules{}, bytesDescs.inSite.desc, n.inVals, protoreflect.ValueOfBytes)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}
@@ -383,7 +371,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	if len(n.notInVals) > 0 && slices.ContainsFunc(n.notInVals, func(v []byte) bool { return bytes.Equal(v, bytesVal) }) {
 		violations = append(violations, n.newViolation(bytesDescs.notInSite,
 			"bytes.not_in", "must not be in list "+formatBytesList(n.notInVals),
-			val, n.notInRuleValue))
+			val, sliceToListValue(&validate.BytesRules{}, bytesDescs.notInSite.desc, n.notInVals, protoreflect.ValueOfBytes)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}

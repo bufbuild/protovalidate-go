@@ -139,13 +139,13 @@ func (b *base) newViolation(
 	}
 }
 
-func newListRuleValue[T any](
-	msg protoreflect.Message,
+func sliceToListValue[T any](
+	msg proto.Message,
 	desc protoreflect.FieldDescriptor,
 	vals []T,
 	conv func(T) protoreflect.Value,
 ) protoreflect.Value {
-	list := msg.NewField(desc).List()
+	list := msg.ProtoReflect().Mutable(desc).List()
 	for _, val := range vals {
 		list.Append(conv(val))
 	}

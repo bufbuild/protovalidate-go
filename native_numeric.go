@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -184,22 +185,14 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 		hasRule = true
 	}
 
-	var (
-		inVals      []T
-		inRuleValue protoreflect.Value
-	)
+	var inVals []T
 	if inVals = rules.GetIn(); len(inVals) > 0 {
-		inRuleValue = newListRuleValue(rules.ProtoReflect(), config.descs.inSite.desc, inVals, config.makeRuleVal)
 		rules.ProtoReflect().Clear(config.descs.inSite.desc)
 		hasRule = true
 	}
 
-	var (
-		notInVals      []T
-		notInRuleValue protoreflect.Value
-	)
+	var notInVals []T
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		notInRuleValue = newListRuleValue(rules.ProtoReflect(), config.descs.notInSite.desc, notInVals, config.makeRuleVal)
 		rules.ProtoReflect().Clear(config.descs.notInSite.desc)
 		hasRule = true
 	}
@@ -221,18 +214,16 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 	}
 
 	return nativeNumericCompare[T]{
-		base:           base,
-		config:         config,
-		lo:             lowerValue,
-		lower:          lower,
-		hi:             upperValue,
-		upper:          upper,
-		constVal:       constVal,
-		inVals:         inVals,
-		inRuleValue:    inRuleValue,
-		notInVals:      notInVals,
-		notInRuleValue: notInRuleValue,
-		finite:         finite,
+		base:      base,
+		config:    config,
+		lo:        lowerValue,
+		lower:     lower,
+		hi:        upperValue,
+		upper:     upper,
+		constVal:  constVal,
+		inVals:    inVals,
+		notInVals: notInVals,
+		finite:    finite,
 	}
 }
 
@@ -304,6 +295,7 @@ type numericTypeConfig[T numericValue] struct {
 	descs         numericDescriptors         // descriptor bundle for rule path construction
 	extractVal    func(protoreflect.Value) T // val.Int/Uint/Float + cast
 	makeRuleVal   func(T) protoreflect.Value // ValueOfInt32, ValueOfFloat32, etc.
+	newRules      func() proto.Message       // fresh rules message, used to build in/not_in rule values
 	nanFailsRange bool                       // true only for float32, float64
 }
 
@@ -314,66 +306,77 @@ var (
 		descs:       makeNumericDescriptors("int32", (*validate.Int32Rules)(nil), "int32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
+		newRules:    func() proto.Message { return &validate.Int32Rules{} },
 	}
 	sint32Config = numericTypeConfig[int32]{
 		typeName:    "sint32",
 		descs:       makeNumericDescriptors("sint32", (*validate.SInt32Rules)(nil), "sint32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
+		newRules:    func() proto.Message { return &validate.SInt32Rules{} },
 	}
 	sfixed32Config = numericTypeConfig[int32]{
 		typeName:    "sfixed32",
 		descs:       makeNumericDescriptors("sfixed32", (*validate.SFixed32Rules)(nil), "sfixed32"),
 		extractVal:  func(v protoreflect.Value) int32 { return int32(v.Int()) },
 		makeRuleVal: protoreflect.ValueOfInt32,
+		newRules:    func() proto.Message { return &validate.SFixed32Rules{} },
 	}
 	int64Config = numericTypeConfig[int64]{
 		typeName:    "int64",
 		descs:       makeNumericDescriptors("int64", (*validate.Int64Rules)(nil), "int64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
+		newRules:    func() proto.Message { return &validate.Int64Rules{} },
 	}
 	sint64Config = numericTypeConfig[int64]{
 		typeName:    "sint64",
 		descs:       makeNumericDescriptors("sint64", (*validate.SInt64Rules)(nil), "sint64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
+		newRules:    func() proto.Message { return &validate.SInt64Rules{} },
 	}
 	sfixed64Config = numericTypeConfig[int64]{
 		typeName:    "sfixed64",
 		descs:       makeNumericDescriptors("sfixed64", (*validate.SFixed64Rules)(nil), "sfixed64"),
 		extractVal:  func(v protoreflect.Value) int64 { return v.Int() },
 		makeRuleVal: protoreflect.ValueOfInt64,
+		newRules:    func() proto.Message { return &validate.SFixed64Rules{} },
 	}
 	uint32Config = numericTypeConfig[uint32]{
 		typeName:    "uint32",
 		descs:       makeNumericDescriptors("uint32", (*validate.UInt32Rules)(nil), "uint32"),
 		extractVal:  func(v protoreflect.Value) uint32 { return uint32(v.Uint()) },
 		makeRuleVal: protoreflect.ValueOfUint32,
+		newRules:    func() proto.Message { return &validate.UInt32Rules{} },
 	}
 	fixed32Config = numericTypeConfig[uint32]{
 		typeName:    "fixed32",
 		descs:       makeNumericDescriptors("fixed32", (*validate.Fixed32Rules)(nil), "fixed32"),
 		extractVal:  func(v protoreflect.Value) uint32 { return uint32(v.Uint()) },
 		makeRuleVal: protoreflect.ValueOfUint32,
+		newRules:    func() proto.Message { return &validate.Fixed32Rules{} },
 	}
 	uint64Config = numericTypeConfig[uint64]{
 		typeName:    "uint64",
 		descs:       makeNumericDescriptors("uint64", (*validate.UInt64Rules)(nil), "uint64"),
 		extractVal:  func(v protoreflect.Value) uint64 { return v.Uint() },
 		makeRuleVal: protoreflect.ValueOfUint64,
+		newRules:    func() proto.Message { return &validate.UInt64Rules{} },
 	}
 	fixed64Config = numericTypeConfig[uint64]{
 		typeName:    "fixed64",
 		descs:       makeNumericDescriptors("fixed64", (*validate.Fixed64Rules)(nil), "fixed64"),
 		extractVal:  func(v protoreflect.Value) uint64 { return v.Uint() },
 		makeRuleVal: protoreflect.ValueOfUint64,
+		newRules:    func() proto.Message { return &validate.Fixed64Rules{} },
 	}
 	floatConfig = numericTypeConfig[float32]{
 		typeName:      "float",
 		descs:         makeNumericDescriptors("float", (*validate.FloatRules)(nil), "float"),
 		extractVal:    func(v protoreflect.Value) float32 { return float32(v.Float()) },
 		makeRuleVal:   protoreflect.ValueOfFloat32,
+		newRules:      func() proto.Message { return &validate.FloatRules{} },
 		nanFailsRange: true,
 	}
 	doubleConfig = numericTypeConfig[float64]{
@@ -381,6 +384,7 @@ var (
 		descs:         makeNumericDescriptors("double", (*validate.DoubleRules)(nil), "double"),
 		extractVal:    func(v protoreflect.Value) float64 { return v.Float() },
 		makeRuleVal:   protoreflect.ValueOfFloat64,
+		newRules:      func() proto.Message { return &validate.DoubleRules{} },
 		nanFailsRange: true,
 	}
 )
@@ -422,9 +426,6 @@ type nativeNumericCompare[T numericValue] struct {
 	inVals    []T        // slice of values for IN comparison
 	notInVals []T        // slice of values for NOT_IN comparison
 	finite    bool       // true if the value is finite (not NaN or Infinity)
-	// inRuleValue and notInRuleValue are used as the Violation.RuleValue for in/not_in.
-	inRuleValue    protoreflect.Value
-	notInRuleValue protoreflect.Value
 }
 
 // belowLo reports whether v violates the lower bound.
@@ -535,7 +536,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		violations = append(violations, n.newViolation(n.config.descs.inSite,
 			n.config.typeName+".in",
 			"must be in list "+formatList(n.inVals),
-			val, n.inRuleValue))
+			val, sliceToListValue(n.config.newRules(), n.config.descs.inSite.desc, n.inVals, n.config.makeRuleVal)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}
@@ -545,7 +546,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		violations = append(violations, n.newViolation(n.config.descs.notInSite,
 			n.config.typeName+".not_in",
 			"must not be in list "+formatList(n.notInVals),
-			val, n.notInRuleValue))
+			val, sliceToListValue(n.config.newRules(), n.config.descs.notInSite.desc, n.notInVals, n.config.makeRuleVal)))
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}

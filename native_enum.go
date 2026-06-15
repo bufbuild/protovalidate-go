@@ -49,22 +49,14 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
 		hasRule = true
 	}
 
-	var (
-		inVals      []int32
-		inRuleValue protoreflect.Value
-	)
+	var inVals []int32
 	if inVals = rules.GetIn(); len(inVals) > 0 {
-		inRuleValue = newListRuleValue(rules.ProtoReflect(), enumInSite.desc, inVals, protoreflect.ValueOfInt32)
 		rules.ProtoReflect().Clear(enumInSite.desc)
 		hasRule = true
 	}
 
-	var (
-		notInVals      []int32
-		notInRuleValue protoreflect.Value
-	)
+	var notInVals []int32
 	if notInVals = rules.GetNotIn(); len(notInVals) > 0 {
-		notInRuleValue = newListRuleValue(rules.ProtoReflect(), enumNotInSite.desc, notInVals, protoreflect.ValueOfInt32)
 		rules.ProtoReflect().Clear(enumNotInSite.desc)
 		hasRule = true
 	}
@@ -74,12 +66,10 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
 	}
 
 	return nativeEnumEval{
-		base:           base,
-		constVal:       constVal,
-		inVals:         inVals,
-		inRuleValue:    inRuleValue,
-		notInVals:      notInVals,
-		notInRuleValue: notInRuleValue,
+		base:      base,
+		constVal:  constVal,
+		inVals:    inVals,
+		notInVals: notInVals,
 	}
 }
 
@@ -88,11 +78,9 @@ var _ evaluator = nativeEnumEval{}
 // nativeEnumEval is a native Go evaluator for enum const/in/not_in rules.
 type nativeEnumEval struct {
 	base
-	constVal       *int32
-	inVals         []int32
-	inRuleValue    protoreflect.Value
-	notInVals      []int32
-	notInRuleValue protoreflect.Value
+	constVal  *int32
+	inVals    []int32
+	notInVals []int32
 }
 
 type enumProcessor func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation
@@ -113,7 +101,7 @@ var enumProcessors = []enumProcessor{
 		if len(n.inVals) > 0 && !slices.Contains(n.inVals, enumVal) {
 			return n.newViolation(enumInSite,
 				"enum.in", "must be in list "+formatList(n.inVals),
-				val, n.inRuleValue)
+				val, sliceToListValue(&validate.EnumRules{}, enumInSite.desc, n.inVals, protoreflect.ValueOfInt32))
 		}
 		return nil
 	},
@@ -122,7 +110,7 @@ var enumProcessors = []enumProcessor{
 		if len(n.notInVals) > 0 && slices.Contains(n.notInVals, enumVal) {
 			return n.newViolation(enumNotInSite,
 				"enum.not_in", "must not be in list "+formatList(n.notInVals),
-				val, n.notInRuleValue)
+				val, sliceToListValue(&validate.EnumRules{}, enumNotInSite.desc, n.notInVals, protoreflect.ValueOfInt32))
 		}
 		return nil
 	},
