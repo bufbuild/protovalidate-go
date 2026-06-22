@@ -23,7 +23,7 @@ jobs:
           - 1.26.x
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
       - name: Install go
