@@ -190,3 +190,36 @@ enum BenchEnum {
   BENCH_ENUM_ONE = 1;
   BENCH_ENUM_TWO = 2;
 }
+
+// BenchCrossReference models a message whose CEL rule enforces referential
+// integrity: every reference held by every rule must resolve to a declared
+// entry. Evaluating it costs O(rules * refs_per_rule * entries), so its
+// validation time grows multiplicatively with the size of the message.
+//
+// It exists to exercise cancellation of a single long-running CEL expression.
+// It is not part of the faked benchmark corpus; tests build it explicitly.
+message BenchCrossReference {
+  option (buf.validate.message).cel = {
+    id: "refs_resolve"
+    message: "every rule reference must resolve to a declared entry"
+    expression:
+      "this.rules.all(rule, rule.refs.all(ref,"
+      "this.entries.exists(entry, entry.key.kind == ref.kind && entry.key.name == ref.name)))"
+  };
+
+  message Key {
+    string kind = 1;
+    string name = 2;
+  }
+
+  message Entry {
+    Key key = 1;
+  }
+
+  message Rule {
+    repeated Key refs = 1;
+  }
+
+  repeated Entry entries = 1;
+  repeated Rule rules = 2;
+}

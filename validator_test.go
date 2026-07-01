@@ -15,9 +15,11 @@
 package protovalidate
 
 import (
+	"context"
 	"testing"
 	"time"
 
+	pvcel "buf.build/go/protovalidate/cel"
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -631,4 +633,143 @@ func TestValidator_Validate_Issue296(t *testing.T) {
 	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
+}
+
+// validateOnly implements only the Validator interface. It exists to guard the
+// backward-compatibility contract: ValidateContext must stay off Validator, so
+// external types implementing only Validate keep satisfying it.
+type validateOnly struct{}
+
+func (validateOnly) Validate(proto.Message, ...ValidationOption) error { return nil }
+
+var (
+	_ Validator        = validateOnly{}
+	_ ContextValidator = (*validator)(nil)
+)
+
+func TestValidator_ValidateContext_Cancelled(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	err = val.ValidateContext(ctx, &pb.Person{})
+	assert.ErrorIs(t, err, context.Canceled)
+}
+
+// TestValidator_ValidateContext_CancelledNilMessage pins the check order: a
+// cancelled context yields its error even when the message is nil, so callers
+// using the error as a cancellation signal never miss it.
+func TestValidator_ValidateContext_CancelledNilMessage(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	err = val.ValidateContext(ctx, nil)
+	assert.ErrorIs(t, err, context.Canceled)
+}
+
+func TestValidator_ValidateContext_DelegatesToValidate(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	// A valid message returns nil through both entry points.
+	msg := &pb.Person{Id: 1, Email: "a@b.co", Name: "x", Home: &pb.Coordinates{}}
+	assert.Equal(t,
+		val.Validate(msg),
+		val.ValidateContext(context.Background(), msg),
+	)
+}
+
+func TestValidateContext_Global(t *testing.T) {
+	t.Parallel()
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	err := ValidateContext(ctx, &pb.Person{})
+	assert.ErrorIs(t, err, context.Canceled)
+}
+
+// TestValidateContext_InterruptsExpensiveCELExpression covers the motivating
+// case: a single CEL rule whose cost grows multiplicatively with message size
+// (see BenchCrossReference). Uncancelled it runs for seconds; a deadline must
+// cut it short rather than waiting for it to finish.
+func TestValidateContext_InterruptsExpensiveCELExpression(t *testing.T) {
+	t.Parallel()
+	msg := newCrossReference(150) // ~3s of CEL evaluation when uncancelled
+	val, err := New(WithMessages(msg), WithDisableLazy())
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+	defer cancel()
+
+	start := time.Now()
+	err = val.ValidateContext(ctx, msg)
+	elapsed := time.Since(start)
+
+	require.ErrorIs(t, err, context.DeadlineExceeded)
+	assert.Less(t, elapsed, time.Second,
+		"the deadline must interrupt evaluation, not be noticed after it completes")
+}
+
+// TestValidateContext_InterruptCheckFrequency documents why the default
+// frequency is 1. cel-go polls ctx.Done() once every `frequency` comprehension
+// iterations, so cancellation latency scales with the frequency, while the
+// per-iteration bookkeeping happens either way. A coarse frequency therefore
+// buys no throughput (see BenchmarkInterruptCheckFrequency) and only makes a
+// deadline less meaningful.
+func TestValidateContext_InterruptCheckFrequency(t *testing.T) {
+	t.Parallel()
+	if testing.Short() {
+		t.Skip("timing-sensitive; runs a multi-second CEL expression")
+	}
+	msg := newCrossReference(150)
+
+	latency := func(frequency uint) time.Duration {
+		val, err := New(WithMessages(msg), WithDisableLazy(),
+			WithCELInterruptCheckFrequency(frequency))
+		require.NoError(t, err)
+		ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
+		defer cancel()
+		start := time.Now()
+		err = val.ValidateContext(ctx, msg)
+		require.ErrorIs(t, err, context.DeadlineExceeded)
+		return time.Since(start)
+	}
+
+	def := latency(pvcel.DefaultInterruptCheckFrequency)
+	coarse := latency(100)
+
+	assert.Less(t, def, 500*time.Millisecond,
+		"the default frequency should honor the deadline promptly")
+	assert.Greater(t, coarse, 2*def,
+		"a coarser frequency should notice the deadline substantially later")
+}
+
+// TestWithCELInterruptCheckFrequency_Disabled shows that a frequency of 0 turns
+// interrupt checking off: validation still works, but CEL expressions run to
+// completion and cannot be cancelled mid-evaluation.
+func TestWithCELInterruptCheckFrequency_Disabled(t *testing.T) {
+	t.Parallel()
+	msg := newCrossReference(8)
+	val, err := New(WithMessages(msg), WithDisableLazy(),
+		WithCELInterruptCheckFrequency(0))
+	require.NoError(t, err)
+	require.NoError(t, val.Validate(msg))
+	require.NoError(t, val.ValidateContext(context.Background(), msg))
+}
+
+func TestValidator_ValidateContext_CancelMidTraversal(t *testing.T) {
+	t.Parallel()
+	val, err := New()
+	require.NoError(t, err)
+	ctx, cancel := context.WithCancel(context.Background())
+	// Cancel as soon as traversal asks whether to validate anything.
+	filter := FilterFunc(func(protoreflect.Message, protoreflect.Descriptor) bool {
+		cancel()
+		return true
+	})
+	msg := &pb.BenchRepeatedMessage{X: []*pb.BenchScalar{{}, {}}}
+	err = val.ValidateContext(ctx, msg, WithFilter(filter))
+	assert.ErrorIs(t, err, context.Canceled)
 }
