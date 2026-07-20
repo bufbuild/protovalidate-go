@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -42,7 +44,11 @@ type definedEnum struct {
 	ValueDescriptors protoreflect.EnumValueDescriptors
 }
 
-func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (d definedEnum) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return d.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (d definedEnum) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: validate.Violation_builder{

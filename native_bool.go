@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
@@ -58,7 +59,11 @@ type nativeBoolEval struct {
 	constVal bool
 }
 
-func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (n nativeBoolEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (n nativeBoolEval) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if val.Bool() != n.constVal {
 		return &ValidationError{Violations: []*Violation{n.newViolation(boolConstSite,
 			"bool.const", fmt.Sprintf("must equal %t", n.constVal),

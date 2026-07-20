@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -48,11 +50,20 @@ func newListItems(valEval *value) listItems {
 }
 
 func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return r.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (r listItems) EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	list := val.List()
 	var ok bool
 	var err error
 	for i := range list.Len() {
-		itemErr := r.ItemRules.EvaluateField(msg, list.Get(i), cfg, true)
+		if cfg.cancellable {
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				return ctxErr
+			}
+		}
+		itemErr := r.ItemRules.EvaluateFieldContext(ctx, msg, list.Get(i), cfg, true)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, validate.FieldPathElement_builder{
 				FieldNumber: proto.Int32(r.FieldPathElement.GetFieldNumber()),

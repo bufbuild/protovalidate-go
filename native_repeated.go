@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"math"
 
@@ -148,7 +149,16 @@ type nativeRepeatedEval struct {
 	uniqueFn uniqueChecker
 }
 
-func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n nativeRepeatedEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (n nativeRepeatedEval) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	if cfg.cancellable {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+	}
 	list := val.List()
 	size := uint64(list.Len()) //nolint:gosec // len can't be < 0 and is always within uint64 range
 	var violations []*Violation

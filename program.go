@@ -15,11 +15,15 @@
 package protovalidate
 
 import (
+	"context"
+	"errors"
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/google/cel-go/cel"
 	"github.com/google/cel-go/common/types"
+	"github.com/google/cel-go/common/types/ref"
+	"github.com/google/cel-go/interpreter"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -42,15 +46,30 @@ func (s programSet) Eval(
 	fieldDesc protoreflect.FieldDescriptor,
 	cfg *validationConfig,
 ) error {
+	return s.EvalContext(context.Background(), val, fieldDesc, cfg)
+}
+
+// EvalContext is like Eval, but honors context cancellation.
+func (s programSet) EvalContext(
+	ctx context.Context,
+	val protoreflect.Value,
+	fieldDesc protoreflect.FieldDescriptor,
+	cfg *validationConfig,
+) error {
 	if len(s.programs) == 0 {
 		return nil
+	}
+	if cfg.cancellable {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
 	}
 	activation := getBindings()
 	defer putBindings(activation)
 	activation.This = newOptional(thisToCel(val.Interface(), fieldDesc, s.env.CELTypeAdapter()))
 	var violations []*Violation
 	for _, expr := range s.programs {
-		violation, err := expr.eval(activation, cfg)
+		violation, err := expr.evalContext(ctx, activation, cfg)
 		if err != nil {
 			return err
 		}
@@ -91,8 +110,12 @@ type compiledProgram struct {
 	Descriptor protoreflect.FieldDescriptor
 }
 
-//nolint:nilnil // non-existence of violations is intentional
 func (expr compiledProgram) eval(activation *bindings, cfg *validationConfig) (*Violation, error) {
+	return expr.evalContext(context.Background(), activation, cfg)
+}
+
+//nolint:nilnil // non-existence of violations is intentional
+func (expr compiledProgram) evalContext(ctx context.Context, activation *bindings, cfg *validationConfig) (*Violation, error) {
 	activation.NowFn = cfg.nowFn
 	if expr.Rules != nil {
 		activation.Rules = expr.Rules.Interface()
@@ -100,8 +123,28 @@ func (expr compiledProgram) eval(activation *bindings, cfg *validationConfig) (*
 	if expr.Value.IsValid() {
 		activation.Rule = expr.Value.Interface()
 	}
-	value, _, err := expr.Program.Eval(activation)
+	var (
+		value ref.Val
+		err   error
+	)
+	if cfg.cancellable {
+		value, _, err = expr.Program.ContextEval(ctx, activation)
+	} else {
+		// The context can never be cancelled (e.g. context.Background), so there
+		// is nothing to interrupt. Skip ContextEval, which would otherwise wrap
+		// the activation on every evaluation just to poll a nil channel. This
+		// keeps the Validate path free of any context-related overhead.
+		value, _, err = expr.Program.Eval(activation)
+	}
 	if err != nil {
+		// Only cel-go's interrupt error signals cancellation; any other failure
+		// is a genuine evaluation error and must keep its RuntimeError identity
+		// (with the rule id) even if the context has expired in the meantime.
+		if errors.Is(err, interpreter.InterruptError{}) {
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				return nil, ctxErr
+			}
+		}
 		return nil, &RuntimeError{cause: fmt.Errorf(
 			"error evaluating %s: %w", expr.Source.GetId(), err)}
 	}

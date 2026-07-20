@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -34,11 +35,24 @@ type message struct {
 	nestedEvaluators messageEvaluators
 }
 
-func (m *message) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return m.EvaluateMessage(val.Message(), cfg)
+func (m *message) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (m *message) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateMessageContext(ctx, val.Message(), cfg)
 }
 
 func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return m.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (m *message) EvaluateMessageContext(ctx context.Context, msg protoreflect.Message, cfg *validationConfig) error {
+	if cfg.cancellable {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+	}
 	var (
 		err error
 		ok  bool
@@ -47,11 +61,11 @@ func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfi
 		if m.Err != nil {
 			return m.Err
 		}
-		if ok, err = mergeViolations(err, m.evaluators.EvaluateMessage(msg, cfg), cfg); !ok {
+		if ok, err = mergeViolations(err, m.evaluators.EvaluateMessageContext(ctx, msg, cfg), cfg); !ok {
 			return err
 		}
 	}
-	_, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessage(msg, cfg), cfg)
+	_, err = mergeViolations(err, m.nestedEvaluators.EvaluateMessageContext(ctx, msg, cfg), cfg)
 	return err
 }
 
@@ -91,11 +105,19 @@ func (u unknownMessage) Err() error {
 
 func (u unknownMessage) Tautology() bool { return false }
 
-func (u unknownMessage) Evaluate(_ protoreflect.Message, _ protoreflect.Value, _ *validationConfig) error {
+func (u unknownMessage) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return u.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (u unknownMessage) EvaluateContext(_ context.Context, _ protoreflect.Message, _ protoreflect.Value, _ *validationConfig) error {
 	return u.Err()
 }
 
-func (u unknownMessage) EvaluateMessage(_ protoreflect.Message, _ *validationConfig) error {
+func (u unknownMessage) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return u.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (u unknownMessage) EvaluateMessageContext(_ context.Context, _ protoreflect.Message, _ *validationConfig) error {
 	return u.Err()
 }
 
@@ -107,8 +129,12 @@ type embeddedMessage struct {
 	message *message
 }
 
-func (m *embeddedMessage) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	err := m.message.EvaluateMessage(val.Message(), cfg)
+func (m *embeddedMessage) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (m *embeddedMessage) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	err := m.message.EvaluateMessageContext(ctx, val.Message(), cfg)
 	updateViolationPaths(err, m.FieldPathElement, nil)
 	return err
 }

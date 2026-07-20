@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
@@ -40,10 +42,19 @@ type value struct {
 }
 
 func (v *value) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return v.EvaluateField(msg, val, cfg, cfg.filter.ShouldValidate(msg, v.Descriptor))
+	return v.EvaluateContext(context.Background(), msg, val, cfg)
 }
 
-func (v *value) EvaluateField(
+func (v *value) EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return v.EvaluateFieldContext(ctx, msg, val, cfg, cfg.filter.ShouldValidate(msg, v.Descriptor))
+}
+
+func (v *value) EvaluateField(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig, shouldValidate bool) error {
+	return v.EvaluateFieldContext(context.Background(), msg, val, cfg, shouldValidate)
+}
+
+func (v *value) EvaluateFieldContext(
+	ctx context.Context,
 	msg protoreflect.Message,
 	val protoreflect.Value,
 	cfg *validationConfig,
@@ -57,11 +68,11 @@ func (v *value) EvaluateField(
 		if v.IgnoreEmpty && val.Equal(v.Zero) {
 			return nil
 		}
-		if ok, err = mergeViolations(err, v.Rules.Evaluate(msg, val, cfg), cfg); !ok {
+		if ok, err = mergeViolations(err, v.Rules.EvaluateContext(ctx, msg, val, cfg), cfg); !ok {
 			return err
 		}
 	}
-	_, err = mergeViolations(err, v.NestedRules.Evaluate(msg, val, cfg), cfg)
+	_, err = mergeViolations(err, v.NestedRules.EvaluateContext(ctx, msg, val, cfg), cfg)
 	return err
 }
 

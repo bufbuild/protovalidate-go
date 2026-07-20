@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -39,11 +40,19 @@ func (o messageOneof) formatFields() string {
 	return strings.Join(names, ", ")
 }
 
-func (o messageOneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return o.EvaluateMessage(val.Message(), cfg)
+func (o messageOneof) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return o.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (o messageOneof) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return o.EvaluateMessageContext(ctx, val.Message(), cfg)
 }
 
 func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return o.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (o messageOneof) EvaluateMessageContext(_ context.Context, msg protoreflect.Message, cfg *validationConfig) error {
 	if !cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		return nil
 	}
