@@ -299,3 +299,14 @@ func (m mockProgram) Eval(_ any) (ref.Val, *cel.EvalDetails, error) {
 func (m mockProgram) ContextEval(_ context.Context, _ any) (ref.Val, *cel.EvalDetails, error) {
 	return m.Val, nil, m.Err
 }
+
+func (m mockProgram) ConcurrentEval(_ context.Context, _ any) <-chan cel.EvalResult {
+	ch := make(chan cel.EvalResult, 1)
+	ch <- cel.EvalResult{
+		Val: m.Val,
+		Err: m.Err,
+	}
+	return ch
+}
+
+var _ cel.Program = mockProgram{}
