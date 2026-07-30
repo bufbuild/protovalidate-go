@@ -15,6 +15,7 @@
 package rules
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -30,6 +31,16 @@ func TestIsHostname(t *testing.T) {
 	require.True(t, IsHostname("foo.example.com"))
 	require.True(t, IsHostname("A.ISI.EDU"))
 	require.False(t, IsHostname("İ"))
+
+	// The 253-character limit excludes the optional trailing dot.
+	name253 := strings.Repeat("a", 63) + "." + strings.Repeat("a", 63) + "." +
+		strings.Repeat("a", 63) + "." + strings.Repeat("a", 61)
+	name254 := strings.Repeat("a", 63) + "." + strings.Repeat("a", 63) + "." +
+		strings.Repeat("a", 63) + "." + strings.Repeat("a", 62)
+	require.True(t, IsHostname(name253))
+	require.True(t, IsHostname(name253+"."))
+	require.False(t, IsHostname(name254))
+	require.False(t, IsHostname(name254+"."))
 }
 
 func TestIsHostAndPort(t *testing.T) {
