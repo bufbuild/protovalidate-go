@@ -130,14 +130,16 @@ func IsIPPrefix(
 //   - The name can have a trailing dot, for example "foo.example.com.".
 //   - The name can be 253 characters at most, excluding the optional trailing dot.
 func IsHostname(val string) bool {
-	if len(val) > 253 {
-		return false
-	}
 	var str string
 	if strings.HasSuffix(val, ".") {
 		str = val[0 : len(val)-1]
 	} else {
 		str = val
+	}
+	// The 253-character limit excludes the optional trailing dot, so measure
+	// after stripping it.
+	if len(str) > 253 {
+		return false
 	}
 
 	allDigits := false
