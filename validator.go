@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
@@ -27,7 +28,7 @@ import (
 )
 
 var (
-	getGlobalValidator = sync.OnceValues(func() (Validator, error) { return New() })
+	getGlobalValidator = sync.OnceValues(func() (ContextValidator, error) { return New() })
 
 	// GlobalValidator provides access to the global Validator instance that is
 	// used by the [Validate] function. This is intended to be used by libraries
@@ -37,7 +38,7 @@ var (
 	// Using the global Validator instance (either through [Validator] or via
 	// GlobalValidator) will result in lower memory usage than using multiple
 	// Validator instances, because each Validator instance has its own caches.
-	GlobalValidator Validator = globalValidator{}
+	GlobalValidator ContextValidator = globalValidator{}
 )
 
 // Validator performs validation on any proto.Message values. The Validator is
@@ -52,13 +53,43 @@ type Validator interface {
 	Validate(msg proto.Message, options ...ValidationOption) error
 }
 
-// New creates a Validator with the given options. An error may occur in setting
-// up the CEL execution environment if the configuration is invalid. See the
-// individual ValidatorOption for how they impact the fallibility of New.
-func New(options ...ValidatorOption) (Validator, error) {
+// ContextValidator is a [Validator] that additionally supports context-aware
+// validation. The value returned by [New] and the [GlobalValidator] both
+// implement it. Callers that hold only a [Validator] can type-assert it to
+// ContextValidator, or use the package-level [ValidateContext] function.
+//
+// ContextValidator is a separate interface (rather than a method on Validator)
+// to preserve backward compatibility for external implementations of Validator.
+type ContextValidator interface {
+	Validator
+
+	// ValidateContext behaves like Validate, but stops early if ctx is
+	// cancelled or its deadline is exceeded, returning the context error
+	// (context.Canceled or context.DeadlineExceeded), detectable with
+	// errors.Is.
+	//
+	// Cancellation is observed at message, repeated and map boundaries, before
+	// each CEL rule, and inside CEL comprehension macros (all, exists, map,
+	// filter): the loops in which an expensive expression spends its time. A
+	// CEL expression containing no comprehension is not interruptible once it
+	// begins; see [WithCELInterruptCheckFrequency].
+	//
+	// Passing a context that can never be cancelled, such as context.Background,
+	// costs nothing: evaluation then takes exactly the same path as Validate.
+	ValidateContext(ctx context.Context, msg proto.Message, options ...ValidationOption) error
+}
+
+// New creates a ContextValidator with the given options. An error may occur in
+// setting up the CEL execution environment if the configuration is invalid. See
+// the individual ValidatorOption for how they impact the fallibility of New.
+//
+// The returned value implements [ContextValidator], and therefore also
+// [Validator]; assigning it to a Validator remains valid.
+func New(options ...ValidatorOption) (ContextValidator, error) {
 	cfg := config{
-		extensionTypeResolver: protoregistry.GlobalTypes,
-		nowFn:                 timestamppb.Now,
+		extensionTypeResolver:   protoregistry.GlobalTypes,
+		nowFn:                   timestamppb.Now,
+		interruptCheckFrequency: pvcel.DefaultInterruptCheckFrequency,
 	}
 	for _, opt := range options {
 		opt.applyToValidator(&cfg)
@@ -72,7 +103,9 @@ func New(options ...ValidatorOption) (Validator, error) {
 	env, err := cel.NewEnv(
 		cel.CustomTypeProvider(reg),
 		cel.CustomTypeAdapter(reg),
-		cel.Lib(pvcel.NewLibrary()),
+		cel.Lib(pvcel.NewLibrary(
+			pvcel.WithInterruptCheckFrequency(cfg.interruptCheckFrequency),
+		)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf(
@@ -88,22 +121,56 @@ func New(options ...ValidatorOption) (Validator, error) {
 		cfg.desc...,
 	)
 
+	baseCfg := &validationConfig{
+		failFast: cfg.failFast,
+		filter:   nopFilter{},
+		nowFn:    cfg.nowFn,
+	}
+	cancellableCfg := baseCfg.clone()
+	cancellableCfg.cancellable = true
+
 	return &validator{
-		builder: bldr,
-		cfg: &validationConfig{
-			failFast: cfg.failFast,
-			filter:   nopFilter{},
-			nowFn:    cfg.nowFn,
-		},
+		builder:        bldr,
+		cfg:            baseCfg,
+		cancellableCfg: cancellableCfg,
 	}, nil
 }
 
 type validator struct {
 	builder *builder
-	cfg     *validationConfig
+	// cfg and cancellableCfg are identical but for the cancellable flag. Both
+	// are built once and treated as immutable, so a ValidateContext call with no
+	// ValidationOptions can select one without allocating a copy.
+	cfg            *validationConfig
+	cancellableCfg *validationConfig
 }
 
 func (v *validator) Validate(
+	msg proto.Message,
+	options ...ValidationOption,
+) error {
+	// Pass cancellable=false without consulting the context: a background
+	// context can never be cancelled, and probing it would add interface calls
+	// to the hot path.
+	return v.validate(context.Background(), false, msg, options...)
+}
+
+func (v *validator) ValidateContext(
+	ctx context.Context,
+	msg proto.Message,
+	options ...ValidationOption,
+) error {
+	// Check the context before anything else (including a nil msg) so that a
+	// cancelled context always yields its error, as documented.
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	return v.validate(ctx, ctx.Done() != nil, msg, options...)
+}
+
+func (v *validator) validate(
+	ctx context.Context,
+	cancellable bool,
 	msg proto.Message,
 	options ...ValidationOption,
 ) error {
@@ -111,6 +178,9 @@ func (v *validator) Validate(
 		return nil
 	}
 	cfg := v.cfg
+	if cancellable {
+		cfg = v.cancellableCfg
+	}
 	if len(options) > 0 {
 		cfg = cfg.clone()
 		for _, opt := range options {
@@ -119,7 +189,7 @@ func (v *validator) Validate(
 	}
 	refl := msg.ProtoReflect()
 	eval := v.builder.Load(refl.Descriptor())
-	err := eval.EvaluateMessage(refl, cfg)
+	err := eval.EvaluateMessageContext(ctx, refl, cfg)
 	finalizeViolationPaths(err)
 	return err
 }
@@ -129,27 +199,39 @@ func (v *validator) Validate(
 // function is safe and acceptable. If you need to provide i.e. a custom
 // ExtensionTypeResolver, you'll need to construct a Validator.
 func Validate(msg proto.Message, options ...ValidationOption) error {
+	return ValidateContext(context.Background(), msg, options...)
+}
+
+// ValidateContext is the context-aware counterpart to Validate, using the
+// global Validator instance. See [ContextValidator.ValidateContext].
+func ValidateContext(ctx context.Context, msg proto.Message, options ...ValidationOption) error {
 	globalValidator, err := getGlobalValidator()
 	if err != nil {
 		return err
 	}
-	return globalValidator.Validate(msg, options...)
+	return globalValidator.ValidateContext(ctx, msg, options...)
 }
 
 type config struct {
-	failFast              bool
-	disableLazy           bool
-	desc                  []protoreflect.MessageDescriptor
-	extensionTypeResolver protoregistry.ExtensionTypeResolver
-	allowUnknownFields    bool
-	nowFn                 func() *timestamppb.Timestamp
-	disableNativeRules    bool
+	failFast                bool
+	disableLazy             bool
+	desc                    []protoreflect.MessageDescriptor
+	extensionTypeResolver   protoregistry.ExtensionTypeResolver
+	allowUnknownFields      bool
+	nowFn                   func() *timestamppb.Timestamp
+	disableNativeRules      bool
+	interruptCheckFrequency uint
 }
 
 type validationConfig struct {
 	failFast bool
 	filter   Filter
 	nowFn    func() *timestamppb.Timestamp
+	// cancellable reports whether the context passed to ValidateContext can
+	// ever be cancelled (ctx.Done() != nil). When false, evaluation skips every
+	// per-node context check and cel-go's ContextEval, so the Validate path
+	// costs exactly what it did before context support existed.
+	cancellable bool
 }
 
 func (cfg *validationConfig) clone() *validationConfig {
@@ -161,4 +243,8 @@ type globalValidator struct{}
 
 func (globalValidator) Validate(msg proto.Message, options ...ValidationOption) error {
 	return Validate(msg, options...)
+}
+
+func (globalValidator) ValidateContext(ctx context.Context, msg proto.Message, options ...ValidationOption) error {
+	return ValidateContext(ctx, msg, options...)
 }

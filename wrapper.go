@@ -14,7 +14,11 @@
 
 package protovalidate
 
-import "google.golang.org/protobuf/reflect/protoreflect"
+import (
+	"context"
+
+	"google.golang.org/protobuf/reflect/protoreflect"
+)
 
 // wrappedValueEval adapts a native evaluator built against a wrapper WKT's
 // inner scalar field (e.g. google.protobuf.Int32Value.value) so it can run
@@ -32,7 +36,11 @@ type wrappedValueEval struct {
 }
 
 func (w wrappedValueEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return w.inner.Evaluate(msg, val.Message().Get(w.innerField), cfg)
+	return w.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (w wrappedValueEval) EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return w.inner.EvaluateContext(ctx, msg, val.Message().Get(w.innerField), cfg)
 }
 
 func (w wrappedValueEval) Tautology() bool {

@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"math"
 
@@ -85,7 +86,16 @@ type nativeMapEval struct {
 	maxPairs uint64
 }
 
-func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (n nativeMapEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (n nativeMapEval) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	if cfg.cancellable {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+	}
 	size := uint64(val.Map().Len()) //nolint:gosec // int will never be negative or out of uint64 range
 
 	// min_pairs

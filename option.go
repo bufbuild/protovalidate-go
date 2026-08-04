@@ -117,6 +117,30 @@ func WithNowFunc(fn func() *timestamppb.Timestamp) Option {
 	return nowFuncOption(fn)
 }
 
+// WithCELInterruptCheckFrequency sets how many CEL comprehension iterations
+// elapse between checks for context cancellation during [ContextValidator.ValidateContext].
+//
+// cel-go only checks for cancellation inside comprehension loops (all, exists,
+// map, filter), once per iteration, so cancellation latency is proportional to
+// this value. The per-iteration bookkeeping happens regardless of the
+// frequency, which merely gates a cheap non-blocking channel poll; raising it
+// therefore buys no measurable throughput while making cancellation
+// correspondingly less responsive. The default,
+// [buf.build/go/protovalidate/cel.DefaultInterruptCheckFrequency], is 1.
+//
+// A value of 0 disables interrupt checking: CEL expressions run to completion
+// and cannot be cancelled mid-evaluation. Expressions with no comprehension are
+// never interruptible regardless of this setting.
+func WithCELInterruptCheckFrequency(frequency uint) ValidatorOption {
+	return celInterruptCheckFrequencyOption{frequency}
+}
+
+type celInterruptCheckFrequencyOption struct{ frequency uint }
+
+func (o celInterruptCheckFrequencyOption) applyToValidator(cfg *config) {
+	cfg.interruptCheckFrequency = o.frequency
+}
+
 type messageDescriptorsOption struct {
 	descriptors []protoreflect.MessageDescriptor
 }

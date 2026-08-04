@@ -40,8 +40,10 @@ import (
 //
 // Using this function, you can create a CEL environment that is identical to
 // the one used to evaluate protovalidate CEL expressions.
-func NewLibrary() cel.Library {
-	return &library{
+// Options may be passed to configure the library; see [LibraryOption].
+func NewLibrary(options ...LibraryOption) cel.Library {
+	lib := &library{
+		interruptCheckFrequency: DefaultInterruptCheckFrequency,
 		uniqueScalarPool: sync.Pool{New: func() any {
 			return map[ref.Val]struct{}{}
 		}},
@@ -49,6 +51,37 @@ func NewLibrary() cel.Library {
 			return map[string]struct{}{}
 		}},
 	}
+	for _, option := range options {
+		option(lib)
+	}
+	return lib
+}
+
+// DefaultInterruptCheckFrequency is the default value for
+// [WithInterruptCheckFrequency].
+//
+// cel-go checks for context cancellation only inside comprehension loops
+// (macros such as all, exists, map and filter), once per iteration. The
+// frequency selects how many of those iterations pass between successive polls
+// of ctx.Done(): the per-iteration bookkeeping happens regardless, and the
+// frequency only gates the (very cheap) non-blocking channel poll. Raising it
+// therefore buys no measurable throughput, while making cancellation latency
+// proportionally worse. 1 is the responsive default.
+const DefaultInterruptCheckFrequency = 1
+
+// LibraryOption configures the CEL library returned by [NewLibrary].
+type LibraryOption func(*library)
+
+// WithInterruptCheckFrequency sets how many comprehension iterations elapse
+// between checks for context cancellation during CEL evaluation.
+//
+// A value of 0 disables interrupt checking entirely: CEL expressions then run
+// to completion and cannot be cancelled mid-evaluation.
+//
+// Note that expressions containing no comprehension are never interruptible,
+// whatever the frequency, because cel-go only checks inside comprehension loops.
+func WithInterruptCheckFrequency(frequency uint) LibraryOption {
+	return func(lib *library) { lib.interruptCheckFrequency = frequency }
 }
 
 // library is the collection of functions and settings required by protovalidate
@@ -59,8 +92,9 @@ func NewLibrary() cel.Library {
 // All implementations of protovalidate MUST implement these functions and
 // should avoid exposing additional functions as they will not be portable.
 type library struct {
-	uniqueScalarPool sync.Pool
-	uniqueBytesPool  sync.Pool
+	uniqueScalarPool        sync.Pool
+	uniqueBytesPool         sync.Pool
+	interruptCheckFrequency uint
 }
 
 func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
@@ -378,11 +412,15 @@ func (l *library) CompileOptions() []cel.EnvOption { //nolint:funlen,gocyclo
 }
 
 func (l *library) ProgramOptions() []cel.ProgramOption {
-	return []cel.ProgramOption{
+	opts := []cel.ProgramOption{
 		cel.EvalOptions(
 			cel.OptOptimize,
 		),
 	}
+	if l.interruptCheckFrequency > 0 {
+		opts = append(opts, cel.InterruptCheckFrequency(l.interruptCheckFrequency))
+	}
+	return opts
 }
 
 func (l *library) uniqueMemberOverload(itemType *cel.Type, overload func(lister traits.Lister) ref.Val) cel.FunctionOpt {

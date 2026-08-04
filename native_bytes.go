@@ -16,6 +16,7 @@ package protovalidate
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"math"
@@ -274,8 +275,12 @@ type nativeBytesEval struct {
 
 var errNotUTF8 = errors.New("must be valid UTF-8 to apply regexp")
 
+func (n nativeBytesEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
 //nolint:gocyclo // this code has nested ifs but it's not hard to follow.
-func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n nativeBytesEval) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	bytesVal := val.Bytes()
 	byteLen := uint64(len(bytesVal))
 	var violations []*Violation

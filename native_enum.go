@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"slices"
 
@@ -116,7 +117,11 @@ var enumProcessors = []enumProcessor{
 	},
 }
 
-func (n nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n nativeEnumEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (n nativeEnumEval) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	enumVal := int32(val.Enum())
 
 	var violations []*Violation

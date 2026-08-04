@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"regexp"
@@ -378,8 +379,12 @@ type nativeStringEval struct {
 	strict        bool
 }
 
+func (n nativeStringEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
 //nolint:gocyclo // this code has nested ifs but it's not hard to follow.
-func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n nativeStringEval) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	strVal := val.String()
 	var violations []*Violation
 

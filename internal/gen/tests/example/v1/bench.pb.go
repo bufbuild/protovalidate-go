@@ -1096,6 +1096,280 @@ func (*BenchComplexSchema_OneofI32) isBenchComplexSchema_Choice() {}
 
 func (*BenchComplexSchema_OneofMsg) isBenchComplexSchema_Choice() {}
 
+// BenchCrossReference models a message whose CEL rule enforces referential
+// integrity: every reference held by every rule must resolve to a declared
+// entry. Evaluating it costs O(rules * refs_per_rule * entries), so its
+// validation time grows multiplicatively with the size of the message.
+//
+// It exists to exercise cancellation of a single long-running CEL expression.
+// It is not part of the faked benchmark corpus; tests build it explicitly.
+type BenchCrossReference struct {
+	state         protoimpl.MessageState       `protogen:"hybrid.v1"`
+	Entries       []*BenchCrossReference_Entry `protobuf:"bytes,1,rep,name=entries,proto3" json:"entries,omitempty"`
+	Rules         []*BenchCrossReference_Rule  `protobuf:"bytes,2,rep,name=rules,proto3" json:"rules,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchCrossReference) Reset() {
+	*x = BenchCrossReference{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchCrossReference) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchCrossReference) ProtoMessage() {}
+
+func (x *BenchCrossReference) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchCrossReference) GetEntries() []*BenchCrossReference_Entry {
+	if x != nil {
+		return x.Entries
+	}
+	return nil
+}
+
+func (x *BenchCrossReference) GetRules() []*BenchCrossReference_Rule {
+	if x != nil {
+		return x.Rules
+	}
+	return nil
+}
+
+func (x *BenchCrossReference) SetEntries(v []*BenchCrossReference_Entry) {
+	x.Entries = v
+}
+
+func (x *BenchCrossReference) SetRules(v []*BenchCrossReference_Rule) {
+	x.Rules = v
+}
+
+type BenchCrossReference_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Entries []*BenchCrossReference_Entry
+	Rules   []*BenchCrossReference_Rule
+}
+
+func (b0 BenchCrossReference_builder) Build() *BenchCrossReference {
+	m0 := &BenchCrossReference{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Entries = b.Entries
+	x.Rules = b.Rules
+	return m0
+}
+
+type BenchCrossReference_Key struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Kind          string                 `protobuf:"bytes,1,opt,name=kind,proto3" json:"kind,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchCrossReference_Key) Reset() {
+	*x = BenchCrossReference_Key{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchCrossReference_Key) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchCrossReference_Key) ProtoMessage() {}
+
+func (x *BenchCrossReference_Key) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchCrossReference_Key) GetKind() string {
+	if x != nil {
+		return x.Kind
+	}
+	return ""
+}
+
+func (x *BenchCrossReference_Key) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *BenchCrossReference_Key) SetKind(v string) {
+	x.Kind = v
+}
+
+func (x *BenchCrossReference_Key) SetName(v string) {
+	x.Name = v
+}
+
+type BenchCrossReference_Key_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Kind string
+	Name string
+}
+
+func (b0 BenchCrossReference_Key_builder) Build() *BenchCrossReference_Key {
+	m0 := &BenchCrossReference_Key{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Kind = b.Kind
+	x.Name = b.Name
+	return m0
+}
+
+type BenchCrossReference_Entry struct {
+	state         protoimpl.MessageState   `protogen:"hybrid.v1"`
+	Key           *BenchCrossReference_Key `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchCrossReference_Entry) Reset() {
+	*x = BenchCrossReference_Entry{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchCrossReference_Entry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchCrossReference_Entry) ProtoMessage() {}
+
+func (x *BenchCrossReference_Entry) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchCrossReference_Entry) GetKey() *BenchCrossReference_Key {
+	if x != nil {
+		return x.Key
+	}
+	return nil
+}
+
+func (x *BenchCrossReference_Entry) SetKey(v *BenchCrossReference_Key) {
+	x.Key = v
+}
+
+func (x *BenchCrossReference_Entry) HasKey() bool {
+	if x == nil {
+		return false
+	}
+	return x.Key != nil
+}
+
+func (x *BenchCrossReference_Entry) ClearKey() {
+	x.Key = nil
+}
+
+type BenchCrossReference_Entry_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Key *BenchCrossReference_Key
+}
+
+func (b0 BenchCrossReference_Entry_builder) Build() *BenchCrossReference_Entry {
+	m0 := &BenchCrossReference_Entry{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Key = b.Key
+	return m0
+}
+
+type BenchCrossReference_Rule struct {
+	state         protoimpl.MessageState     `protogen:"hybrid.v1"`
+	Refs          []*BenchCrossReference_Key `protobuf:"bytes,1,rep,name=refs,proto3" json:"refs,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BenchCrossReference_Rule) Reset() {
+	*x = BenchCrossReference_Rule{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchCrossReference_Rule) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchCrossReference_Rule) ProtoMessage() {}
+
+func (x *BenchCrossReference_Rule) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchCrossReference_Rule) GetRefs() []*BenchCrossReference_Key {
+	if x != nil {
+		return x.Refs
+	}
+	return nil
+}
+
+func (x *BenchCrossReference_Rule) SetRefs(v []*BenchCrossReference_Key) {
+	x.Refs = v
+}
+
+type BenchCrossReference_Rule_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Refs []*BenchCrossReference_Key
+}
+
+func (b0 BenchCrossReference_Rule_builder) Build() *BenchCrossReference_Rule {
+	m0 := &BenchCrossReference_Rule{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Refs = b.Refs
+	return m0
+}
+
 var File_tests_example_v1_bench_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_bench_proto_rawDesc = "" +
@@ -1180,7 +1454,18 @@ const file_tests_example_v1_bench_proto_rawDesc = "" +
 	"\x0eMapI64MsgEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x03R\x03key\x123\n" +
 	"\x05value\x18\x02 \x01(\v2\x1d.tests.example.v1.BenchScalarR\x05value:\x028\x01B\b\n" +
-	"\x06choice*O\n" +
+	"\x06choice\"\xa8\x04\n" +
+	"\x13BenchCrossReference\x12E\n" +
+	"\aentries\x18\x01 \x03(\v2+.tests.example.v1.BenchCrossReference.EntryR\aentries\x12@\n" +
+	"\x05rules\x18\x02 \x03(\v2*.tests.example.v1.BenchCrossReference.RuleR\x05rules\x1a-\n" +
+	"\x03Key\x12\x12\n" +
+	"\x04kind\x18\x01 \x01(\tR\x04kind\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x1aD\n" +
+	"\x05Entry\x12;\n" +
+	"\x03key\x18\x01 \x01(\v2).tests.example.v1.BenchCrossReference.KeyR\x03key\x1aE\n" +
+	"\x04Rule\x12=\n" +
+	"\x04refs\x18\x01 \x03(\v2).tests.example.v1.BenchCrossReference.KeyR\x04refs:\xcb\x01\xbaH\xc7\x01\x1a\xc4\x01\n" +
+	"\frefs_resolve\x125every rule reference must resolve to a declared entry\x1a}this.rules.all(rule, rule.refs.all(ref,this.entries.exists(entry, entry.key.kind == ref.kind && entry.key.name == ref.name)))*O\n" +
 	"\tBenchEnum\x12\x1a\n" +
 	"\x16BENCH_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eBENCH_ENUM_ONE\x10\x01\x12\x12\n" +
@@ -1189,7 +1474,7 @@ const file_tests_example_v1_bench_proto_rawDesc = "" +
 	"BenchProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_bench_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
 var file_tests_example_v1_bench_proto_goTypes = []any{
 	(BenchEnum)(0),                    // 0: tests.example.v1.BenchEnum
 	(*BenchScalar)(nil),               // 1: tests.example.v1.BenchScalar
@@ -1199,35 +1484,43 @@ var file_tests_example_v1_bench_proto_goTypes = []any{
 	(*BenchRepeatedBytesUnique)(nil),  // 5: tests.example.v1.BenchRepeatedBytesUnique
 	(*BenchMap)(nil),                  // 6: tests.example.v1.BenchMap
 	(*BenchComplexSchema)(nil),        // 7: tests.example.v1.BenchComplexSchema
-	nil,                               // 8: tests.example.v1.BenchMap.EntriesEntry
-	nil,                               // 9: tests.example.v1.BenchComplexSchema.MapStrStrEntry
-	nil,                               // 10: tests.example.v1.BenchComplexSchema.MapI32I64Entry
-	nil,                               // 11: tests.example.v1.BenchComplexSchema.MapU64BoolEntry
-	nil,                               // 12: tests.example.v1.BenchComplexSchema.MapStrBytesEntry
-	nil,                               // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry
-	nil,                               // 14: tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	(*BenchCrossReference)(nil),       // 8: tests.example.v1.BenchCrossReference
+	nil,                               // 9: tests.example.v1.BenchMap.EntriesEntry
+	nil,                               // 10: tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	nil,                               // 11: tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	nil,                               // 12: tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	nil,                               // 13: tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	nil,                               // 14: tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	nil,                               // 15: tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	(*BenchCrossReference_Key)(nil),   // 16: tests.example.v1.BenchCrossReference.Key
+	(*BenchCrossReference_Entry)(nil), // 17: tests.example.v1.BenchCrossReference.Entry
+	(*BenchCrossReference_Rule)(nil),  // 18: tests.example.v1.BenchCrossReference.Rule
 }
 var file_tests_example_v1_bench_proto_depIdxs = []int32{
 	1,  // 0: tests.example.v1.BenchRepeatedMessage.x:type_name -> tests.example.v1.BenchScalar
-	8,  // 1: tests.example.v1.BenchMap.entries:type_name -> tests.example.v1.BenchMap.EntriesEntry
+	9,  // 1: tests.example.v1.BenchMap.entries:type_name -> tests.example.v1.BenchMap.EntriesEntry
 	1,  // 2: tests.example.v1.BenchComplexSchema.nested:type_name -> tests.example.v1.BenchScalar
 	7,  // 3: tests.example.v1.BenchComplexSchema.self_ref:type_name -> tests.example.v1.BenchComplexSchema
 	1,  // 4: tests.example.v1.BenchComplexSchema.rep_msg:type_name -> tests.example.v1.BenchScalar
-	9,  // 5: tests.example.v1.BenchComplexSchema.map_str_str:type_name -> tests.example.v1.BenchComplexSchema.MapStrStrEntry
-	10, // 6: tests.example.v1.BenchComplexSchema.map_i32_i64:type_name -> tests.example.v1.BenchComplexSchema.MapI32I64Entry
-	11, // 7: tests.example.v1.BenchComplexSchema.map_u64_bool:type_name -> tests.example.v1.BenchComplexSchema.MapU64BoolEntry
-	12, // 8: tests.example.v1.BenchComplexSchema.map_str_bytes:type_name -> tests.example.v1.BenchComplexSchema.MapStrBytesEntry
-	13, // 9: tests.example.v1.BenchComplexSchema.map_str_msg:type_name -> tests.example.v1.BenchComplexSchema.MapStrMsgEntry
-	14, // 10: tests.example.v1.BenchComplexSchema.map_i64_msg:type_name -> tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	10, // 5: tests.example.v1.BenchComplexSchema.map_str_str:type_name -> tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	11, // 6: tests.example.v1.BenchComplexSchema.map_i32_i64:type_name -> tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	12, // 7: tests.example.v1.BenchComplexSchema.map_u64_bool:type_name -> tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	13, // 8: tests.example.v1.BenchComplexSchema.map_str_bytes:type_name -> tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	14, // 9: tests.example.v1.BenchComplexSchema.map_str_msg:type_name -> tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	15, // 10: tests.example.v1.BenchComplexSchema.map_i64_msg:type_name -> tests.example.v1.BenchComplexSchema.MapI64MsgEntry
 	0,  // 11: tests.example.v1.BenchComplexSchema.enum_field:type_name -> tests.example.v1.BenchEnum
 	1,  // 12: tests.example.v1.BenchComplexSchema.oneof_msg:type_name -> tests.example.v1.BenchScalar
-	1,  // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry.value:type_name -> tests.example.v1.BenchScalar
-	1,  // 14: tests.example.v1.BenchComplexSchema.MapI64MsgEntry.value:type_name -> tests.example.v1.BenchScalar
-	15, // [15:15] is the sub-list for method output_type
-	15, // [15:15] is the sub-list for method input_type
-	15, // [15:15] is the sub-list for extension type_name
-	15, // [15:15] is the sub-list for extension extendee
-	0,  // [0:15] is the sub-list for field type_name
+	17, // 13: tests.example.v1.BenchCrossReference.entries:type_name -> tests.example.v1.BenchCrossReference.Entry
+	18, // 14: tests.example.v1.BenchCrossReference.rules:type_name -> tests.example.v1.BenchCrossReference.Rule
+	1,  // 15: tests.example.v1.BenchComplexSchema.MapStrMsgEntry.value:type_name -> tests.example.v1.BenchScalar
+	1,  // 16: tests.example.v1.BenchComplexSchema.MapI64MsgEntry.value:type_name -> tests.example.v1.BenchScalar
+	16, // 17: tests.example.v1.BenchCrossReference.Entry.key:type_name -> tests.example.v1.BenchCrossReference.Key
+	16, // 18: tests.example.v1.BenchCrossReference.Rule.refs:type_name -> tests.example.v1.BenchCrossReference.Key
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_bench_proto_init() }
@@ -1246,7 +1539,7 @@ func file_tests_example_v1_bench_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_bench_proto_rawDesc), len(file_tests_example_v1_bench_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   14,
+			NumMessages:   18,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

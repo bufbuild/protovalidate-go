@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -58,7 +60,11 @@ type anyPB struct {
 	NotInValue protoreflect.Value
 }
 
-func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (a anyPB) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return a.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (a anyPB) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
 
 	err := &ValidationError{}

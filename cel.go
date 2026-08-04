@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"errors"
 
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -26,8 +27,12 @@ type celPrograms struct {
 	programSet
 }
 
-func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	err := c.Eval(val, c.Descriptor, cfg)
+func (c celPrograms) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return c.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (c celPrograms) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	err := c.EvalContext(ctx, val, c.Descriptor, cfg)
 	if err != nil {
 		var valErr *ValidationError
 		if errors.As(err, &valErr) {
@@ -43,7 +48,11 @@ func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cf
 }
 
 func (c celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
-	return c.Eval(protoreflect.ValueOfMessage(msg), nil, cfg)
+	return c.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (c celPrograms) EvaluateMessageContext(ctx context.Context, msg protoreflect.Message, cfg *validationConfig) error {
+	return c.EvalContext(ctx, protoreflect.ValueOfMessage(msg), nil, cfg)
 }
 
 func (c celPrograms) Tautology() bool {

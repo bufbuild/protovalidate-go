@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -28,11 +30,19 @@ type oneof struct {
 	Required bool
 }
 
-func (o oneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return o.EvaluateMessage(val.Message(), cfg)
+func (o oneof) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return o.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (o oneof) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return o.EvaluateMessageContext(ctx, val.Message(), cfg)
 }
 
 func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return o.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (o oneof) EvaluateMessageContext(_ context.Context, msg protoreflect.Message, cfg *validationConfig) error {
 	if !cfg.filter.ShouldValidate(msg, o.Descriptor) ||
 		!o.Required || msg.WhichOneof(o.Descriptor) != nil {
 		return nil

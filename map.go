@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"strconv"
 
@@ -66,10 +67,20 @@ func newKVPairs(valEval *value) *kvPairs {
 	}
 }
 
-func (m *kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
+func (m *kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return m.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (m *kvPairs) EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	val.Map().Range(func(key protoreflect.MapKey, value protoreflect.Value) bool {
-		evalErr := m.evalPairs(msg, key, value, cfg)
+		if cfg.cancellable {
+			if ctxErr := ctx.Err(); ctxErr != nil {
+				err = ctxErr
+				return false
+			}
+		}
+		evalErr := m.evalPairsContext(ctx, msg, key, value, cfg)
 		if evalErr != nil {
 			element := validate.FieldPathElement_builder{
 				FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
@@ -107,15 +118,15 @@ func (m *kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg
 	return err
 }
 
-func (m *kvPairs) evalPairs(msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
-	evalErr := m.KeyRules.EvaluateField(msg, key.Value(), cfg, true)
+func (m *kvPairs) evalPairsContext(ctx context.Context, msg protoreflect.Message, key protoreflect.MapKey, value protoreflect.Value, cfg *validationConfig) (err error) {
+	evalErr := m.KeyRules.EvaluateFieldContext(ctx, msg, key.Value(), cfg, true)
 	markViolationForKey(evalErr)
 	ok, err := mergeViolations(err, evalErr, cfg)
 	if !ok {
 		return err
 	}
 
-	evalErr = m.ValueRules.EvaluateField(msg, value, cfg, true)
+	evalErr = m.ValueRules.EvaluateFieldContext(ctx, msg, value, cfg, true)
 	_, err = mergeViolations(err, evalErr, cfg)
 	return err
 }

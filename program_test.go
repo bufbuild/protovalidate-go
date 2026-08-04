@@ -287,6 +287,62 @@ func TestSet_BindThis(t *testing.T) {
 	}
 }
 
+func TestCompiled_ContextCancelled(t *testing.T) {
+	t.Parallel()
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	program := programSet{programs: []compiledProgram{{
+		Program: mockProgram{Val: types.True},
+		Source:  validate.Rule_builder{Id: proto.String("x")}.Build(),
+	}}}
+	err := program.EvalContext(ctx, protoreflect.ValueOfString("a"), nil, &validationConfig{cancellable: true})
+	assert.ErrorIs(t, err, context.Canceled)
+}
+
+func TestCompiled_ContextInterrupted(t *testing.T) {
+	t.Parallel()
+	env, err := cel.NewEnv()
+	require.NoError(t, err)
+	ast, iss := env.Compile("[1, 2, 3].all(x, x > 0)")
+	require.NoError(t, iss.Err())
+	prog, err := env.Program(ast, cel.InterruptCheckFrequency(1))
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	expr := compiledProgram{
+		Program: prog,
+		Source:  validate.Rule_builder{Id: proto.String("x")}.Build(),
+	}
+	activation := getBindings()
+	defer putBindings(activation)
+	_, err = expr.evalContext(ctx, activation, &validationConfig{cancellable: true})
+	require.ErrorIs(t, err, context.Canceled)
+	var re *RuntimeError
+	assert.NotErrorAs(t, err, &re, "context cancellation must not be wrapped in RuntimeError, got: %v", err)
+}
+
+// TestCompiled_EvalErrorNotMaskedByExpiredContext guards against reclassifying
+// a genuine evaluation error as a context error just because the context
+// expired while the expression ran: only cel-go's interrupt error signals
+// cancellation.
+func TestCompiled_EvalErrorNotMaskedByExpiredContext(t *testing.T) {
+	t.Parallel()
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	expr := compiledProgram{
+		Program: mockProgram{Err: errors.New("division by zero")},
+		Source:  validate.Rule_builder{Id: proto.String("x")}.Build(),
+	}
+	activation := getBindings()
+	defer putBindings(activation)
+	_, err := expr.evalContext(ctx, activation, &validationConfig{cancellable: true})
+	var re *RuntimeError
+	require.ErrorAs(t, err, &re, "a real evaluation error must stay a RuntimeError, got: %v", err)
+	assert.NotErrorIs(t, err, context.Canceled)
+}
+
 type mockProgram struct {
 	Val ref.Val
 	Err error

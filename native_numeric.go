@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"context"
 	"fmt"
 	"math"
 	"slices"
@@ -518,7 +519,11 @@ func (n nativeNumericCompare[T]) conjunction() string {
 	return "or"
 }
 
-func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n nativeNumericCompare[T]) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return n.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (n nativeNumericCompare[T]) EvaluateContext(_ context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	valT := n.config.extractVal(val)
 	var violations []*Violation
 

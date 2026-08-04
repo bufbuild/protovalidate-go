@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -36,6 +38,9 @@ type evaluator interface {
 	//       build. This error is not recoverable.
 	//
 	Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error
+
+	// EvaluateContext is like Evaluate, but honors context cancellation.
+	EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error
 }
 
 // messageEvaluator is essentially the same as evaluator, but specialized for
@@ -46,6 +51,10 @@ type messageEvaluator interface {
 	// EvaluateMessage checks that the provided msg is valid. See
 	// evaluator.Evaluate for behavior
 	EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error
+
+	// EvaluateMessageContext is like EvaluateMessage, but honors context
+	// cancellation.
+	EvaluateMessageContext(ctx context.Context, msg protoreflect.Message, cfg *validationConfig) error
 }
 
 // evaluators are a set of evaluator applied together to a value. Evaluation
@@ -53,10 +62,14 @@ type messageEvaluator interface {
 // true or a different error is returned.
 type evaluators []evaluator
 
-func (e evaluators) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
+func (e evaluators) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return e.EvaluateContext(context.Background(), msg, val, cfg)
+}
+
+func (e evaluators) EvaluateContext(ctx context.Context, msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range e {
-		evalErr := eval.Evaluate(msg, val, cfg)
+		evalErr := eval.EvaluateContext(ctx, msg, val, cfg)
 		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err
 		}
@@ -81,10 +94,14 @@ func (m messageEvaluators) Evaluate(val protoreflect.Value, cfg *validationConfi
 	return m.EvaluateMessage(val.Message(), cfg)
 }
 
-func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+func (m messageEvaluators) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return m.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (m messageEvaluators) EvaluateMessageContext(ctx context.Context, msg protoreflect.Message, cfg *validationConfig) (err error) {
 	var ok bool
 	for _, eval := range m {
-		evalErr := eval.EvaluateMessage(msg, cfg)
+		evalErr := eval.EvaluateMessageContext(ctx, msg, cfg)
 		if ok, err = mergeViolations(err, evalErr, cfg); !ok {
 			return err
 		}

@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"context"
+
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -60,11 +62,19 @@ func (f field) shouldIgnoreEmpty() bool {
 	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_ZERO_VALUE
 }
 
-func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
-	return f.EvaluateMessage(val.Message(), cfg)
+func (f field) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return f.EvaluateContext(context.Background(), msg, val, cfg)
 }
 
-func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+func (f field) EvaluateContext(ctx context.Context, _ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+	return f.EvaluateMessageContext(ctx, val.Message(), cfg)
+}
+
+func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+	return f.EvaluateMessageContext(context.Background(), msg, cfg)
+}
+
+func (f field) EvaluateMessageContext(ctx context.Context, msg protoreflect.Message, cfg *validationConfig) (err error) {
 	if f.shouldIgnoreAlways() {
 		return nil
 	}
@@ -95,7 +105,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 		return nil
 	}
 
-	return f.Value.EvaluateField(msg, msg.Get(f.Value.Descriptor), cfg, true)
+	return f.Value.EvaluateFieldContext(ctx, msg, msg.Get(f.Value.Descriptor), cfg, true)
 }
 
 func (f field) Tautology() bool {

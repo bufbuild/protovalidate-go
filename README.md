@@ -42,6 +42,14 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 }
 ```
 
+To bound validation with a `context.Context` (cancellation or deadline):
+
+```go
+if err = protovalidate.ValidateContext(ctx, moneyTransfer); err != nil {
+    // Handle failure; errors.Is(err, context.DeadlineExceeded) on timeout.
+}
+```
+
 ## Installation
 
 > [!TIP]
