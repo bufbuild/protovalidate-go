@@ -61,7 +61,12 @@ func (set astSet) ReduceResiduals(rules protoreflect.Message, opts ...cel.Progra
 			residuals = append(residuals, ast)
 			continue
 		}
-		val, details, _ := program.Program.Eval(activation)
+		partialAct, err := cel.PartialVars(activation, cel.AttributePattern("this"))
+		if err != nil {
+			residuals = append(residuals, ast)
+			continue
+		}
+		val, details, _ := program.Program.Eval(partialAct)
 		if val != nil {
 			switch value := val.Value().(type) {
 			case bool:
