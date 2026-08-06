@@ -72,8 +72,6 @@ func BenchmarkPattern(b *testing.B) {
 	benchSuccess(b, &pb.BenchPattern{})
 }
 
-
-
 func BenchmarkWrapperTesting(b *testing.B) {
 	msg := pb.WrapperTesting_builder{
 		I32: &wrapperspb.Int32Value{Value: 11},
@@ -134,7 +132,6 @@ func TestPattern(t *testing.T) {
 	t.Parallel()
 	testSuccess(t, &pb.BenchPattern{})
 }
-
 
 func TestWrapperTesting(t *testing.T) {
 	t.Parallel()
