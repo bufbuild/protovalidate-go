@@ -197,5 +197,3 @@ message BenchPattern {
     (gofakeit.generate).tag = "value"
   ];
 }
-
-
