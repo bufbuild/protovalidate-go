@@ -68,6 +68,10 @@ func BenchmarkStringMatching(b *testing.B) {
 	benchSuccess(b, &pb.StringMatching{})
 }
 
+func BenchmarkPattern(b *testing.B) {
+	benchSuccess(b, &pb.BenchPattern{})
+}
+
 func BenchmarkWrapperTesting(b *testing.B) {
 	msg := pb.WrapperTesting_builder{
 		I32: &wrapperspb.Int32Value{Value: 11},
@@ -122,6 +126,11 @@ func TestByteMatching(t *testing.T) {
 func TestStringMatching(t *testing.T) {
 	t.Parallel()
 	testSuccess(t, &pb.StringMatching{})
+}
+
+func TestPattern(t *testing.T) {
+	t.Parallel()
+	testSuccess(t, &pb.BenchPattern{})
 }
 
 func TestWrapperTesting(t *testing.T) {

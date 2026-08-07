@@ -190,3 +190,10 @@ enum BenchEnum {
   BENCH_ENUM_ONE = 1;
   BENCH_ENUM_TWO = 2;
 }
+
+message BenchPattern {
+  string val = 1 [
+    (buf.validate.field).string.pattern = "^[a-z][a-z0-9_]{1,62}[a-z0-9]$",
+    (gofakeit.generate).tag = "value"
+  ];
+}

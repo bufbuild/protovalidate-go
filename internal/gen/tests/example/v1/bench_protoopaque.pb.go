@@ -1078,6 +1078,63 @@ func (*benchComplexSchema_OneofI32) isBenchComplexSchema_Choice() {}
 
 func (*benchComplexSchema_OneofMsg) isBenchComplexSchema_Choice() {}
 
+type BenchPattern struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val string                 `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *BenchPattern) Reset() {
+	*x = BenchPattern{}
+	mi := &file_tests_example_v1_bench_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BenchPattern) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BenchPattern) ProtoMessage() {}
+
+func (x *BenchPattern) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_bench_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *BenchPattern) GetVal() string {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return ""
+}
+
+func (x *BenchPattern) SetVal(v string) {
+	x.xxx_hidden_Val = v
+}
+
+type BenchPattern_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val string
+}
+
+func (b0 BenchPattern_builder) Build() *BenchPattern {
+	m0 := &BenchPattern{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
 var File_tests_example_v1_bench_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_bench_proto_rawDesc = "" +
@@ -1162,7 +1219,9 @@ const file_tests_example_v1_bench_proto_rawDesc = "" +
 	"\x0eMapI64MsgEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\x03R\x03key\x123\n" +
 	"\x05value\x18\x02 \x01(\v2\x1d.tests.example.v1.BenchScalarR\x05value:\x028\x01B\b\n" +
-	"\x06choice*O\n" +
+	"\x06choice\"R\n" +
+	"\fBenchPattern\x12B\n" +
+	"\x03val\x18\x01 \x01(\tB0\xbaH\"r 2\x1e^[a-z][a-z0-9_]{1,62}[a-z0-9]$\xca\xe66\a\x12\x05valueR\x03val*O\n" +
 	"\tBenchEnum\x12\x1a\n" +
 	"\x16BENCH_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eBENCH_ENUM_ONE\x10\x01\x12\x12\n" +
@@ -1171,7 +1230,7 @@ const file_tests_example_v1_bench_proto_rawDesc = "" +
 	"BenchProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_bench_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_tests_example_v1_bench_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
 var file_tests_example_v1_bench_proto_goTypes = []any{
 	(BenchEnum)(0),                    // 0: tests.example.v1.BenchEnum
 	(*BenchScalar)(nil),               // 1: tests.example.v1.BenchScalar
@@ -1181,26 +1240,27 @@ var file_tests_example_v1_bench_proto_goTypes = []any{
 	(*BenchRepeatedBytesUnique)(nil),  // 5: tests.example.v1.BenchRepeatedBytesUnique
 	(*BenchMap)(nil),                  // 6: tests.example.v1.BenchMap
 	(*BenchComplexSchema)(nil),        // 7: tests.example.v1.BenchComplexSchema
-	nil,                               // 8: tests.example.v1.BenchMap.EntriesEntry
-	nil,                               // 9: tests.example.v1.BenchComplexSchema.MapStrStrEntry
-	nil,                               // 10: tests.example.v1.BenchComplexSchema.MapI32I64Entry
-	nil,                               // 11: tests.example.v1.BenchComplexSchema.MapU64BoolEntry
-	nil,                               // 12: tests.example.v1.BenchComplexSchema.MapStrBytesEntry
-	nil,                               // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry
-	nil,                               // 14: tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	(*BenchPattern)(nil),              // 8: tests.example.v1.BenchPattern
+	nil,                               // 9: tests.example.v1.BenchMap.EntriesEntry
+	nil,                               // 10: tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	nil,                               // 11: tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	nil,                               // 12: tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	nil,                               // 13: tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	nil,                               // 14: tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	nil,                               // 15: tests.example.v1.BenchComplexSchema.MapI64MsgEntry
 }
 var file_tests_example_v1_bench_proto_depIdxs = []int32{
 	1,  // 0: tests.example.v1.BenchRepeatedMessage.x:type_name -> tests.example.v1.BenchScalar
-	8,  // 1: tests.example.v1.BenchMap.entries:type_name -> tests.example.v1.BenchMap.EntriesEntry
+	9,  // 1: tests.example.v1.BenchMap.entries:type_name -> tests.example.v1.BenchMap.EntriesEntry
 	1,  // 2: tests.example.v1.BenchComplexSchema.nested:type_name -> tests.example.v1.BenchScalar
 	7,  // 3: tests.example.v1.BenchComplexSchema.self_ref:type_name -> tests.example.v1.BenchComplexSchema
 	1,  // 4: tests.example.v1.BenchComplexSchema.rep_msg:type_name -> tests.example.v1.BenchScalar
-	9,  // 5: tests.example.v1.BenchComplexSchema.map_str_str:type_name -> tests.example.v1.BenchComplexSchema.MapStrStrEntry
-	10, // 6: tests.example.v1.BenchComplexSchema.map_i32_i64:type_name -> tests.example.v1.BenchComplexSchema.MapI32I64Entry
-	11, // 7: tests.example.v1.BenchComplexSchema.map_u64_bool:type_name -> tests.example.v1.BenchComplexSchema.MapU64BoolEntry
-	12, // 8: tests.example.v1.BenchComplexSchema.map_str_bytes:type_name -> tests.example.v1.BenchComplexSchema.MapStrBytesEntry
-	13, // 9: tests.example.v1.BenchComplexSchema.map_str_msg:type_name -> tests.example.v1.BenchComplexSchema.MapStrMsgEntry
-	14, // 10: tests.example.v1.BenchComplexSchema.map_i64_msg:type_name -> tests.example.v1.BenchComplexSchema.MapI64MsgEntry
+	10, // 5: tests.example.v1.BenchComplexSchema.map_str_str:type_name -> tests.example.v1.BenchComplexSchema.MapStrStrEntry
+	11, // 6: tests.example.v1.BenchComplexSchema.map_i32_i64:type_name -> tests.example.v1.BenchComplexSchema.MapI32I64Entry
+	12, // 7: tests.example.v1.BenchComplexSchema.map_u64_bool:type_name -> tests.example.v1.BenchComplexSchema.MapU64BoolEntry
+	13, // 8: tests.example.v1.BenchComplexSchema.map_str_bytes:type_name -> tests.example.v1.BenchComplexSchema.MapStrBytesEntry
+	14, // 9: tests.example.v1.BenchComplexSchema.map_str_msg:type_name -> tests.example.v1.BenchComplexSchema.MapStrMsgEntry
+	15, // 10: tests.example.v1.BenchComplexSchema.map_i64_msg:type_name -> tests.example.v1.BenchComplexSchema.MapI64MsgEntry
 	0,  // 11: tests.example.v1.BenchComplexSchema.enum_field:type_name -> tests.example.v1.BenchEnum
 	1,  // 12: tests.example.v1.BenchComplexSchema.oneof_msg:type_name -> tests.example.v1.BenchScalar
 	1,  // 13: tests.example.v1.BenchComplexSchema.MapStrMsgEntry.value:type_name -> tests.example.v1.BenchScalar
@@ -1228,7 +1288,7 @@ func file_tests_example_v1_bench_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_bench_proto_rawDesc), len(file_tests_example_v1_bench_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   14,
+			NumMessages:   15,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
