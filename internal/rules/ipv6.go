@@ -47,9 +47,9 @@ func (i *ipv6) getBits() [2]uint64 {
 	p16 := i.pieces
 	// handle dotted decimal, add to p16
 	if i.dottedAddr != nil {
-		dotted32 := i.dottedAddr.getBits()      // right-most 32 bits
-		p16 = append(p16, uint16(dotted32>>16)) //nolint:gosec // this is ok, we only want the high 16 bits
-		p16 = append(p16, uint16(dotted32))     //nolint:gosec // this is ok, we only want the low 16 bits
+		dotted32 := i.dottedAddr.getBits() // right-most 32 bits
+		p16 = append(p16, uint16(dotted32>>16))
+		p16 = append(p16, uint16(dotted32)) //nolint:gosec // this is ok, we only want the low 16 bits
 	}
 	// handle double colon, fill pieces with 0
 	if i.doubleColonSeen {

@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -48,8 +47,8 @@ func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ 
 			Proto: validate.Violation_builder{
 				Field:   d.fieldPath(),
 				Rule:    d.rulePath(enumDefinedOnlyRulePath),
-				RuleId:  proto.String("enum.defined_only"),
-				Message: proto.String("value must be one of the defined enum values"),
+				RuleId:  new("enum.defined_only"),
+				Message: new("value must be one of the defined enum values"),
 			}.Build(),
 			FieldValue:      val,
 			FieldDescriptor: d.Descriptor,

@@ -80,7 +80,7 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 			name: "double_finite",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_DOUBLE.Enum(),
 			rule: validate.FieldRules_builder{
-				Double: validate.DoubleRules_builder{Finite: proto.Bool(true)}.Build(),
+				Double: validate.DoubleRules_builder{Finite: new(true)}.Build(),
 			}.Build(),
 			info: dynamicMessageTesterInfo{
 				goodValue:         protoreflect.ValueOfFloat64(50),
@@ -106,7 +106,7 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 			name: "prefix",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_STRING.Enum(),
 			rule: validate.FieldRules_builder{
-				String: validate.StringRules_builder{Prefix: proto.String("hello")}.Build(),
+				String: validate.StringRules_builder{Prefix: new("hello")}.Build(),
 			}.Build(),
 			info: dynamicMessageTesterInfo{
 				goodValue:         protoreflect.ValueOfString("hello world"),
@@ -119,7 +119,7 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 			name: "bool_const",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_BOOL.Enum(),
 			rule: validate.FieldRules_builder{
-				Bool: validate.BoolRules_builder{Const: proto.Bool(true)}.Build(),
+				Bool: validate.BoolRules_builder{Const: new(true)}.Build(),
 			}.Build(),
 			info: dynamicMessageTesterInfo{
 				goodValue:         protoreflect.ValueOfBool(true),
@@ -133,7 +133,7 @@ func TestDynamicRulesEndToEnd(t *testing.T) {
 		t.Run(d.name, func(t *testing.T) {
 			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.native", "TestMessage", &descriptorpb.FieldDescriptorProto{
-				Name:    proto.String("value"),
+				Name:    new("value"),
 				Number:  proto.Int32(1),
 				Type:    d.typ,
 				Label:   descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -188,7 +188,7 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 			name: "repeated_unique",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 			rule: validate.FieldRules_builder{
-				Repeated: validate.RepeatedRules_builder{Unique: ptr(true)}.Build(),
+				Repeated: validate.RepeatedRules_builder{Unique: new(true)}.Build(),
 			}.Build(),
 			goodValue: []int32{1, 2, 3},
 			badValue:  []int32{1, 2, 1},
@@ -201,7 +201,7 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 			name: "repeated_unique_items",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 			rule: validate.FieldRules_builder{
-				Repeated: validate.RepeatedRules_builder{Unique: proto.Bool(true), Items: validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gte: ptr(int32(2))}.Build()}.Build()}.Build(),
+				Repeated: validate.RepeatedRules_builder{Unique: new(true), Items: validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gte: new(int32(2))}.Build()}.Build()}.Build(),
 			}.Build(),
 			goodValue: []int32{2, 4, 6},
 			badValue:  []int32{2, 1, 3},
@@ -214,7 +214,7 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 			name: "repeated_unique_max_items",
 			typ:  descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 			rule: validate.FieldRules_builder{
-				Repeated: validate.RepeatedRules_builder{Unique: proto.Bool(true), MaxItems: proto.Uint64(3), Items: validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gte: ptr(int32(2))}.Build()}.Build()}.Build(),
+				Repeated: validate.RepeatedRules_builder{Unique: new(true), MaxItems: proto.Uint64(3), Items: validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gte: new(int32(2))}.Build()}.Build()}.Build(),
 			}.Build(),
 			goodValue: []int32{2, 4, 6},
 			badValue:  []int32{2, 6, 3, 5},
@@ -228,7 +228,7 @@ func TestDynamicRepeatedRulesEndToEnd(t *testing.T) {
 		t.Run(d.name, func(t *testing.T) {
 			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.native", "TestMessage", &descriptorpb.FieldDescriptorProto{
-				Name:    proto.String("value"),
+				Name:    new("value"),
 				Number:  proto.Int32(1),
 				Type:    d.typ,
 				Label:   descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
@@ -260,11 +260,11 @@ func TestNativeEnum_EndToEnd(t *testing.T) {
 	t.Parallel()
 	// Build a proto with an enum field and const rule.
 	enumDesc := &descriptorpb.EnumDescriptorProto{
-		Name: proto.String("TestEnum"),
+		Name: new("TestEnum"),
 		Value: []*descriptorpb.EnumValueDescriptorProto{
-			{Name: proto.String("UNSPECIFIED"), Number: proto.Int32(0)},
-			{Name: proto.String("VALUE_ONE"), Number: proto.Int32(1)},
-			{Name: proto.String("VALUE_TWO"), Number: proto.Int32(2)},
+			{Name: new("UNSPECIFIED"), Number: proto.Int32(0)},
+			{Name: new("VALUE_ONE"), Number: proto.Int32(1)},
+			{Name: new("VALUE_TWO"), Number: proto.Int32(2)},
 		},
 	}
 	data := []struct {
@@ -301,10 +301,10 @@ func TestNativeEnum_EndToEnd(t *testing.T) {
 		t.Run(d.name, func(t *testing.T) {
 			t.Parallel()
 			msgType := newDynamicMessageTypeWithEnum(t, "test.native", "EnumMsg", enumDesc, &descriptorpb.FieldDescriptorProto{
-				Name:     proto.String("value"),
+				Name:     new("value"),
 				Number:   proto.Int32(1),
 				Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
-				TypeName: proto.String(".test.native.TestEnum"),
+				TypeName: new(".test.native.TestEnum"),
 				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 				Options:  fieldOpts(d.rule),
 			})
@@ -425,11 +425,11 @@ func dynamicMessageTester(t *testing.T, info dynamicMessageTesterInfo, fieldName
 func TestEnumCombinedRules(t *testing.T) {
 	t.Parallel()
 	enumDesc := &descriptorpb.EnumDescriptorProto{
-		Name: proto.String("Status"),
+		Name: new("Status"),
 		Value: []*descriptorpb.EnumValueDescriptorProto{
-			{Name: proto.String("STATUS_UNSPECIFIED"), Number: proto.Int32(0)},
-			{Name: proto.String("STATUS_ACTIVE"), Number: proto.Int32(1)},
-			{Name: proto.String("STATUS_INACTIVE"), Number: proto.Int32(2)},
+			{Name: new("STATUS_UNSPECIFIED"), Number: proto.Int32(0)},
+			{Name: new("STATUS_ACTIVE"), Number: proto.Int32(1)},
+			{Name: new("STATUS_INACTIVE"), Number: proto.Int32(2)},
 		},
 	}
 
@@ -444,13 +444,13 @@ func TestEnumCombinedRules(t *testing.T) {
 		// --- defined_only + in ---
 		{
 			name:    "defined_only+in/pass: defined and in list",
-			rules:   validate.EnumRules_builder{DefinedOnly: proto.Bool(true), In: []int32{1, 2}}.Build(),
+			rules:   validate.EnumRules_builder{DefinedOnly: new(true), In: []int32{1, 2}}.Build(),
 			value:   1, // STATUS_ACTIVE: defined, in [1,2]
 			wantErr: false,
 		},
 		{
 			name:           "defined_only+in/fail_in_only: defined but not in list",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), In: []int32{1, 2}}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), In: []int32{1, 2}}.Build(),
 			value:          0, // STATUS_UNSPECIFIED: defined, not in [1,2]
 			wantErr:        true,
 			violationCount: 1,
@@ -458,7 +458,7 @@ func TestEnumCombinedRules(t *testing.T) {
 		},
 		{
 			name:           "defined_only+in/fail_both: undefined and not in list",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), In: []int32{1, 2}}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), In: []int32{1, 2}}.Build(),
 			value:          99, // undefined, not in [1,2]
 			wantErr:        true,
 			violationCount: 2,
@@ -468,13 +468,13 @@ func TestEnumCombinedRules(t *testing.T) {
 		// --- defined_only + const ---
 		{
 			name:    "defined_only+const/pass: defined and equals const",
-			rules:   validate.EnumRules_builder{DefinedOnly: proto.Bool(true), Const: proto.Int32(1)}.Build(),
+			rules:   validate.EnumRules_builder{DefinedOnly: new(true), Const: proto.Int32(1)}.Build(),
 			value:   1, // STATUS_ACTIVE: defined, equals 1
 			wantErr: false,
 		},
 		{
 			name:           "defined_only+const/fail_const_only: defined but wrong value",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), Const: proto.Int32(1)}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), Const: proto.Int32(1)}.Build(),
 			value:          2, // STATUS_INACTIVE: defined, but not 1
 			wantErr:        true,
 			violationCount: 1,
@@ -482,7 +482,7 @@ func TestEnumCombinedRules(t *testing.T) {
 		},
 		{
 			name:           "defined_only+const/fail_both: undefined and wrong value",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), Const: proto.Int32(1)}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), Const: proto.Int32(1)}.Build(),
 			value:          99, // undefined, not 1
 			wantErr:        true,
 			violationCount: 2,
@@ -492,13 +492,13 @@ func TestEnumCombinedRules(t *testing.T) {
 		// --- defined_only + not_in ---
 		{
 			name:    "defined_only+not_in/pass: defined and not in exclusion list",
-			rules:   validate.EnumRules_builder{DefinedOnly: proto.Bool(true), NotIn: []int32{0}}.Build(),
+			rules:   validate.EnumRules_builder{DefinedOnly: new(true), NotIn: []int32{0}}.Build(),
 			value:   1, // STATUS_ACTIVE: defined, not in [0]
 			wantErr: false,
 		},
 		{
 			name:           "defined_only+not_in/fail_not_in_only: defined but in exclusion list",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), NotIn: []int32{0}}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), NotIn: []int32{0}}.Build(),
 			value:          0, // STATUS_UNSPECIFIED: defined, but in [0]
 			wantErr:        true,
 			violationCount: 1,
@@ -506,7 +506,7 @@ func TestEnumCombinedRules(t *testing.T) {
 		},
 		{
 			name:           "defined_only+not_in/fail_defined_only: undefined but not in exclusion list",
-			rules:          validate.EnumRules_builder{DefinedOnly: proto.Bool(true), NotIn: []int32{0}}.Build(),
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true), NotIn: []int32{0}}.Build(),
 			value:          99, // undefined, but 99 is not in [0]
 			wantErr:        true,
 			violationCount: 1,
@@ -518,10 +518,10 @@ func TestEnumCombinedRules(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			msgType := newDynamicMessageTypeWithEnum(t, "test.combined", "EnumCombined", enumDesc, &descriptorpb.FieldDescriptorProto{
-				Name:     proto.String("status"),
+				Name:     new("status"),
 				Number:   proto.Int32(1),
 				Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
-				TypeName: proto.String(".test.combined.Status"),
+				TypeName: new(".test.combined.Status"),
 				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 				Options:  fieldOpts(validate.FieldRules_builder{Enum: tt.rules}.Build()),
 			})
@@ -571,15 +571,15 @@ func newDynamicMessageTypeWithEnum(
 	t.Helper()
 
 	file := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String(pkg + "." + name + ".proto"),
-		Package: proto.String(pkg),
-		Syntax:  proto.String("proto3"),
+		Name:    new(pkg + "." + name + ".proto"),
+		Package: new(pkg),
+		Syntax:  new("proto3"),
 		Dependency: []string{
 			"buf/validate/validate.proto",
 		},
 		EnumType: []*descriptorpb.EnumDescriptorProto{enumDesc},
 		MessageType: []*descriptorpb.DescriptorProto{{
-			Name:  proto.String(name),
+			Name:  new(name),
 			Field: []*descriptorpb.FieldDescriptorProto{field},
 		}},
 	}
@@ -624,13 +624,13 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 			validate.FieldRules_builder{Int32: validate.Int32Rules_builder{Gt: proto.Int32(0), Lt: proto.Int32(10)}.Build()}.Build(),
 			protoreflect.ValueOfInt32(20))},
 		{"double_finite", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_DOUBLE,
-			validate.FieldRules_builder{Double: validate.DoubleRules_builder{Finite: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{Double: validate.DoubleRules_builder{Finite: new(true)}.Build()}.Build(),
 			protoreflect.ValueOfFloat64(math.Inf(1)))},
 
 		// string: const, in, not_in, prefix/suffix/contains/not_contains,
 		// pattern, length (rune + byte), well-known format, well_known_regex.
 		{"string_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Const: proto.String("a")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Const: new("a")}.Build()}.Build(),
 			protoreflect.ValueOfString("b"))},
 		{"string_in", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
 			validate.FieldRules_builder{String: validate.StringRules_builder{In: []string{"a", "b"}}.Build()}.Build(),
@@ -639,19 +639,19 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 			validate.FieldRules_builder{String: validate.StringRules_builder{NotIn: []string{"z"}}.Build()}.Build(),
 			protoreflect.ValueOfString("z"))},
 		{"string_prefix", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Prefix: proto.String("foo")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Prefix: new("foo")}.Build()}.Build(),
 			protoreflect.ValueOfString("bar"))},
 		{"string_suffix", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Suffix: proto.String("bar")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Suffix: new("bar")}.Build()}.Build(),
 			protoreflect.ValueOfString("foo"))},
 		{"string_contains", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Contains: proto.String("mid")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Contains: new("mid")}.Build()}.Build(),
 			protoreflect.ValueOfString("absent"))},
 		{"string_not_contains", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{NotContains: proto.String("bad")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{NotContains: new("bad")}.Build()}.Build(),
 			protoreflect.ValueOfString("badger"))},
 		{"string_pattern", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Pattern: proto.String("^[a-z]+$")}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Pattern: new("^[a-z]+$")}.Build()}.Build(),
 			protoreflect.ValueOfString("123"))},
 		{"string_min_len", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
 			validate.FieldRules_builder{String: validate.StringRules_builder{MinLen: proto.Uint64(5)}.Build()}.Build(),
@@ -660,15 +660,15 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 			validate.FieldRules_builder{String: validate.StringRules_builder{MinBytes: proto.Uint64(5)}.Build()}.Build(),
 			protoreflect.ValueOfString("ab"))},
 		{"string_email", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Email: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Email: new(true)}.Build()}.Build(),
 			protoreflect.ValueOfString("not-an-email"))},
 		{"string_uuid", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
-			validate.FieldRules_builder{String: validate.StringRules_builder{Uuid: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{String: validate.StringRules_builder{Uuid: new(true)}.Build()}.Build(),
 			protoreflect.ValueOfString("not-a-uuid"))},
 		{"string_well_known_regex", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
 			validate.FieldRules_builder{String: validate.StringRules_builder{
 				WellKnownRegex: validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME.Enum(),
-				Strict:         proto.Bool(true),
+				Strict:         new(true),
 			}.Build()}.Build(),
 			protoreflect.ValueOfString("bad header"))},
 
@@ -689,12 +689,12 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Prefix: []byte{0x0a}}.Build()}.Build(),
 			protoreflect.ValueOfBytes([]byte{0x0b}))},
 		{"bytes_ip", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BYTES,
-			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Ip: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{Bytes: validate.BytesRules_builder{Ip: new(true)}.Build()}.Build(),
 			protoreflect.ValueOfBytes([]byte{0x01, 0x02, 0x03}))},
 
 		// bool: const.
 		{"bool_const", scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_BOOL,
-			validate.FieldRules_builder{Bool: validate.BoolRules_builder{Const: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{Bool: validate.BoolRules_builder{Const: new(true)}.Build()}.Build(),
 			protoreflect.ValueOfBool(false))},
 
 		// repeated: min_items/max_items (uint64) and unique (bool).
@@ -702,7 +702,7 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 			validate.FieldRules_builder{Repeated: validate.RepeatedRules_builder{MinItems: proto.Uint64(3)}.Build()}.Build(),
 			[]int32{1})},
 		{"repeated_unique", repeatedRuleValueCase(
-			validate.FieldRules_builder{Repeated: validate.RepeatedRules_builder{Unique: proto.Bool(true)}.Build()}.Build(),
+			validate.FieldRules_builder{Repeated: validate.RepeatedRules_builder{Unique: new(true)}.Build()}.Build(),
 			[]int32{1, 1})},
 
 		// enum: const, in, not_in.
@@ -741,7 +741,7 @@ func scalarRuleValueCase(
 	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
 		t.Helper()
 		msgType := newDynamicMessageType(t, "test.rulevalue", "Msg", &descriptorpb.FieldDescriptorProto{
-			Name:    proto.String("value"),
+			Name:    new("value"),
 			Number:  proto.Int32(1),
 			Type:    typ.Enum(),
 			Label:   descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -760,7 +760,7 @@ func repeatedRuleValueCase(
 	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
 		t.Helper()
 		msgType := newDynamicMessageType(t, "test.rulevalue", "Msg", &descriptorpb.FieldDescriptorProto{
-			Name:    proto.String("value"),
+			Name:    new("value"),
 			Number:  proto.Int32(1),
 			Type:    descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 			Label:   descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
@@ -782,18 +782,18 @@ func enumRuleValueCase(
 	return func(t testing.TB) (protoreflect.MessageType, *dynamicpb.Message) {
 		t.Helper()
 		enumDesc := &descriptorpb.EnumDescriptorProto{
-			Name: proto.String("Enum"),
+			Name: new("Enum"),
 			Value: []*descriptorpb.EnumValueDescriptorProto{
-				{Name: proto.String("ENUM_UNSPECIFIED"), Number: proto.Int32(0)},
-				{Name: proto.String("ENUM_A"), Number: proto.Int32(1)},
-				{Name: proto.String("ENUM_B"), Number: proto.Int32(2)},
+				{Name: new("ENUM_UNSPECIFIED"), Number: proto.Int32(0)},
+				{Name: new("ENUM_A"), Number: proto.Int32(1)},
+				{Name: new("ENUM_B"), Number: proto.Int32(2)},
 			},
 		}
 		msgType := newDynamicMessageTypeWithEnum(t, "test.rulevalue", "Msg", enumDesc, &descriptorpb.FieldDescriptorProto{
-			Name:     proto.String("value"),
+			Name:     new("value"),
 			Number:   proto.Int32(1),
 			Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
-			TypeName: proto.String(".test.rulevalue.Enum"),
+			TypeName: new(".test.rulevalue.Enum"),
 			Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 			Options:  fieldOpts(validate.FieldRules_builder{Enum: rule}.Build()),
 		})

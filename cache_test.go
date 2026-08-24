@@ -20,7 +20,7 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
 	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -63,7 +63,7 @@ func TestCache_BuildStandardRules(t *testing.T) {
 			desc: getFieldDesc(t, &cases.RepeatedNone{}, "val"),
 			cons: validate.FieldRules_builder{
 				Repeated: validate.RepeatedRules_builder{
-					MinItems: proto.Uint64(3),
+					MinItems: new(uint64(3)),
 				}.Build(),
 			}.Build(),
 			exCt: 1,
@@ -85,7 +85,7 @@ func TestCache_BuildStandardRules(t *testing.T) {
 			desc: getFieldDesc(t, &cases.MapNone{}, "val"),
 			cons: validate.FieldRules_builder{
 				Map: validate.MapRules_builder{
-					MinPairs: proto.Uint64(2),
+					MinPairs: new(uint64(2)),
 				}.Build(),
 			}.Build(),
 			exCt: 1,
@@ -95,7 +95,7 @@ func TestCache_BuildStandardRules(t *testing.T) {
 			desc: getFieldDesc(t, &cases.AnyNone{}, "val"),
 			cons: validate.FieldRules_builder{
 				Float: validate.FloatRules_builder{
-					Const: proto.Float32(1.23),
+					Const: new(float32(1.23)),
 				}.Build(),
 			}.Build(),
 			exErr: true,

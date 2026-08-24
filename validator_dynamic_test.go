@@ -34,7 +34,7 @@ func TestValidator_DynamicMessageTypeShadowing(t *testing.T) {
 	t.Parallel()
 
 	stringMsgType := newDynamicMessageType(t, "test.shadowing", "Message", &descriptorpb.FieldDescriptorProto{
-		Name:   proto.String("value"),
+		Name:   new("value"),
 		Number: proto.Int32(1),
 		Type:   descriptorpb.FieldDescriptorProto_TYPE_STRING.Enum(),
 		Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -43,7 +43,7 @@ func TestValidator_DynamicMessageTypeShadowing(t *testing.T) {
 		}.Build()),
 	})
 	int32MsgType := newDynamicMessageType(t, "test.shadowing", "Message", &descriptorpb.FieldDescriptorProto{
-		Name:   proto.String("value"),
+		Name:   new("value"),
 		Number: proto.Int32(1),
 		Type:   descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 		Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -106,7 +106,7 @@ func TestValidator_ParallelDynamicMessageRegistration(t *testing.T) {
 			}.Build())
 		}
 		types[i] = newDynamicMessageType(t, fmt.Sprintf("test.parallel%d", i), "Message", &descriptorpb.FieldDescriptorProto{
-			Name:    proto.String("value"),
+			Name:    new("value"),
 			Number:  proto.Int32(1),
 			Type:    fieldType.Enum(),
 			Label:   descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -140,16 +140,16 @@ func TestValidator_SharedNestedDynamicMessage(t *testing.T) {
 	require.NoError(t, registry.RegisterFile(validate.File_buf_validate_validate_proto))
 
 	nestedFilePB := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String("test.shared.nested.proto"),
-		Package: proto.String("test.shared"),
-		Syntax:  proto.String("proto3"),
+		Name:    new("test.shared.nested.proto"),
+		Package: new("test.shared"),
+		Syntax:  new("proto3"),
 		Dependency: []string{
 			"buf/validate/validate.proto",
 		},
 		MessageType: []*descriptorpb.DescriptorProto{{
-			Name: proto.String("Nested"),
+			Name: new("Nested"),
 			Field: []*descriptorpb.FieldDescriptorProto{{
-				Name:   proto.String("value"),
+				Name:   new("value"),
 				Number: proto.Int32(1),
 				Type:   descriptorpb.FieldDescriptorProto_TYPE_STRING.Enum(),
 				Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
@@ -164,10 +164,10 @@ func TestValidator_SharedNestedDynamicMessage(t *testing.T) {
 	require.NoError(t, registry.RegisterFile(nestedFile))
 
 	nestedField := &descriptorpb.FieldDescriptorProto{
-		Name:     proto.String("nested"),
+		Name:     new("nested"),
 		Number:   proto.Int32(1),
 		Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
-		TypeName: proto.String(".test.shared.Nested"),
+		TypeName: new(".test.shared.Nested"),
 		Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 	}
 	parentAType := newDynamicMessageTypeWithRegistry(t, registry, "test.shared", "ParentA", nestedField)
@@ -231,14 +231,14 @@ func newDynamicMessageTypeWithRegistry(
 	t.Helper()
 
 	file := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String(pkg + "." + name + ".proto"),
-		Package: proto.String(pkg),
-		Syntax:  proto.String("proto3"),
+		Name:    new(pkg + "." + name + ".proto"),
+		Package: new(pkg),
+		Syntax:  new("proto3"),
 		Dependency: []string{
 			"buf/validate/validate.proto",
 		},
 		MessageType: []*descriptorpb.DescriptorProto{{
-			Name:  proto.String(name),
+			Name:  new(name),
 			Field: []*descriptorpb.FieldDescriptorProto{field},
 		}},
 	}

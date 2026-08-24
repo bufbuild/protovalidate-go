@@ -150,10 +150,10 @@ func newDynamicMapMessageType(
 
 	mapEntryName := "EntriesEntry"
 	field := &descriptorpb.FieldDescriptorProto{
-		Name:     proto.String("entries"),
+		Name:     new("entries"),
 		Number:   proto.Int32(1),
 		Type:     descriptorpb.FieldDescriptorProto_TYPE_MESSAGE.Enum(),
-		TypeName: proto.String("." + pkg + "." + name + "." + mapEntryName),
+		TypeName: new("." + pkg + "." + name + "." + mapEntryName),
 		Label:    descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),
 	}
 	if rules != nil {
@@ -161,33 +161,33 @@ func newDynamicMapMessageType(
 	}
 
 	file := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String(pkg + "." + name + ".proto"),
-		Package: proto.String(pkg),
-		Syntax:  proto.String("proto3"),
+		Name:    new(pkg + "." + name + ".proto"),
+		Package: new(pkg),
+		Syntax:  new("proto3"),
 		Dependency: []string{
 			"buf/validate/validate.proto",
 		},
 		MessageType: []*descriptorpb.DescriptorProto{{
-			Name:  proto.String(name),
+			Name:  new(name),
 			Field: []*descriptorpb.FieldDescriptorProto{field},
 			NestedType: []*descriptorpb.DescriptorProto{{
-				Name: proto.String(mapEntryName),
+				Name: new(mapEntryName),
 				Field: []*descriptorpb.FieldDescriptorProto{
 					{
-						Name:   proto.String("key"),
+						Name:   new("key"),
 						Number: proto.Int32(1),
 						Type:   keyType.Enum(),
 						Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 					},
 					{
-						Name:   proto.String("value"),
+						Name:   new("value"),
 						Number: proto.Int32(2),
 						Type:   valueType.Enum(),
 						Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 					},
 				},
 				Options: &descriptorpb.MessageOptions{
-					MapEntry: proto.Bool(true),
+					MapEntry: new(true),
 				},
 			}},
 		}},

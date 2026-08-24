@@ -104,7 +104,7 @@ func TestNativeEvaluatorSelection(t *testing.T) {
 			fieldType: descriptorpb.FieldDescriptorProto_TYPE_BOOL,
 			label:     descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL,
 			rules: validate.FieldRules_builder{
-				Bool: validate.BoolRules_builder{Const: proto.Bool(true)}.Build(),
+				Bool: validate.BoolRules_builder{Const: new(true)}.Build(),
 			}.Build(),
 			nativeType: "nativeBoolEval",
 		},
@@ -132,7 +132,7 @@ func TestNativeEvaluatorSelection(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			msgType := newDynamicMessageType(t, "test.sel", "Msg", &descriptorpb.FieldDescriptorProto{
-				Name:    proto.String("value"),
+				Name:    new("value"),
 				Number:  proto.Int32(1),
 				Type:    tt.fieldType.Enum(),
 				Label:   tt.label.Enum(),
@@ -154,17 +154,17 @@ func TestNativeEvaluatorSelection(t *testing.T) {
 func TestNativeEvaluatorSelection_Enum(t *testing.T) {
 	t.Parallel()
 	enumDesc := &descriptorpb.EnumDescriptorProto{
-		Name: proto.String("TestEnum"),
+		Name: new("TestEnum"),
 		Value: []*descriptorpb.EnumValueDescriptorProto{
-			{Name: proto.String("UNSPECIFIED"), Number: proto.Int32(0)},
-			{Name: proto.String("ONE"), Number: proto.Int32(1)},
+			{Name: new("UNSPECIFIED"), Number: proto.Int32(0)},
+			{Name: new("ONE"), Number: proto.Int32(1)},
 		},
 	}
 	msgType := newDynamicMessageTypeWithEnum(t, "test.sel", "EnumMsg", enumDesc, &descriptorpb.FieldDescriptorProto{
-		Name:     proto.String("value"),
+		Name:     new("value"),
 		Number:   proto.Int32(1),
 		Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
-		TypeName: proto.String(".test.sel.TestEnum"),
+		TypeName: new(".test.sel.TestEnum"),
 		Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 		Options: fieldOpts(validate.FieldRules_builder{
 			Enum: validate.EnumRules_builder{In: []int32{0, 1}}.Build(),
@@ -206,7 +206,7 @@ func TestNativeEvaluatorSelection_Map(t *testing.T) {
 func TestCELFallbackWithoutNativeFlag(t *testing.T) {
 	t.Parallel()
 	msgType := newDynamicMessageType(t, "test.sel", "CELMsg", &descriptorpb.FieldDescriptorProto{
-		Name:   proto.String("value"),
+		Name:   new("value"),
 		Number: proto.Int32(1),
 		Type:   descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 		Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),

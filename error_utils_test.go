@@ -91,7 +91,7 @@ func TestMerge(t *testing.T) {
 			t.Parallel()
 			exErr := &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build(),
 			}}}
 			ok, err := mergeViolations(nil, exErr, &validationConfig{failFast: true})
@@ -114,7 +114,7 @@ func TestMerge(t *testing.T) {
 			dstErr := errors.New("some error")
 			srcErr := &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build(),
 			}}}
 			ok, err := mergeViolations(dstErr, srcErr, &validationConfig{failFast: true})
@@ -129,7 +129,7 @@ func TestMerge(t *testing.T) {
 			t.Parallel()
 			dstErr := &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build(),
 			}}}
 			srcErr := errors.New("some error")
@@ -146,20 +146,20 @@ func TestMerge(t *testing.T) {
 
 			dstErr := &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build(),
 			}}}
 			srcErr := &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("bar"),
+					RuleId: new("bar"),
 				}.Build(),
 			}}}
 			exErr := &ValidationError{Violations: []*Violation{
 				{Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build()},
 				{Proto: validate.Violation_builder{
-					RuleId: proto.String("bar"),
+					RuleId: new("bar"),
 				}.Build()},
 			}}
 			ok, err := mergeViolations(dstErr, srcErr, &validationConfig{failFast: true})
@@ -169,7 +169,7 @@ func TestMerge(t *testing.T) {
 			assert.False(t, ok)
 			dstErr = &ValidationError{Violations: []*Violation{{
 				Proto: validate.Violation_builder{
-					RuleId: proto.String("foo"),
+					RuleId: new("foo"),
 				}.Build(),
 			}}}
 			ok, err = mergeViolations(dstErr, srcErr, &validationConfig{failFast: false})

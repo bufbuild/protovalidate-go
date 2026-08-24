@@ -21,7 +21,6 @@ import (
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/apipb"
@@ -143,11 +142,11 @@ func TestValidator_ValidateOneof(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	oneofMessage := pb.MsgHasOneof_builder{X: proto.String("foo")}.Build()
+	oneofMessage := pb.MsgHasOneof_builder{X: new("foo")}.Build()
 	err = val.Validate(oneofMessage)
 	require.NoError(t, err)
 
-	oneofMessage = pb.MsgHasOneof_builder{Y: proto.Int32(42)}.Build()
+	oneofMessage = pb.MsgHasOneof_builder{Y: new(int32(42))}.Build()
 	err = val.Validate(oneofMessage)
 	require.NoError(t, err)
 
@@ -539,7 +538,7 @@ func TestValidator_Validate_Issue148(t *testing.T) {
 	t.Parallel()
 	val, err := New()
 	require.NoError(t, err)
-	msg := pb.Issue148_builder{Test: proto.Int32(1)}.Build()
+	msg := pb.Issue148_builder{Test: new(int32(1))}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)
 }
@@ -549,8 +548,8 @@ func TestValidator_Validate_Issue187(t *testing.T) {
 	val, err := New()
 	require.NoError(t, err)
 	msg := pb.Issue187_builder{
-		FalseField: proto.Bool(false),
-		TrueField:  proto.Bool(true),
+		FalseField: new(false),
+		TrueField:  new(true),
 	}.Build()
 	err = val.Validate(msg)
 	require.NoError(t, err)

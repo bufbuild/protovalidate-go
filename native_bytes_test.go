@@ -115,7 +115,7 @@ func TestNativeBytesMaxLen(t *testing.T) {
 
 func TestNativeBytesPattern(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBytes(t, validate.BytesRules_builder{Pattern: proto.String("^[a-zA-Z0-9]+$")}.Build())
+	eval := buildNativeBytes(t, validate.BytesRules_builder{Pattern: new("^[a-zA-Z0-9]+$")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte("abc123")), &validationConfig{}))
@@ -173,7 +173,7 @@ func TestNativeBytesNotIn(t *testing.T) {
 
 func TestNativeBytesIP(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBytes(t, validate.BytesRules_builder{Ip: proto.Bool(true)}.Build())
+	eval := buildNativeBytes(t, validate.BytesRules_builder{Ip: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	// valid IPv4 (4 bytes)
@@ -199,7 +199,7 @@ func TestNativeBytesIP(t *testing.T) {
 
 func TestNativeBytesIPv4(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBytes(t, validate.BytesRules_builder{Ipv4: proto.Bool(true)}.Build())
+	eval := buildNativeBytes(t, validate.BytesRules_builder{Ipv4: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes([]byte{10, 0, 0, 1}), &validationConfig{}))
@@ -209,7 +209,7 @@ func TestNativeBytesIPv4(t *testing.T) {
 
 func TestNativeBytesIPv6(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBytes(t, validate.BytesRules_builder{Ipv6: proto.Bool(true)}.Build())
+	eval := buildNativeBytes(t, validate.BytesRules_builder{Ipv6: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes(make([]byte, 16)), &validationConfig{}))
@@ -219,7 +219,7 @@ func TestNativeBytesIPv6(t *testing.T) {
 
 func TestNativeBytesUUID(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBytes(t, validate.BytesRules_builder{Uuid: proto.Bool(true)}.Build())
+	eval := buildNativeBytes(t, validate.BytesRules_builder{Uuid: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBytes(make([]byte, 16)), &validationConfig{}))
@@ -255,8 +255,7 @@ func TestNativeBytesBroken(t *testing.T) {
 			require.NoError(t, err)
 			err = validator.Validate(msg)
 			require.Error(t, err)
-			var valErr *ValidationError
-			if errors.As(err, &valErr) {
+			if valErr, ok := errors.AsType[*ValidationError](err); ok {
 				if len(valErr.Violations) != 2 {
 					t.Errorf("expected 2 violations, got %d: %v", len(valErr.Violations), valErr)
 				}
@@ -289,7 +288,7 @@ func TestTryBuildNativeBytesRules_ReturnsNil(t *testing.T) {
 func TestNativeBytes_EndToEnd(t *testing.T) {
 	t.Parallel()
 	msgType := newDynamicMessageType(t, "test.native", "BytesMsg", &descriptorpb.FieldDescriptorProto{
-		Name:   proto.String("value"),
+		Name:   new("value"),
 		Number: proto.Int32(1),
 		Type:   descriptorpb.FieldDescriptorProto_TYPE_BYTES.Enum(),
 		Label:  descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),

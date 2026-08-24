@@ -124,7 +124,7 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 	err = val.Validate(dyn)
 	if err == nil {
 		return harness.TestResult_builder{
-			Success: proto.Bool(true),
+			Success: new(true),
 		}.Build()
 	}
 	switch res := err.(type) {
@@ -134,11 +134,11 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 		}.Build()
 	case *protovalidate.RuntimeError:
 		return harness.TestResult_builder{
-			RuntimeError: proto.String(res.Error()),
+			RuntimeError: new(res.Error()),
 		}.Build()
 	case *protovalidate.CompilationError:
 		return harness.TestResult_builder{
-			CompilationError: proto.String(res.Error()),
+			CompilationError: new(res.Error()),
 		}.Build()
 	default:
 		return unexpectedErrorResult("unknown error: %v", err)
@@ -147,6 +147,6 @@ func TestCase(val protovalidate.Validator, files *protoregistry.Files, testCase 
 
 func unexpectedErrorResult(format string, args ...any) *harness.TestResult {
 	return harness.TestResult_builder{
-		UnexpectedError: proto.String(fmt.Sprintf(format, args...)),
+		UnexpectedError: new(fmt.Sprintf(format, args...)),
 	}.Build()
 }

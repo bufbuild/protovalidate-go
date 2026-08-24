@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -81,8 +80,8 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 			Proto: validate.Violation_builder{
 				Field:   fieldPath(f.Value.Descriptor),
 				Rule:    prefixRulePath(f.Value.NestedRule, requiredRulePath),
-				RuleId:  proto.String("required"),
-				Message: proto.String("value is required"),
+				RuleId:  new("required"),
+				Message: new("value is required"),
 			}.Build(),
 			FieldValue:      protoreflect.Value{},
 			FieldDescriptor: f.Value.Descriptor,

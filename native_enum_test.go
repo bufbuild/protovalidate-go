@@ -82,7 +82,7 @@ func TestTryBuildNativeEnumRules_ReturnsNil(t *testing.T) {
 	}{
 		{"nil_rules", nil},
 		{"empty_rules", validate.EnumRules_builder{}.Build()},
-		{"defined_only_only", validate.EnumRules_builder{DefinedOnly: proto.Bool(true)}.Build()},
+		{"defined_only_only", validate.EnumRules_builder{DefinedOnly: new(true)}.Build()},
 	}
 
 	for _, tt := range tests {
@@ -114,27 +114,27 @@ func buildNativeEnum(t testing.TB, rules *validate.EnumRules) evaluator {
 func newEnumFieldDescriptor(t testing.TB) protoreflect.FieldDescriptor {
 	t.Helper()
 	fileProto := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String("test_enum.proto"),
-		Package: proto.String("test"),
+		Name:    new("test_enum.proto"),
+		Package: new("test"),
 		EnumType: []*descriptorpb.EnumDescriptorProto{{
-			Name: proto.String("TestEnum"),
+			Name: new("TestEnum"),
 			Value: []*descriptorpb.EnumValueDescriptorProto{
-				{Name: proto.String("UNSPECIFIED"), Number: proto.Int32(0)},
-				{Name: proto.String("ONE"), Number: proto.Int32(1)},
-				{Name: proto.String("TWO"), Number: proto.Int32(2)},
+				{Name: new("UNSPECIFIED"), Number: proto.Int32(0)},
+				{Name: new("ONE"), Number: proto.Int32(1)},
+				{Name: new("TWO"), Number: proto.Int32(2)},
 			},
 		}},
 		MessageType: []*descriptorpb.DescriptorProto{{
-			Name: proto.String("Msg"),
+			Name: new("Msg"),
 			Field: []*descriptorpb.FieldDescriptorProto{{
-				Name:     proto.String("val"),
+				Name:     new("val"),
 				Number:   proto.Int32(1),
 				Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
-				TypeName: proto.String(".test.TestEnum"),
+				TypeName: new(".test.TestEnum"),
 				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 			}},
 		}},
-		Syntax: proto.String("proto3"),
+		Syntax: new("proto3"),
 	}
 	file, err := protodesc.NewFile(fileProto, nil)
 	require.NoError(t, err)
