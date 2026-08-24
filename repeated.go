@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -55,10 +54,10 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 		itemErr := r.ItemRules.EvaluateField(msg, list.Get(i), cfg, true)
 		if itemErr != nil {
 			updateViolationPaths(itemErr, validate.FieldPathElement_builder{
-				FieldNumber: proto.Int32(r.FieldPathElement.GetFieldNumber()),
+				FieldNumber: new(r.FieldPathElement.GetFieldNumber()),
 				FieldType:   r.base.FieldPathElement.GetFieldType().Enum(),
-				FieldName:   proto.String(r.FieldPathElement.GetFieldName()),
-				Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+				FieldName:   new(r.FieldPathElement.GetFieldName()),
+				Index:       new(uint64(i)),
 			}.Build(), r.RulePrefix.GetElements())
 		}
 		if ok, err = mergeViolations(err, itemErr, cfg); !ok {

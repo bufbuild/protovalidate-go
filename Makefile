@@ -13,13 +13,13 @@ COPYRIGHT_YEARS := 2023-2026
 # Set to use a different compiler. For example, `GO=go1.18rc1 make test`.
 GO ?= go
 ARGS ?= --strict_message --strict_error
-GOLANGCI_LINT_VERSION ?= v2.9.0
+GOLANGCI_LINT_VERSION ?= v2.13.1
 # Set to use a different version of protovalidate-conformance.
 # Should be kept in sync with the version referenced in buf.yaml and
 # 'buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go' in go.mod.
 CONFORMANCE_VERSION ?= v1.2.0
 LICENSE_IGNORE := -e .github/ -e .golangci.yml -e buf.gen.yaml -e buf.yaml -e conformance/expected_failures.yaml
-BUF_VERSION := 1.69.0
+BUF_VERSION := 1.72.0
 
 .PHONY: help
 help: ## Describe useful make targets

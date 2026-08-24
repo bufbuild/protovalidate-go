@@ -73,7 +73,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 
 	var exactLen *uint64
 	if rules.HasLen() {
-		exactLen = ptr(rules.GetLen())
+		exactLen = new(rules.GetLen())
 		rules.ProtoReflect().Clear(bytesDescs.lenSite.desc)
 		hasRule = true
 	}

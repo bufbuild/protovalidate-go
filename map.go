@@ -19,7 +19,6 @@ import (
 	"strconv"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
@@ -72,24 +71,24 @@ func (m *kvPairs) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg
 		evalErr := m.evalPairs(msg, key, value, cfg)
 		if evalErr != nil {
 			element := validate.FieldPathElement_builder{
-				FieldNumber: proto.Int32(m.FieldPathElement.GetFieldNumber()),
+				FieldNumber: new(m.FieldPathElement.GetFieldNumber()),
 				FieldType:   m.base.FieldPathElement.GetFieldType().Enum(),
-				FieldName:   proto.String(m.FieldPathElement.GetFieldName()),
+				FieldName:   new(m.FieldPathElement.GetFieldName()),
 			}
 			element.KeyType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapKey().Kind()).Enum()
 			element.ValueType = descriptorpb.FieldDescriptorProto_Type(m.base.Descriptor.MapValue().Kind()).Enum()
 			switch m.base.Descriptor.MapKey().Kind() {
 			case protoreflect.BoolKind:
-				element.BoolKey = proto.Bool(key.Bool())
+				element.BoolKey = new(key.Bool())
 			case protoreflect.Int32Kind, protoreflect.Int64Kind,
 				protoreflect.Sfixed32Kind, protoreflect.Sfixed64Kind,
 				protoreflect.Sint32Kind, protoreflect.Sint64Kind:
-				element.IntKey = proto.Int64(key.Int())
+				element.IntKey = new(key.Int())
 			case protoreflect.Uint32Kind, protoreflect.Uint64Kind,
 				protoreflect.Fixed32Kind, protoreflect.Fixed64Kind:
-				element.UintKey = proto.Uint64(key.Uint())
+				element.UintKey = new(key.Uint())
 			case protoreflect.StringKind:
-				element.StringKey = proto.String(key.String())
+				element.StringKey = new(key.String())
 			case protoreflect.EnumKind, protoreflect.FloatKind, protoreflect.DoubleKind,
 				protoreflect.BytesKind, protoreflect.MessageKind, protoreflect.GroupKind:
 				fallthrough

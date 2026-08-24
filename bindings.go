@@ -17,7 +17,7 @@ package protovalidate
 import (
 	"sync"
 
-	"github.com/google/cel-go/interpreter"
+	"cel.dev/cel-go/interpreter"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )

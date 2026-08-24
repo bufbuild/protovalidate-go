@@ -18,7 +18,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -26,15 +25,15 @@ func TestExpectedWrapperRules(t *testing.T) {
 	t.Parallel()
 
 	tests := map[protoreflect.FullName]*string{
-		"google.protobuf.BoolValue":   proto.String("buf.validate.FieldRules.bool"),
-		"google.protobuf.BytesValue":  proto.String("buf.validate.FieldRules.bytes"),
-		"google.protobuf.DoubleValue": proto.String("buf.validate.FieldRules.double"),
-		"google.protobuf.FloatValue":  proto.String("buf.validate.FieldRules.float"),
-		"google.protobuf.Int32Value":  proto.String("buf.validate.FieldRules.int32"),
-		"google.protobuf.Int64Value":  proto.String("buf.validate.FieldRules.int64"),
-		"google.protobuf.StringValue": proto.String("buf.validate.FieldRules.string"),
-		"google.protobuf.UInt32Value": proto.String("buf.validate.FieldRules.uint32"),
-		"google.protobuf.UInt64Value": proto.String("buf.validate.FieldRules.uint64"),
+		"google.protobuf.BoolValue":   new("buf.validate.FieldRules.bool"),
+		"google.protobuf.BytesValue":  new("buf.validate.FieldRules.bytes"),
+		"google.protobuf.DoubleValue": new("buf.validate.FieldRules.double"),
+		"google.protobuf.FloatValue":  new("buf.validate.FieldRules.float"),
+		"google.protobuf.Int32Value":  new("buf.validate.FieldRules.int32"),
+		"google.protobuf.Int64Value":  new("buf.validate.FieldRules.int64"),
+		"google.protobuf.StringValue": new("buf.validate.FieldRules.string"),
+		"google.protobuf.UInt32Value": new("buf.validate.FieldRules.uint32"),
+		"google.protobuf.UInt64Value": new("buf.validate.FieldRules.uint64"),
 		"foo.bar":                     nil,
 	}
 

@@ -20,14 +20,13 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 )
 
 func TestNativeBoolConst_True(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBool(t, validate.BoolRules_builder{Const: proto.Bool(true)}.Build())
+	eval := buildNativeBool(t, validate.BoolRules_builder{Const: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBool(true), &validationConfig{}))
@@ -43,7 +42,7 @@ func TestNativeBoolConst_True(t *testing.T) {
 
 func TestNativeBoolConst_False(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBool(t, validate.BoolRules_builder{Const: proto.Bool(false)}.Build())
+	eval := buildNativeBool(t, validate.BoolRules_builder{Const: new(false)}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfBool(false), &validationConfig{}))
@@ -76,7 +75,7 @@ func TestTryBuildNativeBoolRules_ReturnsNil(t *testing.T) {
 
 func TestNativeBoolTautology(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeBool(t, validate.BoolRules_builder{Const: proto.Bool(true)}.Build())
+	eval := buildNativeBool(t, validate.BoolRules_builder{Const: new(true)}.Build())
 	require.NotNil(t, eval)
 	assert.False(t, eval.Tautology())
 }

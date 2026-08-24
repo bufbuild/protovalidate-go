@@ -19,7 +19,7 @@ import (
 	"sync"
 
 	pvcel "buf.build/go/protovalidate/cel"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"

@@ -19,7 +19,6 @@ import (
 	"strings"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -58,8 +57,8 @@ func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationC
 		if count > 1 {
 			err.Violations = append(err.Violations, &Violation{
 				Proto: validate.Violation_builder{
-					RuleId:  proto.String("message.oneof"),
-					Message: proto.String(fmt.Sprintf("only one of %s can be set", o.formatFields())),
+					RuleId:  new("message.oneof"),
+					Message: new(fmt.Sprintf("only one of %s can be set", o.formatFields())),
 				}.Build(),
 			})
 			return err
@@ -67,8 +66,8 @@ func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationC
 		if o.Required && count != 1 {
 			err.Violations = append(err.Violations, &Violation{
 				Proto: validate.Violation_builder{
-					RuleId:  proto.String("message.oneof"),
-					Message: proto.String(fmt.Sprintf("one of %s must be set", o.formatFields())),
+					RuleId:  new("message.oneof"),
+					Message: new(fmt.Sprintf("one of %s must be set", o.formatFields())),
 				}.Build(),
 			})
 			return err

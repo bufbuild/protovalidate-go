@@ -24,7 +24,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -340,10 +340,10 @@ func (bldr *builder) processFieldExpressions(
 		for i := range set.programs {
 			set.programs[i].Path = []*validate.FieldPathElement{
 				validate.FieldPathElement_builder{
-					FieldNumber: proto.Int32(fieldPathElement.GetFieldNumber()),
+					FieldNumber: new(fieldPathElement.GetFieldNumber()),
 					FieldType:   fieldPathElement.GetFieldType().Enum(),
-					FieldName:   proto.String(fieldPathElement.GetFieldName()),
-					Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+					FieldName:   new(fieldPathElement.GetFieldName()),
+					Index:       new(uint64(i)),
 				}.Build(),
 			}
 			set.programs[i].Descriptor = descriptor
@@ -741,8 +741,8 @@ func expressionsToRules(expressions []string) []*validate.Rule {
 	rules := make([]*validate.Rule, 0, len(expressions))
 	for _, expr := range expressions {
 		rules = append(rules, validate.Rule_builder{
-			Id:         proto.String(expr),
-			Expression: proto.String(expr),
+			Id:         new(expr),
+			Expression: new(expr),
 		}.Build())
 	}
 	return rules

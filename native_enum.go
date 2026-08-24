@@ -44,7 +44,7 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
 
 	var constVal *int32
 	if rules.HasConst() {
-		constVal = ptr(rules.GetConst())
+		constVal = new(rules.GetConst())
 		rules.ProtoReflect().Clear(enumConstSite.desc)
 		hasRule = true
 	}

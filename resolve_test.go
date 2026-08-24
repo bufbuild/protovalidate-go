@@ -30,7 +30,7 @@ func TestResolve(t *testing.T) {
 
 	expectedRules := validate.FieldRules_builder{
 		Cel: []*validate.Rule{
-			validate.Rule_builder{Message: proto.String("test")}.Build(),
+			validate.Rule_builder{Message: new("test")}.Build(),
 		},
 	}.Build()
 	expectedRulesBytes, err := proto.Marshal(expectedRules)
