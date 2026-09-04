@@ -483,7 +483,7 @@ func (bldr *builder) processStandardRules(
 			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
 				valEval.Append(native)
 			}
-		case fdesc.IsMap() && valEval.NestedRule == nil:
+		case fdesc.IsMap():
 			// Map-level rules (min_pairs, max_pairs).
 			if native := tryNativeMapRules(newBase(valEval), rules.GetMap()); native != nil {
 				valEval.Append(native)
