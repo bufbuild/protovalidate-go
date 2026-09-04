@@ -491,7 +491,7 @@ func (bldr *builder) processStandardRules(
 			}
 		}
 		// Try native Go evaluators for known simple rules before falling back to CEL.
-		if !fdesc.IsMap() && !fdesc.IsList() {
+		if !fdesc.IsMap() && (!fdesc.IsList() || valEval.NestedRule != nil) {
 			if native := bldr.tryNativeRules(fdesc, rules, valEval); native != nil {
 				valEval.Append(native)
 			}
