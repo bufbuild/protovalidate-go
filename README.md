@@ -37,7 +37,8 @@ message User {
 Once you've added `protovalidate-go` to your project, validation is idiomatic Go:
 
 ```go
-if err = protovalidate.Validate(moneyTransfer); err != nil {
+user := &userv1.User{ /* ... */ }
+if err := protovalidate.Validate(user); err != nil {
     // Handle failure.
 }
 ```
@@ -45,7 +46,7 @@ if err = protovalidate.Validate(moneyTransfer); err != nil {
 ## Installation
 
 > [!TIP]
-> The easiest way to get started with Protovalidate for RPC APIs are the quickstarts in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
+> The easiest ways to get started with Protovalidate for RPC APIs are the quickstarts in Buf's documentation. They're available for both [Connect][connect-go] and [gRPC][grpc-go].
 
 To install the package, use `go get` from within your Go module:
 
@@ -55,7 +56,7 @@ go get buf.build/go/protovalidate
 
 ## Documentation
 
-Comprehensive documentation for Protovalidate is available at [protovalidate.com][protovalidate]. 
+Comprehensive documentation for Protovalidate is available at [protovalidate.com][protovalidate].
 
 Highlights for Go developers include:
 
@@ -66,17 +67,17 @@ Highlights for Go developers include:
 API documentation for Go is available on [pkg.go.dev][pkg-go].
 
 ### Native standard validation rules
-protovalidate-go provides native support for standard validation rule processing. They are enabled by default and are disabled by setting the ValidatorOption `WithDisableNativeRules`.
 
-We continue to validate that the native rules and the CEL rules produce identical results. The `compliance` Makefile target has been updated to run twice, 
-once with the native rules enabled, and once with the CEL rules enabled.
+Standard validation rules are evaluated by native Go implementations where available, falling back to CEL. This is enabled by default - pass the `WithDisableNativeRules` validator option to evaluate all standard rules through CEL instead.
+
+The `conformance` Makefile target runs the conformance suite twice, once with native rules enabled and once with them disabled, to verify both paths produce identical results.
 
 ## Additional languages and repositories
 
-Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages: 
+Protovalidate isn't just for Go! You might be interested in sibling repositories for other languages:
 
 - [`protovalidate-java`][pv-java] (Java)
-- [`protovalidate-python`][pv-python] (Python)
+- [`protovalidate-py`][pv-py] (Python)
 - [`protovalidate-cc`][pv-cc] (C++)
 - [`protovalidate-es`][pv-es] (TypeScript and JavaScript)
 
@@ -100,9 +101,8 @@ Offered under the [Apache 2 license][license].
 [buf]: https://buf.build
 [cel]: https://cel.dev
 
-[pv-go]: https://github.com/bufbuild/protovalidate-go
 [pv-java]: https://github.com/bufbuild/protovalidate-java
-[pv-python]: https://github.com/bufbuild/protovalidate-python
+[pv-py]: https://github.com/bufbuild/protovalidate-py
 [pv-cc]: https://github.com/bufbuild/protovalidate-cc
 [pv-es]: https://github.com/bufbuild/protovalidate-es
 
@@ -116,13 +116,9 @@ Offered under the [Apache 2 license][license].
 [quickstart]: https://protovalidate.com/quickstart/
 [connect-go]: https://protovalidate.com/quickstart/connect-go/
 [grpc-go]: https://protovalidate.com/quickstart/grpc-go/
-[grpc-java]: https://protovalidate.com/quickstart/grpc-java/
-[grpc-python]: https://protovalidate.com/quickstart/grpc-python/
 [migration-guide]: https://protovalidate.com/migration-guides/migrate-from-protoc-gen-validate/
 [conformance-executable]: ./internal/cmd/protovalidate-conformance-go/README.md
 [pkg-go]: https://pkg.go.dev/buf.build/go/protovalidate
 
 [validate-proto]: https://buf.build/bufbuild/protovalidate/docs/main:buf.validate
 [conformance]: https://github.com/bufbuild/protovalidate/blob/main/docs/conformance.md
-[examples]: https://github.com/bufbuild/protovalidate/tree/main/examples
-[migrate]: https://protovalidate.com/migration-guides/migrate-from-protoc-gen-validate/
