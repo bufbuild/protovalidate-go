@@ -4,7 +4,6 @@
 
 [![CI](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/ci.yaml)
 [![Conformance](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml/badge.svg)](https://github.com/bufbuild/protovalidate-go/actions/workflows/conformance.yaml)
-[![Report Card](https://goreportcard.com/badge/buf.build/go/protovalidate)](https://goreportcard.com/report/buf.build/go/protovalidate)
 [![GoDoc](https://pkg.go.dev/badge/buf.build/go/protovalidate.svg)](https://pkg.go.dev/buf.build/go/protovalidate)
 [![BSR](https://img.shields.io/badge/BSR-Module-0C65EC)][buf-mod]
 
