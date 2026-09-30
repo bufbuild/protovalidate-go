@@ -62,49 +62,49 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 
 	var constVal *string
 	if rules.HasConst() {
-		constVal = ptr(rules.GetConst())
+		constVal = new(rules.GetConst())
 		rules.ProtoReflect().Clear(strDescs.constSite.desc)
 		hasRule = true
 	}
 
 	var exactLen *uint64
 	if rules.HasLen() {
-		exactLen = ptr(rules.GetLen())
+		exactLen = new(rules.GetLen())
 		rules.ProtoReflect().Clear(strDescs.lenSite.desc)
 		hasRule = true
 	}
 
 	var minLen *uint64
 	if rules.HasMinLen() {
-		minLen = ptr(rules.GetMinLen())
+		minLen = new(rules.GetMinLen())
 		rules.ProtoReflect().Clear(strDescs.minLenSite.desc)
 		hasRule = true
 	}
 
 	var maxLen *uint64
 	if rules.HasMaxLen() {
-		maxLen = ptr(rules.GetMaxLen())
+		maxLen = new(rules.GetMaxLen())
 		rules.ProtoReflect().Clear(strDescs.maxLenSite.desc)
 		hasRule = true
 	}
 
 	var exactBytes *uint64
 	if rules.HasLenBytes() {
-		exactBytes = ptr(rules.GetLenBytes())
+		exactBytes = new(rules.GetLenBytes())
 		rules.ProtoReflect().Clear(strDescs.lenBytesSite.desc)
 		hasRule = true
 	}
 
 	var minBytes *uint64
 	if rules.HasMinBytes() {
-		minBytes = ptr(rules.GetMinBytes())
+		minBytes = new(rules.GetMinBytes())
 		rules.ProtoReflect().Clear(strDescs.minBytesSite.desc)
 		hasRule = true
 	}
 
 	var maxBytes *uint64
 	if rules.HasMaxBytes() {
-		maxBytes = ptr(rules.GetMaxBytes())
+		maxBytes = new(rules.GetMaxBytes())
 		rules.ProtoReflect().Clear(strDescs.maxBytesSite.desc)
 		hasRule = true
 	}
@@ -125,28 +125,28 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 
 	var prefix *string
 	if rules.HasPrefix() {
-		prefix = ptr(rules.GetPrefix())
+		prefix = new(rules.GetPrefix())
 		rules.ProtoReflect().Clear(strDescs.prefixSite.desc)
 		hasRule = true
 	}
 
 	var suffix *string
 	if rules.HasSuffix() {
-		suffix = ptr(rules.GetSuffix())
+		suffix = new(rules.GetSuffix())
 		rules.ProtoReflect().Clear(strDescs.suffixSite.desc)
 		hasRule = true
 	}
 
 	var containsVal *string
 	if rules.HasContains() {
-		containsVal = ptr(rules.GetContains())
+		containsVal = new(rules.GetContains())
 		rules.ProtoReflect().Clear(strDescs.containsSite.desc)
 		hasRule = true
 	}
 
 	var notContains *string
 	if rules.HasNotContains() {
-		notContains = ptr(rules.GetNotContains())
+		notContains = new(rules.GetNotContains())
 		rules.ProtoReflect().Clear(strDescs.notContainsSite.desc)
 		hasRule = true
 	}

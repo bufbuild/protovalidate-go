@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	pvcel "buf.build/go/protovalidate/cel"
-	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/types"
+	"cel.dev/cel-go/cel"
+	"cel.dev/cel-go/common/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
@@ -255,16 +255,16 @@ func newRegistryTestMessageType(t testing.TB, fieldType descriptorpb.FieldDescri
 	t.Helper()
 	files, err := protodesc.NewFiles(&descriptorpb.FileDescriptorSet{
 		File: []*descriptorpb.FileDescriptorProto{{
-			Name:    proto.String("test.proto"),
-			Package: proto.String("test"),
-			Syntax:  proto.String("proto3"),
+			Name:    new("test.proto"),
+			Package: new("test"),
+			Syntax:  new("proto3"),
 			MessageType: []*descriptorpb.DescriptorProto{{
-				Name: proto.String("Duplicate"),
+				Name: new("Duplicate"),
 				Field: []*descriptorpb.FieldDescriptorProto{{
-					Name:     proto.String("id"),
+					Name:     new("id"),
 					Number:   proto.Int32(1),
 					Type:     fieldType.Enum(),
-					JsonName: proto.String("id"),
+					JsonName: new("id"),
 					Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 				}},
 			}},
@@ -282,16 +282,16 @@ func newRegistryTestMessageTypeWithName(t testing.TB, pkg, name string, fieldTyp
 	t.Helper()
 	files, err := protodesc.NewFiles(&descriptorpb.FileDescriptorSet{
 		File: []*descriptorpb.FileDescriptorProto{{
-			Name:    proto.String(fmt.Sprintf("%s.%s.proto", pkg, name)),
-			Package: proto.String(pkg),
-			Syntax:  proto.String("proto3"),
+			Name:    new(fmt.Sprintf("%s.%s.proto", pkg, name)),
+			Package: new(pkg),
+			Syntax:  new("proto3"),
 			MessageType: []*descriptorpb.DescriptorProto{{
-				Name: proto.String(name),
+				Name: new(name),
 				Field: []*descriptorpb.FieldDescriptorProto{{
-					Name:     proto.String("value"),
+					Name:     new("value"),
 					Number:   proto.Int32(1),
 					Type:     fieldType.Enum(),
-					JsonName: proto.String("value"),
+					JsonName: new("value"),
 					Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 				}},
 			}},
@@ -312,10 +312,10 @@ func newRegistryTestMessageTypeWithFields(t testing.TB, pkg, name string, fields
 	fieldNum := int32(1)
 	for fieldName, fieldType := range fields {
 		fieldDescs = append(fieldDescs, &descriptorpb.FieldDescriptorProto{
-			Name:     proto.String(fieldName),
-			Number:   proto.Int32(fieldNum),
+			Name:     new(fieldName),
+			Number:   new(fieldNum),
 			Type:     fieldType.Enum(),
-			JsonName: proto.String(fieldName),
+			JsonName: new(fieldName),
 			Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
 		})
 		fieldNum++
@@ -323,11 +323,11 @@ func newRegistryTestMessageTypeWithFields(t testing.TB, pkg, name string, fields
 
 	files, err := protodesc.NewFiles(&descriptorpb.FileDescriptorSet{
 		File: []*descriptorpb.FileDescriptorProto{{
-			Name:    proto.String(fmt.Sprintf("%s.%s.proto", pkg, name)),
-			Package: proto.String(pkg),
-			Syntax:  proto.String("proto3"),
+			Name:    new(fmt.Sprintf("%s.%s.proto", pkg, name)),
+			Package: new(pkg),
+			Syntax:  new("proto3"),
 			MessageType: []*descriptorpb.DescriptorProto{{
-				Name:  proto.String(name),
+				Name:  new(name),
 				Field: fieldDescs,
 			}},
 		}},

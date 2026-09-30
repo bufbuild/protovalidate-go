@@ -18,10 +18,9 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 )
 
 func TestCompile(t *testing.T) {
@@ -43,8 +42,8 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("this == 123")}.Build(),
-				validate.Rule_builder{Id: proto.String("bar"), Expression: proto.String("'a string'")}.Build(),
+				validate.Rule_builder{Id: new("foo"), Expression: new("this == 123")}.Build(),
+				validate.Rule_builder{Id: new("bar"), Expression: new("'a string'")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Variable("this", cel.IntType))
@@ -56,7 +55,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("0 != 0")}.Build(),
+				validate.Rule_builder{Id: new("foo"), Expression: new("0 != 0")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv, cel.Types(true))
@@ -69,7 +68,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("!@#$%^&")}.Build(),
+				validate.Rule_builder{Id: new("foo"), Expression: new("!@#$%^&")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv)
@@ -82,7 +81,7 @@ func TestCompile(t *testing.T) {
 		t.Parallel()
 		exprs := expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Id: proto.String("foo"), Expression: proto.String("1.23")}.Build(),
+				validate.Rule_builder{Id: new("foo"), Expression: new("1.23")}.Build(),
 			},
 		}
 		set, err := compile(exprs, baseEnv)

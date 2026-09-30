@@ -20,9 +20,9 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/types"
-	"github.com/google/cel-go/common/types/ref"
+	"cel.dev/cel-go/cel"
+	"cel.dev/cel-go/common/types"
+	"cel.dev/cel-go/common/types/ref"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -52,14 +52,14 @@ func TestCompiled(t *testing.T) {
 		{
 			name:   "invalid bool",
 			prog:   mockProgram{Val: types.False},
-			src:    validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("bar")}.Build(),
-			exViol: validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("bar")}.Build(),
+			src:    validate.Rule_builder{Id: new("foo"), Message: new("bar")}.Build(),
+			exViol: validate.Violation_builder{RuleId: new("foo"), Message: new("bar")}.Build(),
 		},
 		{
 			name:   "invalid string",
 			prog:   mockProgram{Val: types.String("bar")},
-			src:    validate.Rule_builder{Id: proto.String("foo")}.Build(),
-			exViol: validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("bar")}.Build(),
+			src:    validate.Rule_builder{Id: new("foo")}.Build(),
+			exViol: validate.Violation_builder{RuleId: new("foo"), Message: new("bar")}.Build(),
 		},
 		{
 			name:  "eval error",
@@ -150,19 +150,19 @@ func TestSet(t *testing.T) {
 				programs: []compiledProgram{
 					{
 						Program: mockProgram{Val: types.False},
-						Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+						Source:  validate.Rule_builder{Id: new("foo"), Message: new("fizz")}.Build(),
 					},
 					{
 						Program: mockProgram{Val: types.String("buzz")},
-						Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
+						Source:  validate.Rule_builder{Id: new("bar")}.Build(),
 					},
 				},
 				env: env,
 			},
 			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
-					validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("fizz")}.Build(),
-					validate.Violation_builder{RuleId: proto.String("bar"), Message: proto.String("buzz")}.Build(),
+					validate.Violation_builder{RuleId: new("foo"), Message: new("fizz")}.Build(),
+					validate.Violation_builder{RuleId: new("bar"), Message: new("buzz")}.Build(),
 				},
 			}.Build(),
 		},
@@ -173,18 +173,18 @@ func TestSet(t *testing.T) {
 				programs: []compiledProgram{
 					{
 						Program: mockProgram{Val: types.False},
-						Source:  validate.Rule_builder{Id: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+						Source:  validate.Rule_builder{Id: new("foo"), Message: new("fizz")}.Build(),
 					},
 					{
 						Program: mockProgram{Val: types.String("buzz")},
-						Source:  validate.Rule_builder{Id: proto.String("bar")}.Build(),
+						Source:  validate.Rule_builder{Id: new("bar")}.Build(),
 					},
 				},
 				env: env,
 			},
 			exViols: validate.Violations_builder{
 				Violations: []*validate.Violation{
-					validate.Violation_builder{RuleId: proto.String("foo"), Message: proto.String("fizz")}.Build(),
+					validate.Violation_builder{RuleId: new("foo"), Message: new("fizz")}.Build(),
 				},
 			}.Build(),
 		},

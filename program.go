@@ -18,9 +18,8 @@ import (
 	"fmt"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"github.com/google/cel-go/cel"
-	"github.com/google/cel-go/common/types"
-	"google.golang.org/protobuf/proto"
+	"cel.dev/cel-go/cel"
+	"cel.dev/cel-go/common/types"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -113,8 +112,8 @@ func (expr compiledProgram) eval(activation *bindings, cfg *validationConfig) (*
 		return &Violation{
 			Proto: validate.Violation_builder{
 				Rule:    expr.rulePath(),
-				RuleId:  proto.String(expr.Source.GetId()),
-				Message: proto.String(val),
+				RuleId:  new(expr.Source.GetId()),
+				Message: new(val),
 			}.Build(),
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,
@@ -130,8 +129,8 @@ func (expr compiledProgram) eval(activation *bindings, cfg *validationConfig) (*
 		return &Violation{
 			Proto: validate.Violation_builder{
 				Rule:    expr.rulePath(),
-				RuleId:  proto.String(expr.Source.GetId()),
-				Message: proto.String(message),
+				RuleId:  new(expr.Source.GetId()),
+				Message: new(message),
 			}.Build(),
 			RuleValue:      expr.Value,
 			RuleDescriptor: expr.Descriptor,

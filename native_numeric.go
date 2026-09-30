@@ -180,7 +180,7 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 
 	var constVal *T
 	if rules.HasConst() {
-		constVal = ptr(rules.GetConst())
+		constVal = new(rules.GetConst())
 		rules.ProtoReflect().Clear(config.descs.constSite.desc)
 		hasRule = true
 	}
@@ -623,8 +623,6 @@ func (n nativeNumericCompare[T]) Tautology() bool {
 }
 
 var _ evaluator = nativeNumericCompare[int32]{}
-
-func ptr[T any](v T) *T { return &v }
 
 // formatList formats a slice as "list [val1, val2]" to match CEL message format.
 func formatList[T any](vals []T) string {

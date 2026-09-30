@@ -24,7 +24,7 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -340,10 +340,10 @@ func (bldr *builder) processFieldExpressions(
 		for i := range set.programs {
 			set.programs[i].Path = []*validate.FieldPathElement{
 				validate.FieldPathElement_builder{
-					FieldNumber: proto.Int32(fieldPathElement.GetFieldNumber()),
+					FieldNumber: new(fieldPathElement.GetFieldNumber()),
 					FieldType:   fieldPathElement.GetFieldType().Enum(),
-					FieldName:   proto.String(fieldPathElement.GetFieldName()),
-					Index:       proto.Uint64(uint64(i)), //nolint:gosec // indices are guaranteed to be non-negative
+					FieldName:   new(fieldPathElement.GetFieldName()),
+					Index:       new(uint64(i)),
 				}.Build(),
 			}
 			set.programs[i].Descriptor = descriptor
@@ -474,24 +474,24 @@ func (bldr *builder) processStandardRules(
 	// reused (happens in some test cases, could happen in production code with dynamic messages).
 	rules = proto.CloneOf[*validate.FieldRules](rules)
 
-	// put behind a feature flag to allow for testing.
-	// it's easier to follow like this, don't break it up
-	//nolint:nestif
+	// Try native Go evaluators for known simple rules before falling back to
+	// CEL. put behind a feature flag to allow for testing.
 	if !bldr.disableNativeRules {
-		// Try native Go evaluators for repeated list-level rules (min_items, max_items, unique).
-		if fdesc.IsList() && valEval.NestedRule == nil {
+		switch {
+		case fdesc.IsList() && valEval.NestedRule == nil:
+			// List-level rules (min_items, max_items, unique).
 			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
 				valEval.Append(native)
 			}
-		}
-		// Try native Go evaluators for map-level rules (min_pairs, max_pairs).
-		if fdesc.IsMap() && valEval.NestedRule == nil {
+		case fdesc.IsMap():
+			// Map-level rules (min_pairs, max_pairs).
 			if native := tryNativeMapRules(newBase(valEval), rules.GetMap()); native != nil {
 				valEval.Append(native)
 			}
-		}
-		// Try native Go evaluators for known simple rules before falling back to CEL.
-		if !fdesc.IsMap() && !fdesc.IsList() {
+		default:
+			// Scalar rules for plain fields, map keys/values, and repeated
+			// items. A non-nil NestedRule means we're compiling rules for an
+			// individual item, not the list itself.
 			if native := bldr.tryNativeRules(fdesc, rules, valEval); native != nil {
 				valEval.Append(native)
 			}
@@ -741,8 +741,8 @@ func expressionsToRules(expressions []string) []*validate.Rule {
 	rules := make([]*validate.Rule, 0, len(expressions))
 	for _, expr := range expressions {
 		rules = append(rules, validate.Rule_builder{
-			Id:         proto.String(expr),
-			Expression: proto.String(expr),
+			Id:         new(expr),
+			Expression: new(expr),
 		}.Build())
 	}
 	return rules

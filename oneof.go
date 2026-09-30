@@ -16,7 +16,6 @@ package protovalidate
 
 import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
-	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 )
 
@@ -42,12 +41,12 @@ func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 			Field: validate.FieldPath_builder{
 				Elements: []*validate.FieldPathElement{
 					validate.FieldPathElement_builder{
-						FieldName: proto.String(string(o.Descriptor.Name())),
+						FieldName: new(string(o.Descriptor.Name())),
 					}.Build(),
 				},
 			}.Build(),
-			RuleId:  proto.String("required"),
-			Message: proto.String("exactly one field is required in oneof"),
+			RuleId:  new("required"),
+			Message: new("exactly one field is required in oneof"),
 		}.Build(),
 	}}}
 }

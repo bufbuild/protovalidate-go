@@ -38,7 +38,7 @@ func buildNativeString(t testing.TB, rules *validate.StringRules) evaluator {
 
 func TestNativeStringConst(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Const: proto.String("hello")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Const: new("hello")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("hello"), &validationConfig{}))
@@ -124,7 +124,7 @@ func TestNativeStringMaxBytes(t *testing.T) {
 
 func TestNativeStringPattern(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Pattern: proto.String("^[a-z]+$")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Pattern: new("^[a-z]+$")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("abc"), &validationConfig{}))
@@ -140,13 +140,13 @@ func TestNativeStringPattern(t *testing.T) {
 
 func TestNativeStringPattern_InvalidRegex(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Pattern: proto.String("[invalid")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Pattern: new("[invalid")}.Build())
 	assert.Nil(t, eval, "invalid regex should bail to CEL")
 }
 
 func TestNativeStringPrefix(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Prefix: proto.String("foo")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Prefix: new("foo")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("foobar"), &validationConfig{}))
@@ -155,7 +155,7 @@ func TestNativeStringPrefix(t *testing.T) {
 
 func TestNativeStringSuffix(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Suffix: proto.String("bar")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Suffix: new("bar")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("foobar"), &validationConfig{}))
@@ -164,7 +164,7 @@ func TestNativeStringSuffix(t *testing.T) {
 
 func TestNativeStringContains(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{Contains: proto.String("mid")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{Contains: new("mid")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("amidst"), &validationConfig{}))
@@ -173,7 +173,7 @@ func TestNativeStringContains(t *testing.T) {
 
 func TestNativeStringNotContains(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeString(t, validate.StringRules_builder{NotContains: proto.String("bad")}.Build())
+	eval := buildNativeString(t, validate.StringRules_builder{NotContains: new("bad")}.Build())
 	require.NotNil(t, eval)
 
 	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfString("good"), &validationConfig{}))
@@ -254,7 +254,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 	}{
 		{
 			name:        "email",
-			rules:       validate.StringRules_builder{Email: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Email: new(true)}.Build(),
 			valid:       "user@example.com",
 			invalid:     "not-an-email",
 			ruleID:      "string.email",
@@ -264,7 +264,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "hostname",
-			rules:       validate.StringRules_builder{Hostname: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Hostname: new(true)}.Build(),
 			valid:       "example.com",
 			invalid:     "-invalid",
 			ruleID:      "string.hostname",
@@ -274,7 +274,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ip",
-			rules:       validate.StringRules_builder{Ip: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ip: new(true)}.Build(),
 			valid:       "192.168.1.1",
 			invalid:     "not-valid",
 			ruleID:      "string.ip",
@@ -284,7 +284,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv4",
-			rules:       validate.StringRules_builder{Ipv4: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv4: new(true)}.Build(),
 			valid:       "192.168.1.1",
 			invalid:     "::1",
 			ruleID:      "string.ipv4",
@@ -294,7 +294,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv6",
-			rules:       validate.StringRules_builder{Ipv6: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv6: new(true)}.Build(),
 			valid:       "::1",
 			invalid:     "192.168.1.1",
 			ruleID:      "string.ipv6",
@@ -304,7 +304,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "uri",
-			rules:       validate.StringRules_builder{Uri: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Uri: new(true)}.Build(),
 			valid:       "https://example.com",
 			invalid:     "not a uri",
 			ruleID:      "string.uri",
@@ -314,7 +314,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:    "uri_ref",
-			rules:   validate.StringRules_builder{UriRef: proto.Bool(true)}.Build(),
+			rules:   validate.StringRules_builder{UriRef: new(true)}.Build(),
 			valid:   "/path/to/resource",
 			invalid: "not valid ref",
 			ruleID:  "string.uri_ref",
@@ -322,7 +322,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "address",
-			rules:       validate.StringRules_builder{Address: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Address: new(true)}.Build(),
 			valid:       "example.com",
 			invalid:     "!@#$%",
 			ruleID:      "string.address",
@@ -332,7 +332,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "uuid",
-			rules:       validate.StringRules_builder{Uuid: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Uuid: new(true)}.Build(),
 			valid:       "550e8400-e29b-41d4-a716-446655440000",
 			invalid:     "not-a-uuid",
 			ruleID:      "string.uuid",
@@ -342,7 +342,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "tuuid",
-			rules:       validate.StringRules_builder{Tuuid: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Tuuid: new(true)}.Build(),
 			valid:       "550e8400e29b41d4a716446655440000",
 			invalid:     "not-a-tuuid",
 			ruleID:      "string.tuuid",
@@ -352,7 +352,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ip_with_prefixlen",
-			rules:       validate.StringRules_builder{IpWithPrefixlen: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{IpWithPrefixlen: new(true)}.Build(),
 			valid:       "192.168.0.1/24",
 			invalid:     "not-valid",
 			ruleID:      "string.ip_with_prefixlen",
@@ -362,7 +362,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv4_with_prefixlen",
-			rules:       validate.StringRules_builder{Ipv4WithPrefixlen: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv4WithPrefixlen: new(true)}.Build(),
 			valid:       "192.168.0.1/24",
 			invalid:     "not-valid",
 			ruleID:      "string.ipv4_with_prefixlen",
@@ -372,7 +372,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv6_with_prefixlen",
-			rules:       validate.StringRules_builder{Ipv6WithPrefixlen: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv6WithPrefixlen: new(true)}.Build(),
 			valid:       "::1/128",
 			invalid:     "not-valid",
 			ruleID:      "string.ipv6_with_prefixlen",
@@ -382,7 +382,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ip_prefix",
-			rules:       validate.StringRules_builder{IpPrefix: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{IpPrefix: new(true)}.Build(),
 			valid:       "192.168.0.0/24",
 			invalid:     "not-valid",
 			ruleID:      "string.ip_prefix",
@@ -392,7 +392,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv4_prefix",
-			rules:       validate.StringRules_builder{Ipv4Prefix: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv4Prefix: new(true)}.Build(),
 			valid:       "192.168.0.0/24",
 			invalid:     "not-valid",
 			ruleID:      "string.ipv4_prefix",
@@ -402,7 +402,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ipv6_prefix",
-			rules:       validate.StringRules_builder{Ipv6Prefix: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ipv6Prefix: new(true)}.Build(),
 			valid:       "2001:db8::/32",
 			invalid:     "not-valid",
 			ruleID:      "string.ipv6_prefix",
@@ -412,7 +412,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "host_and_port",
-			rules:       validate.StringRules_builder{HostAndPort: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{HostAndPort: new(true)}.Build(),
 			valid:       "example.com:80",
 			invalid:     "example.com",
 			ruleID:      "string.host_and_port",
@@ -422,7 +422,7 @@ func TestNativeStringWellKnowns(t *testing.T) {
 		},
 		{
 			name:        "ulid",
-			rules:       validate.StringRules_builder{Ulid: proto.Bool(true)}.Build(),
+			rules:       validate.StringRules_builder{Ulid: new(true)}.Build(),
 			valid:       "01ARZ3NDEKTSV4RRFFQ69G5FAV",
 			invalid:     "not-a-ulid",
 			ruleID:      "string.ulid",

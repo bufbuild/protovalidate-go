@@ -19,7 +19,6 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 )
 
 func TestViolationString(t *testing.T) {
@@ -32,15 +31,15 @@ func TestViolationString(t *testing.T) {
 				Field: validate.FieldPath_builder{
 					Elements: []*validate.FieldPathElement{
 						validate.FieldPathElement_builder{
-							FieldName: proto.String("one"),
+							FieldName: new("one"),
 						}.Build(),
 						validate.FieldPathElement_builder{
-							FieldName: proto.String("two"),
+							FieldName: new("two"),
 						}.Build(),
 					},
 				}.Build(),
-				Message: proto.String("foo"),
-				RuleId:  proto.String("bar"),
+				Message: new("foo"),
+				RuleId:  new("bar"),
 			}.Build(),
 		}).String(),
 	)
@@ -49,8 +48,8 @@ func TestViolationString(t *testing.T) {
 		"foo",
 		(&Violation{
 			Proto: validate.Violation_builder{
-				Message: proto.String("foo"),
-				RuleId:  proto.String("bar"),
+				Message: new("foo"),
+				RuleId:  new("bar"),
 			}.Build(),
 		}).String(),
 	)
@@ -59,7 +58,7 @@ func TestViolationString(t *testing.T) {
 		"[bar]",
 		(&Violation{
 			Proto: validate.Violation_builder{
-				RuleId: proto.String("bar"),
+				RuleId: new("bar"),
 			}.Build(),
 		}).String(),
 	)

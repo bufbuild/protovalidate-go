@@ -19,10 +19,9 @@ import (
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/proto"
 )
 
 func TestASTSet_Merge(t *testing.T) {
@@ -55,7 +54,7 @@ func TestASTSet_ToProgramSet(t *testing.T) {
 	asts, err := compileASTs(
 		expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Expression: proto.String("foo")}.Build(),
+				validate.Rule_builder{Expression: new("foo")}.Build(),
 			},
 		},
 		env,
@@ -83,7 +82,7 @@ func TestASTSet_ReduceResiduals(t *testing.T) {
 	asts, err := compileASTs(
 		expressions{
 			Rules: []*validate.Rule{
-				validate.Rule_builder{Expression: proto.String("foo")}.Build(),
+				validate.Rule_builder{Expression: new("foo")}.Build(),
 			},
 		},
 		env,

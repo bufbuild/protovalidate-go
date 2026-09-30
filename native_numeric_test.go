@@ -368,7 +368,7 @@ func TestNativeFloatCompare(t *testing.T) {
 func TestNativeFloatFinite(t *testing.T) {
 	t.Parallel()
 
-	rules := validate.FloatRules_builder{Finite: proto.Bool(true)}.Build()
+	rules := validate.FloatRules_builder{Finite: new(true)}.Build()
 	eval := buildNativeNumeric(t, rules, &floatConfig, descriptorpb.FieldDescriptorProto_TYPE_FLOAT)
 	require.NotNil(t, eval)
 
@@ -380,7 +380,7 @@ func TestNativeFloatFinite(t *testing.T) {
 func TestNativeDoubleFinite(t *testing.T) {
 	t.Parallel()
 
-	rules := validate.DoubleRules_builder{Finite: proto.Bool(true)}.Build()
+	rules := validate.DoubleRules_builder{Finite: new(true)}.Build()
 	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
 	require.NotNil(t, eval)
 
@@ -419,11 +419,11 @@ func TestNativeFloatNaNGT(t *testing.T) {
 		name  string
 		rules *validate.FloatRules
 	}{
-		{"gt", validate.FloatRules_builder{Gt: proto.Float32(float32(math.NaN()))}.Build()},
-		{"lt", validate.FloatRules_builder{Lt: proto.Float32(float32(math.NaN()))}.Build()},
-		{"lte", validate.FloatRules_builder{Lte: proto.Float32(float32(math.NaN()))}.Build()},
-		{"gte", validate.FloatRules_builder{Gte: proto.Float32(float32(math.NaN()))}.Build()},
-		{"gte_lte", validate.FloatRules_builder{Gte: proto.Float32(float32(math.NaN())), Lte: proto.Float32(float32(math.NaN()))}.Build()},
+		{"gt", validate.FloatRules_builder{Gt: new(float32(math.NaN()))}.Build()},
+		{"lt", validate.FloatRules_builder{Lt: new(float32(math.NaN()))}.Build()},
+		{"lte", validate.FloatRules_builder{Lte: new(float32(math.NaN()))}.Build()},
+		{"gte", validate.FloatRules_builder{Gte: new(float32(math.NaN()))}.Build()},
+		{"gte_lte", validate.FloatRules_builder{Gte: new(float32(math.NaN())), Lte: new(float32(math.NaN()))}.Build()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -436,7 +436,7 @@ func TestNativeFloatNaNGT(t *testing.T) {
 
 func TestNativeFloat_FiniteDoesNotBailToCEL(t *testing.T) {
 	t.Parallel()
-	rules := validate.FloatRules_builder{Finite: proto.Bool(true), Gt: proto.Float32(0)}.Build()
+	rules := validate.FloatRules_builder{Finite: new(true), Gt: proto.Float32(0)}.Build()
 	eval := tryBuildNativeFloatRules(base{}, rules)
 	if eval == nil {
 		t.Error("finite rules should have native implementation")
@@ -448,7 +448,7 @@ func TestNativeFloat_FiniteDoesNotBailToCEL(t *testing.T) {
 func TestNativeDoubleCompare(t *testing.T) {
 	t.Parallel()
 
-	rules := validate.DoubleRules_builder{Gte: proto.Float64(-1.5), Lte: proto.Float64(1.5)}.Build()
+	rules := validate.DoubleRules_builder{Gte: new(-1.5), Lte: new(1.5)}.Build()
 	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
 	require.NotNil(t, eval)
 
@@ -556,14 +556,14 @@ func buildNativeNumeric[T numericValue, R numericRules[T]](
 func newFieldDescriptor(t testing.TB, fieldType descriptorpb.FieldDescriptorProto_Type, label *descriptorpb.FieldDescriptorProto_Label) protoreflect.FieldDescriptor {
 	t.Helper()
 	fileProto := &descriptorpb.FileDescriptorProto{
-		Name:    proto.String("test.proto"),
-		Package: proto.String("test"),
+		Name:    new("test.proto"),
+		Package: new("test"),
 		MessageType: []*descriptorpb.DescriptorProto{
 			{
-				Name: proto.String("Msg"),
+				Name: new("Msg"),
 				Field: []*descriptorpb.FieldDescriptorProto{
 					{
-						Name:   proto.String("val"),
+						Name:   new("val"),
 						Number: proto.Int32(1),
 						Type:   fieldType.Enum(),
 						Label:  label,
@@ -571,7 +571,7 @@ func newFieldDescriptor(t testing.TB, fieldType descriptorpb.FieldDescriptorProt
 				},
 			},
 		},
-		Syntax: proto.String("proto3"),
+		Syntax: new("proto3"),
 	}
 	file, err := protodesc.NewFile(fileProto, nil)
 	require.NoError(t, err)

@@ -65,7 +65,7 @@ func TestNativeRepeatedMaxItems(t *testing.T) {
 
 func TestNativeRepeatedUnique(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: proto.Bool(true)}.Build())
+	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	// unique items passes
@@ -84,7 +84,7 @@ func TestNativeRepeatedUnique(t *testing.T) {
 
 func TestNativeRepeatedUnique_Empty(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: proto.Bool(true)}.Build())
+	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	list := newInt32List(t)
@@ -93,7 +93,7 @@ func TestNativeRepeatedUnique_Empty(t *testing.T) {
 
 func TestNativeRepeatedUnique_Single(t *testing.T) {
 	t.Parallel()
-	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: proto.Bool(true)}.Build())
+	eval := buildNativeRepeated(t, validate.RepeatedRules_builder{Unique: new(true)}.Build())
 	require.NotNil(t, eval)
 
 	list := newInt32List(t, 42)
@@ -114,7 +114,7 @@ func TestTryNativeRepeatedRules_ReturnsNil(t *testing.T) {
 				Int32: validate.Int32Rules_builder{Gt: proto.Int32(0)}.Build(),
 			}.Build(),
 		}.Build()},
-		{"unique_false", validate.RepeatedRules_builder{Unique: proto.Bool(false)}.Build()},
+		{"unique_false", validate.RepeatedRules_builder{Unique: new(false)}.Build()},
 	}
 
 	for _, tt := range tests {
@@ -244,7 +244,7 @@ func newInt32List(t testing.TB, vals ...int32) protoreflect.List {
 	t.Helper()
 
 	msgType := newDynamicMessageType(t, "test.native", "TestMessage", &descriptorpb.FieldDescriptorProto{
-		Name:   proto.String("value"),
+		Name:   new("value"),
 		Number: proto.Int32(1),
 		Type:   descriptorpb.FieldDescriptorProto_TYPE_INT32.Enum(),
 		Label:  descriptorpb.FieldDescriptorProto_LABEL_REPEATED.Enum(),

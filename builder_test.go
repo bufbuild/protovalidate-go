@@ -20,7 +20,7 @@ import (
 
 	pvcel "buf.build/go/protovalidate/cel"
 	pb "buf.build/go/protovalidate/internal/gen/tests/example/v1"
-	"github.com/google/cel-go/cel"
+	"cel.dev/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
