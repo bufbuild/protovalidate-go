@@ -733,6 +733,27 @@ func TestNativeRuleValueMatchesCEL(t *testing.T) {
 	}
 }
 
+// TestNativeHeaderValueNonStrictEmptyMatchesCEL guards against the native
+// evaluator applying the header-name loose regex (which rejects "") to values.
+func TestNativeHeaderValueNonStrictEmptyMatchesCEL(t *testing.T) {
+	t.Parallel()
+	msgType, msg := scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
+		validate.FieldRules_builder{String: validate.StringRules_builder{
+			WellKnownRegex: validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE.Enum(),
+			Strict:         proto.Bool(false),
+		}.Build()}.Build(),
+		protoreflect.ValueOfString(""))(t)
+	for _, disableNativeRules := range []bool{false, true} {
+		options := []ValidatorOption{WithMessageDescriptors(msgType.Descriptor())}
+		if disableNativeRules {
+			options = append(options, WithDisableNativeRules())
+		}
+		validator, err := New(options...)
+		require.NoError(t, err)
+		require.NoError(t, validator.Validate(msg), "disableNativeRules=%v", disableNativeRules)
+	}
+}
+
 func scalarRuleValueCase(
 	typ descriptorpb.FieldDescriptorProto_Type,
 	rule *validate.FieldRules,
