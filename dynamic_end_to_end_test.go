@@ -740,7 +740,7 @@ func TestNativeHeaderValueNonStrictEmptyMatchesCEL(t *testing.T) {
 	msgType, msg := scalarRuleValueCase(descriptorpb.FieldDescriptorProto_TYPE_STRING,
 		validate.FieldRules_builder{String: validate.StringRules_builder{
 			WellKnownRegex: validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE.Enum(),
-			Strict:         proto.Bool(false),
+			Strict:         new(false),
 		}.Build()}.Build(),
 		protoreflect.ValueOfString(""))(t)
 	for _, disableNativeRules := range []bool{false, true} {

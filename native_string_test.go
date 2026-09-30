@@ -594,7 +594,7 @@ func TestNativeStringHeaderNonStrict(t *testing.T) {
 			t.Parallel()
 			eval := buildNativeString(t, validate.StringRules_builder{
 				WellKnownRegex: tt.regex.Enum(),
-				Strict:         proto.Bool(false),
+				Strict:         new(false),
 			}.Build())
 			require.NotNil(t, eval)
 			err := eval.Evaluate(nil, protoreflect.ValueOfString(tt.value), &validationConfig{})
