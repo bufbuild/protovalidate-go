@@ -242,7 +242,8 @@ var (
 	uuidRegexp        = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 	tuuidRegexp       = regexp.MustCompile(`^[0-9a-fA-F]{32}$`)
 	ulidRegexp        = regexp.MustCompile(`^[0-7][0-9A-HJKMNP-TV-Za-hjkmnp-tv-z]{25}$`)
-	looseRegexp       = regexp.MustCompile(`^[^\x00\x0A\x0D]+$`)
+	looseNameRegexp   = regexp.MustCompile(`^[^\x00\x0A\x0D]+$`)
+	looseValueRegexp  = regexp.MustCompile(`^[^\x00\x0A\x0D]*$`)
 	headerNameRegexp  = regexp.MustCompile(`^:?[0-9a-zA-Z!#$%&'*+.\-^_|~\x60]+$`)
 	headerValueRegexp = regexp.MustCompile(`^[^\x00-\x08\x0A-\x1F\x7F]*$`)
 )
@@ -517,7 +518,8 @@ func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) 
 
 func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value) []*Violation {
 	// check if strict is set (it is on by default)
-	// if not, just validate against the loose rule (^[^\u0000\u000A\u000D]+$)
+	// if not, validate against the loose rule: ^[^\u0000\u000A\u000D]+$ for
+	// name and ^[^\u0000\u000A\u000D]*$ for value
 	// if yes, check whether this is a name or value and use the correct strict rule
 	// ^:?[0-9a-zA-Z!#$%&\\'*+-.^_|~\\x60]+$ for name
 	// ^[^\u0000-\u0008\u000A-\u001F\u007F]*$ for value
@@ -533,17 +535,20 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 				val, ruleValue)}
 		}
 		matcher = headerNameRegexp
+		if !n.strict {
+			matcher = looseNameRegexp
+		}
 		rule = "string.well_known_regex.header_name"
 		msg = "must be a valid HTTP header name"
 	case validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE:
 		matcher = headerValueRegexp
+		if !n.strict {
+			matcher = looseValueRegexp
+		}
 		rule = "string.well_known_regex.header_value"
 		msg = "must be a valid HTTP header value"
 	default:
 		return nil // should never happen, but just in case
-	}
-	if !n.strict {
-		matcher = looseRegexp
 	}
 	if !matcher.MatchString(strVal) {
 		return []*Violation{n.newViolation(strDescs.wellKnownRegexSite,

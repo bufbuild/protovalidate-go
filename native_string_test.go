@@ -572,3 +572,40 @@ func TestHeaderNameRegex(t *testing.T) {
 		})
 	}
 }
+
+func TestNativeStringHeaderNonStrict(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		regex   validate.KnownRegex
+		value   string
+		ruleID  string
+		invalid bool
+	}{
+		{"name_empty", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME, "", "string.well_known_regex.header_name_empty", true},
+		{"name_space", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME, "a b", "", false},
+		{"name_newline", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_NAME, "a\nb", "string.well_known_regex.header_name", true},
+		{"value_empty", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE, "", "", false},
+		{"value_control_char", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE, "a\x01b", "", false},
+		{"value_carriage_return", validate.KnownRegex_KNOWN_REGEX_HTTP_HEADER_VALUE, "a\rb", "string.well_known_regex.header_value", true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			eval := buildNativeString(t, validate.StringRules_builder{
+				WellKnownRegex: tt.regex.Enum(),
+				Strict:         new(false),
+			}.Build())
+			require.NotNil(t, eval)
+			err := eval.Evaluate(nil, protoreflect.ValueOfString(tt.value), &validationConfig{})
+			if !tt.invalid {
+				require.NoError(t, err)
+				return
+			}
+			var valErr *ValidationError
+			require.ErrorAs(t, err, &valErr)
+			require.Len(t, valErr.Violations, 1)
+			assert.Equal(t, tt.ruleID, valErr.Violations[0].Proto.GetRuleId())
+		})
+	}
+}
