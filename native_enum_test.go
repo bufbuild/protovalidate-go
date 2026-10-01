@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	examplev1 "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -149,4 +150,23 @@ func newRegistryWithValidateProto(t testing.TB) *protoregistry.Files {
 	require.NoError(t, registry.RegisterFile(validate.File_buf_validate_validate_proto))
 	require.NoError(t, registry.RegisterFile(wrapperspb.File_google_protobuf_wrappers_proto))
 	return registry
+}
+
+func TestNativeEnumViolationOrder(t *testing.T) {
+	t.Parallel()
+	msg := examplev1.EnumRuleOrder_builder{Val: examplev1.TestEnum(99)}.Build()
+	for _, disableNative := range []bool{false, true} {
+		var opts []ValidatorOption
+		if disableNative {
+			opts = append(opts, WithDisableNativeRules())
+		}
+		val, err := New(opts...)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"enum.defined_only", "enum.in", "enum.not_in"},
+			violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
+		val, err = New(append(opts, WithFailFast())...)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"enum.defined_only"},
+			violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
+	}
 }

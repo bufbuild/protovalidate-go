@@ -577,3 +577,48 @@ func newFieldDescriptor(t testing.TB, fieldType descriptorpb.FieldDescriptorProt
 	require.NoError(t, err)
 	return file.Messages().Get(0).Fields().Get(0)
 }
+
+func violationRuleIDs(t *testing.T, err error) []string {
+	t.Helper()
+	var valErr *ValidationError
+	require.ErrorAs(t, err, &valErr)
+	ruleIDs := make([]string, len(valErr.Violations))
+	for i, violation := range valErr.Violations {
+		ruleIDs[i] = violation.Proto.GetRuleId()
+	}
+	return ruleIDs
+}
+
+func TestNativeNumericViolationOrder(t *testing.T) {
+	t.Parallel()
+	msg := examplev1.Int32RuleOrder_builder{Val: 3}.Build()
+	for _, disableNative := range []bool{false, true} {
+		var opts []ValidatorOption
+		if disableNative {
+			opts = append(opts, WithDisableNativeRules())
+		}
+		val, err := New(opts...)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"int32.gt", "int32.in", "int32.not_in"},
+			violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
+		val, err = New(append(opts, WithFailFast())...)
+		require.NoError(t, err)
+		assert.Equal(t, []string{"int32.gt"},
+			violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
+	}
+}
+
+func TestNativeDoubleViolationOrder(t *testing.T) {
+	t.Parallel()
+	rules := validate.DoubleRules_builder{
+		Gt:     proto.Float64(10),
+		In:     []float64{1},
+		NotIn:  []float64{math.Inf(-1)},
+		Finite: new(true),
+	}.Build()
+	eval := buildNativeNumeric(t, rules, &doubleConfig, descriptorpb.FieldDescriptorProto_TYPE_DOUBLE)
+	require.NotNil(t, eval)
+	err := eval.Evaluate(nil, protoreflect.ValueOfFloat64(math.Inf(-1)), &validationConfig{})
+	assert.Equal(t, []string{"double.gt", "double.in", "double.not_in", "double.finite"},
+		violationRuleIDs(t, err))
+}

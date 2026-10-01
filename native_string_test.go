@@ -609,3 +609,21 @@ func TestNativeStringHeaderNonStrict(t *testing.T) {
 		})
 	}
 }
+
+func TestNativeStringViolationOrder(t *testing.T) {
+	t.Parallel()
+	eval := buildNativeString(t, validate.StringRules_builder{
+		Const:    new("hello"),
+		Len:      proto.Uint64(5),
+		MinBytes: proto.Uint64(4),
+		Prefix:   new("h"),
+		In:       []string{"hello"},
+	}.Build())
+	require.NotNil(t, eval)
+	value := protoreflect.ValueOfString("x")
+	assert.Equal(t,
+		[]string{"string.const", "string.len", "string.min_bytes", "string.prefix", "string.in"},
+		violationRuleIDs(t, eval.Evaluate(nil, value, &validationConfig{})))
+	assert.Equal(t, []string{"string.const"},
+		violationRuleIDs(t, eval.Evaluate(nil, value, &validationConfig{failFast: true})))
+}

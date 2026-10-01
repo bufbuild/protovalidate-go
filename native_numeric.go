@@ -532,6 +532,13 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 		}
 	}
 
+	if v := n.evaluateRange(valT, val); v != nil {
+		violations = append(violations, v)
+		if cfg.failFast {
+			return &ValidationError{Violations: violations}
+		}
+	}
+
 	if len(n.inVals) > 0 && !slices.Contains(n.inVals, valT) {
 		violations = append(violations, n.newViolation(n.config.descs.inSite,
 			n.config.typeName+".in",
@@ -557,13 +564,6 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 			n.config.typeName+".finite",
 			"must be finite",
 			val, protoreflect.ValueOfBool(true)))
-		if cfg.failFast {
-			return &ValidationError{Violations: violations}
-		}
-	}
-
-	if v := n.evaluateRange(valT, val); v != nil {
-		violations = append(violations, v)
 		if cfg.failFast {
 			return &ValidationError{Violations: violations}
 		}

@@ -206,3 +206,80 @@ message MultiRule {
     (buf.validate.field).int64.gt = 5
   ];
 }
+
+message RepeatedWrapperItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated.items.int32.gt = 10];
+}
+
+message MapWrapperValues {
+  map<string, google.protobuf.Int32Value> val = 1 [(buf.validate.field).map.values.int32.gt = 10];
+}
+
+message MapStringWrapperValues {
+  map<string, google.protobuf.StringValue> val = 1 [(buf.validate.field).map.values.string.min_len = 3];
+}
+
+message UniqueWrappers {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated.unique = true];
+}
+
+message MinItemsWrappers {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated.min_items = 2];
+}
+
+message UniqueBytesWrappers {
+  repeated google.protobuf.BytesValue val = 1 [(buf.validate.field).repeated.unique = true];
+}
+
+message Int32RuleOrder {
+  int32 val = 1 [(buf.validate.field).int32 = {
+    gt: 10
+    in: [1]
+    not_in: [3]
+  }];
+}
+
+message EnumRuleOrder {
+  TestEnum val = 1 [(buf.validate.field).enum = {
+    defined_only: true
+    in: [1]
+    not_in: [99]
+  }];
+}
+
+message WrapperStandardAndCustom {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 10}
+    cel: {
+      id: "custom"
+      message: "must be greater than 100"
+      expression: "this > 100"
+    }
+  }];
+}
+
+message WrapperCustomOnly {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field).cel = {
+    id: "custom"
+    message: "must be greater than 100"
+    expression: "this > 100"
+  }];
+}
+
+message WrapperStandardAndCelExpression {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 10}
+    cel_expression: "this > 100 ? '' : 'must be greater than 100'"
+  }];
+}
+
+message RepeatedWrapperStandardAndCustom {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated.items = {
+    int32: {gt: 10}
+    cel: {
+      id: "custom"
+      message: "must be greater than 100"
+      expression: "this > 100"
+    }
+  }];
+}

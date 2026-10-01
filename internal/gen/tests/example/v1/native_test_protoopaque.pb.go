@@ -1110,6 +1110,733 @@ func (b0 MultiRule_builder) Build() *MultiRule {
 	return m0
 }
 
+type RepeatedWrapperItems struct {
+	state          protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Val *[]*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *RepeatedWrapperItems) Reset() {
+	*x = RepeatedWrapperItems{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RepeatedWrapperItems) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RepeatedWrapperItems) ProtoMessage() {}
+
+func (x *RepeatedWrapperItems) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RepeatedWrapperItems) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		if x.xxx_hidden_Val != nil {
+			return *x.xxx_hidden_Val
+		}
+	}
+	return nil
+}
+
+func (x *RepeatedWrapperItems) SetVal(v []*wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = &v
+}
+
+type RepeatedWrapperItems_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 RepeatedWrapperItems_builder) Build() *RepeatedWrapperItems {
+	m0 := &RepeatedWrapperItems{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = &b.Val
+	return m0
+}
+
+type MapWrapperValues struct {
+	state          protoimpl.MessageState            `protogen:"opaque.v1"`
+	xxx_hidden_Val map[string]*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MapWrapperValues) Reset() {
+	*x = MapWrapperValues{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapWrapperValues) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapWrapperValues) ProtoMessage() {}
+
+func (x *MapWrapperValues) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MapWrapperValues) GetVal() map[string]*wrapperspb.Int32Value {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *MapWrapperValues) SetVal(v map[string]*wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = v
+}
+
+type MapWrapperValues_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val map[string]*wrapperspb.Int32Value
+}
+
+func (b0 MapWrapperValues_builder) Build() *MapWrapperValues {
+	m0 := &MapWrapperValues{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type MapStringWrapperValues struct {
+	state          protoimpl.MessageState             `protogen:"opaque.v1"`
+	xxx_hidden_Val map[string]*wrapperspb.StringValue `protobuf:"bytes,1,rep,name=val,proto3" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MapStringWrapperValues) Reset() {
+	*x = MapStringWrapperValues{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MapStringWrapperValues) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MapStringWrapperValues) ProtoMessage() {}
+
+func (x *MapStringWrapperValues) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MapStringWrapperValues) GetVal() map[string]*wrapperspb.StringValue {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *MapStringWrapperValues) SetVal(v map[string]*wrapperspb.StringValue) {
+	x.xxx_hidden_Val = v
+}
+
+type MapStringWrapperValues_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val map[string]*wrapperspb.StringValue
+}
+
+func (b0 MapStringWrapperValues_builder) Build() *MapStringWrapperValues {
+	m0 := &MapStringWrapperValues{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type UniqueWrappers struct {
+	state          protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Val *[]*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *UniqueWrappers) Reset() {
+	*x = UniqueWrappers{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UniqueWrappers) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UniqueWrappers) ProtoMessage() {}
+
+func (x *UniqueWrappers) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *UniqueWrappers) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		if x.xxx_hidden_Val != nil {
+			return *x.xxx_hidden_Val
+		}
+	}
+	return nil
+}
+
+func (x *UniqueWrappers) SetVal(v []*wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = &v
+}
+
+type UniqueWrappers_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 UniqueWrappers_builder) Build() *UniqueWrappers {
+	m0 := &UniqueWrappers{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = &b.Val
+	return m0
+}
+
+type MinItemsWrappers struct {
+	state          protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Val *[]*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *MinItemsWrappers) Reset() {
+	*x = MinItemsWrappers{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MinItemsWrappers) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MinItemsWrappers) ProtoMessage() {}
+
+func (x *MinItemsWrappers) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *MinItemsWrappers) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		if x.xxx_hidden_Val != nil {
+			return *x.xxx_hidden_Val
+		}
+	}
+	return nil
+}
+
+func (x *MinItemsWrappers) SetVal(v []*wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = &v
+}
+
+type MinItemsWrappers_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 MinItemsWrappers_builder) Build() *MinItemsWrappers {
+	m0 := &MinItemsWrappers{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = &b.Val
+	return m0
+}
+
+type UniqueBytesWrappers struct {
+	state          protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Val *[]*wrapperspb.BytesValue `protobuf:"bytes,1,rep,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *UniqueBytesWrappers) Reset() {
+	*x = UniqueBytesWrappers{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UniqueBytesWrappers) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UniqueBytesWrappers) ProtoMessage() {}
+
+func (x *UniqueBytesWrappers) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *UniqueBytesWrappers) GetVal() []*wrapperspb.BytesValue {
+	if x != nil {
+		if x.xxx_hidden_Val != nil {
+			return *x.xxx_hidden_Val
+		}
+	}
+	return nil
+}
+
+func (x *UniqueBytesWrappers) SetVal(v []*wrapperspb.BytesValue) {
+	x.xxx_hidden_Val = &v
+}
+
+type UniqueBytesWrappers_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.BytesValue
+}
+
+func (b0 UniqueBytesWrappers_builder) Build() *UniqueBytesWrappers {
+	m0 := &UniqueBytesWrappers{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = &b.Val
+	return m0
+}
+
+type Int32RuleOrder struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val int32                  `protobuf:"varint,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Int32RuleOrder) Reset() {
+	*x = Int32RuleOrder{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Int32RuleOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Int32RuleOrder) ProtoMessage() {}
+
+func (x *Int32RuleOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *Int32RuleOrder) GetVal() int32 {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return 0
+}
+
+func (x *Int32RuleOrder) SetVal(v int32) {
+	x.xxx_hidden_Val = v
+}
+
+type Int32RuleOrder_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val int32
+}
+
+func (b0 Int32RuleOrder_builder) Build() *Int32RuleOrder {
+	m0 := &Int32RuleOrder{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type EnumRuleOrder struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val TestEnum               `protobuf:"varint,1,opt,name=val,proto3,enum=tests.example.v1.TestEnum"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *EnumRuleOrder) Reset() {
+	*x = EnumRuleOrder{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EnumRuleOrder) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EnumRuleOrder) ProtoMessage() {}
+
+func (x *EnumRuleOrder) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *EnumRuleOrder) GetVal() TestEnum {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return TestEnum_TEST_ENUM_UNSPECIFIED
+}
+
+func (x *EnumRuleOrder) SetVal(v TestEnum) {
+	x.xxx_hidden_Val = v
+}
+
+type EnumRuleOrder_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val TestEnum
+}
+
+func (b0 EnumRuleOrder_builder) Build() *EnumRuleOrder {
+	m0 := &EnumRuleOrder{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type WrapperStandardAndCustom struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val *wrapperspb.Int32Value `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *WrapperStandardAndCustom) Reset() {
+	*x = WrapperStandardAndCustom{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WrapperStandardAndCustom) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WrapperStandardAndCustom) ProtoMessage() {}
+
+func (x *WrapperStandardAndCustom) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *WrapperStandardAndCustom) GetVal() *wrapperspb.Int32Value {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *WrapperStandardAndCustom) SetVal(v *wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = v
+}
+
+func (x *WrapperStandardAndCustom) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Val != nil
+}
+
+func (x *WrapperStandardAndCustom) ClearVal() {
+	x.xxx_hidden_Val = nil
+}
+
+type WrapperStandardAndCustom_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *wrapperspb.Int32Value
+}
+
+func (b0 WrapperStandardAndCustom_builder) Build() *WrapperStandardAndCustom {
+	m0 := &WrapperStandardAndCustom{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type WrapperCustomOnly struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val *wrapperspb.Int32Value `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *WrapperCustomOnly) Reset() {
+	*x = WrapperCustomOnly{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WrapperCustomOnly) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WrapperCustomOnly) ProtoMessage() {}
+
+func (x *WrapperCustomOnly) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *WrapperCustomOnly) GetVal() *wrapperspb.Int32Value {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *WrapperCustomOnly) SetVal(v *wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = v
+}
+
+func (x *WrapperCustomOnly) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Val != nil
+}
+
+func (x *WrapperCustomOnly) ClearVal() {
+	x.xxx_hidden_Val = nil
+}
+
+type WrapperCustomOnly_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *wrapperspb.Int32Value
+}
+
+func (b0 WrapperCustomOnly_builder) Build() *WrapperCustomOnly {
+	m0 := &WrapperCustomOnly{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type WrapperStandardAndCelExpression struct {
+	state          protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Val *wrapperspb.Int32Value `protobuf:"bytes,1,opt,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *WrapperStandardAndCelExpression) Reset() {
+	*x = WrapperStandardAndCelExpression{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *WrapperStandardAndCelExpression) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WrapperStandardAndCelExpression) ProtoMessage() {}
+
+func (x *WrapperStandardAndCelExpression) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *WrapperStandardAndCelExpression) GetVal() *wrapperspb.Int32Value {
+	if x != nil {
+		return x.xxx_hidden_Val
+	}
+	return nil
+}
+
+func (x *WrapperStandardAndCelExpression) SetVal(v *wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = v
+}
+
+func (x *WrapperStandardAndCelExpression) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.xxx_hidden_Val != nil
+}
+
+func (x *WrapperStandardAndCelExpression) ClearVal() {
+	x.xxx_hidden_Val = nil
+}
+
+type WrapperStandardAndCelExpression_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *wrapperspb.Int32Value
+}
+
+func (b0 WrapperStandardAndCelExpression_builder) Build() *WrapperStandardAndCelExpression {
+	m0 := &WrapperStandardAndCelExpression{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = b.Val
+	return m0
+}
+
+type RepeatedWrapperStandardAndCustom struct {
+	state          protoimpl.MessageState    `protogen:"opaque.v1"`
+	xxx_hidden_Val *[]*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *RepeatedWrapperStandardAndCustom) Reset() {
+	*x = RepeatedWrapperStandardAndCustom{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RepeatedWrapperStandardAndCustom) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RepeatedWrapperStandardAndCustom) ProtoMessage() {}
+
+func (x *RepeatedWrapperStandardAndCustom) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *RepeatedWrapperStandardAndCustom) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		if x.xxx_hidden_Val != nil {
+			return *x.xxx_hidden_Val
+		}
+	}
+	return nil
+}
+
+func (x *RepeatedWrapperStandardAndCustom) SetVal(v []*wrapperspb.Int32Value) {
+	x.xxx_hidden_Val = &v
+}
+
+type RepeatedWrapperStandardAndCustom_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 RepeatedWrapperStandardAndCustom_builder) Build() *RepeatedWrapperStandardAndCustom {
+	m0 := &RepeatedWrapperStandardAndCustom{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.xxx_hidden_Val = &b.Val
+	return m0
+}
+
 var File_tests_example_v1_native_test_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_native_test_proto_rawDesc = "" +
@@ -1175,7 +1902,49 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x02bs\x18\t \x01(\v2\x1b.google.protobuf.BytesValueB\a\xbaH\x04z\x02h\x05R\x02bs\"*\n" +
 	"\tMultiRule\x12\x1d\n" +
 	"\x04many\x18\x01 \x01(\x03B\t\xbaH\x06\"\x04\b\n" +
-	" \x05R\x04many*a\n" +
+	" \x05R\x04many\"S\n" +
+	"\x14RepeatedWrapperItems\x12;\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB\f\xbaH\t\x92\x01\x06\"\x04\x1a\x02 \n" +
+	"R\x03val\"\xb4\x01\n" +
+	"\x10MapWrapperValues\x12K\n" +
+	"\x03val\x18\x01 \x03(\v2+.tests.example.v1.MapWrapperValues.ValEntryB\f\xbaH\t\x9a\x01\x06*\x04\x1a\x02 \n" +
+	"R\x03val\x1aS\n" +
+	"\bValEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x121\n" +
+	"\x05value\x18\x02 \x01(\v2\x1b.google.protobuf.Int32ValueR\x05value:\x028\x01\"\xc1\x01\n" +
+	"\x16MapStringWrapperValues\x12Q\n" +
+	"\x03val\x18\x01 \x03(\v21.tests.example.v1.MapStringWrapperValues.ValEntryB\f\xbaH\t\x9a\x01\x06*\x04r\x02\x10\x03R\x03val\x1aT\n" +
+	"\bValEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x122\n" +
+	"\x05value\x18\x02 \x01(\v2\x1c.google.protobuf.StringValueR\x05value:\x028\x01\"I\n" +
+	"\x0eUniqueWrappers\x127\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB\b\xbaH\x05\x92\x01\x02\x18\x01R\x03val\"K\n" +
+	"\x10MinItemsWrappers\x127\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB\b\xbaH\x05\x92\x01\x02\b\x02R\x03val\"N\n" +
+	"\x13UniqueBytesWrappers\x127\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.BytesValueB\b\xbaH\x05\x92\x01\x02\x18\x01R\x03val\"/\n" +
+	"\x0eInt32RuleOrder\x12\x1d\n" +
+	"\x03val\x18\x01 \x01(\x05B\v\xbaH\b\x1a\x060\x018\x03 \n" +
+	"R\x03val\"K\n" +
+	"\rEnumRuleOrder\x12:\n" +
+	"\x03val\x18\x01 \x01(\x0e2\x1a.tests.example.v1.TestEnumB\f\xbaH\t\x82\x01\x06\x10\x01\x18\x01 cR\x03val\"\x83\x01\n" +
+	"\x18WrapperStandardAndCustom\x12g\n" +
+	"\x03val\x18\x01 \x01(\v2\x1b.google.protobuf.Int32ValueB8\xbaH5\xba\x01.\n" +
+	"\x06custom\x12\x18must be greater than 100\x1a\n" +
+	"this > 100\x1a\x02 \n" +
+	"R\x03val\"x\n" +
+	"\x11WrapperCustomOnly\x12c\n" +
+	"\x03val\x18\x01 \x01(\v2\x1b.google.protobuf.Int32ValueB4\xbaH1\xba\x01.\n" +
+	"\x06custom\x12\x18must be greater than 100\x1a\n" +
+	"this > 100R\x03val\"\x88\x01\n" +
+	"\x1fWrapperStandardAndCelExpression\x12e\n" +
+	"\x03val\x18\x01 \x01(\v2\x1b.google.protobuf.Int32ValueB6\xbaH3\xea\x01,this > 100 ? '' : 'must be greater than 100'\x1a\x02 \n" +
+	"R\x03val\"\x90\x01\n" +
+	" RepeatedWrapperStandardAndCustom\x12l\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB=\xbaH:\x92\x017\"5\xba\x01.\n" +
+	"\x06custom\x12\x18must be greater than 100\x1a\n" +
+	"this > 100\x1a\x02 \n" +
+	"R\x03val*a\n" +
 	"\bTestEnum\x12\x19\n" +
 	"\x15TEST_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTEST_ENUM_VAL1\x10\x01\x12\x12\n" +
@@ -1184,43 +1953,70 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x14com.tests.example.v1B\x0fNativeTestProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_native_test_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_tests_example_v1_native_test_proto_goTypes = []any{
-	(TestEnum)(0),                  // 0: tests.example.v1.TestEnum
-	(*BenchGT)(nil),                // 1: tests.example.v1.BenchGT
-	(*BenchTestBytes)(nil),         // 2: tests.example.v1.BenchTestBytes
-	(*TestUnique)(nil),             // 3: tests.example.v1.TestUnique
-	(*TestByteBroken)(nil),         // 4: tests.example.v1.TestByteBroken
-	(*TestByteMatching)(nil),       // 5: tests.example.v1.TestByteMatching
-	(*StringMatching)(nil),         // 6: tests.example.v1.StringMatching
-	(*WrapperTesting)(nil),         // 7: tests.example.v1.WrapperTesting
-	(*MultiRule)(nil),              // 8: tests.example.v1.MultiRule
-	(*wrapperspb.Int32Value)(nil),  // 9: google.protobuf.Int32Value
-	(*wrapperspb.DoubleValue)(nil), // 10: google.protobuf.DoubleValue
-	(*wrapperspb.FloatValue)(nil),  // 11: google.protobuf.FloatValue
-	(*wrapperspb.Int64Value)(nil),  // 12: google.protobuf.Int64Value
-	(*wrapperspb.UInt64Value)(nil), // 13: google.protobuf.UInt64Value
-	(*wrapperspb.UInt32Value)(nil), // 14: google.protobuf.UInt32Value
-	(*wrapperspb.BoolValue)(nil),   // 15: google.protobuf.BoolValue
-	(*wrapperspb.StringValue)(nil), // 16: google.protobuf.StringValue
-	(*wrapperspb.BytesValue)(nil),  // 17: google.protobuf.BytesValue
+	(TestEnum)(0),                            // 0: tests.example.v1.TestEnum
+	(*BenchGT)(nil),                          // 1: tests.example.v1.BenchGT
+	(*BenchTestBytes)(nil),                   // 2: tests.example.v1.BenchTestBytes
+	(*TestUnique)(nil),                       // 3: tests.example.v1.TestUnique
+	(*TestByteBroken)(nil),                   // 4: tests.example.v1.TestByteBroken
+	(*TestByteMatching)(nil),                 // 5: tests.example.v1.TestByteMatching
+	(*StringMatching)(nil),                   // 6: tests.example.v1.StringMatching
+	(*WrapperTesting)(nil),                   // 7: tests.example.v1.WrapperTesting
+	(*MultiRule)(nil),                        // 8: tests.example.v1.MultiRule
+	(*RepeatedWrapperItems)(nil),             // 9: tests.example.v1.RepeatedWrapperItems
+	(*MapWrapperValues)(nil),                 // 10: tests.example.v1.MapWrapperValues
+	(*MapStringWrapperValues)(nil),           // 11: tests.example.v1.MapStringWrapperValues
+	(*UniqueWrappers)(nil),                   // 12: tests.example.v1.UniqueWrappers
+	(*MinItemsWrappers)(nil),                 // 13: tests.example.v1.MinItemsWrappers
+	(*UniqueBytesWrappers)(nil),              // 14: tests.example.v1.UniqueBytesWrappers
+	(*Int32RuleOrder)(nil),                   // 15: tests.example.v1.Int32RuleOrder
+	(*EnumRuleOrder)(nil),                    // 16: tests.example.v1.EnumRuleOrder
+	(*WrapperStandardAndCustom)(nil),         // 17: tests.example.v1.WrapperStandardAndCustom
+	(*WrapperCustomOnly)(nil),                // 18: tests.example.v1.WrapperCustomOnly
+	(*WrapperStandardAndCelExpression)(nil),  // 19: tests.example.v1.WrapperStandardAndCelExpression
+	(*RepeatedWrapperStandardAndCustom)(nil), // 20: tests.example.v1.RepeatedWrapperStandardAndCustom
+	nil,                                      // 21: tests.example.v1.MapWrapperValues.ValEntry
+	nil,                                      // 22: tests.example.v1.MapStringWrapperValues.ValEntry
+	(*wrapperspb.Int32Value)(nil),            // 23: google.protobuf.Int32Value
+	(*wrapperspb.DoubleValue)(nil),           // 24: google.protobuf.DoubleValue
+	(*wrapperspb.FloatValue)(nil),            // 25: google.protobuf.FloatValue
+	(*wrapperspb.Int64Value)(nil),            // 26: google.protobuf.Int64Value
+	(*wrapperspb.UInt64Value)(nil),           // 27: google.protobuf.UInt64Value
+	(*wrapperspb.UInt32Value)(nil),           // 28: google.protobuf.UInt32Value
+	(*wrapperspb.BoolValue)(nil),             // 29: google.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil),           // 30: google.protobuf.StringValue
+	(*wrapperspb.BytesValue)(nil),            // 31: google.protobuf.BytesValue
 }
 var file_tests_example_v1_native_test_proto_depIdxs = []int32{
 	0,  // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
-	9,  // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
-	10, // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
-	11, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
-	12, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
-	13, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
-	14, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
-	15, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
-	16, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
-	17, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	23, // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
+	24, // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
+	25, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
+	26, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
+	27, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
+	28, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
+	29, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
+	30, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
+	31, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
+	23, // 10: tests.example.v1.RepeatedWrapperItems.val:type_name -> google.protobuf.Int32Value
+	21, // 11: tests.example.v1.MapWrapperValues.val:type_name -> tests.example.v1.MapWrapperValues.ValEntry
+	22, // 12: tests.example.v1.MapStringWrapperValues.val:type_name -> tests.example.v1.MapStringWrapperValues.ValEntry
+	23, // 13: tests.example.v1.UniqueWrappers.val:type_name -> google.protobuf.Int32Value
+	23, // 14: tests.example.v1.MinItemsWrappers.val:type_name -> google.protobuf.Int32Value
+	31, // 15: tests.example.v1.UniqueBytesWrappers.val:type_name -> google.protobuf.BytesValue
+	0,  // 16: tests.example.v1.EnumRuleOrder.val:type_name -> tests.example.v1.TestEnum
+	23, // 17: tests.example.v1.WrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
+	23, // 18: tests.example.v1.WrapperCustomOnly.val:type_name -> google.protobuf.Int32Value
+	23, // 19: tests.example.v1.WrapperStandardAndCelExpression.val:type_name -> google.protobuf.Int32Value
+	23, // 20: tests.example.v1.RepeatedWrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
+	23, // 21: tests.example.v1.MapWrapperValues.ValEntry.value:type_name -> google.protobuf.Int32Value
+	30, // 22: tests.example.v1.MapStringWrapperValues.ValEntry.value:type_name -> google.protobuf.StringValue
+	23, // [23:23] is the sub-list for method output_type
+	23, // [23:23] is the sub-list for method input_type
+	23, // [23:23] is the sub-list for extension type_name
+	23, // [23:23] is the sub-list for extension extendee
+	0,  // [0:23] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_native_test_proto_init() }
@@ -1234,7 +2030,7 @@ func file_tests_example_v1_native_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_native_test_proto_rawDesc), len(file_tests_example_v1_native_test_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   8,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

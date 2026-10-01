@@ -18,6 +18,7 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	examplev1 "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
@@ -25,6 +26,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 func TestNativeMapMinPairs(t *testing.T) {
@@ -201,4 +203,66 @@ func newDynamicMapMessageType(
 	require.NotNil(t, desc)
 
 	return dynamicpb.NewMessageType(desc)
+}
+
+func TestNativeMapWrapperValues(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name     string
+		msg      proto.Message
+		wantRule string
+		wantPath string
+	}{
+		{
+			name: "int32/invalid",
+			msg: examplev1.MapWrapperValues_builder{
+				Val: map[string]*wrapperspb.Int32Value{"key": wrapperspb.Int32(5)},
+			}.Build(),
+			wantRule: "int32.gt",
+			wantPath: `val["key"]`,
+		},
+		{
+			name: "int32/valid",
+			msg: examplev1.MapWrapperValues_builder{
+				Val: map[string]*wrapperspb.Int32Value{"key": wrapperspb.Int32(100)},
+			}.Build(),
+		},
+		{
+			name: "string/invalid",
+			msg: examplev1.MapStringWrapperValues_builder{
+				Val: map[string]*wrapperspb.StringValue{"k": wrapperspb.String("a")},
+			}.Build(),
+			wantRule: "string.min_len",
+			wantPath: `val["k"]`,
+		},
+		{
+			name: "string/valid",
+			msg: examplev1.MapStringWrapperValues_builder{
+				Val: map[string]*wrapperspb.StringValue{"k": wrapperspb.String("abc")},
+			}.Build(),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			nativeVal, err := New()
+			require.NoError(t, err)
+			celVal, err := New(WithDisableNativeRules())
+			require.NoError(t, err)
+			nativeErr := nativeVal.Validate(test.msg)
+			celErr := celVal.Validate(test.msg)
+			if test.wantRule == "" {
+				require.NoError(t, nativeErr)
+				require.NoError(t, celErr)
+				return
+			}
+			var nativeValErr, celValErr *ValidationError
+			require.ErrorAs(t, nativeErr, &nativeValErr)
+			require.ErrorAs(t, celErr, &celValErr)
+			require.Len(t, nativeValErr.Violations, 1)
+			assert.Equal(t, test.wantRule, nativeValErr.Violations[0].Proto.GetRuleId())
+			assert.Equal(t, test.wantPath, FieldPathString(nativeValErr.Violations[0].Proto.GetField()))
+			assert.True(t, proto.Equal(celValErr.ToProto(), nativeValErr.ToProto()))
+		})
+	}
 }

@@ -15,7 +15,9 @@
 package protovalidate
 
 import (
+	"cmp"
 	"fmt"
+	"slices"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
@@ -71,7 +73,8 @@ func (c *cache) Build(
 	}
 
 	var asts astSet
-	rules.Range(func(desc protoreflect.FieldDescriptor, rule protoreflect.Value) bool {
+	for _, ruleField := range sortedRuleFields(rules) {
+		desc, rule := ruleField.desc, ruleField.value
 		// Try compiling without the rule variable first. Extending a cel
 		// environment is expensive.
 		precomputedASTs, compileErr := c.loadOrCompileStandardRule(set.env, setOneof, desc)
@@ -80,28 +83,61 @@ func (c *cache) Build(
 				cel.Variable("rule", pvcel.ProtoFieldToType(desc, true, false)),
 			)
 			if compileErr != nil {
-				err = compileErr
-				return false
+				return set, compileErr
 			}
 			precomputedASTs, compileErr = c.loadOrCompileStandardRule(fieldEnv, setOneof, desc)
 			if compileErr != nil {
-				err = compileErr
-				return false
+				return set, compileErr
 			}
 		}
 		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(rules, rule, desc)
 		if compileErr != nil {
-			err = compileErr
-			return false
+			return set, compileErr
 		}
 		asts = asts.Merge(precomputedASTs)
-		return true
-	})
-	if err != nil {
-		return set, err
 	}
 
 	return asts.ReduceResiduals(rules)
+}
+
+type ruleField struct {
+	desc  protoreflect.FieldDescriptor
+	value protoreflect.Value
+}
+
+// Range order is undefined (random for dynamicpb), so violations follow
+// validate.proto declaration order, then extensions by field number.
+func sortedRuleFields(rules protoreflect.Message) []ruleField {
+	var fields []ruleField
+	rules.Range(func(desc protoreflect.FieldDescriptor, value protoreflect.Value) bool {
+		fields = append(fields, ruleField{desc: desc, value: value})
+		return true
+	})
+	slices.SortFunc(fields, func(left, right ruleField) int {
+		return cmp.Or(
+			compareBool(left.desc.IsExtension(), right.desc.IsExtension()),
+			cmp.Compare(ruleFieldOrder(left.desc), ruleFieldOrder(right.desc)),
+		)
+	})
+	return fields
+}
+
+func ruleFieldOrder(desc protoreflect.FieldDescriptor) int {
+	if desc.IsExtension() {
+		return int(desc.Number())
+	}
+	return desc.Index()
+}
+
+func compareBool(left, right bool) int {
+	switch {
+	case left == right:
+		return 0
+	case left:
+		return 1
+	default:
+		return -1
+	}
 }
 
 // resolveRules extracts the standard rules for the specified field. An
