@@ -25,6 +25,7 @@ import (
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 func TestNativeRepeatedMinItems(t *testing.T) {
@@ -331,4 +332,100 @@ func Test_isUniqueBytes(t *testing.T) {
 			assert.Equal(t, d.result, result)
 		})
 	}
+}
+
+func TestNativeRepeatedWrappers(t *testing.T) {
+	t.Parallel()
+	int32s := func(vals ...int32) []*wrapperspb.Int32Value {
+		wrappers := make([]*wrapperspb.Int32Value, len(vals))
+		for i, val := range vals {
+			wrappers[i] = wrapperspb.Int32(val)
+		}
+		return wrappers
+	}
+	tests := []struct {
+		name     string
+		msg      proto.Message
+		wantRule string
+		wantPath string
+	}{
+		{
+			name:     "items/invalid",
+			msg:      examplev1.RepeatedWrapperItems_builder{Val: int32s(5)}.Build(),
+			wantRule: "int32.gt",
+			wantPath: "val[0]",
+		},
+		{
+			name: "items/valid",
+			msg:  examplev1.RepeatedWrapperItems_builder{Val: int32s(100)}.Build(),
+		},
+		{
+			name:     "min_items/invalid",
+			msg:      examplev1.MinItemsWrappers_builder{}.Build(),
+			wantRule: "repeated.min_items",
+			wantPath: "val",
+		},
+		{
+			name: "min_items/valid",
+			msg:  examplev1.MinItemsWrappers_builder{Val: int32s(1, 2)}.Build(),
+		},
+		{
+			name:     "unique/invalid",
+			msg:      examplev1.UniqueWrappers_builder{Val: int32s(1, 1)}.Build(),
+			wantRule: "repeated.unique",
+			wantPath: "val",
+		},
+		{
+			name: "unique/valid",
+			msg:  examplev1.UniqueWrappers_builder{Val: int32s(1, 2)}.Build(),
+		},
+		{
+			name: "unique_bytes/invalid",
+			msg: examplev1.UniqueBytesWrappers_builder{Val: []*wrapperspb.BytesValue{
+				wrapperspb.Bytes([]byte("a")), wrapperspb.Bytes([]byte("a")),
+			}}.Build(),
+			wantRule: "repeated.unique",
+			wantPath: "val",
+		},
+		{
+			name: "unique_bytes/valid",
+			msg: examplev1.UniqueBytesWrappers_builder{Val: []*wrapperspb.BytesValue{
+				wrapperspb.Bytes([]byte("a")), wrapperspb.Bytes([]byte("b")),
+			}}.Build(),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			nativeVal, err := New()
+			require.NoError(t, err)
+			celVal, err := New(WithDisableNativeRules())
+			require.NoError(t, err)
+			for _, msg := range []proto.Message{test.msg, toDynamic(t, test.msg)} {
+				nativeErr := nativeVal.Validate(msg)
+				celErr := celVal.Validate(msg)
+				if test.wantRule == "" {
+					require.NoError(t, nativeErr)
+					require.NoError(t, celErr)
+					continue
+				}
+				var nativeValErr, celValErr *ValidationError
+				require.ErrorAs(t, nativeErr, &nativeValErr)
+				require.ErrorAs(t, celErr, &celValErr)
+				require.Len(t, nativeValErr.Violations, 1)
+				assert.Equal(t, test.wantRule, nativeValErr.Violations[0].Proto.GetRuleId())
+				assert.Equal(t, test.wantPath, FieldPathString(nativeValErr.Violations[0].Proto.GetField()))
+				assert.True(t, proto.Equal(celValErr.ToProto(), nativeValErr.ToProto()))
+			}
+		})
+	}
+}
+
+func toDynamic(t *testing.T, msg proto.Message) proto.Message {
+	t.Helper()
+	data, err := proto.Marshal(msg)
+	require.NoError(t, err)
+	dyn := dynamicpb.NewMessage(msg.ProtoReflect().Descriptor())
+	require.NoError(t, proto.Unmarshal(data, dyn))
+	return dyn
 }

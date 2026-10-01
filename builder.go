@@ -293,7 +293,6 @@ func (bldr *builder) buildValue(
 		bldr.processWrapperRules,
 		bldr.processStandardRules,
 		bldr.processAnyRules,
-		bldr.processEnumRules,
 		bldr.processMapRules,
 		bldr.processRepeatedRules,
 	}
@@ -445,7 +444,11 @@ func (bldr *builder) processWrapperRules(
 		Descriptor: valEval.Descriptor,
 		NestedRule: valEval.NestedRule,
 	}
-	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), rules, &unwrapped, cache)
+	// Only the type rules apply to the inner value; the outer pipeline already
+	// handled the rest (cel, cel_expression, ...), which would otherwise run twice.
+	innerRules := &validate.FieldRules{}
+	innerRules.ProtoReflect().Set(setOneof, refRules.Get(setOneof))
+	err := bldr.buildValue(fdesc.Message().Fields().ByName("value"), innerRules, &unwrapped, cache)
 	if err != nil {
 		return err
 	}
@@ -461,7 +464,8 @@ func (bldr *builder) processStandardRules(
 ) error {
 	// If this is a wrapper field, just return. Wrapper fields are handled by
 	// processWrapperRules and their wrapped values are passed through the process gauntlet.
-	if isMessageField(fdesc) {
+	// A list of wrappers still needs its list-level rules (min_items, unique).
+	if isMessageField(fdesc) && (!fdesc.IsList() || valEval.NestedRule != nil) {
 		if _, ok := expectedWrapperRules(fdesc.Message().FullName()); ok {
 			return nil
 		}
@@ -474,6 +478,31 @@ func (bldr *builder) processStandardRules(
 	// reused (happens in some test cases, could happen in production code with dynamic messages).
 	rules = proto.CloneOf[*validate.FieldRules](rules)
 
+	// defined_only has its own evaluator; keep it in validate.proto order,
+	// between const and the remaining enum rules.
+	if enumRules := rules.GetEnum(); fdesc.Kind() == protoreflect.EnumKind && enumRules.GetDefinedOnly() {
+		if enumRules.HasConst() {
+			constRules := validate.FieldRules_builder{
+				Enum: validate.EnumRules_builder{Const: new(enumRules.GetConst())}.Build(),
+			}.Build()
+			if err := bldr.appendStandardRules(fdesc, constRules, valEval); err != nil {
+				return err
+			}
+			enumRules.ClearConst()
+		}
+		valEval.Append(definedEnum{
+			base:             newBase(valEval),
+			ValueDescriptors: fdesc.Enum().Values(),
+		})
+	}
+	return bldr.appendStandardRules(fdesc, rules, valEval)
+}
+
+func (bldr *builder) appendStandardRules(
+	fdesc protoreflect.FieldDescriptor,
+	rules *validate.FieldRules,
+	valEval *value,
+) error {
 	// Try native Go evaluators for known simple rules before falling back to
 	// CEL. put behind a feature flag to allow for testing.
 	if !bldr.disableNativeRules {
@@ -565,14 +594,9 @@ func (bldr *builder) tryNativeRules(
 	if native == nil {
 		return nil
 	}
-	// processWrapperRules swaps in the inner "value" field as fdesc when
-	// building rules for a wrapper WKT (Int32Value, StringValue, ...), but
-	// leaves valEval.Descriptor pointing at the outer wrapper message field.
-	// Detect that here and wrap the native eval so it unwraps the wrapper
-	// message at runtime before calling val.Int()/Bytes()/etc.
-	if valEval.Descriptor != nil &&
-		(valEval.Descriptor.Kind() == protoreflect.MessageKind ||
-			valEval.Descriptor.Kind() == protoreflect.GroupKind) {
+	// For wrapper WKTs, fdesc is the inner "value" field but the runtime value is
+	// the wrapper message. valEval.Descriptor is nil for list items/map values.
+	if _, isWrapper := expectedWrapperRules(fdesc.ContainingMessage().FullName()); isWrapper {
 		native = wrappedValueEval{
 			innerField: fdesc,
 			inner:      native,
@@ -606,24 +630,6 @@ func (bldr *builder) processAnyRules(
 		NotInValue:        fieldRules.GetAny().ProtoReflect().Get(notInField),
 	}
 	valEval.Append(anyEval)
-	return nil
-}
-
-func (bldr *builder) processEnumRules(
-	fdesc protoreflect.FieldDescriptor,
-	fieldRules *validate.FieldRules,
-	valEval *value,
-	_ messageCache,
-) error {
-	if fdesc.Kind() != protoreflect.EnumKind {
-		return nil
-	}
-	if fieldRules.GetEnum().GetDefinedOnly() {
-		valEval.Append(definedEnum{
-			base:             newBase(valEval),
-			ValueDescriptors: fdesc.Enum().Values(),
-		})
-	}
 	return nil
 }
 

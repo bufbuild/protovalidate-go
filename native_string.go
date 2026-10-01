@@ -384,6 +384,15 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	strVal := val.String()
 	var violations []*Violation
 
+	if n.constVal != nil && strVal != *n.constVal {
+		violations = append(violations, n.newViolation(strDescs.constSite,
+			"string.const", fmt.Sprintf("must equal `%s`", *n.constVal),
+			val, protoreflect.ValueOfString(*n.constVal)))
+		if cfg.failFast {
+			return &ValidationError{Violations: violations[:1]}
+		}
+	}
+
 	if n.exactLen != nil || n.minLen != nil || n.maxLen != nil {
 		runeCount := uint64(utf8.RuneCountInString(strVal)) //nolint:gosec // cannot be negative
 		if vs := n.evaluateLength(runeCount, val); len(vs) > 0 {
@@ -401,15 +410,6 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 			if cfg.failFast {
 				return &ValidationError{Violations: violations[:1]}
 			}
-		}
-	}
-
-	if n.constVal != nil && strVal != *n.constVal {
-		violations = append(violations, n.newViolation(strDescs.constSite,
-			"string.const", fmt.Sprintf("must equal `%s`", *n.constVal),
-			val, protoreflect.ValueOfString(*n.constVal)))
-		if cfg.failFast {
-			return &ValidationError{Violations: violations[:1]}
 		}
 	}
 

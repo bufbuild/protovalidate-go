@@ -26,6 +26,7 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 func TestBuildCache(t *testing.T) {
@@ -137,4 +138,56 @@ func unwrapFieldDescriptor(fd protoreflect.FieldDescriptor) protoreflect.FieldDe
 		return d.FieldDescriptor
 	}
 	return fd
+}
+
+func TestWrapperFieldRulesNotDuplicated(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		msg  proto.Message
+		want []string
+	}{
+		{
+			name: "standard_and_custom/both_fail",
+			msg:  pb.WrapperStandardAndCustom_builder{Val: wrapperspb.Int32(5)}.Build(),
+			want: []string{"custom", "int32.gt"},
+		},
+		{
+			name: "standard_and_custom/custom_fails",
+			msg:  pb.WrapperStandardAndCustom_builder{Val: wrapperspb.Int32(50)}.Build(),
+			want: []string{"custom"},
+		},
+		{
+			name: "custom_only",
+			msg:  pb.WrapperCustomOnly_builder{Val: wrapperspb.Int32(5)}.Build(),
+			want: []string{"custom"},
+		},
+		{
+			name: "repeated_items/both_fail",
+			msg: pb.RepeatedWrapperStandardAndCustom_builder{
+				Val: []*wrapperspb.Int32Value{wrapperspb.Int32(5)},
+			}.Build(),
+			want: []string{"custom", "int32.gt"},
+		},
+		{
+			name: "standard_and_cel_expression/both_fail",
+			msg:  pb.WrapperStandardAndCelExpression_builder{Val: wrapperspb.Int32(5)}.Build(),
+			want: []string{"this > 100 ? '' : 'must be greater than 100'", "int32.gt"},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			for _, disableNative := range []bool{false, true} {
+				var opts []ValidatorOption
+				if disableNative {
+					opts = append(opts, WithDisableNativeRules())
+				}
+				val, err := New(opts...)
+				require.NoError(t, err)
+				assert.Equal(t, test.want, violationRuleIDs(t, val.Validate(test.msg)),
+					"disableNative=%v", disableNative)
+			}
+		})
+	}
 }

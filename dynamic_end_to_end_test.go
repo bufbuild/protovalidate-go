@@ -462,7 +462,7 @@ func TestEnumCombinedRules(t *testing.T) {
 			value:          99, // undefined, not in [1,2]
 			wantErr:        true,
 			violationCount: 2,
-			ruleIDs:        []string{"enum.in", "enum.defined_only"},
+			ruleIDs:        []string{"enum.defined_only", "enum.in"},
 		},
 
 		// --- defined_only + const ---

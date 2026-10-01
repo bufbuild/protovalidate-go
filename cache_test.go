@@ -20,12 +20,14 @@ import (
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
 	pvcel "buf.build/go/protovalidate/cel"
 	"buf.build/go/protovalidate/internal/gen/buf/validate/conformance/cases"
+	examplev1 "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"cel.dev/cel-go/cel"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"google.golang.org/protobuf/types/dynamicpb"
 )
 
 func getFieldDesc(t *testing.T, msg proto.Message, fld protoreflect.Name) protoreflect.FieldDescriptor {
@@ -210,5 +212,30 @@ func TestCache_GetExpectedRuleDescriptor(t *testing.T) {
 				assert.False(t, ok)
 			}
 		})
+	}
+}
+
+func TestSortedRuleFields(t *testing.T) {
+	t.Parallel()
+	rules := validate.Int32Rules_builder{
+		Const: proto.Int32(5),
+		Lt:    proto.Int32(20),
+		Gt:    proto.Int32(10),
+		In:    []int32{1},
+		NotIn: []int32{3},
+	}.Build()
+	proto.SetExtension(rules, examplev1.E_AbsNotIn, []int32{7})
+	data, err := proto.Marshal(rules)
+	require.NoError(t, err)
+	want := []protoreflect.Name{"const", "lt", "gt", "in", "not_in", "abs_not_in"}
+	// dynamicpb ranges over a map, so repeat to catch order-dependent sorting.
+	for range 20 {
+		dyn := dynamicpb.NewMessage(rules.ProtoReflect().Descriptor())
+		require.NoError(t, proto.UnmarshalOptions{Resolver: protoregistry.GlobalTypes}.Unmarshal(data, dyn))
+		got := make([]protoreflect.Name, 0, len(want))
+		for _, field := range sortedRuleFields(dyn) {
+			got = append(got, field.desc.Name())
+		}
+		require.Equal(t, want, got)
 	}
 }
