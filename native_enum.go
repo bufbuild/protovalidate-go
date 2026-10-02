@@ -15,6 +15,7 @@
 package protovalidate
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 
@@ -30,13 +31,10 @@ var (
 )
 
 // tryBuildNativeEnumRules attempts to build a native Go evaluator for
-// enum const/in/not_in rules. Returns nil if the rules can't be handled
-// natively. Note: defined_only is handled separately in enum.go.
-func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
-	if rules == nil {
-		return nil
-	}
-	if len(rules.ProtoReflect().GetUnknown()) > 0 {
+// enum const/defined_only/in/not_in rules. Returns nil if the rules can't be
+// handled natively.
+func tryBuildNativeEnumRules(base base, rules *validate.EnumRules, values protoreflect.EnumValueDescriptors) evaluator {
+	if rules == nil || !canBuildNativeEnumRules(rules) {
 		return nil
 	}
 
@@ -46,6 +44,13 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
 	if rules.HasConst() {
 		constVal = new(rules.GetConst())
 		rules.ProtoReflect().Clear(enumConstSite.desc)
+		hasRule = true
+	}
+
+	var definedOnly *definedEnum
+	if rules.GetDefinedOnly() {
+		definedOnly = &definedEnum{base: base, ValueDescriptors: values}
+		rules.ProtoReflect().Clear(enumDefinedOnlyRuleDescriptor)
 		hasRule = true
 	}
 
@@ -66,21 +71,30 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules) evaluator {
 	}
 
 	return nativeEnumEval{
-		base:      base,
-		constVal:  constVal,
-		inVals:    inVals,
-		notInVals: notInVals,
+		base:        base,
+		constVal:    constVal,
+		definedOnly: definedOnly,
+		inVals:      inVals,
+		notInVals:   notInVals,
 	}
+}
+
+// canBuildNativeEnumRules reports whether tryBuildNativeEnumRules can handle
+// rules. Unknown fields are custom predefined rules, which CEL must evaluate
+// against the complete rules message.
+func canBuildNativeEnumRules(rules *validate.EnumRules) bool {
+	return len(rules.ProtoReflect().GetUnknown()) == 0
 }
 
 var _ evaluator = nativeEnumEval{}
 
-// nativeEnumEval is a native Go evaluator for enum const/in/not_in rules.
+// nativeEnumEval is a native Go evaluator for enum const/defined_only/in/not_in rules.
 type nativeEnumEval struct {
 	base
-	constVal  *int32
-	inVals    []int32
-	notInVals []int32
+	constVal    *int32
+	definedOnly *definedEnum
+	inVals      []int32
+	notInVals   []int32
 }
 
 type enumProcessor func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation
@@ -93,6 +107,16 @@ var enumProcessors = []enumProcessor{
 			return n.newViolation(enumConstSite,
 				"enum.const", fmt.Sprintf("must equal %d", *n.constVal),
 				val, protoreflect.ValueOfInt32(*n.constVal))
+		}
+		return nil
+	},
+	// defined_only
+	func(n nativeEnumEval, val protoreflect.Value, _ int32) *Violation {
+		if n.definedOnly == nil {
+			return nil
+		}
+		if valErr, ok := errors.AsType[*ValidationError](n.definedOnly.Evaluate(nil, val, nil)); ok {
+			return valErr.Violations[0]
 		}
 		return nil
 	},

@@ -20,11 +20,13 @@ import (
 	"testing"
 
 	"buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	examplev1 "buf.build/go/protovalidate/internal/gen/tests/example/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protodesc"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/reflect/protoregistry"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/dynamicpb"
 )
@@ -433,9 +435,18 @@ func TestEnumCombinedRules(t *testing.T) {
 		},
 	}
 
+	celExpression := []string{"this != 99 ? '' : 'must not be 99'"}
+	celRules := []*validate.Rule{validate.Rule_builder{
+		Id:         new("custom"),
+		Message:    new("must be less than 10"),
+		Expression: new("this < 10"),
+	}.Build()}
+
 	tests := []struct {
 		name           string
 		rules          *validate.EnumRules
+		celExpression  []string
+		cel            []*validate.Rule
 		value          protoreflect.EnumNumber
 		wantErr        bool
 		violationCount int
@@ -489,6 +500,53 @@ func TestEnumCombinedRules(t *testing.T) {
 			ruleIDs:        []string{"enum.const", "enum.defined_only"},
 		},
 
+		// --- field-level cel_expression and cel alongside enum rules ---
+		{
+			name: "cel+const+defined_only+in+not_in/fail_all: field rules before enum rules",
+			rules: validate.EnumRules_builder{
+				Const:       proto.Int32(1),
+				DefinedOnly: new(true),
+				In:          []int32{1},
+				NotIn:       []int32{99},
+			}.Build(),
+			celExpression:  celExpression,
+			cel:            celRules,
+			value:          99,
+			wantErr:        true,
+			violationCount: 6,
+			ruleIDs: []string{
+				celExpression[0], "custom", "enum.const", "enum.defined_only", "enum.in", "enum.not_in",
+			},
+		},
+		{
+			name:           "cel+defined_only/fail_all",
+			rules:          validate.EnumRules_builder{DefinedOnly: new(true)}.Build(),
+			celExpression:  celExpression,
+			cel:            celRules,
+			value:          99,
+			wantErr:        true,
+			violationCount: 3,
+			ruleIDs:        []string{celExpression[0], "custom", "enum.defined_only"},
+		},
+		{
+			name:           "cel+in/fail_all",
+			rules:          validate.EnumRules_builder{In: []int32{1}}.Build(),
+			celExpression:  celExpression,
+			cel:            celRules,
+			value:          99,
+			wantErr:        true,
+			violationCount: 3,
+			ruleIDs:        []string{celExpression[0], "custom", "enum.in"},
+		},
+		{
+			name:          "cel+in/pass",
+			rules:         validate.EnumRules_builder{In: []int32{1}}.Build(),
+			celExpression: celExpression,
+			cel:           celRules,
+			value:         1,
+			wantErr:       false,
+		},
+
 		// --- defined_only + not_in ---
 		{
 			name:    "defined_only+not_in/pass: defined and not in exclusion list",
@@ -523,7 +581,11 @@ func TestEnumCombinedRules(t *testing.T) {
 				Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
 				TypeName: new(".test.combined.Status"),
 				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
-				Options:  fieldOpts(validate.FieldRules_builder{Enum: tt.rules}.Build()),
+				Options: fieldOpts(validate.FieldRules_builder{
+					Enum:          tt.rules,
+					CelExpression: tt.celExpression,
+					Cel:           tt.cel,
+				}.Build()),
 			})
 
 			// Run with both CEL and native to verify identical results.
@@ -554,8 +616,98 @@ func TestEnumCombinedRules(t *testing.T) {
 						assert.Equal(t, expectedID, valErr.Violations[i].Proto.GetRuleId(),
 							"violation[%d] rule ID mismatch", i)
 					}
+
+					failFastValidator, err := New(append(options, WithFailFast())...)
+					require.NoError(t, err)
+					assert.Equal(t, tt.ruleIDs[:1], violationRuleIDs(t, failFastValidator.Validate(msg)))
 				})
 			}
+		})
+	}
+}
+
+// The predefined extensions stay as unknown bytes, as they do for descriptors
+// built without the extensions registered, so the native enum builder bails.
+func TestEnumUnknownExtension(t *testing.T) {
+	t.Parallel()
+	enumDesc := &descriptorpb.EnumDescriptorProto{
+		Name: new("Status"),
+		Value: []*descriptorpb.EnumValueDescriptorProto{
+			{Name: new("STATUS_UNSPECIFIED"), Number: proto.Int32(0)},
+			{Name: new("STATUS_ACTIVE"), Number: proto.Int32(1)},
+		},
+	}
+	tests := []struct {
+		name        string
+		definedOnly bool
+		want        []string
+	}{
+		{
+			name:        "const+defined_only",
+			definedOnly: true,
+			want: []string{
+				"enum.const", "enum.defined_only", "enum.in", "enum.not_in", "enum.forbidden", "enum.in_or_zero",
+			},
+		},
+		{
+			name: "const",
+			want: []string{"enum.const", "enum.in", "enum.not_in", "enum.forbidden", "enum.in_or_zero"},
+		},
+	}
+	for i, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			knownRules := validate.EnumRules_builder{
+				Const:       proto.Int32(1),
+				DefinedOnly: new(test.definedOnly),
+				In:          []int32{1},
+				NotIn:       []int32{99},
+			}.Build()
+			proto.SetExtension(knownRules, examplev1.E_EnumForbidden, []int32{99})
+			// in_or_zero reads rules.in, so CEL must see the rules native would clear.
+			proto.SetExtension(knownRules, examplev1.E_InOrZero, true)
+			data, err := proto.Marshal(knownRules)
+			require.NoError(t, err)
+			enumRules := &validate.EnumRules{}
+			require.NoError(t, proto.UnmarshalOptions{Resolver: new(protoregistry.Types)}.Unmarshal(data, enumRules))
+
+			pkg := fmt.Sprintf("test.unknownext%d", i)
+			msgType := newDynamicMessageTypeWithEnum(t, pkg, "EnumUnknownExt", enumDesc, &descriptorpb.FieldDescriptorProto{
+				Name:     new("status"),
+				Number:   proto.Int32(1),
+				Type:     descriptorpb.FieldDescriptorProto_TYPE_ENUM.Enum(),
+				TypeName: new("." + pkg + ".Status"),
+				Label:    descriptorpb.FieldDescriptorProto_LABEL_OPTIONAL.Enum(),
+				Options:  fieldOpts(validate.FieldRules_builder{Enum: enumRules}.Build()),
+			})
+			statusDesc := msgType.Descriptor().Fields().ByName("status")
+			fieldRules, ok := proto.GetExtension(statusDesc.Options(), validate.E_Field).(*validate.FieldRules)
+			require.True(t, ok)
+			require.NotEmpty(t, fieldRules.GetEnum().ProtoReflect().GetUnknown(), "extension must be unknown bytes")
+			require.Nil(t, tryBuildNativeEnumRules(base{}, proto.CloneOf(fieldRules.GetEnum()), statusDesc.Enum().Values()),
+				"native enum builder must bail on unknown fields")
+
+			msg := dynamicpb.NewMessage(msgType.Descriptor())
+			msg.Set(statusDesc, protoreflect.ValueOfEnum(99))
+			validMsg := dynamicpb.NewMessage(msgType.Descriptor())
+			validMsg.Set(statusDesc, protoreflect.ValueOfEnum(1))
+			for _, disableNative := range []bool{false, true} {
+				opts := []ValidatorOption{WithMessageDescriptors(msgType.Descriptor())}
+				if disableNative {
+					opts = append(opts, WithDisableNativeRules())
+				}
+				val, err := New(opts...)
+				require.NoError(t, err)
+				assert.Equal(t, test.want, violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
+				require.NoError(t, val.Validate(validMsg), "disableNative=%v", disableNative)
+				val, err = New(append(opts, WithFailFast())...)
+				require.NoError(t, err)
+				assert.Equal(t, []string{"enum.const"}, violationRuleIDs(t, val.Validate(msg)),
+					"disableNative=%v", disableNative)
+			}
+			assert.NotEmpty(t, fieldRules.GetEnum().ProtoReflect().GetUnknown(),
+				"building validators must not reparse the field's options")
+			assert.True(t, fieldRules.GetEnum().HasConst(), "building validators must not clear the field's const")
 		})
 	}
 }

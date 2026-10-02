@@ -70,6 +70,10 @@ linters:
           - unparam
           - varnamelen
         path: _test.go
+      # prototext inputs repeat values on purpose (duplicate list items, deep nesting)
+      - linters:
+          - dupword
+        path: supplementary_.*_test\.go
       - linters:
           # setting up custom functions/overloads appears duplicative (false positive)
           - dupl

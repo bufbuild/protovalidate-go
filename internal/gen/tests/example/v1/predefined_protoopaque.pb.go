@@ -38,6 +38,50 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PredefinedEnum int32
+
+const (
+	PredefinedEnum_PREDEFINED_ENUM_UNSPECIFIED PredefinedEnum = 0
+	PredefinedEnum_PREDEFINED_ENUM_ONE         PredefinedEnum = 1
+	PredefinedEnum_PREDEFINED_ENUM_TWO         PredefinedEnum = 2
+)
+
+// Enum value maps for PredefinedEnum.
+var (
+	PredefinedEnum_name = map[int32]string{
+		0: "PREDEFINED_ENUM_UNSPECIFIED",
+		1: "PREDEFINED_ENUM_ONE",
+		2: "PREDEFINED_ENUM_TWO",
+	}
+	PredefinedEnum_value = map[string]int32{
+		"PREDEFINED_ENUM_UNSPECIFIED": 0,
+		"PREDEFINED_ENUM_ONE":         1,
+		"PREDEFINED_ENUM_TWO":         2,
+	}
+)
+
+func (x PredefinedEnum) Enum() *PredefinedEnum {
+	p := new(PredefinedEnum)
+	*p = x
+	return p
+}
+
+func (x PredefinedEnum) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PredefinedEnum) Descriptor() protoreflect.EnumDescriptor {
+	return file_tests_example_v1_predefined_proto_enumTypes[0].Descriptor()
+}
+
+func (PredefinedEnum) Type() protoreflect.EnumType {
+	return &file_tests_example_v1_predefined_proto_enumTypes[0]
+}
+
+func (x PredefinedEnum) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
 // https://github.com/bufbuild/protovalidate-go/issues/148
 type Issue148 struct {
 	state                  protoimpl.MessageState `protogen:"opaque.v1"`
@@ -289,6 +333,179 @@ func (b0 Issue296_builder) Build() *Issue296 {
 	return m0
 }
 
+// Predefined rules that read a sibling standard rule through `rules`.
+type PredefinedReadsRules struct {
+	state                       protoimpl.MessageState `protogen:"opaque.v1"`
+	xxx_hidden_Gt               int32                  `protobuf:"varint,1,opt,name=gt"`
+	xxx_hidden_MinLen           *string                `protobuf:"bytes,2,opt,name=min_len,json=minLen"`
+	xxx_hidden_In               PredefinedEnum         `protobuf:"varint,3,opt,name=in,enum=tests.example.v1.PredefinedEnum"`
+	xxx_hidden_ConstDefinedOnly PredefinedEnum         `protobuf:"varint,4,opt,name=const_defined_only,json=constDefinedOnly,enum=tests.example.v1.PredefinedEnum"`
+	XXX_raceDetectHookData      protoimpl.RaceDetectHookData
+	XXX_presence                [1]uint32
+	unknownFields               protoimpl.UnknownFields
+	sizeCache                   protoimpl.SizeCache
+}
+
+func (x *PredefinedReadsRules) Reset() {
+	*x = PredefinedReadsRules{}
+	mi := &file_tests_example_v1_predefined_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PredefinedReadsRules) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PredefinedReadsRules) ProtoMessage() {}
+
+func (x *PredefinedReadsRules) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_predefined_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *PredefinedReadsRules) GetGt() int32 {
+	if x != nil {
+		return x.xxx_hidden_Gt
+	}
+	return 0
+}
+
+func (x *PredefinedReadsRules) GetMinLen() string {
+	if x != nil {
+		if x.xxx_hidden_MinLen != nil {
+			return *x.xxx_hidden_MinLen
+		}
+		return ""
+	}
+	return ""
+}
+
+func (x *PredefinedReadsRules) GetIn() PredefinedEnum {
+	if x != nil {
+		if protoimpl.X.Present(&(x.XXX_presence[0]), 2) {
+			return x.xxx_hidden_In
+		}
+	}
+	return PredefinedEnum_PREDEFINED_ENUM_UNSPECIFIED
+}
+
+func (x *PredefinedReadsRules) GetConstDefinedOnly() PredefinedEnum {
+	if x != nil {
+		if protoimpl.X.Present(&(x.XXX_presence[0]), 3) {
+			return x.xxx_hidden_ConstDefinedOnly
+		}
+	}
+	return PredefinedEnum_PREDEFINED_ENUM_UNSPECIFIED
+}
+
+func (x *PredefinedReadsRules) SetGt(v int32) {
+	x.xxx_hidden_Gt = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 0, 4)
+}
+
+func (x *PredefinedReadsRules) SetMinLen(v string) {
+	x.xxx_hidden_MinLen = &v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 1, 4)
+}
+
+func (x *PredefinedReadsRules) SetIn(v PredefinedEnum) {
+	x.xxx_hidden_In = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 2, 4)
+}
+
+func (x *PredefinedReadsRules) SetConstDefinedOnly(v PredefinedEnum) {
+	x.xxx_hidden_ConstDefinedOnly = v
+	protoimpl.X.SetPresent(&(x.XXX_presence[0]), 3, 4)
+}
+
+func (x *PredefinedReadsRules) HasGt() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 0)
+}
+
+func (x *PredefinedReadsRules) HasMinLen() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 1)
+}
+
+func (x *PredefinedReadsRules) HasIn() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 2)
+}
+
+func (x *PredefinedReadsRules) HasConstDefinedOnly() bool {
+	if x == nil {
+		return false
+	}
+	return protoimpl.X.Present(&(x.XXX_presence[0]), 3)
+}
+
+func (x *PredefinedReadsRules) ClearGt() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 0)
+	x.xxx_hidden_Gt = 0
+}
+
+func (x *PredefinedReadsRules) ClearMinLen() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 1)
+	x.xxx_hidden_MinLen = nil
+}
+
+func (x *PredefinedReadsRules) ClearIn() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 2)
+	x.xxx_hidden_In = PredefinedEnum_PREDEFINED_ENUM_UNSPECIFIED
+}
+
+func (x *PredefinedReadsRules) ClearConstDefinedOnly() {
+	protoimpl.X.ClearPresent(&(x.XXX_presence[0]), 3)
+	x.xxx_hidden_ConstDefinedOnly = PredefinedEnum_PREDEFINED_ENUM_UNSPECIFIED
+}
+
+type PredefinedReadsRules_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Gt               *int32
+	MinLen           *string
+	In               *PredefinedEnum
+	ConstDefinedOnly *PredefinedEnum
+}
+
+func (b0 PredefinedReadsRules_builder) Build() *PredefinedReadsRules {
+	m0 := &PredefinedReadsRules{}
+	b, x := &b0, m0
+	_, _ = b, x
+	if b.Gt != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 0, 4)
+		x.xxx_hidden_Gt = *b.Gt
+	}
+	if b.MinLen != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 1, 4)
+		x.xxx_hidden_MinLen = b.MinLen
+	}
+	if b.In != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 2, 4)
+		x.xxx_hidden_In = *b.In
+	}
+	if b.ConstDefinedOnly != nil {
+		protoimpl.X.SetPresentNonAtomic(&(x.XXX_presence[0]), 3, 4)
+		x.xxx_hidden_ConstDefinedOnly = *b.ConstDefinedOnly
+	}
+	return m0
+}
+
 var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 	{
 		ExtendedType:  (*validate.Int32Rules)(nil),
@@ -296,6 +513,46 @@ var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 		Field:         1800,
 		Name:          "tests.example.v1.abs_not_in",
 		Tag:           "varint,1800,rep,name=abs_not_in",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.Int32Rules)(nil),
+		ExtensionType: (*bool)(nil),
+		Field:         1801,
+		Name:          "tests.example.v1.gt_or_zero",
+		Tag:           "varint,1801,opt,name=gt_or_zero",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.StringRules)(nil),
+		ExtensionType: (*bool)(nil),
+		Field:         1800,
+		Name:          "tests.example.v1.min_len_or_empty",
+		Tag:           "varint,1800,opt,name=min_len_or_empty",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.EnumRules)(nil),
+		ExtensionType: ([]int32)(nil),
+		Field:         1800,
+		Name:          "tests.example.v1.enum_forbidden",
+		Tag:           "varint,1800,rep,name=enum_forbidden",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.EnumRules)(nil),
+		ExtensionType: (*bool)(nil),
+		Field:         1801,
+		Name:          "tests.example.v1.in_or_zero",
+		Tag:           "varint,1801,opt,name=in_or_zero",
+		Filename:      "tests/example/v1/predefined.proto",
+	},
+	{
+		ExtendedType:  (*validate.EnumRules)(nil),
+		ExtensionType: (*bool)(nil),
+		Field:         1802,
+		Name:          "tests.example.v1.const_or_zero",
+		Tag:           "varint,1802,opt,name=const_or_zero",
 		Filename:      "tests/example/v1/predefined.proto",
 	},
 	{
@@ -320,18 +577,36 @@ var file_tests_example_v1_predefined_proto_extTypes = []protoimpl.ExtensionInfo{
 var (
 	// repeated int32 abs_not_in = 1800;
 	E_AbsNotIn = &file_tests_example_v1_predefined_proto_extTypes[0]
+	// optional bool gt_or_zero = 1801;
+	E_GtOrZero = &file_tests_example_v1_predefined_proto_extTypes[1]
+)
+
+// Extension fields to validate.StringRules.
+var (
+	// optional bool min_len_or_empty = 1800;
+	E_MinLenOrEmpty = &file_tests_example_v1_predefined_proto_extTypes[2]
+)
+
+// Extension fields to validate.EnumRules.
+var (
+	// repeated int32 enum_forbidden = 1800;
+	E_EnumForbidden = &file_tests_example_v1_predefined_proto_extTypes[3]
+	// optional bool in_or_zero = 1801;
+	E_InOrZero = &file_tests_example_v1_predefined_proto_extTypes[4]
+	// optional bool const_or_zero = 1802;
+	E_ConstOrZero = &file_tests_example_v1_predefined_proto_extTypes[5]
 )
 
 // Extension fields to validate.BoolRules.
 var (
 	// optional bool this_equals_rule = 1800;
-	E_ThisEqualsRule = &file_tests_example_v1_predefined_proto_extTypes[1]
+	E_ThisEqualsRule = &file_tests_example_v1_predefined_proto_extTypes[6]
 )
 
 // Extension fields to validate.FieldMaskRules.
 var (
 	// optional google.protobuf.FieldMask fm_rules_extension = 1801;
-	E_FmRulesExtension = &file_tests_example_v1_predefined_proto_extTypes[2]
+	E_FmRulesExtension = &file_tests_example_v1_predefined_proto_extTypes[7]
 )
 
 var File_tests_example_v1_predefined_proto protoreflect.FileDescriptor
@@ -348,11 +623,40 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"true_field\x18\x02 \x01(\bB\b\xbaH\x05j\x03\xc0p\x01R\ttrueField\"D\n" +
 	"\bIssue296\x128\n" +
 	"\x02fm\x18\x01 \x01(\v2\x1a.google.protobuf.FieldMaskB\f\xbaH\t\xe2\x01\x06\xcap\x03\n" +
-	"\x01aR\x02fm:\xa6\x01\n" +
+	"\x01aR\x02fm\"\xf5\x01\n" +
+	"\x14PredefinedReadsRules\x12\x1a\n" +
+	"\x02gt\x18\x01 \x01(\x05B\n" +
+	"\xbaH\a\x1a\x05\xc8p\x01 \x05R\x02gt\x12#\n" +
+	"\amin_len\x18\x02 \x01(\tB\n" +
+	"\xbaH\ar\x05\xc0p\x01\x10\x03R\x06minLen\x12=\n" +
+	"\x02in\x18\x03 \x01(\x0e2 .tests.example.v1.PredefinedEnumB\v\xbaH\b\x82\x01\x05\xc8p\x01\x18\x01R\x02in\x12]\n" +
+	"\x12const_defined_only\x18\x04 \x01(\x0e2 .tests.example.v1.PredefinedEnumB\r\xbaH\n" +
+	"\x82\x01\a\xd0p\x01\b\x01\x10\x01R\x10constDefinedOnly*c\n" +
+	"\x0ePredefinedEnum\x12\x1f\n" +
+	"\x1bPREDEFINED_ENUM_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13PREDEFINED_ENUM_ONE\x10\x01\x12\x17\n" +
+	"\x13PREDEFINED_ENUM_TWO\x10\x02:\xa6\x01\n" +
 	"\n" +
 	"abs_not_in\x12\x18.buf.validate.Int32Rules\x18\x88\x0e \x03(\x05Bm\xc2Hj\n" +
 	"h\n" +
-	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xb1\x01\n" +
+	"\x10int32.abs_not_in\x12+value must not be in absolute value of list\x1a'this in rule || this in rule.map(n, -n)R\babsNotIn:\xa0\x01\n" +
+	"\n" +
+	"gt_or_zero\x12\x18.buf.validate.Int32Rules\x18\x89\x0e \x01(\bBg\xc2Hd\n" +
+	"b\n" +
+	"\x10int32.gt_or_zero\x1aNrule && this != 0 && this <= rules.gt ? 'must be zero or greater than gt' : ''R\bgtOrZero:\xc7\x01\n" +
+	"\x10min_len_or_empty\x12\x19.buf.validate.StringRules\x18\x88\x0e \x01(\bB\x81\x01\xc2H~\n" +
+	"|\n" +
+	"\x17string.min_len_or_empty\x1aarule && this != '' && uint(size(this)) < rules.min_len ? 'must be empty or at least min_len' : ''R\rminLenOrEmpty:\x8b\x01\n" +
+	"\x0eenum_forbidden\x12\x17.buf.validate.EnumRules\x18\x88\x0e \x03(\x05BJ\xc2HG\n" +
+	"E\n" +
+	"\x0eenum.forbidden\x1a3this in rule ? 'must not be a forbidden value' : ''R\renumForbidden:\xa6\x01\n" +
+	"\n" +
+	"in_or_zero\x12\x17.buf.validate.EnumRules\x18\x89\x0e \x01(\bBn\xc2Hk\n" +
+	"i\n" +
+	"\x0fenum.in_or_zero\x1aVrule && this != 0 && !(this in getField(rules, 'in')) ? 'must be zero or in list' : ''R\binOrZero:\xad\x01\n" +
+	"\rconst_or_zero\x12\x17.buf.validate.EnumRules\x18\x8a\x0e \x01(\bBo\xc2Hl\n" +
+	"j\n" +
+	"\x12enum.const_or_zero\x1aTrule && this != 0 && this != getField(rules, 'const') ? 'must be zero or const' : ''R\vconstOrZero:\xb1\x01\n" +
 	"\x10this_equals_rule\x12\x17.buf.validate.BoolRules\x18\x88\x0e \x01(\bBm\xc2Hj\n" +
 	"h\n" +
 	"\x15bool.this_equals_rule\x1aOthis == rule ? '' : 'this = %s, rule = %s'.format([string(this), string(rule)])R\x0ethisEqualsRule:\x9b\x01\n" +
@@ -361,27 +665,39 @@ const file_tests_example_v1_predefined_proto_rawDesc = "" +
 	"\x1dfield_mask.fm_rules_extension\x1a\fthis == ruleR\x10fmRulesExtensionB\xcd\x01\n" +
 	"\x14com.tests.example.v1B\x0fPredefinedProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1"
 
-var file_tests_example_v1_predefined_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_tests_example_v1_predefined_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_tests_example_v1_predefined_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_tests_example_v1_predefined_proto_goTypes = []any{
-	(*Issue148)(nil),                // 0: tests.example.v1.Issue148
-	(*Issue187)(nil),                // 1: tests.example.v1.Issue187
-	(*Issue296)(nil),                // 2: tests.example.v1.Issue296
-	(*fieldmaskpb.FieldMask)(nil),   // 3: google.protobuf.FieldMask
-	(*validate.Int32Rules)(nil),     // 4: buf.validate.Int32Rules
-	(*validate.BoolRules)(nil),      // 5: buf.validate.BoolRules
-	(*validate.FieldMaskRules)(nil), // 6: buf.validate.FieldMaskRules
+	(PredefinedEnum)(0),             // 0: tests.example.v1.PredefinedEnum
+	(*Issue148)(nil),                // 1: tests.example.v1.Issue148
+	(*Issue187)(nil),                // 2: tests.example.v1.Issue187
+	(*Issue296)(nil),                // 3: tests.example.v1.Issue296
+	(*PredefinedReadsRules)(nil),    // 4: tests.example.v1.PredefinedReadsRules
+	(*fieldmaskpb.FieldMask)(nil),   // 5: google.protobuf.FieldMask
+	(*validate.Int32Rules)(nil),     // 6: buf.validate.Int32Rules
+	(*validate.StringRules)(nil),    // 7: buf.validate.StringRules
+	(*validate.EnumRules)(nil),      // 8: buf.validate.EnumRules
+	(*validate.BoolRules)(nil),      // 9: buf.validate.BoolRules
+	(*validate.FieldMaskRules)(nil), // 10: buf.validate.FieldMaskRules
 }
 var file_tests_example_v1_predefined_proto_depIdxs = []int32{
-	3, // 0: tests.example.v1.Issue296.fm:type_name -> google.protobuf.FieldMask
-	4, // 1: tests.example.v1.abs_not_in:extendee -> buf.validate.Int32Rules
-	5, // 2: tests.example.v1.this_equals_rule:extendee -> buf.validate.BoolRules
-	6, // 3: tests.example.v1.fm_rules_extension:extendee -> buf.validate.FieldMaskRules
-	3, // 4: tests.example.v1.fm_rules_extension:type_name -> google.protobuf.FieldMask
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	4, // [4:5] is the sub-list for extension type_name
-	1, // [1:4] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	5,  // 0: tests.example.v1.Issue296.fm:type_name -> google.protobuf.FieldMask
+	0,  // 1: tests.example.v1.PredefinedReadsRules.in:type_name -> tests.example.v1.PredefinedEnum
+	0,  // 2: tests.example.v1.PredefinedReadsRules.const_defined_only:type_name -> tests.example.v1.PredefinedEnum
+	6,  // 3: tests.example.v1.abs_not_in:extendee -> buf.validate.Int32Rules
+	6,  // 4: tests.example.v1.gt_or_zero:extendee -> buf.validate.Int32Rules
+	7,  // 5: tests.example.v1.min_len_or_empty:extendee -> buf.validate.StringRules
+	8,  // 6: tests.example.v1.enum_forbidden:extendee -> buf.validate.EnumRules
+	8,  // 7: tests.example.v1.in_or_zero:extendee -> buf.validate.EnumRules
+	8,  // 8: tests.example.v1.const_or_zero:extendee -> buf.validate.EnumRules
+	9,  // 9: tests.example.v1.this_equals_rule:extendee -> buf.validate.BoolRules
+	10, // 10: tests.example.v1.fm_rules_extension:extendee -> buf.validate.FieldMaskRules
+	5,  // 11: tests.example.v1.fm_rules_extension:type_name -> google.protobuf.FieldMask
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	11, // [11:12] is the sub-list for extension type_name
+	3,  // [3:11] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_predefined_proto_init() }
@@ -394,13 +710,14 @@ func file_tests_example_v1_predefined_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_predefined_proto_rawDesc), len(file_tests_example_v1_predefined_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   3,
-			NumExtensions: 3,
+			NumEnums:      1,
+			NumMessages:   4,
+			NumExtensions: 8,
 			NumServices:   0,
 		},
 		GoTypes:           file_tests_example_v1_predefined_proto_goTypes,
 		DependencyIndexes: file_tests_example_v1_predefined_proto_depIdxs,
+		EnumInfos:         file_tests_example_v1_predefined_proto_enumTypes,
 		MessageInfos:      file_tests_example_v1_predefined_proto_msgTypes,
 		ExtensionInfos:    file_tests_example_v1_predefined_proto_extTypes,
 	}.Build()
