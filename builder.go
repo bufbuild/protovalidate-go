@@ -510,20 +510,15 @@ func (bldr *builder) appendStandardRules(
 ) error {
 	// Native builders clear the rules they handle so CEL skips them. They get
 	// a copy, because a builder can bail out after clearing some rules.
-	var celRules *validate.FieldRules
+	// Without a native evaluator, CEL compiles every rule. cache.Build doesn't
+	// modify rules, so it can be the field's shared options.
+	celRules := rules
 	if !bldr.disableNativeRules {
 		nativeRules := proto.CloneOf(rules)
 		if native := bldr.tryNativeStandardRules(fdesc, nativeRules, valEval); native != nil {
 			valEval.Append(native)
 			celRules = nativeRules
 		}
-	}
-	// At this point, celRules could be nil because native rules are disabled or because native rule parsing
-	// produced nothing. If that's the case, make a new copy of the rules and use it for CEL parsing.
-	if celRules == nil {
-		// cache.Build reparses unknown extensions in place, and rules may be the
-		// field's shared options.
-		celRules = proto.CloneOf(rules)
 	}
 
 	stdRules, err := bldr.rules.Build(

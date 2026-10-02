@@ -62,7 +62,7 @@ func (c *cache) Build(
 		return set, err
 	}
 
-	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
+	if rules, err = reparsedRules(rules, extensionTypeResolver); err != nil {
 		return set, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
 	}
 	if !allowUnknownFields && len(rules.GetUnknown()) > 0 {
@@ -113,13 +113,20 @@ func boundRulesMessage(
 	setOneof protoreflect.FieldDescriptor,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 ) (protoreflect.Message, error) {
-	bound := allRules.ProtoReflect().Get(setOneof).Message()
-	if len(bound.GetUnknown()) == 0 {
-		return bound, nil
+	return reparsedRules(allRules.ProtoReflect().Get(setOneof).Message(), extensionTypeResolver)
+}
+
+// Rules may be the field's shared options, so unknown extensions are reparsed
+// into a copy. Without unknown fields, rules is returned unchanged.
+func reparsedRules(
+	rules protoreflect.Message,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+) (protoreflect.Message, error) {
+	if len(rules.GetUnknown()) == 0 {
+		return rules, nil
 	}
-	// allRules may be the field's shared options; reparse a copy.
-	bound = proto.Clone(bound.Interface()).ProtoReflect()
-	return bound, reparseUnrecognized(extensionTypeResolver, bound)
+	rules = proto.Clone(rules.Interface()).ProtoReflect()
+	return rules, reparseUnrecognized(extensionTypeResolver, rules)
 }
 
 type ruleField struct {
