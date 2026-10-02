@@ -83,13 +83,12 @@ func TestTryBuildNativeEnumRules_ReturnsNil(t *testing.T) {
 	}{
 		{"nil_rules", nil},
 		{"empty_rules", validate.EnumRules_builder{}.Build()},
-		{"defined_only_only", validate.EnumRules_builder{DefinedOnly: new(true)}.Build()},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			assert.Nil(t, tryBuildNativeEnumRules(base{}, tt.rules))
+			assert.Nil(t, tryBuildNativeEnumRules(base{}, tt.rules, nil))
 		})
 	}
 }
@@ -108,7 +107,7 @@ func buildNativeEnum(t testing.TB, rules *validate.EnumRules) evaluator {
 		Descriptor:       fdesc,
 		FieldPathElement: fieldPathElement(fdesc),
 	}
-	return tryBuildNativeEnumRules(b, rules)
+	return tryBuildNativeEnumRules(b, rules, fdesc.Enum().Values())
 }
 
 // newEnumFieldDescriptor creates a minimal enum field descriptor for testing.
@@ -169,4 +168,40 @@ func TestNativeEnumViolationOrder(t *testing.T) {
 		assert.Equal(t, []string{"enum.defined_only"},
 			violationRuleIDs(t, val.Validate(msg)), "disableNative=%v", disableNative)
 	}
+}
+
+func TestNativeEnumDefinedOnly(t *testing.T) {
+	t.Parallel()
+	fdesc := newEnumFieldDescriptor(t)
+	b := base{
+		Descriptor:       fdesc,
+		FieldPathElement: fieldPathElement(fdesc),
+	}
+	eval := tryBuildNativeEnumRules(b, validate.EnumRules_builder{DefinedOnly: new(true)}.Build(), fdesc.Enum().Values())
+	require.NotNil(t, eval)
+	require.NoError(t, eval.Evaluate(nil, protoreflect.ValueOfEnum(2), &validationConfig{}))
+
+	undefined := protoreflect.ValueOfEnum(99)
+	nativeErr := eval.Evaluate(nil, undefined, &validationConfig{})
+	definedErr := definedEnum{base: b, ValueDescriptors: fdesc.Enum().Values()}.Evaluate(nil, undefined, &validationConfig{})
+	var nativeValErr, definedValErr *ValidationError
+	require.ErrorAs(t, nativeErr, &nativeValErr)
+	require.ErrorAs(t, definedErr, &definedValErr)
+	assert.True(t, proto.Equal(definedValErr.ToProto(), nativeValErr.ToProto()))
+}
+
+func TestNativeEnumViolationOrderAllRules(t *testing.T) {
+	t.Parallel()
+	eval := buildNativeEnum(t, validate.EnumRules_builder{
+		Const:       proto.Int32(1),
+		DefinedOnly: new(true),
+		In:          []int32{1},
+		NotIn:       []int32{99},
+	}.Build())
+	require.NotNil(t, eval)
+	undefined := protoreflect.ValueOfEnum(99)
+	assert.Equal(t, []string{"enum.const", "enum.defined_only", "enum.in", "enum.not_in"},
+		violationRuleIDs(t, eval.Evaluate(nil, undefined, &validationConfig{})))
+	assert.Equal(t, []string{"enum.const"},
+		violationRuleIDs(t, eval.Evaluate(nil, undefined, &validationConfig{failFast: true})))
 }

@@ -41,11 +41,13 @@ func newCache() cache {
 
 // Build creates the standard rules for the given field. If forItems is
 // true, the rules for repeated list items are built instead of the
-// rules on the list itself.
+// rules on the list itself. Only fieldRules are compiled, but expressions see
+// allRules as `rules`, so they can read siblings that native rules handled.
 func (c *cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldRules *validate.FieldRules,
+	allRules *validate.FieldRules,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	forItems bool,
@@ -71,6 +73,12 @@ func (c *cache) Build(
 	if err != nil {
 		return set, err
 	}
+	boundRules := rules
+	if allRules != fieldRules {
+		if boundRules, err = boundRulesMessage(allRules, setOneof, extensionTypeResolver); err != nil {
+			return set, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
+		}
+	}
 
 	var asts astSet
 	for _, ruleField := range sortedRuleFields(rules) {
@@ -90,14 +98,28 @@ func (c *cache) Build(
 				return set, compileErr
 			}
 		}
-		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(rules, rule, desc)
+		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(boundRules, rule, desc)
 		if compileErr != nil {
 			return set, compileErr
 		}
 		asts = asts.Merge(precomputedASTs)
 	}
 
-	return asts.ReduceResiduals(rules)
+	return asts.ReduceResiduals(boundRules)
+}
+
+func boundRulesMessage(
+	allRules *validate.FieldRules,
+	setOneof protoreflect.FieldDescriptor,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+) (protoreflect.Message, error) {
+	bound := allRules.ProtoReflect().Get(setOneof).Message()
+	if len(bound.GetUnknown()) == 0 {
+		return bound, nil
+	}
+	// allRules may be the field's shared options; reparse a copy.
+	bound = proto.Clone(bound.Interface()).ProtoReflect()
+	return bound, reparseUnrecognized(extensionTypeResolver, bound)
 }
 
 type ruleField struct {

@@ -15,6 +15,8 @@
 package protovalidate
 
 import (
+	"fmt"
+	"math"
 	"sync"
 	"testing"
 
@@ -187,6 +189,153 @@ func TestWrapperFieldRulesNotDuplicated(t *testing.T) {
 				require.NoError(t, err)
 				assert.Equal(t, test.want, violationRuleIDs(t, val.Validate(test.msg)),
 					"disableNative=%v", disableNative)
+			}
+		})
+	}
+}
+
+func TestNativeFallbackKeepsClearedRules(t *testing.T) {
+	t.Parallel()
+	int32s := []*wrapperspb.Int32Value{wrapperspb.Int32(5), wrapperspb.Int32(5)}
+	nan := math.NaN()
+	tests := []struct {
+		name string
+		msg  proto.Message
+		// A nil want only checks that native and CEL agree.
+		want []string
+	}{
+		{
+			name: "G5MinItemsUnique",
+			msg:  pb.G5MinItemsUnique_builder{Val: int32s}.Build(),
+			want: []string{"repeated.min_items", "repeated.unique"},
+		},
+		{
+			name: "G5MaxItemsUnique",
+			msg: pb.G5MaxItemsUnique_builder{
+				Val: []*wrapperspb.StringValue{wrapperspb.String("a"), wrapperspb.String("a")},
+			}.Build(),
+			want: []string{"repeated.max_items", "repeated.unique"},
+		},
+		{
+			name: "G5MinItemsUniqueItems",
+			msg:  pb.G5MinItemsUniqueItems_builder{Val: int32s}.Build(),
+			want: []string{"repeated.min_items", "repeated.unique", "int32.gt", "int32.gt"},
+		},
+		{
+			name: "G6DoubleGtLt",
+			msg:  pb.G6DoubleGtLt_builder{Val: nan}.Build(),
+			want: []string{},
+		},
+		{
+			name: "G6FloatGteLte",
+			msg:  pb.G6FloatGteLte_builder{Val: float32(nan)}.Build(),
+			want: []string{},
+		},
+		{
+			name: "G6DoubleValueGtLt",
+			msg:  pb.G6DoubleValueGtLt_builder{Val: wrapperspb.Double(nan)}.Build(),
+			want: []string{},
+		},
+		{
+			name: "G6NanLowerBound",
+			msg:  pb.G6NanLowerBound_builder{Val: nan}.Build(),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			nativeVal, err := New()
+			require.NoError(t, err)
+			celVal, err := New(WithDisableNativeRules())
+			require.NoError(t, err)
+			nativeErr := nativeVal.Validate(test.msg)
+			celErr := celVal.Validate(test.msg)
+			if test.want != nil {
+				if len(test.want) == 0 {
+					require.NoError(t, celErr)
+				} else {
+					assert.Equal(t, test.want, violationRuleIDs(t, celErr))
+				}
+			}
+			var nativeValErr, celValErr *ValidationError
+			if celErr == nil {
+				require.NoError(t, nativeErr)
+				return
+			}
+			require.ErrorAs(t, celErr, &celValErr)
+			require.ErrorAs(t, nativeErr, &nativeValErr)
+			assert.True(t, proto.Equal(celValErr.ToProto(), nativeValErr.ToProto()),
+				"native: %v\ncel: %v", nativeValErr.ToProto(), celValErr.ToProto())
+		})
+	}
+}
+
+func TestPredefinedRulesSeeAllStandardRules(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		msg  *pb.PredefinedReadsRules
+		want []string
+	}{
+		{
+			name: "int32/invalid",
+			msg:  pb.PredefinedReadsRules_builder{Gt: proto.Int32(3)}.Build(),
+			want: []string{"int32.gt", "int32.gt_or_zero"},
+		},
+		{
+			name: "int32/valid",
+			msg:  pb.PredefinedReadsRules_builder{Gt: proto.Int32(10)}.Build(),
+		},
+		{
+			name: "string/invalid",
+			msg:  pb.PredefinedReadsRules_builder{MinLen: new("a")}.Build(),
+			want: []string{"string.min_len", "string.min_len_or_empty"},
+		},
+		{
+			name: "string/valid",
+			msg:  pb.PredefinedReadsRules_builder{MinLen: new("abcd")}.Build(),
+		},
+		{
+			name: "enum_in/invalid",
+			msg:  pb.PredefinedReadsRules_builder{In: pb.PredefinedEnum_PREDEFINED_ENUM_TWO.Enum()}.Build(),
+			want: []string{"enum.in", "enum.in_or_zero"},
+		},
+		{
+			name: "enum_in/valid",
+			msg:  pb.PredefinedReadsRules_builder{In: pb.PredefinedEnum_PREDEFINED_ENUM_ONE.Enum()}.Build(),
+		},
+		{
+			name: "enum_const_defined_only/invalid",
+			msg: pb.PredefinedReadsRules_builder{
+				ConstDefinedOnly: pb.PredefinedEnum_PREDEFINED_ENUM_TWO.Enum(),
+			}.Build(),
+			want: []string{"enum.const", "enum.const_or_zero"},
+		},
+		{
+			name: "enum_const_defined_only/valid",
+			msg: pb.PredefinedReadsRules_builder{
+				ConstDefinedOnly: pb.PredefinedEnum_PREDEFINED_ENUM_ONE.Enum(),
+			}.Build(),
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			for _, disableNative := range []bool{false, true} {
+				t.Run(fmt.Sprintf("disableNative=%v", disableNative), func(t *testing.T) {
+					var opts []ValidatorOption
+					if disableNative {
+						opts = append(opts, WithDisableNativeRules())
+					}
+					val, err := New(opts...)
+					require.NoError(t, err)
+					err = val.Validate(test.msg)
+					if test.want == nil {
+						require.NoError(t, err)
+						return
+					}
+					assert.Equal(t, test.want, violationRuleIDs(t, err))
+				})
 			}
 		})
 	}
