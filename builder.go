@@ -471,66 +471,61 @@ func (bldr *builder) processStandardRules(
 		}
 	}
 
-	// make a copy of the rules because we're going to clear anything handled by native rules, leaving
-	// anything else to be handled by CEL rules. this allows us to fall back to CEL rules if there is no
-	// native rule (for example, when a new rule is added to the validate proto, but the native code hasn't
-	// been updated. we are making a copy because we don't want to modify the original rules in case they are
-	// reused (happens in some test cases, could happen in production code with dynamic messages).
-	rules = proto.CloneOf[*validate.FieldRules](rules)
-
-	// defined_only has its own evaluator; keep it in validate.proto order,
-	// between const and the remaining enum rules.
-	if enumRules := rules.GetEnum(); fdesc.Kind() == protoreflect.EnumKind && enumRules.GetDefinedOnly() {
+	// Enums are an interesting case, because checking defined_only requires its own evaluator outside of CEL
+	// (the names are stripped when they reach CEL). For consistency, we want to always process rules in the
+	// same order, whether it's CEL or Native (and across all languages). For enums, that order is const,
+	// defined_only, in, not_in. If we are running with native rules disabled, or the native enum builder can't
+	// handle the rules, and there's an enum rule, we need to check if there's a defined_only rule. If there is and there is an enum const rule as well, then
+	// we need to add an evaluator for the const rule, make a copy of the rules without const rule, then add
+	// the defined only rule. This leads to an extra call to proto.CloneOf in this case, but really, it's
+	// pretty rare.
+	allRules := rules
+	enumRules := rules.GetEnum()
+	if fdesc.Kind() == protoreflect.EnumKind && enumRules.GetDefinedOnly() &&
+		(bldr.disableNativeRules || !canBuildNativeEnumRules(enumRules)) {
 		if enumRules.HasConst() {
 			constRules := validate.FieldRules_builder{
 				Enum: validate.EnumRules_builder{Const: new(enumRules.GetConst())}.Build(),
 			}.Build()
-			if err := bldr.appendStandardRules(fdesc, constRules, valEval); err != nil {
+			if err := bldr.appendStandardRules(fdesc, constRules, allRules, valEval); err != nil {
 				return err
 			}
-			enumRules.ClearConst()
+			// make a copy of the rules without const so const isn't evaluated twice
+			rules = proto.CloneOf(rules)
+			rules.GetEnum().ClearConst()
 		}
 		valEval.Append(definedEnum{
 			base:             newBase(valEval),
 			ValueDescriptors: fdesc.Enum().Values(),
 		})
 	}
-	return bldr.appendStandardRules(fdesc, rules, valEval)
+	return bldr.appendStandardRules(fdesc, rules, allRules, valEval)
 }
 
 func (bldr *builder) appendStandardRules(
 	fdesc protoreflect.FieldDescriptor,
 	rules *validate.FieldRules,
+	allRules *validate.FieldRules,
 	valEval *value,
 ) error {
-	// Try native Go evaluators for known simple rules before falling back to
-	// CEL. put behind a feature flag to allow for testing.
+	// Native builders clear the rules they handle so CEL skips them. They get
+	// a copy, because a builder can bail out after clearing some rules.
+	// Without a native evaluator, CEL compiles every rule. cache.Build doesn't
+	// modify rules, so it can be the field's shared options.
+	celRules := rules
 	if !bldr.disableNativeRules {
-		switch {
-		case fdesc.IsList() && valEval.NestedRule == nil:
-			// List-level rules (min_items, max_items, unique).
-			if native := tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated()); native != nil {
-				valEval.Append(native)
-			}
-		case fdesc.IsMap():
-			// Map-level rules (min_pairs, max_pairs).
-			if native := tryNativeMapRules(newBase(valEval), rules.GetMap()); native != nil {
-				valEval.Append(native)
-			}
-		default:
-			// Scalar rules for plain fields, map keys/values, and repeated
-			// items. A non-nil NestedRule means we're compiling rules for an
-			// individual item, not the list itself.
-			if native := bldr.tryNativeRules(fdesc, rules, valEval); native != nil {
-				valEval.Append(native)
-			}
+		nativeRules := proto.CloneOf(rules)
+		if native := bldr.tryNativeStandardRules(fdesc, nativeRules, valEval); native != nil {
+			valEval.Append(native)
+			celRules = nativeRules
 		}
 	}
 
 	stdRules, err := bldr.rules.Build(
 		bldr.env,
 		fdesc,
-		rules,
+		celRules,
+		allRules,
 		bldr.extensionTypeResolver,
 		bldr.allowUnknownFields,
 		valEval.NestedRule != nil,
@@ -543,6 +538,26 @@ func (bldr *builder) appendStandardRules(
 		programSet: stdRules,
 	})
 	return nil
+}
+
+func (bldr *builder) tryNativeStandardRules(
+	fdesc protoreflect.FieldDescriptor,
+	rules *validate.FieldRules,
+	valEval *value,
+) evaluator {
+	switch {
+	case fdesc.IsList() && valEval.NestedRule == nil:
+		// List-level rules (min_items, max_items, unique).
+		return tryNativeRepeatedRules(newBase(valEval), rules.GetRepeated())
+	case fdesc.IsMap():
+		// Map-level rules (min_pairs, max_pairs).
+		return tryNativeMapRules(newBase(valEval), rules.GetMap())
+	default:
+		// Scalar rules for plain fields, map keys/values, and repeated
+		// items. A non-nil NestedRule means we're compiling rules for an
+		// individual item, not the list itself.
+		return bldr.tryNativeRules(fdesc, rules, valEval)
+	}
 }
 
 func (bldr *builder) tryNativeRules(
@@ -585,7 +600,7 @@ func (bldr *builder) tryNativeRules(
 	case protoreflect.BoolKind:
 		native = tryBuildNativeBoolRules(base, rules.GetBool())
 	case protoreflect.EnumKind:
-		native = tryBuildNativeEnumRules(base, rules.GetEnum())
+		native = tryBuildNativeEnumRules(base, rules.GetEnum(), fdesc.Enum().Values())
 	case protoreflect.BytesKind:
 		native = tryBuildNativeBytesRules(base, rules.GetBytes())
 	default:

@@ -1,0 +1,2687 @@
+// Copyright 2023-2026 Buf Technologies, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package tests.supplementary.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message Item {
+  int32 x = 1;
+}
+
+message Node {
+  int32 v = 1 [(buf.validate.field) = {
+    int32: {gt: 0}
+  }];
+
+  Node next = 2;
+}
+
+message ShapeRepStr {
+  repeated string val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message ShapeRepEnum {
+  repeated Color val = 1 [(buf.validate.field) = {
+    enum: {defined_only: true}
+  }];
+}
+
+message ShapeRepWrapper {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 10}
+  }];
+}
+
+message ShapeRepDuration {
+  repeated google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      gt: {seconds: 1}
+    }
+  }];
+}
+
+message ShapeSingularRepeated {
+  string val = 1 [(buf.validate.field) = {
+    repeated: {min_items: 1}
+  }];
+}
+
+message ShapeMapRepeated {
+  map<string, string> val = 1 [(buf.validate.field) = {
+    repeated: {min_items: 1}
+  }];
+}
+
+message ShapeRepMap {
+  repeated string val = 1 [(buf.validate.field) = {
+    map: {min_pairs: 1}
+  }];
+}
+
+message ShapeMapStr {
+  map<string, string> val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message ShapeMapKeys {
+  map<int32, string> val = 1 [(buf.validate.field) = {
+    map: {
+      keys: {
+        string: {min_len: 3}
+      }
+    }
+  }];
+}
+
+message ShapeMapValues {
+  map<string, string> val = 1 [(buf.validate.field) = {
+    map: {
+      values: {
+        int32: {gt: 1}
+      }
+    }
+  }];
+}
+
+message ItemsWrapper {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message Mismatch0 {
+  string val = 1 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message Mismatch1 {
+  bytes val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message Mismatch2 {
+  bool val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message Mismatch3 {
+  Color val = 1 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message Mismatch4 {
+  int32 val = 1 [(buf.validate.field) = {
+    int64: {gt: 1}
+  }];
+}
+
+message Mismatch5 {
+  uint32 val = 1 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message Mismatch6 {
+  sint32 val = 1 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message Mismatch7 {
+  fixed32 val = 1 [(buf.validate.field) = {
+    uint32: {gt: 1}
+  }];
+}
+
+message Mismatch8 {
+  string val = 1 [(buf.validate.field) = {
+    bytes: {min_len: 1}
+  }];
+}
+
+message MsgMismatch0 {
+  Item val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message MsgMismatch1 {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+}
+
+message MsgMismatch2 {
+  google.protobuf.Int64Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message MsgMismatch3 {
+  google.protobuf.StringValue val = 1 [(buf.validate.field) = {
+    bytes: {min_len: 1}
+  }];
+}
+
+message MsgMismatch4 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    timestamp: {
+      gt: {seconds: 1}
+    }
+  }];
+}
+
+message MsgMismatch5 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    field_mask: {
+      in: ["a"]
+    }
+  }];
+}
+
+message MsgMismatch6 {
+  Item val = 1 [(buf.validate.field) = {
+    any: {
+      in: ["x"]
+    }
+  }];
+}
+
+message UniqueBytes {
+  repeated bytes val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueBool {
+  repeated bool val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueEnum {
+  repeated Color val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueDoubleZeroNegzero {
+  repeated double val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueDoubleNanNan {
+  repeated double val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueFloatDup {
+  repeated float val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueUint64Dup {
+  repeated uint64 val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueSint64Dup {
+  repeated sint64 val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueFixed64Distinct {
+  repeated fixed64 val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueMsgMessage {
+  repeated Item val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueMsgInt32value {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueMsgDuration {
+  repeated google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message Num0 {
+  int64 val = 1 [(buf.validate.field) = {
+    int64: {const: -9223372036854775808}
+  }];
+}
+
+message Num1 {
+  int64 val = 1 [(buf.validate.field) = {
+    int64: {const: 9223372036854775807}
+  }];
+}
+
+message Num2 {
+  int64 val = 1 [(buf.validate.field) = {
+    int64: {
+      in: [
+        -9223372036854775808,
+        9223372036854775807
+      ]
+    }
+  }];
+}
+
+message Num3 {
+  int64 val = 1 [(buf.validate.field) = {
+    int64: {gt: 9223372036854775807}
+  }];
+}
+
+message Num4 {
+  int64 val = 1 [(buf.validate.field) = {
+    int64: {lt: -9223372036854775808}
+  }];
+}
+
+message Num5 {
+  uint64 val = 1 [(buf.validate.field) = {
+    uint64: {const: 18446744073709551615}
+  }];
+}
+
+message Num6 {
+  uint64 val = 1 [(buf.validate.field) = {
+    uint64: {gte: 18446744073709551615}
+  }];
+}
+
+message Num7 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      lt: 5
+      gt: 5
+    }
+  }];
+}
+
+message Num8 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      lte: 5
+      gte: 5
+    }
+  }];
+}
+
+message Num9 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      lte: 5
+      gte: 5
+    }
+  }];
+}
+
+message Num10 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      lt: 5
+      gt: 10
+    }
+  }];
+}
+
+message Num11 {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: nan}
+  }];
+}
+
+message Num12 {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: nan}
+  }];
+}
+
+message Num13 {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      in: [nan]
+    }
+  }];
+}
+
+message Num14 {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      not_in: [nan]
+    }
+  }];
+}
+
+message Num15 {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: -inf}
+  }];
+}
+
+message Num16 {
+  double val = 1 [(buf.validate.field) = {
+    double: {lte: inf}
+  }];
+}
+
+message Num17 {
+  double val = 1 [(buf.validate.field) = {
+    double: {gt: -0}
+  }];
+}
+
+message Num18 {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: 1e-300}
+  }];
+}
+
+message Num19 {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: 1.7976931348623157e+308}
+  }];
+}
+
+message Num20 {
+  float val = 1 [(buf.validate.field) = {
+    float: {const: 0.1}
+  }];
+}
+
+message Num21 {
+  float val = 1 [(buf.validate.field) = {
+    float: {
+      in: [0.1]
+    }
+  }];
+}
+
+message Num22 {
+  float val = 1 [(buf.validate.field) = {
+    float: {lt: 3.4028235e+38}
+  }];
+}
+
+message Num23 {
+  float val = 1 [(buf.validate.field) = {
+    float: {const: inf}
+  }];
+}
+
+message Time0 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {seconds: -62135596800}
+    }
+  }];
+}
+
+message Time1 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {
+        seconds: 253402300799
+        nanos: 999999999
+      }
+    }
+  }];
+}
+
+message Time2 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {seconds: -62135596801}
+    }
+  }];
+}
+
+message Time3 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {nanos: 1000000000}
+    }
+  }];
+}
+
+message Time4 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {nanos: -1}
+    }
+  }];
+}
+
+message Time5 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      gt: {}
+    }
+  }];
+}
+
+message Time6 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      gt: {}
+    }
+  }];
+}
+
+message Time7 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {seconds: 1}
+      gt_now: true
+    }
+  }];
+}
+
+message Time8 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      within: {}
+    }
+  }];
+}
+
+message Time9 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      within: {seconds: -10}
+    }
+  }];
+}
+
+message Time10 {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      gt: {seconds: 4102444800}
+      lt_now: true
+    }
+  }];
+}
+
+message Time11 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      const: {seconds: 315576000000}
+    }
+  }];
+}
+
+message Time12 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      const: {seconds: 315576000001}
+    }
+  }];
+}
+
+message Time13 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      const: {
+        seconds: 1
+        nanos: -1
+      }
+    }
+  }];
+}
+
+message Time14 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      in: [
+        {nanos: 1},
+        {
+          seconds: -1
+          nanos: -500000000
+        }
+      ]
+    }
+  }];
+}
+
+message Time15 {
+  google.protobuf.Duration val = 1 [(buf.validate.field) = {
+    duration: {
+      gt: {}
+    }
+  }];
+}
+
+message Order0 {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      min_len: 5
+      pattern: "^z"
+      prefix: "q"
+      suffix: "w"
+      contains: "k"
+    }
+  }];
+}
+
+message Order1 {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      min_len: 5
+      min_bytes: 5
+    }
+  }];
+}
+
+message Order2 {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      const: "abcd"
+      in: ["abcd"]
+      len: 4
+    }
+  }];
+}
+
+message Order3 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      const: 1
+      gt: 10
+      in: [1]
+      not_in: [3]
+    }
+  }];
+}
+
+message Order4 {
+  bytes val = 1 [(buf.validate.field) = {
+    bytes: {
+      min_len: 5
+      pattern: "^z"
+      prefix: "q"
+      contains: "k"
+    }
+  }];
+}
+
+message Order5 {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      const: 1
+      defined_only: true
+      in: [1]
+      not_in: [7]
+    }
+  }];
+}
+
+message Order6 {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      const: 2
+      gt: 1
+      not_in: [inf]
+      finite: true
+    }
+  }];
+}
+
+message Order7 {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      min_len: 10
+      email: true
+    }
+  }];
+}
+
+message Order8 {
+  repeated string val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      unique: true
+      items: {
+        string: {min_len: 3}
+      }
+    }
+  }];
+}
+
+message OrderTs {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    timestamp: {
+      const: {seconds: 1}
+      lt_now: true
+    }
+  }];
+}
+
+message OrderMsgField {
+  option (buf.validate.message) = {
+    cel: [
+      {
+        id: "m"
+        message: "m failed"
+        expression: "false"
+      }
+    ]
+  };
+
+  string a = 1 [(buf.validate.field) = {
+    string: {min_len: 3}
+  }];
+
+  int32 b = 2 [(buf.validate.field) = {
+    int32: {gt: 1}
+  }];
+}
+
+message Re0 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "a(?=b)"}
+  }];
+}
+
+message Re1 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?<=a)b"}
+  }];
+}
+
+message Re2 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(a)\\1"}
+  }];
+}
+
+message Re3 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\C$"}
+  }];
+}
+
+message Re4 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\Qa.c\\E$"}
+  }];
+}
+
+message Re5 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^a{1000}$"}
+  }];
+}
+
+message Re6 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^a{1001}$"}
+  }];
+}
+
+message Re7 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\pL$"}
+  }];
+}
+
+message Re8 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\p{Greek}$"}
+  }];
+}
+
+message Re9 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?i)^é$"}
+  }];
+}
+
+message Re10 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?i)^\\u03c3$"}
+  }];
+}
+
+message Re11 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\d$"}
+  }];
+}
+
+message Re12 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\w$"}
+  }];
+}
+
+message Re13 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\s$"}
+  }];
+}
+
+message Re14 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\s$"}
+  }];
+}
+
+message Re15 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "\\bb"}
+  }];
+}
+
+message Re16 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^abc$"}
+  }];
+}
+
+message Re17 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^abc\\z"}
+  }];
+}
+
+message Re18 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^.$"}
+  }];
+}
+
+message Re19 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?s)^.$"}
+  }];
+}
+
+message Re20 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?m)^b$"}
+  }];
+}
+
+message Re21 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: ""}
+  }];
+}
+
+message Re22 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^[[:digit:]]+$"}
+  }];
+}
+
+message Re23 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?P<n>a)"}
+  }];
+}
+
+message Re24 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?<n>a)"}
+  }];
+}
+
+message Re25 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?U)^a+$"}
+  }];
+}
+
+message Re26 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\x{e9}$"}
+  }];
+}
+
+message Re27 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^\\141$"}
+  }];
+}
+
+message Re28 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "("}
+  }];
+}
+
+message Re29 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "[a"}
+  }];
+}
+
+message Re30 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "*a"}
+  }];
+}
+
+message Re31 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "[z-a]"}
+  }];
+}
+
+message Re32 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "^[\\d-z]$"}
+  }];
+}
+
+message Re33 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "a*+"}
+  }];
+}
+
+message Re34 {
+  string val = 1 [(buf.validate.field) = {
+    string: {pattern: "(?>a)"}
+  }];
+}
+
+message ReBytesUnicode {
+  bytes val = 1 [(buf.validate.field) = {
+    bytes: {pattern: "^\\pL$"}
+  }];
+}
+
+message ReBytesBadUtf8 {
+  bytes val = 1 [(buf.validate.field) = {
+    bytes: {pattern: "^.$"}
+  }];
+}
+
+message ReCelMatches {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.matches('^\\\\C$')"
+      }
+    ]
+  }];
+}
+
+message Fmt0 {
+  string val = 1 [(buf.validate.field) = {
+    string: {hostname: true}
+  }];
+}
+
+message Fmt1 {
+  string val = 1 [(buf.validate.field) = {
+    string: {hostname: true}
+  }];
+}
+
+message Fmt2 {
+  string val = 1 [(buf.validate.field) = {
+    string: {hostname: true}
+  }];
+}
+
+message Fmt3 {
+  string val = 1 [(buf.validate.field) = {
+    string: {hostname: true}
+  }];
+}
+
+message Fmt4 {
+  string val = 1 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+}
+
+message Fmt5 {
+  string val = 1 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+}
+
+message Fmt6 {
+  string val = 1 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+}
+
+message Fmt7 {
+  string val = 1 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+}
+
+message Fmt8 {
+  string val = 1 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+}
+
+message Fmt9 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ip_prefix: true}
+  }];
+}
+
+message Fmt10 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ip_prefix: true}
+  }];
+}
+
+message Fmt11 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ipv6_prefix: true}
+  }];
+}
+
+message Fmt12 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ip: true}
+  }];
+}
+
+message Fmt13 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ip: true}
+  }];
+}
+
+message Fmt14 {
+  string val = 1 [(buf.validate.field) = {
+    string: {host_and_port: true}
+  }];
+}
+
+message Fmt15 {
+  string val = 1 [(buf.validate.field) = {
+    string: {host_and_port: true}
+  }];
+}
+
+message Fmt16 {
+  string val = 1 [(buf.validate.field) = {
+    string: {host_and_port: true}
+  }];
+}
+
+message Fmt17 {
+  string val = 1 [(buf.validate.field) = {
+    string: {host_and_port: true}
+  }];
+}
+
+message Fmt18 {
+  string val = 1 [(buf.validate.field) = {
+    string: {uri: true}
+  }];
+}
+
+message Fmt19 {
+  string val = 1 [(buf.validate.field) = {
+    string: {uri: true}
+  }];
+}
+
+message Fmt20 {
+  string val = 1 [(buf.validate.field) = {
+    string: {uri: true}
+  }];
+}
+
+message Fmt21 {
+  string val = 1 [(buf.validate.field) = {
+    string: {uri: true}
+  }];
+}
+
+message Fmt22 {
+  string val = 1 [(buf.validate.field) = {
+    string: {uri_ref: true}
+  }];
+}
+
+message Fmt23 {
+  string val = 1 [(buf.validate.field) = {
+    string: {ipv4: true}
+  }];
+}
+
+message HeaderHttpHeaderName {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      well_known_regex: KNOWN_REGEX_HTTP_HEADER_NAME
+      strict: false
+    }
+  }];
+}
+
+message HeaderHttpHeaderValue {
+  string val = 1 [(buf.validate.field) = {
+    string: {
+      well_known_regex: KNOWN_REGEX_HTTP_HEADER_VALUE
+      strict: false
+    }
+  }];
+}
+
+message Cel0 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this + 1"
+      }
+    ]
+  }];
+}
+
+message Cel1 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "[this]"
+      }
+    ]
+  }];
+}
+
+message Cel2 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "{'a': this}"
+      }
+    ]
+  }];
+}
+
+message Cel3 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this"
+      }
+    ]
+  }];
+}
+
+message Cel4 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "b'x'"
+      }
+    ]
+  }];
+}
+
+message Cel5 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "null"
+      }
+    ]
+  }];
+}
+
+message Cel6 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "duration('1s')"
+      }
+    ]
+  }];
+}
+
+message Cel7 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "dyn('x')"
+      }
+    ]
+  }];
+}
+
+message Cel8 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel9 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel10 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel11 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel12 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%f'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel13 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([duration('1.5s')])"
+      }
+    ]
+  }];
+}
+
+message Cel14 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([timestamp('2020-01-01T00:00:00.5Z')])"
+      }
+    ]
+  }];
+}
+
+message Cel15 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel16 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s %s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel17 {
+  uint64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel18 {
+  bytes val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([this])"
+      }
+    ]
+  }];
+}
+
+message Cel19 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%s'.format([{'b': this, 'a': 2}])"
+      }
+    ]
+  }];
+}
+
+message Cel20 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.lowerAscii()"
+      }
+    ]
+  }];
+}
+
+message Cel21 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.upperAscii()"
+      }
+    ]
+  }];
+}
+
+message Cel22 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([this.split(',').size()])"
+      }
+    ]
+  }];
+}
+
+message Cel23 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.split(',').join('-')"
+      }
+    ]
+  }];
+}
+
+message Cel24 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.replace('a', 'b')"
+      }
+    ]
+  }];
+}
+
+message Cel25 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([this.indexOf('b')])"
+      }
+    ]
+  }];
+}
+
+message Cel26 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.substring(1)"
+      }
+    ]
+  }];
+}
+
+message Cel27 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.charAt(0)"
+      }
+    ]
+  }];
+}
+
+message Cel28 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.trim() + 'x'"
+      }
+    ]
+  }];
+}
+
+message Cel29 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this.reverse()"
+      }
+    ]
+  }];
+}
+
+message Cel30 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + strings.quote(this)"
+      }
+    ]
+  }];
+}
+
+message Cel31 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([this.lastIndexOf('a')])"
+      }
+    ]
+  }];
+}
+
+message Cel32 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this * 2 > 0"
+      }
+    ]
+  }];
+}
+
+message Cel33 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "1 / this > 0"
+      }
+    ]
+  }];
+}
+
+message Cel34 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "1 % this > 0"
+      }
+    ]
+  }];
+}
+
+message Cel35 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this / -1 > 0"
+      }
+    ]
+  }];
+}
+
+message Cel36 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "uint(this) > 0u"
+      }
+    ]
+  }];
+}
+
+message Cel37 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "int(this) > 0"
+      }
+    ]
+  }];
+}
+
+message Cel38 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "int(this) > 0"
+      }
+    ]
+  }];
+}
+
+message Cel39 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "now > timestamp('2000-01-01T00:00:00Z')"
+      }
+    ]
+  }];
+}
+
+message Cel40 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "getField(this, 'nope') == 1"
+      }
+    ]
+  }];
+}
+
+message Cel41 {
+  bytes val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([size(this)])"
+      }
+    ]
+  }];
+}
+
+message Cel42 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x%d'.format([size(this)])"
+      }
+    ]
+  }];
+}
+
+message Cel43 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this == 1 ? '' : 'x'"
+      }
+    ]
+  }];
+}
+
+message Cel44 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this == 1u ? '' : 'x'"
+      }
+    ]
+  }];
+}
+
+message Cel45 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.isNan() ? 'x' : ''"
+      }
+    ]
+  }];
+}
+
+message Cel46 {
+  double val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.isInf(1) ? 'x' : ''"
+      }
+    ]
+  }];
+}
+
+message Cel47 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.isHostAndPort(true) ? '' : 'x'"
+      }
+    ]
+  }];
+}
+
+message Cel48 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.isIp(7) ? 'x' : ''"
+      }
+    ]
+  }];
+}
+
+message Cel49 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this.isIpPrefix(true) ? '' : 'x'"
+      }
+    ]
+  }];
+}
+
+message Cel50 {
+  int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "[this, 1u].unique() ? 'x' : ''"
+      }
+    ]
+  }];
+}
+
+message Cel51 {
+  string val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "'x' + this + this"
+      }
+    ]
+  }];
+}
+
+message CelMapKey {
+  map<string, string> val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this['x'] == 'a'"
+      }
+    ]
+  }];
+}
+
+message CelIndex {
+  repeated int64 val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this[5] > 0"
+      }
+    ]
+  }];
+}
+
+message CelTsNow {
+  google.protobuf.Timestamp val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this < now"
+      }
+    ]
+  }];
+}
+
+message CelExpression {
+  int32 val = 1 [(buf.validate.field) = {
+    cel_expression: ["this > 5 ? '' : 'too small'"]
+  }];
+}
+
+message CelMsgString {
+  option (buf.validate.message) = {
+    cel: [
+      {
+        id: "m"
+        expression: "this.a == '' ? 'a must be set' : ''"
+      }
+    ]
+  };
+
+  string a = 1;
+}
+
+message CelMsgInt {
+  option (buf.validate.message) = {
+    cel: [
+      {
+        id: "m"
+        expression: "this.a.size()"
+      }
+    ]
+  };
+
+  string a = 1;
+}
+
+message IgnoreMsgItems {
+  repeated Item val = 1 [(buf.validate.field) = {
+    repeated: {
+      items: {
+        cel: [
+          {
+            id: "x"
+            message: "x must be positive"
+            expression: "this.x > 0"
+          }
+        ]
+        ignore: IGNORE_IF_ZERO_VALUE
+      }
+    }
+  }];
+}
+
+message IgnoreMsgValues {
+  map<string, Item> val = 1 [(buf.validate.field) = {
+    map: {
+      values: {
+        cel: [
+          {
+            id: "x"
+            message: "x must be positive"
+            expression: "this.x > 0"
+          }
+        ]
+        ignore: IGNORE_IF_ZERO_VALUE
+      }
+    }
+  }];
+}
+
+message IgnoreMsgField {
+  Item val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "x"
+        message: "x must be positive"
+        expression: "this.x > 0"
+      }
+    ]
+    ignore: IGNORE_IF_ZERO_VALUE
+  }];
+}
+
+message IgnoreAlwaysRequired {
+  string val = 1 [(buf.validate.field) = {
+    required: true
+    ignore: IGNORE_ALWAYS
+  }];
+}
+
+message IgnoreOneof {
+  oneof o {
+    string a = 1 [(buf.validate.field) = {
+      string: {min_len: 3}
+      ignore: IGNORE_IF_ZERO_VALUE
+    }];
+  }
+}
+
+message WrapperBoth {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 10}
+    cel: [
+      {
+        id: "custom"
+        message: "custom failed"
+        expression: "this > 100"
+      }
+    ]
+  }];
+}
+
+message WrapperItemsBoth {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      items: {
+        int32: {gt: 10}
+        cel: [
+          {
+            id: "custom"
+            message: "custom failed"
+            expression: "this > 100"
+          }
+        ]
+      }
+    }
+  }];
+}
+
+message WrapperMapValues {
+  map<string, google.protobuf.StringValue> val = 1 [(buf.validate.field) = {
+    map: {
+      values: {
+        string: {min_len: 3}
+        cel: [
+          {
+            id: "custom"
+            message: "custom failed"
+            expression: "this.startsWith('z')"
+          }
+        ]
+      }
+    }
+  }];
+}
+
+message WrapperCelOnlyUnset {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "c"
+        message: ""
+        expression: "this > 1"
+      }
+    ]
+  }];
+}
+
+message UniqueWrapperInt32DefaultVsZero {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperInt32Distinct {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperInt64Dup {
+  repeated google.protobuf.Int64Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperUint32Dup {
+  repeated google.protobuf.UInt32Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperUint64Dup {
+  repeated google.protobuf.UInt64Value val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperFloatDup {
+  repeated google.protobuf.FloatValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperDoubleZeroNegzero {
+  repeated google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperDoubleNanNan {
+  repeated google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperBoolDup {
+  repeated google.protobuf.BoolValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperStringDup {
+  repeated google.protobuf.StringValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperStringEmptyVsUnset {
+  repeated google.protobuf.StringValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperBytesDup {
+  repeated google.protobuf.BytesValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message UniqueWrapperBytesDistinct {
+  repeated google.protobuf.BytesValue val = 1 [(buf.validate.field) = {
+    repeated: {unique: true}
+  }];
+}
+
+message WrapperListAndItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      unique: true
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListMinItemsItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListMinItemsItemsPlain {
+  repeated int32 val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListUniqueItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      unique: true
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListUniqueItemsPlain {
+  repeated int32 val = 1 [(buf.validate.field) = {
+    repeated: {
+      unique: true
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListMinItemsUnique {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      unique: true
+    }
+  }];
+}
+
+message WrapperListMinItemsUniquePlain {
+  repeated int32 val = 1 [(buf.validate.field) = {
+    repeated: {
+      min_items: 3
+      unique: true
+    }
+  }];
+}
+
+message WrapperListMaxItemsItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      max_items: 1
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListMaxItemsItemsPlain {
+  repeated int32 val = 1 [(buf.validate.field) = {
+    repeated: {
+      max_items: 1
+      items: {
+        int32: {gt: 10}
+      }
+    }
+  }];
+}
+
+message WrapperListMaxItemsUnique {
+  repeated google.protobuf.StringValue val = 1 [(buf.validate.field) = {
+    repeated: {
+      max_items: 1
+      unique: true
+    }
+  }];
+}
+
+message WrapperListMaxItemsUniquePlain {
+  repeated string val = 1 [(buf.validate.field) = {
+    repeated: {
+      max_items: 1
+      unique: true
+    }
+  }];
+}
+
+message WrapperItemsCelOnly {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {
+      items: {
+        cel: [
+          {
+            id: "c"
+            message: ""
+            expression: "this > 1"
+          }
+        ]
+      }
+    }
+  }];
+}
+
+message WrapperListMaxItems {
+  repeated google.protobuf.StringValue val = 1 [(buf.validate.field) = {
+    repeated: {max_items: 1}
+  }];
+}
+
+message WrapperMapInt32Values {
+  map<string, google.protobuf.Int32Value> val = 1 [(buf.validate.field) = {
+    map: {
+      min_pairs: 2
+      values: {
+        int32: {
+          lt: 20
+          gt: 10
+        }
+      }
+    }
+  }];
+}
+
+message WrapperMapBytesConst {
+  map<int32, google.protobuf.BytesValue> val = 1 [(buf.validate.field) = {
+    map: {
+      values: {
+        bytes: {const: "x"}
+      }
+    }
+  }];
+}
+
+message WrapperOneof {
+  oneof o {
+    google.protobuf.UInt64Value a = 1 [(buf.validate.field) = {
+      uint64: {
+        in: [
+          1,
+          2
+        ]
+      }
+    }];
+  }
+}
+
+message WrapperDoubleOrder {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    double: {
+      const: 2
+      gt: 1
+      not_in: [inf]
+      finite: true
+    }
+  }];
+}
+
+message EnumOrderConstDefined {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      const: 1
+      defined_only: true
+    }
+  }];
+}
+
+message EnumOrderDefinedIn {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      defined_only: true
+      in: [1]
+    }
+  }];
+}
+
+message EnumOrderDefinedNotIn {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      defined_only: true
+      not_in: [7]
+    }
+  }];
+}
+
+message EnumOrderConstIn {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      const: 1
+      in: [1]
+    }
+  }];
+}
+
+message EnumOrderItems {
+  repeated Color val = 1 [(buf.validate.field) = {
+    repeated: {
+      items: {
+        enum: {
+          const: 1
+          defined_only: true
+          not_in: [7]
+        }
+      }
+    }
+  }];
+}
+
+message AnyIn {
+  google.protobuf.Any val = 1 [(buf.validate.field) = {
+    any: {
+      in: ["type.googleapis.com/supplementary.Item"]
+    }
+  }];
+}
+
+message FieldMaskConst {
+  google.protobuf.FieldMask val = 1 [(buf.validate.field) = {
+    field_mask: {
+      const: {
+        paths: [
+          "a",
+          "b"
+        ]
+      }
+    }
+  }];
+}
+
+message FieldMaskIn {
+  google.protobuf.FieldMask val = 1 [(buf.validate.field) = {
+    field_mask: {
+      in: ["a"]
+    }
+  }];
+}
+
+message EnumDefined {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {defined_only: true}
+  }];
+}
+
+message EnumInDup {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      in: [
+        1,
+        1,
+        2
+      ]
+    }
+  }];
+}
+
+message Contra0 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      in: [1]
+      not_in: [1]
+    }
+  }];
+}
+
+message Contra1 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      const: 1
+      in: [2]
+    }
+  }];
+}
+
+message Contra2 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {gte: 1}
+  }];
+}
+
+message Contra3 {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {}
+  }];
+}
+
+message Recursive {
+  Node root = 1;
+}
+
+message ParityCoordinates {
+  double lat = 1 [(buf.validate.field) = {
+    double: {
+      lte: 90
+      gte: -90
+    }
+  }];
+
+  double lng = 2 [(buf.validate.field) = {
+    double: {
+      lte: 180
+      gte: -180
+    }
+  }];
+}
+
+message ParityPerson {
+  uint64 id = 1 [(buf.validate.field) = {
+    uint64: {gt: 999}
+  }];
+
+  string email = 2 [(buf.validate.field) = {
+    string: {email: true}
+  }];
+
+  string name = 3 [(buf.validate.field) = {
+    string: {
+      max_bytes: 256
+      pattern: "^[[:alpha:]]+( [[:alpha:]]+)*$"
+    }
+  }];
+
+  ParityCoordinates home = 4;
+}
+
+message ParityMismatchRules {
+  bool no_rule = 1 [json_name = "no_rule"];
+
+  string string_field_bool_rule = 2 [
+    json_name = "string_field_bool_rule",
+    (buf.validate.field) = {
+      bool: {const: true}
+    }
+  ];
+}
+
+message ParityMixedValidInvalidRules {
+  string string_field_bool_rule = 1 [
+    json_name = "string_field_bool_rule",
+    (buf.validate.field) = {
+      bool: {const: true}
+    }
+  ];
+
+  string valid_string_rule = 2 [
+    json_name = "valid_string_rule",
+    (buf.validate.field) = {
+      string: {const: "foo"}
+    }
+  ];
+}
+
+message ParityEnumRuleOrder {
+  Color val = 1 [(buf.validate.field) = {
+    enum: {
+      defined_only: true
+      in: [1]
+      not_in: [99]
+    }
+  }];
+}
+
+message ParityInt32RuleOrder {
+  int32 val = 1 [(buf.validate.field) = {
+    int32: {
+      gt: 10
+      in: [1]
+      not_in: [3]
+    }
+  }];
+}
+
+message ParityWrapperCelExpression {
+  google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    int32: {gt: 10}
+    cel_expression: ["this > 100 ? '' : 'must be greater than 100'"]
+  }];
+}
+
+message ParityDoubleFinite {
+  double val = 1 [(buf.validate.field) = {
+    double: {finite: true}
+  }];
+}
+
+message ParityMapMinMax {
+  map<string, bool> val = 1 [(buf.validate.field) = {
+    map: {
+      min_pairs: 2
+      max_pairs: 4
+    }
+  }];
+}
+
+message ParityMinItemsWrappers {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    repeated: {min_items: 2}
+  }];
+}
+
+message ParityMapKeys {
+  map<sint64, string> val = 1 [(buf.validate.field) = {
+    map: {
+      keys: {
+        sint64: {lt: 0}
+      }
+    }
+  }];
+}
+
+message ParityOneof {
+  option (buf.validate.message) = {
+    oneof: [
+      {
+        fields: [
+          "a",
+          "b"
+        ]
+        required: false
+      }
+    ]
+  };
+
+  string a = 1;
+
+  string b = 2;
+
+  bool unrelated = 3;
+}
+
+message ParityOneofRequired {
+  option (buf.validate.message) = {
+    oneof: [
+      {
+        fields: [
+          "a",
+          "b"
+        ]
+        required: true
+      }
+    ]
+  };
+
+  string a = 1;
+
+  string b = 2;
+
+  bool unrelated = 3;
+}
+
+message ParityOneofUnknownField {
+  option (buf.validate.message) = {
+    oneof: [
+      {
+        fields: [
+          "a",
+          "b",
+          "xxx"
+        ]
+        required: false
+      }
+    ]
+  };
+
+  string a = 1;
+
+  string b = 2;
+
+  bool unrelated = 3;
+}
+
+message ParityMistypedRule {
+  string val = 1 [(buf.validate.field) = {
+    duration: {
+      gt: {seconds: 1}
+    }
+  }];
+}
+
+message ParityNestedMistypedRule {
+  ParityMistypedRule child = 1;
+}
+
+message ParityMessageRuleError {
+  option (buf.validate.message) = {
+    cel: [
+      {
+        id: "message_rule_error"
+        expression: "1 +"
+      }
+    ]
+  };
+}
+
+message ParityNestedMessageRuleError {
+  ParityMessageRuleError child = 1;
+}
+
+message ParityViolationBeforeError {
+  string a = 1 [(buf.validate.field) = {
+    string: {min_len: 5}
+  }];
+
+  string b = 2 [(buf.validate.field) = {
+    duration: {
+      gt: {seconds: 1}
+    }
+  }];
+}
+
+message ParityHostname {
+  string val = 1 [(buf.validate.field) = {
+    string: {hostname: true}
+  }];
+}
+
+message ParityDoubleConstInf {
+  double val = 1 [(buf.validate.field) = {
+    double: {const: inf}
+  }];
+}
+
+message ParityDoubleInfiniteRange {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      lt: inf
+      gt: -inf
+    }
+  }];
+}
+
+message ParityCelUniqueWrappers {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field) = {
+    cel: [
+      {
+        id: "unique_wrappers"
+        message: "must be unique"
+        expression: "this.unique()"
+      }
+    ]
+  }];
+}
+
+message NanBoundGtLtNanDouble {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      lt: nan
+      gt: 1
+    }
+  }];
+}
+
+message NanBoundGtLtNanFloat {
+  float val = 1 [(buf.validate.field) = {
+    float: {
+      lt: nan
+      gt: 1
+    }
+  }];
+}
+
+message NanBoundGtLtNanDoubleValue {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    double: {
+      lt: nan
+      gt: 1
+    }
+  }];
+}
+
+message NanBoundGteLteNanDouble {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      lte: nan
+      gte: 1
+    }
+  }];
+}
+
+message NanBoundGteLteNanFloat {
+  float val = 1 [(buf.validate.field) = {
+    float: {
+      lte: nan
+      gte: 1
+    }
+  }];
+}
+
+message NanBoundGteLteNanDoubleValue {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    double: {
+      lte: nan
+      gte: 1
+    }
+  }];
+}
+
+message NanBoundGtNanLtDouble {
+  double val = 1 [(buf.validate.field) = {
+    double: {
+      lt: 5
+      gt: nan
+    }
+  }];
+}
+
+message NanBoundGtNanLtFloat {
+  float val = 1 [(buf.validate.field) = {
+    float: {
+      lt: 5
+      gt: nan
+    }
+  }];
+}
+
+message NanBoundGtNanLtDoubleValue {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    double: {
+      lt: 5
+      gt: nan
+    }
+  }];
+}
+
+message NanBoundLtNanOnlyDouble {
+  double val = 1 [(buf.validate.field) = {
+    double: {lt: nan}
+  }];
+}
+
+message NanBoundLtNanOnlyFloat {
+  float val = 1 [(buf.validate.field) = {
+    float: {lt: nan}
+  }];
+}
+
+message NanBoundLtNanOnlyDoubleValue {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field) = {
+    double: {lt: nan}
+  }];
+}
+
+enum Color {
+  COLOR_UNSPECIFIED = 0;
+
+  COLOR_RED = 1;
+
+  COLOR_GREEN = 2;
+}

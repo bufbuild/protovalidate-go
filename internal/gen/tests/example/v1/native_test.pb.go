@@ -1827,6 +1827,416 @@ func (b0 RepeatedWrapperStandardAndCustom_builder) Build() *RepeatedWrapperStand
 	return m0
 }
 
+type G5MinItemsUnique struct {
+	state         protoimpl.MessageState   `protogen:"hybrid.v1"`
+	Val           []*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G5MinItemsUnique) Reset() {
+	*x = G5MinItemsUnique{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G5MinItemsUnique) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G5MinItemsUnique) ProtoMessage() {}
+
+func (x *G5MinItemsUnique) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G5MinItemsUnique) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *G5MinItemsUnique) SetVal(v []*wrapperspb.Int32Value) {
+	x.Val = v
+}
+
+type G5MinItemsUnique_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 G5MinItemsUnique_builder) Build() *G5MinItemsUnique {
+	m0 := &G5MinItemsUnique{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G5MaxItemsUnique struct {
+	state         protoimpl.MessageState    `protogen:"hybrid.v1"`
+	Val           []*wrapperspb.StringValue `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G5MaxItemsUnique) Reset() {
+	*x = G5MaxItemsUnique{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G5MaxItemsUnique) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G5MaxItemsUnique) ProtoMessage() {}
+
+func (x *G5MaxItemsUnique) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G5MaxItemsUnique) GetVal() []*wrapperspb.StringValue {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *G5MaxItemsUnique) SetVal(v []*wrapperspb.StringValue) {
+	x.Val = v
+}
+
+type G5MaxItemsUnique_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.StringValue
+}
+
+func (b0 G5MaxItemsUnique_builder) Build() *G5MaxItemsUnique {
+	m0 := &G5MaxItemsUnique{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G5MinItemsUniqueItems struct {
+	state         protoimpl.MessageState   `protogen:"hybrid.v1"`
+	Val           []*wrapperspb.Int32Value `protobuf:"bytes,1,rep,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G5MinItemsUniqueItems) Reset() {
+	*x = G5MinItemsUniqueItems{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G5MinItemsUniqueItems) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G5MinItemsUniqueItems) ProtoMessage() {}
+
+func (x *G5MinItemsUniqueItems) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G5MinItemsUniqueItems) GetVal() []*wrapperspb.Int32Value {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *G5MinItemsUniqueItems) SetVal(v []*wrapperspb.Int32Value) {
+	x.Val = v
+}
+
+type G5MinItemsUniqueItems_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val []*wrapperspb.Int32Value
+}
+
+func (b0 G5MinItemsUniqueItems_builder) Build() *G5MinItemsUniqueItems {
+	m0 := &G5MinItemsUniqueItems{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G6DoubleGtLt struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           float64                `protobuf:"fixed64,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G6DoubleGtLt) Reset() {
+	*x = G6DoubleGtLt{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G6DoubleGtLt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G6DoubleGtLt) ProtoMessage() {}
+
+func (x *G6DoubleGtLt) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G6DoubleGtLt) GetVal() float64 {
+	if x != nil {
+		return x.Val
+	}
+	return 0
+}
+
+func (x *G6DoubleGtLt) SetVal(v float64) {
+	x.Val = v
+}
+
+type G6DoubleGtLt_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val float64
+}
+
+func (b0 G6DoubleGtLt_builder) Build() *G6DoubleGtLt {
+	m0 := &G6DoubleGtLt{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G6FloatGteLte struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           float32                `protobuf:"fixed32,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G6FloatGteLte) Reset() {
+	*x = G6FloatGteLte{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G6FloatGteLte) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G6FloatGteLte) ProtoMessage() {}
+
+func (x *G6FloatGteLte) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G6FloatGteLte) GetVal() float32 {
+	if x != nil {
+		return x.Val
+	}
+	return 0
+}
+
+func (x *G6FloatGteLte) SetVal(v float32) {
+	x.Val = v
+}
+
+type G6FloatGteLte_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val float32
+}
+
+func (b0 G6FloatGteLte_builder) Build() *G6FloatGteLte {
+	m0 := &G6FloatGteLte{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G6DoubleValueGtLt struct {
+	state         protoimpl.MessageState  `protogen:"hybrid.v1"`
+	Val           *wrapperspb.DoubleValue `protobuf:"bytes,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G6DoubleValueGtLt) Reset() {
+	*x = G6DoubleValueGtLt{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G6DoubleValueGtLt) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G6DoubleValueGtLt) ProtoMessage() {}
+
+func (x *G6DoubleValueGtLt) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G6DoubleValueGtLt) GetVal() *wrapperspb.DoubleValue {
+	if x != nil {
+		return x.Val
+	}
+	return nil
+}
+
+func (x *G6DoubleValueGtLt) SetVal(v *wrapperspb.DoubleValue) {
+	x.Val = v
+}
+
+func (x *G6DoubleValueGtLt) HasVal() bool {
+	if x == nil {
+		return false
+	}
+	return x.Val != nil
+}
+
+func (x *G6DoubleValueGtLt) ClearVal() {
+	x.Val = nil
+}
+
+type G6DoubleValueGtLt_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val *wrapperspb.DoubleValue
+}
+
+func (b0 G6DoubleValueGtLt_builder) Build() *G6DoubleValueGtLt {
+	m0 := &G6DoubleValueGtLt{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
+type G6NanLowerBound struct {
+	state         protoimpl.MessageState `protogen:"hybrid.v1"`
+	Val           float64                `protobuf:"fixed64,1,opt,name=val,proto3" json:"val,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *G6NanLowerBound) Reset() {
+	*x = G6NanLowerBound{}
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *G6NanLowerBound) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*G6NanLowerBound) ProtoMessage() {}
+
+func (x *G6NanLowerBound) ProtoReflect() protoreflect.Message {
+	mi := &file_tests_example_v1_native_test_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+func (x *G6NanLowerBound) GetVal() float64 {
+	if x != nil {
+		return x.Val
+	}
+	return 0
+}
+
+func (x *G6NanLowerBound) SetVal(v float64) {
+	x.Val = v
+}
+
+type G6NanLowerBound_builder struct {
+	_ [0]func() // Prevents comparability and use of unkeyed literals for the builder.
+
+	Val float64
+}
+
+func (b0 G6NanLowerBound_builder) Build() *G6NanLowerBound {
+	m0 := &G6NanLowerBound{}
+	b, x := &b0, m0
+	_, _ = b, x
+	x.Val = b.Val
+	return m0
+}
+
 var File_tests_example_v1_native_test_proto protoreflect.FileDescriptor
 
 const file_tests_example_v1_native_test_proto_rawDesc = "" +
@@ -1934,7 +2344,27 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB=\xbaH:\x92\x017\"5\xba\x01.\n" +
 	"\x06custom\x12\x18must be greater than 100\x1a\n" +
 	"this > 100\x1a\x02 \n" +
-	"R\x03val*a\n" +
+	"R\x03val\"M\n" +
+	"\x10G5MinItemsUnique\x129\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB\n" +
+	"\xbaH\a\x92\x01\x04\b\x03\x18\x01R\x03val\"N\n" +
+	"\x10G5MaxItemsUnique\x12:\n" +
+	"\x03val\x18\x01 \x03(\v2\x1c.google.protobuf.StringValueB\n" +
+	"\xbaH\a\x92\x01\x04\x10\x01\x18\x01R\x03val\"X\n" +
+	"\x15G5MinItemsUniqueItems\x12?\n" +
+	"\x03val\x18\x01 \x03(\v2\x1b.google.protobuf.Int32ValueB\x10\xbaH\r\x92\x01\n" +
+	"\b\x03\x18\x01\"\x04\x1a\x02 \n" +
+	"R\x03val\"9\n" +
+	"\fG6DoubleGtLt\x12)\n" +
+	"\x03val\x18\x01 \x01(\x01B\x17\xbaH\x14\x12\x12\x11\x00\x00\x00\x00\x00\x00\xf8\x7f!\x00\x00\x00\x00\x00\x00\xf0?R\x03val\"2\n" +
+	"\rG6FloatGteLte\x12!\n" +
+	"\x03val\x18\x01 \x01(\x02B\x0f\xbaH\f\n" +
+	"\n" +
+	"\x1d\x00\x00\xc0\x7f-\x00\x00\x80?R\x03val\"\\\n" +
+	"\x11G6DoubleValueGtLt\x12G\n" +
+	"\x03val\x18\x01 \x01(\v2\x1c.google.protobuf.DoubleValueB\x17\xbaH\x14\x12\x12\x11\x00\x00\x00\x00\x00\x00\xf8\x7f!\x00\x00\x00\x00\x00\x00\xf0?R\x03val\"<\n" +
+	"\x0fG6NanLowerBound\x12)\n" +
+	"\x03val\x18\x01 \x01(\x01B\x17\xbaH\x14\x12\x12\x11\x00\x00\x00\x00\x00\x00\x14@!\x00\x00\x00\x00\x00\x00\xf8\x7fR\x03val*a\n" +
 	"\bTestEnum\x12\x19\n" +
 	"\x15TEST_ENUM_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eTEST_ENUM_VAL1\x10\x01\x12\x12\n" +
@@ -1943,7 +2373,7 @@ const file_tests_example_v1_native_test_proto_rawDesc = "" +
 	"\x14com.tests.example.v1B\x0fNativeTestProtoP\x01ZBbuf.build/go/protovalidate/internal/gen/tests/example/v1;examplev1\xa2\x02\x03TEX\xaa\x02\x10Tests.Example.V1\xca\x02\x10Tests\\Example\\V1\xe2\x02\x1cTests\\Example\\V1\\GPBMetadata\xea\x02\x12Tests::Example::V1b\x06proto3"
 
 var file_tests_example_v1_native_test_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_tests_example_v1_native_test_proto_msgTypes = make([]protoimpl.MessageInfo, 29)
 var file_tests_example_v1_native_test_proto_goTypes = []any{
 	(TestEnum)(0),                            // 0: tests.example.v1.TestEnum
 	(*BenchGT)(nil),                          // 1: tests.example.v1.BenchGT
@@ -1966,47 +2396,58 @@ var file_tests_example_v1_native_test_proto_goTypes = []any{
 	(*WrapperCustomOnly)(nil),                // 18: tests.example.v1.WrapperCustomOnly
 	(*WrapperStandardAndCelExpression)(nil),  // 19: tests.example.v1.WrapperStandardAndCelExpression
 	(*RepeatedWrapperStandardAndCustom)(nil), // 20: tests.example.v1.RepeatedWrapperStandardAndCustom
-	nil,                                      // 21: tests.example.v1.MapWrapperValues.ValEntry
-	nil,                                      // 22: tests.example.v1.MapStringWrapperValues.ValEntry
-	(*wrapperspb.Int32Value)(nil),            // 23: google.protobuf.Int32Value
-	(*wrapperspb.DoubleValue)(nil),           // 24: google.protobuf.DoubleValue
-	(*wrapperspb.FloatValue)(nil),            // 25: google.protobuf.FloatValue
-	(*wrapperspb.Int64Value)(nil),            // 26: google.protobuf.Int64Value
-	(*wrapperspb.UInt64Value)(nil),           // 27: google.protobuf.UInt64Value
-	(*wrapperspb.UInt32Value)(nil),           // 28: google.protobuf.UInt32Value
-	(*wrapperspb.BoolValue)(nil),             // 29: google.protobuf.BoolValue
-	(*wrapperspb.StringValue)(nil),           // 30: google.protobuf.StringValue
-	(*wrapperspb.BytesValue)(nil),            // 31: google.protobuf.BytesValue
+	(*G5MinItemsUnique)(nil),                 // 21: tests.example.v1.G5MinItemsUnique
+	(*G5MaxItemsUnique)(nil),                 // 22: tests.example.v1.G5MaxItemsUnique
+	(*G5MinItemsUniqueItems)(nil),            // 23: tests.example.v1.G5MinItemsUniqueItems
+	(*G6DoubleGtLt)(nil),                     // 24: tests.example.v1.G6DoubleGtLt
+	(*G6FloatGteLte)(nil),                    // 25: tests.example.v1.G6FloatGteLte
+	(*G6DoubleValueGtLt)(nil),                // 26: tests.example.v1.G6DoubleValueGtLt
+	(*G6NanLowerBound)(nil),                  // 27: tests.example.v1.G6NanLowerBound
+	nil,                                      // 28: tests.example.v1.MapWrapperValues.ValEntry
+	nil,                                      // 29: tests.example.v1.MapStringWrapperValues.ValEntry
+	(*wrapperspb.Int32Value)(nil),            // 30: google.protobuf.Int32Value
+	(*wrapperspb.DoubleValue)(nil),           // 31: google.protobuf.DoubleValue
+	(*wrapperspb.FloatValue)(nil),            // 32: google.protobuf.FloatValue
+	(*wrapperspb.Int64Value)(nil),            // 33: google.protobuf.Int64Value
+	(*wrapperspb.UInt64Value)(nil),           // 34: google.protobuf.UInt64Value
+	(*wrapperspb.UInt32Value)(nil),           // 35: google.protobuf.UInt32Value
+	(*wrapperspb.BoolValue)(nil),             // 36: google.protobuf.BoolValue
+	(*wrapperspb.StringValue)(nil),           // 37: google.protobuf.StringValue
+	(*wrapperspb.BytesValue)(nil),            // 38: google.protobuf.BytesValue
 }
 var file_tests_example_v1_native_test_proto_depIdxs = []int32{
 	0,  // 0: tests.example.v1.TestUnique.enums:type_name -> tests.example.v1.TestEnum
-	23, // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
-	24, // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
-	25, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
-	26, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
-	27, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
-	28, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
-	29, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
-	30, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
-	31, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
-	23, // 10: tests.example.v1.RepeatedWrapperItems.val:type_name -> google.protobuf.Int32Value
-	21, // 11: tests.example.v1.MapWrapperValues.val:type_name -> tests.example.v1.MapWrapperValues.ValEntry
-	22, // 12: tests.example.v1.MapStringWrapperValues.val:type_name -> tests.example.v1.MapStringWrapperValues.ValEntry
-	23, // 13: tests.example.v1.UniqueWrappers.val:type_name -> google.protobuf.Int32Value
-	23, // 14: tests.example.v1.MinItemsWrappers.val:type_name -> google.protobuf.Int32Value
-	31, // 15: tests.example.v1.UniqueBytesWrappers.val:type_name -> google.protobuf.BytesValue
+	30, // 1: tests.example.v1.WrapperTesting.i32:type_name -> google.protobuf.Int32Value
+	31, // 2: tests.example.v1.WrapperTesting.d:type_name -> google.protobuf.DoubleValue
+	32, // 3: tests.example.v1.WrapperTesting.f:type_name -> google.protobuf.FloatValue
+	33, // 4: tests.example.v1.WrapperTesting.i64:type_name -> google.protobuf.Int64Value
+	34, // 5: tests.example.v1.WrapperTesting.u64:type_name -> google.protobuf.UInt64Value
+	35, // 6: tests.example.v1.WrapperTesting.u32:type_name -> google.protobuf.UInt32Value
+	36, // 7: tests.example.v1.WrapperTesting.b:type_name -> google.protobuf.BoolValue
+	37, // 8: tests.example.v1.WrapperTesting.s:type_name -> google.protobuf.StringValue
+	38, // 9: tests.example.v1.WrapperTesting.bs:type_name -> google.protobuf.BytesValue
+	30, // 10: tests.example.v1.RepeatedWrapperItems.val:type_name -> google.protobuf.Int32Value
+	28, // 11: tests.example.v1.MapWrapperValues.val:type_name -> tests.example.v1.MapWrapperValues.ValEntry
+	29, // 12: tests.example.v1.MapStringWrapperValues.val:type_name -> tests.example.v1.MapStringWrapperValues.ValEntry
+	30, // 13: tests.example.v1.UniqueWrappers.val:type_name -> google.protobuf.Int32Value
+	30, // 14: tests.example.v1.MinItemsWrappers.val:type_name -> google.protobuf.Int32Value
+	38, // 15: tests.example.v1.UniqueBytesWrappers.val:type_name -> google.protobuf.BytesValue
 	0,  // 16: tests.example.v1.EnumRuleOrder.val:type_name -> tests.example.v1.TestEnum
-	23, // 17: tests.example.v1.WrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
-	23, // 18: tests.example.v1.WrapperCustomOnly.val:type_name -> google.protobuf.Int32Value
-	23, // 19: tests.example.v1.WrapperStandardAndCelExpression.val:type_name -> google.protobuf.Int32Value
-	23, // 20: tests.example.v1.RepeatedWrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
-	23, // 21: tests.example.v1.MapWrapperValues.ValEntry.value:type_name -> google.protobuf.Int32Value
-	30, // 22: tests.example.v1.MapStringWrapperValues.ValEntry.value:type_name -> google.protobuf.StringValue
-	23, // [23:23] is the sub-list for method output_type
-	23, // [23:23] is the sub-list for method input_type
-	23, // [23:23] is the sub-list for extension type_name
-	23, // [23:23] is the sub-list for extension extendee
-	0,  // [0:23] is the sub-list for field type_name
+	30, // 17: tests.example.v1.WrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
+	30, // 18: tests.example.v1.WrapperCustomOnly.val:type_name -> google.protobuf.Int32Value
+	30, // 19: tests.example.v1.WrapperStandardAndCelExpression.val:type_name -> google.protobuf.Int32Value
+	30, // 20: tests.example.v1.RepeatedWrapperStandardAndCustom.val:type_name -> google.protobuf.Int32Value
+	30, // 21: tests.example.v1.G5MinItemsUnique.val:type_name -> google.protobuf.Int32Value
+	37, // 22: tests.example.v1.G5MaxItemsUnique.val:type_name -> google.protobuf.StringValue
+	30, // 23: tests.example.v1.G5MinItemsUniqueItems.val:type_name -> google.protobuf.Int32Value
+	31, // 24: tests.example.v1.G6DoubleValueGtLt.val:type_name -> google.protobuf.DoubleValue
+	30, // 25: tests.example.v1.MapWrapperValues.ValEntry.value:type_name -> google.protobuf.Int32Value
+	37, // 26: tests.example.v1.MapStringWrapperValues.ValEntry.value:type_name -> google.protobuf.StringValue
+	27, // [27:27] is the sub-list for method output_type
+	27, // [27:27] is the sub-list for method input_type
+	27, // [27:27] is the sub-list for extension type_name
+	27, // [27:27] is the sub-list for extension extendee
+	0,  // [0:27] is the sub-list for field type_name
 }
 
 func init() { file_tests_example_v1_native_test_proto_init() }
@@ -2020,7 +2461,7 @@ func file_tests_example_v1_native_test_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tests_example_v1_native_test_proto_rawDesc), len(file_tests_example_v1_native_test_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   22,
+			NumMessages:   29,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

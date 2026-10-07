@@ -39,6 +39,32 @@ extend buf.validate.Int32Rules {
     expression: "this in rule || this in rule.map(n, -n)"
     message: "value must not be in absolute value of list"
   }];
+  optional bool gt_or_zero = 1801 [(buf.validate.predefined).cel = {
+    id: "int32.gt_or_zero"
+    expression: "rule && this != 0 && this <= rules.gt ? 'must be zero or greater than gt' : ''"
+  }];
+}
+
+extend buf.validate.StringRules {
+  optional bool min_len_or_empty = 1800 [(buf.validate.predefined).cel = {
+    id: "string.min_len_or_empty"
+    expression: "rule && this != '' && uint(size(this)) < rules.min_len ? 'must be empty or at least min_len' : ''"
+  }];
+}
+
+extend buf.validate.EnumRules {
+  repeated int32 enum_forbidden = 1800 [(buf.validate.predefined).cel = {
+    id: "enum.forbidden"
+    expression: "this in rule ? 'must not be a forbidden value' : ''"
+  }];
+  optional bool in_or_zero = 1801 [(buf.validate.predefined).cel = {
+    id: "enum.in_or_zero"
+    expression: "rule && this != 0 && !(this in getField(rules, 'in')) ? 'must be zero or in list' : ''"
+  }];
+  optional bool const_or_zero = 1802 [(buf.validate.predefined).cel = {
+    id: "enum.const_or_zero"
+    expression: "rule && this != 0 && this != getField(rules, 'const') ? 'must be zero or const' : ''"
+  }];
 }
 
 extend buf.validate.BoolRules {
@@ -60,4 +86,31 @@ extend buf.validate.FieldMaskRules {
     id: "field_mask.fm_rules_extension"
     expression: "this == rule"
   }];
+}
+
+enum PredefinedEnum {
+  PREDEFINED_ENUM_UNSPECIFIED = 0;
+  PREDEFINED_ENUM_ONE = 1;
+  PREDEFINED_ENUM_TWO = 2;
+}
+
+// Predefined rules that read a sibling standard rule through `rules`.
+message PredefinedReadsRules {
+  optional int32 gt = 1 [
+    (buf.validate.field).int32.gt = 5,
+    (buf.validate.field).int32.(gt_or_zero) = true
+  ];
+  optional string min_len = 2 [
+    (buf.validate.field).string.min_len = 3,
+    (buf.validate.field).string.(min_len_or_empty) = true
+  ];
+  optional PredefinedEnum in = 3 [
+    (buf.validate.field).enum.in = 1,
+    (buf.validate.field).enum.(in_or_zero) = true
+  ];
+  optional PredefinedEnum const_defined_only = 4 [
+    (buf.validate.field).enum.const = 1,
+    (buf.validate.field).enum.defined_only = true,
+    (buf.validate.field).enum.(const_or_zero) = true
+  ];
 }

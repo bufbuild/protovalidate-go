@@ -283,3 +283,55 @@ message RepeatedWrapperStandardAndCustom {
     }
   }];
 }
+
+message G5MinItemsUnique {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated = {
+    min_items: 3
+    unique: true
+  }];
+}
+
+message G5MaxItemsUnique {
+  repeated google.protobuf.StringValue val = 1 [(buf.validate.field).repeated = {
+    max_items: 1
+    unique: true
+  }];
+}
+
+message G5MinItemsUniqueItems {
+  repeated google.protobuf.Int32Value val = 1 [(buf.validate.field).repeated = {
+    min_items: 3
+    unique: true
+    items: {
+      int32: {gt: 10}
+    }
+  }];
+}
+
+message G6DoubleGtLt {
+  double val = 1 [(buf.validate.field).double = {
+    gt: 1
+    lt: nan
+  }];
+}
+
+message G6FloatGteLte {
+  float val = 1 [(buf.validate.field).float = {
+    gte: 1
+    lte: nan
+  }];
+}
+
+message G6DoubleValueGtLt {
+  google.protobuf.DoubleValue val = 1 [(buf.validate.field).double = {
+    gt: 1
+    lt: nan
+  }];
+}
+
+message G6NanLowerBound {
+  double val = 1 [(buf.validate.field).double = {
+    gt: nan
+    lt: 5
+  }];
+}

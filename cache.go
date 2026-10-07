@@ -41,11 +41,13 @@ func newCache() cache {
 
 // Build creates the standard rules for the given field. If forItems is
 // true, the rules for repeated list items are built instead of the
-// rules on the list itself.
+// rules on the list itself. Only fieldRules are compiled, but expressions see
+// allRules as `rules`, so they can read siblings that native rules handled.
 func (c *cache) Build(
 	env *cel.Env,
 	fieldDesc protoreflect.FieldDescriptor,
 	fieldRules *validate.FieldRules,
+	allRules *validate.FieldRules,
 	extensionTypeResolver protoregistry.ExtensionTypeResolver,
 	allowUnknownFields bool,
 	forItems bool,
@@ -60,7 +62,7 @@ func (c *cache) Build(
 		return set, err
 	}
 
-	if err = reparseUnrecognized(extensionTypeResolver, rules); err != nil {
+	if rules, err = reparsedRules(rules, extensionTypeResolver); err != nil {
 		return set, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
 	}
 	if !allowUnknownFields && len(rules.GetUnknown()) > 0 {
@@ -70,6 +72,12 @@ func (c *cache) Build(
 	set.env, err = c.prepareEnvironment(env, fieldDesc, rules, forItems)
 	if err != nil {
 		return set, err
+	}
+	boundRules := rules
+	if allRules != fieldRules {
+		if boundRules, err = boundRulesMessage(allRules, setOneof, extensionTypeResolver); err != nil {
+			return set, &CompilationError{cause: fmt.Errorf("error reparsing message: %w", err)}
+		}
 	}
 
 	var asts astSet
@@ -90,14 +98,35 @@ func (c *cache) Build(
 				return set, compileErr
 			}
 		}
-		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(rules, rule, desc)
+		precomputedASTs, compileErr = precomputedASTs.WithRuleValues(boundRules, rule, desc)
 		if compileErr != nil {
 			return set, compileErr
 		}
 		asts = asts.Merge(precomputedASTs)
 	}
 
-	return asts.ReduceResiduals(rules)
+	return asts.ReduceResiduals(boundRules)
+}
+
+func boundRulesMessage(
+	allRules *validate.FieldRules,
+	setOneof protoreflect.FieldDescriptor,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+) (protoreflect.Message, error) {
+	return reparsedRules(allRules.ProtoReflect().Get(setOneof).Message(), extensionTypeResolver)
+}
+
+// Rules may be the field's shared options, so unknown extensions are reparsed
+// into a copy. Without unknown fields, rules is returned unchanged.
+func reparsedRules(
+	rules protoreflect.Message,
+	extensionTypeResolver protoregistry.ExtensionTypeResolver,
+) (protoreflect.Message, error) {
+	if len(rules.GetUnknown()) == 0 {
+		return rules, nil
+	}
+	rules = proto.Clone(rules.Interface()).ProtoReflect()
+	return rules, reparseUnrecognized(extensionTypeResolver, rules)
 }
 
 type ruleField struct {
