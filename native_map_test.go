@@ -68,6 +68,81 @@ func TestNativeMapMaxPairs(t *testing.T) {
 	assert.Equal(t, "map must be at most 2 entries", valErr.Violations[0].Proto.GetMessage())
 }
 
+func TestNativeMapPairViolations(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name     string
+		minPairs uint64
+		maxPairs uint64
+		size     int
+		wantIDs  []string
+	}{
+		{"conflicting_bounds/empty", 2, 0, 0, []string{"map.min_pairs"}},
+		{"conflicting_bounds/both", 2, 0, 1, []string{"map.min_pairs", "map.max_pairs"}},
+		{"conflicting_bounds/minimum", 2, 0, 2, []string{"map.max_pairs"}},
+		{"normal_bounds/below", 1, 2, 0, []string{"map.min_pairs"}},
+		{"normal_bounds/minimum", 1, 2, 1, nil},
+		{"normal_bounds/maximum", 1, 2, 2, nil},
+		{"normal_bounds/above", 1, 2, 3, []string{"map.max_pairs"}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+			msgType := newDynamicMapMessageType(t, "test.map", "PairViolations",
+				descriptorpb.FieldDescriptorProto_TYPE_STRING,
+				descriptorpb.FieldDescriptorProto_TYPE_STRING,
+				validate.FieldRules_builder{
+					Map: validate.MapRules_builder{
+						MinPairs: new(test.minPairs),
+						MaxPairs: new(test.maxPairs),
+					}.Build(),
+				}.Build(),
+			)
+			msg := msgType.New()
+			entries := msg.Mutable(msg.Descriptor().Fields().ByName("entries")).Map()
+			for _, key := range []string{"a", "b", "c"}[:test.size] {
+				entries.Set(protoreflect.ValueOfString(key).MapKey(), protoreflect.ValueOfString(key))
+			}
+
+			modes := []struct {
+				name              string
+				validatorOptions  []ValidatorOption
+				validationOptions []ValidationOption
+				failFast          bool
+			}{
+				{name: "all_violations"},
+				{name: "validator_fail_fast", validatorOptions: []ValidatorOption{WithFailFast()}, failFast: true},
+				{name: "validation_fail_fast", validationOptions: []ValidationOption{WithFailFast()}, failFast: true},
+			}
+			for _, mode := range modes {
+				t.Run(mode.name, func(t *testing.T) {
+					nativeVal, err := New(mode.validatorOptions...)
+					require.NoError(t, err)
+					celVal, err := New(append([]ValidatorOption{WithDisableNativeRules()}, mode.validatorOptions...)...)
+					require.NoError(t, err)
+					nativeErr := nativeVal.Validate(msg.Interface(), mode.validationOptions...)
+					celErr := celVal.Validate(msg.Interface(), mode.validationOptions...)
+					if len(test.wantIDs) == 0 {
+						require.NoError(t, nativeErr)
+						require.NoError(t, celErr)
+						return
+					}
+					wantIDs := test.wantIDs
+					if mode.failFast {
+						wantIDs = wantIDs[:1]
+					}
+					assert.Equal(t, wantIDs, violationRuleIDs(t, nativeErr))
+					assert.Equal(t, wantIDs, violationRuleIDs(t, celErr))
+					var nativeValErr, celValErr *ValidationError
+					require.ErrorAs(t, nativeErr, &nativeValErr)
+					require.ErrorAs(t, celErr, &celValErr)
+					assert.True(t, proto.Equal(celValErr.ToProto(), nativeValErr.ToProto()))
+				})
+			}
+		})
+	}
+}
+
 func TestTryNativeMapRules_ReturnsNil(t *testing.T) {
 	t.Parallel()
 
