@@ -43,7 +43,7 @@ func (o messageOneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, c
 }
 
 func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
-	if !cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
+	if cfg.filter != nil && !cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		return nil
 	}
 	err := &ValidationError{}

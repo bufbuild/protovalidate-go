@@ -67,7 +67,7 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 	if f.shouldIgnoreAlways() {
 		return nil
 	}
-	if !cfg.filter.ShouldValidate(msg, f.Value.Descriptor) {
+	if !cfg.shouldValidate(msg, f.Value.Descriptor) {
 		return nil
 	}
 
