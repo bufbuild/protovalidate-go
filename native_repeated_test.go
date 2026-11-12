@@ -298,7 +298,7 @@ func Test_isUniqueList(t *testing.T) {
 			l := testList[int64]{
 				vals: d.vals,
 			}
-			result := isUniqueList[int64](l)
+			result := isUniqueList(l, protoreflect.Value.Int)
 			assert.Equal(t, d.result, result)
 		})
 	}

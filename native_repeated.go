@@ -107,30 +107,35 @@ func uniqueCheckerForKind(desc protoreflect.FieldDescriptor) uniqueChecker {
 		return nil
 	}
 	switch desc.Kind() {
-	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
-		return isUniqueList[int32]
-	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
-		return isUniqueList[int64]
-	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
-		return isUniqueList[uint32]
-	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
-		return isUniqueList[uint64]
-	case protoreflect.FloatKind:
-		return isUniqueList[float32]
-	case protoreflect.DoubleKind:
-		return isUniqueList[float64]
+	// Widening the 32-bit kinds is one-to-one, so uniqueness is unchanged.
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind,
+		protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
+		return uniqueListChecker(protoreflect.Value.Int)
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind,
+		protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+		return uniqueListChecker(protoreflect.Value.Uint)
+	case protoreflect.FloatKind, protoreflect.DoubleKind:
+		return uniqueListChecker(protoreflect.Value.Float)
 	case protoreflect.StringKind:
-		return isUniqueList[string]
+		return uniqueListChecker(protoreflect.Value.String)
 	case protoreflect.BoolKind:
-		return isUniqueList[bool]
+		return uniqueListChecker(protoreflect.Value.Bool)
 	case protoreflect.EnumKind:
-		return isUniqueList[protoreflect.EnumNumber]
+		return uniqueListChecker(protoreflect.Value.Enum)
 	case protoreflect.BytesKind:
 		return isUniqueBytes
 	case protoreflect.MessageKind, protoreflect.GroupKind:
 		return nil
 	default:
 		return nil
+	}
+}
+
+// uniqueListChecker returns a uniqueChecker for elements read with get. Typed
+// getters avoid boxing every element into an interface.
+func uniqueListChecker[T comparable](get func(protoreflect.Value) T) uniqueChecker {
+	return func(list protoreflect.List) bool {
+		return isUniqueList(list, get)
 	}
 }
 
@@ -198,20 +203,17 @@ func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Va
 const uniqueLinearThreshold = 16
 
 // isUniqueList is the generic uniqueness check used for all comparable scalar
-// element kinds (the concrete T is bound at compile time via
+// element kinds (the concrete T and get are bound at compile time via
 // uniqueCheckerForKind).
-func isUniqueList[T comparable](list protoreflect.List) bool {
+func isUniqueList[T comparable](list protoreflect.List, get func(protoreflect.Value) T) bool {
 	length := list.Len()
 	if length <= 1 {
 		return true
 	}
 	if length <= uniqueLinearThreshold {
-		var seen = make([]T, length)
+		var seen [uniqueLinearThreshold]T
 		for i := range length {
-			key, ok := list.Get(i).Interface().(T)
-			if !ok {
-				return false
-			}
+			key := get(list.Get(i))
 			for j := range i {
 				if seen[j] == key {
 					return false
@@ -224,11 +226,7 @@ func isUniqueList[T comparable](list protoreflect.List) bool {
 
 	seen := make(map[T]struct{}, length)
 	for i := range length {
-		key, ok := list.Get(i).Interface().(T)
-		if !ok {
-			// should never happen, but just in case
-			return false
-		}
+		key := get(list.Get(i))
 		if _, exists := seen[key]; exists {
 			return false
 		}
@@ -245,7 +243,7 @@ func isUniqueBytes(list protoreflect.List) bool {
 	if length <= uniqueLinearThreshold {
 		// storing []byte directly avoids the []byte→string allocation the
 		// map path needs for a hashable key.
-		var seen = make([][]byte, uniqueLinearThreshold)
+		var seen [uniqueLinearThreshold][]byte
 		for i := range length {
 			byteVal := list.Get(i).Bytes()
 			for j := range i {
