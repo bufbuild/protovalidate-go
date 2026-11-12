@@ -148,7 +148,7 @@ func tryBuildNativeBytesRules(base base, rules *validate.BytesRules) evaluator {
 		return nil
 	}
 
-	return nativeBytesEval{
+	return &nativeBytesEval{
 		base:        base,
 		constVal:    constVal,
 		hasConst:    hasConst,
@@ -249,7 +249,7 @@ func makeBytesDescriptors() bytesDescriptors {
 //nolint:gochecknoglobals
 var bytesDescs = makeBytesDescriptors()
 
-var _ evaluator = nativeBytesEval{}
+var _ evaluator = (*nativeBytesEval)(nil)
 
 // nativeBytesEval is a native Go evaluator for bytes rules.
 type nativeBytesEval struct {
@@ -275,7 +275,7 @@ type nativeBytesEval struct {
 var errNotUTF8 = errors.New("must be valid UTF-8 to apply regexp")
 
 //nolint:gocyclo // this code has nested ifs but it's not hard to follow.
-func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	bytesVal := val.Bytes()
 	byteLen := uint64(len(bytesVal))
 	var violations []*Violation
@@ -394,7 +394,7 @@ func (n nativeBytesEval) Evaluate(_ protoreflect.Message, val protoreflect.Value
 	return nil
 }
 
-func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Value) *Violation {
+func (n *nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Value) *Violation {
 	size := len(bytesVal)
 	wellKnown := n.wellKnown
 
@@ -413,7 +413,7 @@ func (n nativeBytesEval) evaluateWellKnown(bytesVal []byte, val protoreflect.Val
 		val, protoreflect.ValueOfBool(true))
 }
 
-func (n nativeBytesEval) Tautology() bool {
+func (n *nativeBytesEval) Tautology() bool {
 	return false
 }
 

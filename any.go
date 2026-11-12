@@ -57,7 +57,7 @@ type anyPB struct {
 	NotInValue protoreflect.Value
 }
 
-func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (a *anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	typeURL := val.Message().Get(a.TypeURLDescriptor).String()
 
 	err := &ValidationError{}
@@ -104,7 +104,7 @@ func (a anyPB) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *val
 	return nil
 }
 
-func (a anyPB) Tautology() bool {
+func (a *anyPB) Tautology() bool {
 	return len(a.In) == 0 && len(a.NotIn) == 0
 }
 
@@ -119,4 +119,4 @@ func stringsToSet(ss []string) map[string]struct{} {
 	return set
 }
 
-var _ evaluator = anyPB{}
+var _ evaluator = (*anyPB)(nil)

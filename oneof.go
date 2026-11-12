@@ -27,11 +27,11 @@ type oneof struct {
 	Required bool
 }
 
-func (o oneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (o *oneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return o.EvaluateMessage(val.Message(), cfg)
 }
 
-func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+func (o *oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
 	if !cfg.filter.ShouldValidate(msg, o.Descriptor) ||
 		!o.Required || msg.WhichOneof(o.Descriptor) != nil {
 		return nil
@@ -51,8 +51,8 @@ func (o oneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 	}}}
 }
 
-func (o oneof) Tautology() bool {
+func (o *oneof) Tautology() bool {
 	return !o.Required
 }
 
-var _ messageEvaluator = oneof{}
+var _ messageEvaluator = (*oneof)(nil)

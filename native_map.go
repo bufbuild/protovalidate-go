@@ -67,14 +67,14 @@ func tryNativeMapRules(base base, rules *validate.MapRules) evaluator {
 		return nil
 	}
 
-	return nativeMapEval{
+	return &nativeMapEval{
 		base:     base,
 		minPairs: minPairs,
 		maxPairs: maxPairs,
 	}
 }
 
-var _ evaluator = nativeMapEval{}
+var _ evaluator = (*nativeMapEval)(nil)
 
 // nativeMapEval is a native Go evaluator for map-level rules
 // (min_pairs, max_pairs). Key/value rules are handled separately
@@ -85,7 +85,7 @@ type nativeMapEval struct {
 	maxPairs uint64
 }
 
-func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	size := uint64(val.Map().Len()) //nolint:gosec // int will never be negative or out of uint64 range
 	var violations []*Violation
 
@@ -117,6 +117,6 @@ func (n nativeMapEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, 
 	return nil
 }
 
-func (n nativeMapEval) Tautology() bool {
+func (n *nativeMapEval) Tautology() bool {
 	return n.minPairs == 0 && n.maxPairs == math.MaxUint64
 }

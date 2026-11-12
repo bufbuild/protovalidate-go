@@ -30,7 +30,7 @@ type messageOneof struct {
 	Required bool
 }
 
-func (o messageOneof) formatFields() string {
+func (o *messageOneof) formatFields() string {
 	names := make([]string, len(o.Fields))
 	for idx, fdesc := range o.Fields {
 		names[idx] = string(fdesc.Name())
@@ -38,11 +38,11 @@ func (o messageOneof) formatFields() string {
 	return strings.Join(names, ", ")
 }
 
-func (o messageOneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (o *messageOneof) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return o.EvaluateMessage(val.Message(), cfg)
 }
 
-func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+func (o *messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
 	if !cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		return nil
 	}
@@ -76,8 +76,8 @@ func (o messageOneof) EvaluateMessage(msg protoreflect.Message, cfg *validationC
 	return nil
 }
 
-func (o messageOneof) Tautology() bool {
+func (o *messageOneof) Tautology() bool {
 	return false
 }
 
-var _ messageEvaluator = messageOneof{}
+var _ messageEvaluator = (*messageOneof)(nil)

@@ -242,7 +242,7 @@ func findFieldEvaluators(
 	require.True(t, ok, "expected *message evaluator")
 
 	for _, ne := range msg.nestedEvaluators {
-		f, ok := ne.(field)
+		f, ok := ne.(*field)
 		if !ok {
 			continue
 		}
@@ -282,5 +282,9 @@ func assertNoCELPrograms(t testing.TB, evals evaluators) {
 // evaluatorTypeName returns a string identifying the evaluator's concrete type
 // using reflection, so it automatically handles new evaluator types.
 func evaluatorTypeName(e evaluator) string {
-	return reflect.TypeOf(e).Name()
+	typ := reflect.TypeOf(e)
+	if typ.Kind() == reflect.Pointer {
+		typ = typ.Elem()
+	}
+	return typ.Name()
 }

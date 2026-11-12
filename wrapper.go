@@ -31,12 +31,12 @@ type wrappedValueEval struct {
 	inner      evaluator
 }
 
-func (w wrappedValueEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (w *wrappedValueEval) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return w.inner.Evaluate(msg, val.Message().Get(w.innerField), cfg)
 }
 
-func (w wrappedValueEval) Tautology() bool {
+func (w *wrappedValueEval) Tautology() bool {
 	return w.inner.Tautology()
 }
 
-var _ evaluator = wrappedValueEval{}
+var _ evaluator = (*wrappedValueEval)(nil)

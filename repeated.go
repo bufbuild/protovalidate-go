@@ -39,14 +39,14 @@ type listItems struct {
 	ItemRules value
 }
 
-func newListItems(valEval *value) listItems {
-	return listItems{
+func newListItems(valEval *value) *listItems {
+	return &listItems{
 		base:      newBase(valEval),
 		ItemRules: value{NestedRule: repeatedItemsRulePath},
 	}
 }
 
-func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (r *listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	list := val.List()
 	var ok bool
 	var err error
@@ -67,8 +67,8 @@ func (r listItems) Evaluate(msg protoreflect.Message, val protoreflect.Value, cf
 	return err
 }
 
-func (r listItems) Tautology() bool {
+func (r *listItems) Tautology() bool {
 	return r.ItemRules.Tautology()
 }
 
-var _ evaluator = listItems{}
+var _ evaluator = (*listItems)(nil)

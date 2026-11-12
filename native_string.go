@@ -167,7 +167,7 @@ func tryBuildNativeStringRules(base base, rules *validate.StringRules) evaluator
 		return nil
 	}
 
-	return nativeStringEval{
+	return &nativeStringEval{
 		base:          base,
 		constVal:      constVal,
 		inVals:        inVals,
@@ -380,7 +380,7 @@ type nativeStringEval struct {
 }
 
 //nolint:gocyclo // this code has nested ifs but it's not hard to follow.
-func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	strVal := val.String()
 	var violations []*Violation
 
@@ -501,7 +501,7 @@ func (n nativeStringEval) Evaluate(_ protoreflect.Message, val protoreflect.Valu
 	return nil
 }
 
-func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) []*Violation {
+func (n *nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) []*Violation {
 	rule := n.wellKnownRule
 	if rule.emptySite.ruleID != nil && strVal == "" {
 		return []*Violation{n.newViolation(rule.emptySite,
@@ -516,7 +516,7 @@ func (n nativeStringEval) checkWellKnown(strVal string, val protoreflect.Value) 
 	return nil
 }
 
-func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value) []*Violation {
+func (n *nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value) []*Violation {
 	// check if strict is set (it is on by default)
 	// if not, validate against the loose rule: ^[^\u0000\u000A\u000D]+$ for
 	// name and ^[^\u0000\u000A\u000D]*$ for value
@@ -562,7 +562,7 @@ func (n nativeStringEval) checkKnownRegex(strVal string, val protoreflect.Value)
 // very similar bits of code
 //
 //nolint:dupl
-func (n nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.Value) []*Violation {
+func (n *nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.Value) []*Violation {
 	var out []*Violation
 	if n.exactBytes != nil && byteCount != *n.exactBytes {
 		out = append(out, n.newViolation(strDescs.lenBytesSite,
@@ -586,7 +586,7 @@ func (n nativeStringEval) evaluateByteLength(byteCount uint64, val protoreflect.
 // very similar bits of code
 //
 //nolint:dupl
-func (n nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Value) []*Violation {
+func (n *nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Value) []*Violation {
 	var out []*Violation
 
 	if n.exactLen != nil && runeCount != *n.exactLen {
@@ -607,11 +607,11 @@ func (n nativeStringEval) evaluateLength(runeCount uint64, val protoreflect.Valu
 	return out
 }
 
-func (n nativeStringEval) Tautology() bool {
+func (n *nativeStringEval) Tautology() bool {
 	return false
 }
 
-var _ evaluator = nativeStringEval{}
+var _ evaluator = (*nativeStringEval)(nil)
 
 var errUnsupportedWellKnown = errors.New("unsupported well-known string constraint")
 

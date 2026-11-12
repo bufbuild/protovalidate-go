@@ -70,7 +70,7 @@ func tryBuildNativeEnumRules(base base, rules *validate.EnumRules, values protor
 		return nil
 	}
 
-	return nativeEnumEval{
+	return &nativeEnumEval{
 		base:        base,
 		constVal:    constVal,
 		definedOnly: definedOnly,
@@ -86,7 +86,7 @@ func canBuildNativeEnumRules(rules *validate.EnumRules) bool {
 	return len(rules.ProtoReflect().GetUnknown()) == 0
 }
 
-var _ evaluator = nativeEnumEval{}
+var _ evaluator = (*nativeEnumEval)(nil)
 
 // nativeEnumEval is a native Go evaluator for enum const/defined_only/in/not_in rules.
 type nativeEnumEval struct {
@@ -97,12 +97,12 @@ type nativeEnumEval struct {
 	notInVals   []int32
 }
 
-type enumProcessor func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation
+type enumProcessor func(n *nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation
 
 //nolint:gochecknoglobals // slice of all the processors that are used, value never modified, effectively immutable
 var enumProcessors = []enumProcessor{
 	// const
-	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+	func(n *nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
 		if n.constVal != nil && enumVal != *n.constVal {
 			return n.newViolation(enumConstSite,
 				"enum.const", fmt.Sprintf("must equal %d", *n.constVal),
@@ -111,7 +111,7 @@ var enumProcessors = []enumProcessor{
 		return nil
 	},
 	// defined_only
-	func(n nativeEnumEval, val protoreflect.Value, _ int32) *Violation {
+	func(n *nativeEnumEval, val protoreflect.Value, _ int32) *Violation {
 		if n.definedOnly == nil {
 			return nil
 		}
@@ -121,7 +121,7 @@ var enumProcessors = []enumProcessor{
 		return nil
 	},
 	// in
-	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+	func(n *nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
 		if len(n.inVals) > 0 && !slices.Contains(n.inVals, enumVal) {
 			return n.newViolation(enumInSite,
 				"enum.in", "must be in list "+formatList(n.inVals),
@@ -130,7 +130,7 @@ var enumProcessors = []enumProcessor{
 		return nil
 	},
 	// not_in
-	func(n nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
+	func(n *nativeEnumEval, val protoreflect.Value, enumVal int32) *Violation {
 		if len(n.notInVals) > 0 && slices.Contains(n.notInVals, enumVal) {
 			return n.newViolation(enumNotInSite,
 				"enum.not_in", "must not be in list "+formatList(n.notInVals),
@@ -140,7 +140,7 @@ var enumProcessors = []enumProcessor{
 	},
 }
 
-func (n nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	enumVal := int32(val.Enum())
 
 	var violations []*Violation
@@ -163,6 +163,6 @@ func (n nativeEnumEval) Evaluate(_ protoreflect.Message, val protoreflect.Value,
 	return nil
 }
 
-func (n nativeEnumEval) Tautology() bool {
+func (n *nativeEnumEval) Tautology() bool {
 	return false
 }

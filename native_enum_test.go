@@ -183,7 +183,7 @@ func TestNativeEnumDefinedOnly(t *testing.T) {
 
 	undefined := protoreflect.ValueOfEnum(99)
 	nativeErr := eval.Evaluate(nil, undefined, &validationConfig{})
-	definedErr := definedEnum{base: b, ValueDescriptors: fdesc.Enum().Values()}.Evaluate(nil, undefined, &validationConfig{})
+	definedErr := (&definedEnum{base: b, ValueDescriptors: fdesc.Enum().Values()}).Evaluate(nil, undefined, &validationConfig{})
 	var nativeValErr, definedValErr *ValidationError
 	require.ErrorAs(t, nativeErr, &nativeValErr)
 	require.ErrorAs(t, definedErr, &definedValErr)
