@@ -40,11 +40,3 @@ func (f FilterFunc) ShouldValidate(
 ) bool {
 	return f(message, descriptor)
 }
-
-type nopFilter struct{}
-
-func (nopFilter) ShouldValidate(_ protoreflect.Message, _ protoreflect.Descriptor) bool {
-	return true
-}
-
-var _ Filter = nopFilter{}

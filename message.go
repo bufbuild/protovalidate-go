@@ -43,7 +43,7 @@ func (m *message) EvaluateMessage(msg protoreflect.Message, cfg *validationConfi
 		err error
 		ok  bool
 	)
-	if cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
+	if cfg.filter == nil || cfg.filter.ShouldValidate(msg, msg.Descriptor()) {
 		if m.Err != nil {
 			return m.Err
 		}

@@ -148,11 +148,7 @@ func (o *allowUnknownFieldsOption) applyToValidator(cfg *config) {
 type filterOption struct{ filter Filter }
 
 func (o *filterOption) applyToValidation(cfg *validationConfig) {
-	if o.filter == nil {
-		cfg.filter = nopFilter{}
-	} else {
-		cfg.filter = o.filter
-	}
+	cfg.filter = o.filter
 }
 
 type failFastOption struct{}
