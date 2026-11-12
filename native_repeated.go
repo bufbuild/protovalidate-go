@@ -110,18 +110,18 @@ func uniqueCheckerForKind(desc protoreflect.FieldDescriptor) uniqueChecker {
 	// Widening the 32-bit kinds is one-to-one, so uniqueness is unchanged.
 	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind,
 		protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
-		return uniqueListChecker(protoreflect.Value.Int)
+		return isUniqueInts
 	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind,
 		protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
-		return uniqueListChecker(protoreflect.Value.Uint)
+		return isUniqueUints
 	case protoreflect.FloatKind, protoreflect.DoubleKind:
-		return uniqueListChecker(protoreflect.Value.Float)
+		return isUniqueFloats
 	case protoreflect.StringKind:
-		return uniqueListChecker(protoreflect.Value.String)
+		return isUniqueStrings
 	case protoreflect.BoolKind:
-		return uniqueListChecker(protoreflect.Value.Bool)
+		return isUniqueBools
 	case protoreflect.EnumKind:
-		return uniqueListChecker(protoreflect.Value.Enum)
+		return isUniqueEnums
 	case protoreflect.BytesKind:
 		return isUniqueBytes
 	case protoreflect.MessageKind, protoreflect.GroupKind:
@@ -131,12 +131,31 @@ func uniqueCheckerForKind(desc protoreflect.FieldDescriptor) uniqueChecker {
 	}
 }
 
-// uniqueListChecker returns a uniqueChecker for elements read with get. Typed
-// getters avoid boxing every element into an interface.
-func uniqueListChecker[T comparable](get func(protoreflect.Value) T) uniqueChecker {
-	return func(list protoreflect.List) bool {
-		return isUniqueList(list, get)
-	}
+// The checkers below read elements with typed getters, which avoids boxing
+// every element into an interface.
+
+func isUniqueInts(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.Int)
+}
+
+func isUniqueUints(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.Uint)
+}
+
+func isUniqueFloats(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.Float)
+}
+
+func isUniqueStrings(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.String)
+}
+
+func isUniqueBools(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.Bool)
+}
+
+func isUniqueEnums(list protoreflect.List) bool {
+	return isUniqueList(list, protoreflect.Value.Enum)
 }
 
 var _ evaluator = nativeRepeatedEval{}
