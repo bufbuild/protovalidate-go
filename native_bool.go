@@ -44,13 +44,13 @@ func tryBuildNativeBoolRules(base base, rules *validate.BoolRules) evaluator {
 	}
 	constVal := rules.GetConst()
 	rules.ProtoReflect().Clear(boolConstSite.desc)
-	return nativeBoolEval{
+	return &nativeBoolEval{
 		base:     base,
 		constVal: constVal,
 	}
 }
 
-var _ evaluator = nativeBoolEval{}
+var _ evaluator = (*nativeBoolEval)(nil)
 
 // nativeBoolEval is a native Go evaluator for bool const rules.
 type nativeBoolEval struct {
@@ -58,7 +58,7 @@ type nativeBoolEval struct {
 	constVal bool
 }
 
-func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (n *nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if val.Bool() != n.constVal {
 		return &ValidationError{Violations: []*Violation{n.newViolation(boolConstSite,
 			"bool.const", fmt.Sprintf("must equal %t", n.constVal),
@@ -68,6 +68,6 @@ func (n nativeBoolEval) Evaluate(_ protoreflect.Message, val protoreflect.Value,
 	return nil
 }
 
-func (n nativeBoolEval) Tautology() bool {
+func (n *nativeBoolEval) Tautology() bool {
 	return false
 }

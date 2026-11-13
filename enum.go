@@ -41,7 +41,7 @@ type definedEnum struct {
 	ValueDescriptors protoreflect.EnumValueDescriptors
 }
 
-func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
+func (d *definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ *validationConfig) error {
 	if d.ValueDescriptors.ByNumber(val.Enum()) == nil {
 		return &ValidationError{Violations: []*Violation{{
 			Proto: validate.Violation_builder{
@@ -59,8 +59,8 @@ func (d definedEnum) Evaluate(_ protoreflect.Message, val protoreflect.Value, _ 
 	return nil
 }
 
-func (d definedEnum) Tautology() bool {
+func (d *definedEnum) Tautology() bool {
 	return false
 }
 
-var _ evaluator = definedEnum{}
+var _ evaluator = (*definedEnum)(nil)

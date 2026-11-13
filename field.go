@@ -48,22 +48,22 @@ type field struct {
 
 // shouldIgnoreAlways returns whether this field should always skip validation.
 // If true, this will take precedence and all checks are skipped.
-func (f field) shouldIgnoreAlways() bool {
+func (f *field) shouldIgnoreAlways() bool {
 	return f.Ignore == validate.Ignore_IGNORE_ALWAYS
 }
 
 // shouldIgnoreEmpty returns whether this field should skip validation on its zero value.
 // This field is generally true for nullable fields or fields with the
 // ignore_empty rule explicitly set.
-func (f field) shouldIgnoreEmpty() bool {
+func (f *field) shouldIgnoreEmpty() bool {
 	return f.HasPresence || f.Ignore == validate.Ignore_IGNORE_IF_ZERO_VALUE
 }
 
-func (f field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (f *field) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	return f.EvaluateMessage(val.Message(), cfg)
 }
 
-func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
+func (f *field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) (err error) {
 	if f.shouldIgnoreAlways() {
 		return nil
 	}
@@ -97,8 +97,8 @@ func (f field) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) 
 	return f.Value.EvaluateField(msg, msg.Get(f.Value.Descriptor), cfg, true)
 }
 
-func (f field) Tautology() bool {
+func (f *field) Tautology() bool {
 	return !f.Required && f.Value.Tautology() && f.Err == nil
 }
 
-var _ messageEvaluator = field{}
+var _ messageEvaluator = (*field)(nil)

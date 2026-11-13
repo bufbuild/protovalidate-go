@@ -213,7 +213,7 @@ func tryBuildNativeNumericRules[T numericValue, R numericRules[T]](
 		return nil
 	}
 
-	return nativeNumericCompare[T]{
+	return &nativeNumericCompare[T]{
 		base:      base,
 		config:    config,
 		lo:        lowerValue,
@@ -413,8 +413,7 @@ const (
 // const/in/not_in rules. It replaces CEL evaluation with direct Go comparisons.
 //
 // config is stored as a pointer so the (globally shared, read-only) config
-// struct is not copied into every evaluator (and then again onto the stack
-// via the value receiver on Evaluate).
+// struct is not copied into every evaluator.
 type nativeNumericCompare[T numericValue] struct {
 	base
 	config    *numericTypeConfig[T]
@@ -429,7 +428,7 @@ type nativeNumericCompare[T numericValue] struct {
 }
 
 // belowLo reports whether v violates the lower bound.
-func (n nativeNumericCompare[T]) belowLo(v T) bool {
+func (n *nativeNumericCompare[T]) belowLo(v T) bool {
 	if n.lower == lowerBoundGt {
 		return v <= n.lo
 	}
@@ -437,7 +436,7 @@ func (n nativeNumericCompare[T]) belowLo(v T) bool {
 }
 
 // aboveHi reports whether v violates the upper bound.
-func (n nativeNumericCompare[T]) aboveHi(v T) bool {
+func (n *nativeNumericCompare[T]) aboveHi(v T) bool {
 	if n.upper == upperBoundLt {
 		return v >= n.hi
 	}
@@ -445,39 +444,39 @@ func (n nativeNumericCompare[T]) aboveHi(v T) bool {
 }
 
 // isNormalRange reports whether lo and hi form a normal (non-exclusive) range.
-func (n nativeNumericCompare[T]) isNormalRange() bool {
+func (n *nativeNumericCompare[T]) isNormalRange() bool {
 	return n.hi >= n.lo
 }
 
-func (n nativeNumericCompare[T]) loSite() ruleSite {
+func (n *nativeNumericCompare[T]) loSite() ruleSite {
 	if n.lower == lowerBoundGt {
 		return n.config.descs.gtSite
 	}
 	return n.config.descs.gteSite
 }
 
-func (n nativeNumericCompare[T]) hiSite() ruleSite {
+func (n *nativeNumericCompare[T]) hiSite() ruleSite {
 	if n.upper == upperBoundLt {
 		return n.config.descs.ltSite
 	}
 	return n.config.descs.lteSite
 }
 
-func (n nativeNumericCompare[T]) gtRulePrefix() string {
+func (n *nativeNumericCompare[T]) gtRulePrefix() string {
 	if n.lower == lowerBoundGt {
 		return n.config.typeName + ".gt"
 	}
 	return n.config.typeName + ".gte"
 }
 
-func (n nativeNumericCompare[T]) ltRulePrefix() string {
+func (n *nativeNumericCompare[T]) ltRulePrefix() string {
 	if n.upper == upperBoundLt {
 		return n.config.typeName + ".lt"
 	}
 	return n.config.typeName + ".lte"
 }
 
-func (n nativeNumericCompare[T]) gtltRule() string {
+func (n *nativeNumericCompare[T]) gtltRule() string {
 	if n.lower != lowerBoundNone {
 		prefix := n.gtRulePrefix()
 		switch n.upper {
@@ -497,28 +496,28 @@ func (n nativeNumericCompare[T]) gtltRule() string {
 	return n.ltRulePrefix()
 }
 
-func (n nativeNumericCompare[T]) loMessage() string {
+func (n *nativeNumericCompare[T]) loMessage() string {
 	if n.lower == lowerBoundGt {
 		return "greater than " + format(n.lo)
 	}
 	return "greater than or equal to " + format(n.lo)
 }
 
-func (n nativeNumericCompare[T]) hiMessage() string {
+func (n *nativeNumericCompare[T]) hiMessage() string {
 	if n.upper == upperBoundLt {
 		return "less than " + format(n.hi)
 	}
 	return "less than or equal to " + format(n.hi)
 }
 
-func (n nativeNumericCompare[T]) conjunction() string {
+func (n *nativeNumericCompare[T]) conjunction() string {
 	if n.isNormalRange() {
 		return "and"
 	}
 	return "or"
 }
 
-func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	valT := n.config.extractVal(val)
 	var violations []*Violation
 
@@ -580,7 +579,7 @@ func (n nativeNumericCompare[T]) Evaluate(_ protoreflect.Message, val protorefle
 // evaluateRange returns a violation for lower/upper bound checks, or nil.
 // Split out of Evaluate so that the hot path (no range rules) stays small
 // enough to inline.
-func (n nativeNumericCompare[T]) evaluateRange(valT T, val protoreflect.Value) *Violation {
+func (n *nativeNumericCompare[T]) evaluateRange(valT T, val protoreflect.Value) *Violation {
 	if n.lower == lowerBoundNone && n.upper == upperBoundNone {
 		return nil
 	}
@@ -618,11 +617,11 @@ func (n nativeNumericCompare[T]) evaluateRange(valT T, val protoreflect.Value) *
 	return nil
 }
 
-func (n nativeNumericCompare[T]) Tautology() bool {
+func (n *nativeNumericCompare[T]) Tautology() bool {
 	return false
 }
 
-var _ evaluator = nativeNumericCompare[int32]{}
+var _ evaluator = (*nativeNumericCompare[int32])(nil)
 
 // formatList formats a slice as "list [val1, val2]" to match CEL message format.
 func formatList[T any](vals []T) string {

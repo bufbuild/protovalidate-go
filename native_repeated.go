@@ -86,7 +86,7 @@ func tryNativeRepeatedRules(base base, rules *validate.RepeatedRules) evaluator 
 		return nil
 	}
 
-	return nativeRepeatedEval{
+	return &nativeRepeatedEval{
 		base:     base,
 		minItems: minItems,
 		maxItems: maxItems,
@@ -158,7 +158,7 @@ func isUniqueEnums(list protoreflect.List) bool {
 	return isUniqueList(list, protoreflect.Value.Enum)
 }
 
-var _ evaluator = nativeRepeatedEval{}
+var _ evaluator = (*nativeRepeatedEval)(nil)
 
 // nativeRepeatedEval is a native Go evaluator for repeated list-level rules
 // (min_items, max_items, unique). Item-level rules are handled separately
@@ -172,7 +172,7 @@ type nativeRepeatedEval struct {
 	uniqueFn uniqueChecker
 }
 
-func (n nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (n *nativeRepeatedEval) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	list := val.List()
 	size := uint64(list.Len()) //nolint:gosec // len can't be < 0 and is always within uint64 range
 	var violations []*Violation
@@ -289,6 +289,6 @@ func isUniqueBytes(list protoreflect.List) bool {
 	return true
 }
 
-func (n nativeRepeatedEval) Tautology() bool {
+func (n *nativeRepeatedEval) Tautology() bool {
 	return false
 }

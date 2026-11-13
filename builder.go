@@ -168,7 +168,7 @@ func (bldr *builder) processMessageExpressions(
 		return
 	}
 
-	msgEval.Append(celPrograms{programSet: compiledExprs})
+	msgEval.Append(&celPrograms{programSet: compiledExprs})
 }
 
 func (bldr *builder) processMessageOneofRules(
@@ -223,7 +223,7 @@ func (bldr *builder) processOneofRules(
 	for i := range oneofs.Len() {
 		oneofDesc := oneofs.Get(i)
 		oneofRules, _ := ResolveOneofRules(oneofDesc)
-		oneofEval := oneof{
+		oneofEval := &oneof{
 			Descriptor: oneofDesc,
 			Required:   oneofRules.GetRequired(),
 		}
@@ -254,12 +254,12 @@ func (bldr *builder) buildField(
 	fieldRules *validate.FieldRules,
 	msgRules *validate.MessageRules,
 	cache messageCache,
-) (field, error) {
+) (*field, error) {
 	if fieldRules != nil && !fieldRules.HasIgnore() && isPartOfMessageOneof(msgRules, fieldDescriptor) {
 		fieldRules = proto.CloneOf(fieldRules)
 		fieldRules.SetIgnore(validate.Ignore_IGNORE_IF_ZERO_VALUE)
 	}
-	fld := field{
+	fld := &field{
 		Value: value{
 			Descriptor: fieldDescriptor,
 		},
@@ -375,7 +375,7 @@ func (bldr *builder) processFieldExpressions(
 	if len(compiledExpressions.programs) > 0 {
 		compiledExpressions.env = cmp.Or(compiledExpressions.env, celRuleCompiledExpressions.env, bldr.env)
 		eval.Rules = append(eval.Rules,
-			celPrograms{
+			&celPrograms{
 				base:       newBase(eval),
 				programSet: compiledExpressions,
 			},
@@ -494,7 +494,7 @@ func (bldr *builder) processStandardRules(
 			rules = proto.CloneOf(rules)
 			rules.GetEnum().ClearConst()
 		}
-		valEval.Append(definedEnum{
+		valEval.Append(&definedEnum{
 			base:             newBase(valEval),
 			ValueDescriptors: fdesc.Enum().Values(),
 		})
@@ -533,7 +533,7 @@ func (bldr *builder) appendStandardRules(
 	if err != nil {
 		return err
 	}
-	valEval.Append(celPrograms{
+	valEval.Append(&celPrograms{
 		base:       newBase(valEval),
 		programSet: stdRules,
 	})
@@ -612,7 +612,7 @@ func (bldr *builder) tryNativeRules(
 	// For wrapper WKTs, fdesc is the inner "value" field but the runtime value is
 	// the wrapper message. valEval.Descriptor is nil for list items/map values.
 	if _, isWrapper := expectedWrapperRules(fdesc.ContainingMessage().FullName()); isWrapper {
-		native = wrappedValueEval{
+		native = &wrappedValueEval{
 			innerField: fdesc,
 			inner:      native,
 		}
@@ -636,7 +636,7 @@ func (bldr *builder) processAnyRules(
 	anyPbDesc := (&validate.AnyRules{}).ProtoReflect().Descriptor()
 	inField := anyPbDesc.Fields().ByName("in")
 	notInField := anyPbDesc.Fields().ByName("not_in")
-	anyEval := anyPB{
+	anyEval := &anyPB{
 		base:              newBase(valEval),
 		TypeURLDescriptor: typeURLDesc,
 		In:                stringsToSet(fieldRules.GetAny().GetIn()),

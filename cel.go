@@ -26,7 +26,7 @@ type celPrograms struct {
 	programSet
 }
 
-func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
+func (c *celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cfg *validationConfig) error {
 	err := c.Eval(val, c.Descriptor, cfg)
 	if valErr, ok := errors.AsType[*ValidationError](err); ok {
 		for _, violation := range valErr.Violations {
@@ -39,15 +39,15 @@ func (c celPrograms) Evaluate(_ protoreflect.Message, val protoreflect.Value, cf
 	return err
 }
 
-func (c celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
+func (c *celPrograms) EvaluateMessage(msg protoreflect.Message, cfg *validationConfig) error {
 	return c.Eval(protoreflect.ValueOfMessage(msg), nil, cfg)
 }
 
-func (c celPrograms) Tautology() bool {
+func (c *celPrograms) Tautology() bool {
 	return len(c.programs) == 0
 }
 
 var (
-	_ evaluator        = celPrograms{}
-	_ messageEvaluator = celPrograms{}
+	_ evaluator        = (*celPrograms)(nil)
+	_ messageEvaluator = (*celPrograms)(nil)
 )
