@@ -290,6 +290,17 @@ func TestValidator_Validate_Filter(t *testing.T) {
 		require.Len(t, valErr.Violations, 1)
 	})
 
+	t.Run("NilFilter", func(t *testing.T) {
+		t.Parallel()
+		val, err := New()
+		require.NoError(t, err)
+		msg := &pb.Person{}
+		err = val.Validate(msg, WithFilter(nil))
+		valErr := &ValidationError{}
+		require.ErrorAs(t, err, &valErr)
+		require.Len(t, valErr.Violations, 3)
+	})
+
 	t.Run("FilterInvalid", func(t *testing.T) {
 		t.Parallel()
 		val, err := New()

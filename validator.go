@@ -92,7 +92,6 @@ func New(options ...ValidatorOption) (Validator, error) {
 		builder: bldr,
 		cfg: &validationConfig{
 			failFast: cfg.failFast,
-			filter:   nopFilter{},
 			nowFn:    cfg.nowFn,
 		},
 	}, nil
@@ -148,8 +147,15 @@ type config struct {
 
 type validationConfig struct {
 	failFast bool
-	filter   Filter
-	nowFn    func() *timestamppb.Timestamp
+	// filter is nil if every rule should be validated.
+	filter Filter
+	nowFn  func() *timestamppb.Timestamp
+}
+
+// shouldValidate reports whether the filter, if any, selects the rules for
+// descriptor in msg.
+func (cfg *validationConfig) shouldValidate(msg protoreflect.Message, descriptor protoreflect.Descriptor) bool {
+	return cfg.filter == nil || cfg.filter.ShouldValidate(msg, descriptor)
 }
 
 func (cfg *validationConfig) clone() *validationConfig {
