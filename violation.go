@@ -33,7 +33,11 @@ type Violation struct {
 	FieldValue protoreflect.Value
 
 	// FieldDescriptor contains the field descriptor corresponding to the
-	// field that failed validation.
+	// field that failed validation. For a map key or value, it is the
+	// descriptor returned by MapKey or MapValue on the map field.
+	//
+	// It is nil for items of repeated fields, and for violations that do not
+	// apply to a single field, such as message-level rules and oneof rules.
 	FieldDescriptor protoreflect.FieldDescriptor
 
 	// RuleValue contains the value of the rule that specified the failed

@@ -39,9 +39,15 @@ type base struct {
 }
 
 func newBase(valEval *value) base {
+	var pathElement *validate.FieldPathElement
+	// Map keys, map values, and list items get their path element from the
+	// enclosing kvPairs or listItems evaluator.
+	if valEval.NestedRule == nil {
+		pathElement = fieldPathElement(valEval.Descriptor)
+	}
 	return base{
 		Descriptor:       valEval.Descriptor,
-		FieldPathElement: fieldPathElement(valEval.Descriptor),
+		FieldPathElement: pathElement,
 		RulePrefix:       valEval.NestedRule,
 	}
 }

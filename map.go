@@ -59,9 +59,15 @@ type kvPairs struct {
 
 func newKVPairs(valEval *value) *kvPairs {
 	return &kvPairs{
-		base:       newBase(valEval),
-		KeyRules:   value{NestedRule: mapKeysRulePath},
-		ValueRules: value{NestedRule: mapValuesRulePath},
+		base: newBase(valEval),
+		KeyRules: value{
+			Descriptor: valEval.Descriptor.MapKey(),
+			NestedRule: mapKeysRulePath,
+		},
+		ValueRules: value{
+			Descriptor: valEval.Descriptor.MapValue(),
+			NestedRule: mapValuesRulePath,
+		},
 	}
 }
 

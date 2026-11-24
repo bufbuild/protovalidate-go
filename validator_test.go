@@ -503,6 +503,51 @@ func TestValidator_WithNowFunc_Issue211(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func TestValidator_MapFieldDescriptor_Issue322(t *testing.T) {
+	t.Parallel()
+	msg := pb.Issue322_builder{
+		Value:  pb.Issue322Value_ISSUE322_VALUE_UNSPECIFIED,
+		Values: map[string]pb.Issue322Value{"foo": pb.Issue322Value_ISSUE322_VALUE_UNSPECIFIED},
+		Keys:   map[string]int32{"k": 1},
+	}.Build()
+	fieldDescriptors := msg.ProtoReflect().Descriptor().Fields()
+	expectedDescriptors := map[string]protoreflect.FieldDescriptor{
+		"value":         fieldDescriptors.ByName("value"),
+		`values["foo"]`: fieldDescriptors.ByName("values").MapValue(),
+		`keys["k"]`:     fieldDescriptors.ByName("keys").MapKey(),
+	}
+
+	// Native and CEL rules create violations in different code paths.
+	validatorOptions := map[string][]ValidatorOption{
+		"native": nil,
+		"cel":    {WithDisableNativeRules()},
+	}
+	for name, options := range validatorOptions {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			validator, err := New(options...)
+			require.NoError(t, err)
+			err = validator.Validate(msg)
+			var validationErr *ValidationError
+			require.ErrorAs(t, err, &validationErr)
+			require.Len(t, validationErr.Violations, len(expectedDescriptors))
+			violationsByPath := make(map[string]*Violation, len(validationErr.Violations))
+			for _, violation := range validationErr.Violations {
+				violationsByPath[FieldPathString(violation.Proto.GetField())] = violation
+			}
+			for path, expectedDescriptor := range expectedDescriptors {
+				violation := violationsByPath[path]
+				if !assert.NotNil(t, violation, "no violation for %s", path) {
+					continue
+				}
+				if assert.NotNil(t, violation.FieldDescriptor, "%s violation has no field descriptor", path) {
+					assert.Equal(t, expectedDescriptor.FullName(), violation.FieldDescriptor.FullName(), path)
+				}
+			}
+		})
+	}
+}
+
 func TestValidator_Validate_Issue141(t *testing.T) {
 	t.Parallel()
 

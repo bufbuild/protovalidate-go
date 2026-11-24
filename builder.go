@@ -610,7 +610,7 @@ func (bldr *builder) tryNativeRules(
 		return nil
 	}
 	// For wrapper WKTs, fdesc is the inner "value" field but the runtime value is
-	// the wrapper message. valEval.Descriptor is nil for list items/map values.
+	// the wrapper message.
 	if _, isWrapper := expectedWrapperRules(fdesc.ContainingMessage().FullName()); isWrapper {
 		native = &wrappedValueEval{
 			innerField: fdesc,

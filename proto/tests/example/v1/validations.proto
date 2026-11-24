@@ -204,6 +204,30 @@ message Issue211 {
   google.protobuf.Timestamp value = 1 [(buf.validate.field).timestamp.gt_now = true];
 }
 
+// https://github.com/bufbuild/protovalidate-go/issues/322
+enum Issue322Value {
+  ISSUE322_VALUE_UNSPECIFIED = 0;
+  ISSUE322_VALUE_A = 1;
+  ISSUE322_VALUE_B = 2;
+}
+
+// https://github.com/bufbuild/protovalidate-go/issues/322
+message Issue322 {
+  Issue322Value value = 1 [(buf.validate.field).enum = {
+    in: [
+      1,
+      2
+    ]
+  }];
+  map<string, Issue322Value> values = 2 [(buf.validate.field).map.values.enum = {
+    in: [
+      1,
+      2
+    ]
+  }];
+  map<string, int32> keys = 3 [(buf.validate.field).map.keys.string.min_len = 2];
+}
+
 // https://github.com/bufbuild/protovalidate-go/issues/307
 message SelfReferentialRepeated {
   repeated SelfReferentialRepeated children = 1;
